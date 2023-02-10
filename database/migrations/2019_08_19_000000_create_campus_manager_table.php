@@ -13,7 +13,7 @@ class CreateCampusManagerTable extends Migration
      */
     public function up()
     {
-        Schema::create('campusmangers', function (Blueprint $table) {
+        Schema::create('campus_mangers', function (Blueprint $table) {
             $table->string('campusManagerId')->primary();
             $table->string('name')->nullable();
             $table->string('email')->nullable();
@@ -36,6 +36,6 @@ class CreateCampusManagerTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('campusmanagers');
+        Schema::dropIfExists('campus_managers');
     }
 }
