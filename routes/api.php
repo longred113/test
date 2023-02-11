@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\api\AdminController;
 use App\Http\Controllers\api\CampusManagerController;
+use App\Http\Controllers\api\CampusController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 

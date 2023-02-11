@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Campus;
 use Illuminate\Http\Request;
 
 class CampusController extends Controller
@@ -14,7 +15,8 @@ class CampusController extends Controller
      */
     public function index()
     {
-        //
+        $data = Campus::all();
+        return $data;
     }
 
     /**
@@ -25,7 +27,8 @@ class CampusController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = Campus::create($request->all);
+        return $data;
     }
 
     /**
@@ -36,7 +39,7 @@ class CampusController extends Controller
      */
     public function show($id)
     {
-        //
+
     }
 
     /**

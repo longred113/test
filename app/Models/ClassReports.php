@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class ClassReports extends Model
+{
+    use HasFactory;
+    protected $fillable = [
+        'teacherId',
+        'classId',
+        'studentId',
+        'campusId',
+        'status',
+        'date',
+        'preparation',
+        'attitude',
+        'participation',
+        'comment',
+    ];
+}
