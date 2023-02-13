@@ -25,6 +25,10 @@ class CreateClassReportsTable extends Migration
             $table->integer('participation')->nullable();
             $table->string('comment')->nullable();
             $table->timestamps();
+            $table->foreign('teacherId')->references('teacherId')->on('teachers')->onDelete('cascade');
+            $table->foreign('classId')->references('classId')->on('classes')->onDelete('cascade');
+            $table->foreign('studentId')->references('studentId')->on('students')->onDelete('cascade');
+            $table->foreign('campusId')->references('campusId')->on('campuses')->onDelete('cascade');
         });
     }
 

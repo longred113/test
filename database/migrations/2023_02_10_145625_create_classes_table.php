@@ -24,7 +24,11 @@ class CreateClassesTable extends Migration
             $table->string('classTimeSlot')->nullable();
             $table->date('classStartDate')->nullable();
             $table->string('status')->nullable();
+            $table->string('studentId')->nullable();
             $table->timestamps();
+            $table->foreign('productId')->references('productId')->on('products')->onDelete('cascade');
+            $table->foreign('onlineTeacher')->references('teacherId')->on('teachers')->onDelete('cascade');
+            $table->foreign('studentId')->references('studentId')->on('students')->onDelete('cascade');
         });
     }
 

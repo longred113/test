@@ -23,6 +23,7 @@ class CreateProductsTable extends Migration
             $table->string('image')->nullable();
             $table->boolean('activate')->nullable();
             $table->timestamps();
+            $table->foreign('packageId')->references('packageId')->on('pakages')->onDelete('cascade');
         });
     }
 
