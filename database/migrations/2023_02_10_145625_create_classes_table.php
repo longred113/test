@@ -25,8 +25,6 @@ class CreateClassesTable extends Migration
             $table->date('classStartDate')->nullable();
             $table->string('status')->nullable();
             $table->timestamps();
-            $table->foreign('productId')->references('productId')->on('products')->onDelete('cascade');
-            $table->foreign('onlineTeacher')->references('teacherId')->on('teachers')->onDelete('cascade');
         });
     }
 

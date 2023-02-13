@@ -28,12 +28,9 @@ class CreateStudentsTable extends Migration
             $table->string('talkSamId')->nullable();
             $table->integer('basicPoint')->nullable();
             $table->string('campusId')->nullable();
-            $table->boolean('type')->nullable();
+            $table->string('type')->nullable();
             $table->string('classId')->nullable();
             $table->timestamps();
-            $table->foreign('studentId')->references('userId')->on('users')->onDelete('cascade');
-            $table->foreign('campusId')->references('campusId')->on('campuses')->onDelete('cascade');
-            $table->foreign('classId')->references('classId')->on('classes')->onDelete('cascade');
         });
     }
 

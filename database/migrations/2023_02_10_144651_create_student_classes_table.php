@@ -18,8 +18,6 @@ class CreateStudentClassesTable extends Migration
             $table->string('classId')->nullable();
             $table->integer('point')->nullable();
             $table->timestamps();
-            $table->foreign('classId')->references('classId')->on('classes')->onDelete('cascade');
-            $table->foreign('studentId')->references('studentId')->on('students')->onDelete('cascade');
         });
     }
 

@@ -18,8 +18,6 @@ class CreateClassMatchActivitiesTable extends Migration
             $table->string('matchedActivityId')->nullable();
             $table->string('status')->nullable();
             $table->timestamps();
-            $table->foreign('classId')->references('classId')->on('classes')->onDelete('cascade');
-            $table->foreign('matchedActivityId')->references('matchedActivityId')->on('matchedActivities')->onDelete('cascade');
         });
     }
 
