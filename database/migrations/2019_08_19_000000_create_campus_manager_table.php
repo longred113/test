@@ -13,7 +13,7 @@ class CreateCampusManagerTable extends Migration
      */
     public function up()
     {
-        Schema::create('campus_mangers', function (Blueprint $table) {
+        Schema::create('campus_managers', function (Blueprint $table) {
             $table->string('campusManagerId')->primary();
             $table->string('name')->nullable();
             $table->string('email')->nullable();
