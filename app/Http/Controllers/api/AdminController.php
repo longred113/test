@@ -16,8 +16,8 @@ class AdminController extends Controller
      */
     public function index()
     {
-        $data = Admin::all();
-        return $data;
+        $adminsData = Admin::all();
+        return $adminsData;
     }
 
     /**
@@ -28,8 +28,9 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
-        $data = Admin::create($request->all);
-        return $data;
+        $adminData = $request->all();
+        $newAdmin = Admin::create($adminData);
+        return $newAdmin;
     }
 
     /**

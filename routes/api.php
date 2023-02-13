@@ -3,6 +3,8 @@
 use App\Http\Controllers\api\AdminController;
 use App\Http\Controllers\api\CampusManagerController;
 use App\Http\Controllers\api\CampusController;
+use App\Http\Controllers\api\RoleController;
+use App\Http\Controllers\api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,3 +29,5 @@ Route::resource('campus-manger', CampusManagerController::class);
 Route::resource('parent', ParentController::class);
 Route::resource('student', StudentController::class);
 Route::resource('teacher', TeacherController::class);
+Route::resource('roles', RoleController::class);
+Route::resource('users', UserController::class);

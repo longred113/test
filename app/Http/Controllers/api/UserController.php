@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Campus;
+use App\Models\User;
 use Illuminate\Http\Request;
 
-class CampusController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +15,8 @@ class CampusController extends Controller
      */
     public function index()
     {
-        $campusesData = Campus::all();
-        return $campusesData;
+        $usersData = User::all();
+        return $usersData;
     }
 
     /**
@@ -27,9 +27,9 @@ class CampusController extends Controller
      */
     public function store(Request $request)
     {
-        $campusData = $request->all();
-        $newCampus = Campus::create($campusData);
-        return $newCampus;
+        $userData = $request->all();
+        $newUser = User::create($userData);
+        return $newUser;
     }
 
     /**
@@ -40,7 +40,7 @@ class CampusController extends Controller
      */
     public function show($id)
     {
-
+        //
     }
 
     /**
