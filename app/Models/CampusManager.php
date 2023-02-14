@@ -21,4 +21,5 @@ class CampusManager extends Model
         'campusId',
         'memo'
     ];
+    protected $primaryKey = 'campusManagerId';
 }

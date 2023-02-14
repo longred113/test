@@ -4,7 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 use App\Models\CampusManager;
 use App\Http\Resources\CampusManager as CampusManagerResource;
 
@@ -31,6 +31,7 @@ class CampusManagerController extends Controller
     {
         $input = $request->all();
         $validator = Validator::make($input, [
+            'campusManagerId' => 'required',
             'name' => 'required', 
             'email' => 'require',
             'gender' => 'require',
@@ -43,12 +44,12 @@ class CampusManagerController extends Controller
             'memo' => 'require',
         ]);
         if($validator->fails()){
-            $arr = [
-                'success' => false,
-                'message' => 'Lỗi kiểm tra dữ liệu',
-                'data' => $validator->errors()
-            ];
-            return response() ->json($arr, 200);
+           $arr = [
+      'success' => false,
+      'message' => 'Lỗi kiểm tra dữ liệu',
+      'data' => $validator->errors()
+    ];
+    return response()->json($arr, 200);
         }
         $campusManager = CampusManager::create($input);
         $arr = [
@@ -77,9 +78,47 @@ class CampusManagerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, CampusManager $CampusManager)
     {
-        //
+        $input = $request->all();
+    $validator = Validator::make($input, [
+            // 'campusManagerId' => 'required',
+            'name' => 'required', 
+            // 'email' => 'require',
+            // 'gender' => 'require',
+            // 'dateOfBirth' => 'require',
+            // 'country' => 'require',
+            // 'timeZone' => 'require',
+            // 'startDate' => 'require',
+            // 'resignation' => 'require',
+            // 'campusId' => 'require',
+            // 'memo' => 'require',
+  ]);
+  if($validator->fails()){
+     $arr = [
+       'success' => false,
+       'message' => 'Lỗi kiểm tra dữ liệu',
+       'data' => $validator->errors()
+     ];
+     return response()->json($arr, 200);
+  }
+  $CampusManager->name = $input['name'];
+//   $CampusManager->email = $input['email'];
+//   $CampusManager->gender = $input['gender'];
+//   $CampusManager->dateOfBirth = $input['dateOfBirth'];
+//   $CampusManager->country = $input['country'];
+//   $CampusManager->timeZone = $input['timeZone'];
+//   $CampusManager->startDate = $input['startDate'];
+//   $CampusManager->resignation = $input['resignation'];
+//   $CampusManager->campusId = $input['campusId'];
+//   $CampusManager->memo = $input['memo'];
+  $CampusManager->save();
+  $arr = [
+     'status' => true,
+     'message' => 'Sản phẩm cập nhật thành công',
+     'data' => new CampusManagerResource($CampusManager)
+  ];
+  return response()->json($arr, 200);
     }
 
     /**

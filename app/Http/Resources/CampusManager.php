@@ -19,13 +19,15 @@ class CampusManager extends JsonResource
         'name' => $this->name,
         'email'=>$this->email,
         'gender'=>$this->gender,
-        'dateOfBirth'=>$this->dateOfBirth->format('d/m/Y'),
+        'dateOfBirth'=>$this->dateOfBirth,
         'country'=>$this->country,
         'timeZone'=>$this->timeZone,
         'startDate'=>$this->startDate,
         'resignation'=>$this->resignation,
         'campusId'=>$this->campusId,
         'memo'=>$this->memo,
+        'created_at' => $this->created_at->format('d/m/Y'),
+        'updated_at' => $this->updated_at->format('d/m/Y'),
         ];
     }
 }
