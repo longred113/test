@@ -21,8 +21,6 @@ class CreateMatchActivitiesTable extends Migration
             $table->integer('time')->nullable();
             $table->string('unitId')->nullable();
             $table->timestamps();
-            $table->foreign('productId')->references('productId')->on('products')->onDelete('cascade');
-            $table->foreign('unitId')->references('unitId')->on('units')->onDelete('cascade');
         });
     }
 

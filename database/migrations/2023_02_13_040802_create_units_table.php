@@ -19,9 +19,8 @@ class CreateUnitsTable extends Migration
             $table->string('productId')->nullable();
             $table->string('name')->nullable();
             $table->date('startDate')->nullable();
-            $table->date('startDate')->nullable();
+            $table->date('endDate')->nullable();
             $table->timestamps();
-            $table->foreign('productId')->references('productId')->on('products')->onDelete('cascade');
         });
     }
 

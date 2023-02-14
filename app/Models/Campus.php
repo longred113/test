@@ -15,4 +15,5 @@ class Campus extends Model
         'contact',
         'activate',
     ];
+    protected $primaryKey = 'campusId';
 }

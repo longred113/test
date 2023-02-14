@@ -24,7 +24,17 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::resource('admin', AdminController::class);
-Route::resource('campus', CampusController::class);
+
+Route::prefix('dash-board-admin/campus-management')
+    ->name('dash-board-admin/campus-management.')
+    ->group(function() {
+        Route::get('/', [CampusController::class, 'index'])->name('index');
+        Route::post('/', [CampusController::class, 'store'])->name('store');
+        Route::get('/{campus}', [CampusController::class, 'show'])->name('show');
+        Route::put( '/{campusId}', [CampusController::class, 'update'])->name('update');
+        Route::delete('/campus', [CampusController::class, 'destroy'])->name('destroy');
+    });
+
 Route::resource('campus-manger', CampusManagerController::class);
 Route::resource('parent', ParentController::class);
 Route::resource('student', StudentController::class);

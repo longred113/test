@@ -22,7 +22,6 @@ class CreateEnrollmentTable extends Migration
             $table->string('subject')->nullable();
             $table->string('status')->nullable();
             $table->timestamps();
-            $table->foreign('studentId')->references('studentId')->on('students')->onDelete('cascade');
         });
     }
 

@@ -20,8 +20,6 @@ class CreateParentsTable extends Migration
             $table->string('phone')->nullable();
             $table->string('studentIds')->nullable();
             $table->timestamps();
-            $table->foreign('userId')->references('userId')->on('users')->onDelete('cascade');
-            $table->foreign('studentId')->references('studentId')->on('students')->onDelete('cascade');
         });
     }
 

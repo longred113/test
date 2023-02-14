@@ -24,14 +24,10 @@ class CreateCampusManagerTable extends Migration
             $table->string('startDate')->nullable();
             $table->boolean('resignation')->nullable();
             $table->string('campusId')->nullable();
-            $table->string('memo');
-            $table->string('offlineStudentId');
-            $table->string('offlineTeacherId');
+            $table->string('memo')->nullable();
+            $table->string('offlineStudentId')->nullable();
+            $table->string('offlineTeacherId')->nullable();
             $table->timestamps();
-            $table->foreign('campusManagerId')->references('userId')->on('users')->onDelete('cascade');
-            $table->foreign('campusId')->references('campusId')->on('campuses')->onDelete('cascade');
-            $table->foreign('offlineStudentId')->references('studentId')->on('students')->onDelete('cascade');
-            $table->foreign('offlineTeacherId')->references('teacherId')->on('teachers')->onDelete('cascade');
         });
     }
 
