@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CampusResource;
 use App\Models\Campus;
 use GrahamCampbell\ResultType\Success;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ class CampusController extends Controller
      */
     public function index()
     {
-        $campusesData = Campus::all();
+        $campusesData = CampusResource::collection(Campus::all());
         return $campusesData;
     }
 
@@ -29,7 +30,6 @@ class CampusController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
         $validator = validator::make($request->all(), [
             'campusId' => 'required|unique:campuses',
             'name' => 'required',
@@ -47,7 +47,7 @@ class CampusController extends Controller
             'contact' => request('contact'),
             'activate' => request('activate')
         ];
-        $newCampus = Campus::create($params);
+        $newCampus = new CampusResource(Campus::create($params));
         return $newCampus;
     }
 
@@ -57,11 +57,11 @@ class CampusController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Campus $campus)
+    public function show($campusId)
     {
-        $campusId = Campus::get('campusId');
-        // $data
-        return $campus;
+        $campus = Campus::find($campusId);
+        $campusesData = new CampusResource($campus);
+        return $campusesData;
     }
 
     /**
@@ -73,6 +73,19 @@ class CampusController extends Controller
      */
     public function update(Request $request, $campusId)
     {
+        $campus = Campus::find($campusId);
+        if(empty($request->name)) {
+            $request['name'] = $campus['name'];
+        }
+        if(empty($request->name)) {
+            $request['name'] = $campus['name'];
+        }
+        if(empty($request->name)) {
+            $request['name'] = $campus['name'];
+        }
+        if(empty($request->name)) {
+            $request['name'] = $campus['name'];
+        }
         $validator = validator::make($request->all(), [
             'name' => 'required',
             'indicated' => 'required',
@@ -82,29 +95,11 @@ class CampusController extends Controller
         if ($validator->fails()) {
             return $validator->errors();
         }
-        $nameCampus = $request['name'];
-        $indicated = $request['indicated'];
-        $contact = $request['contact'];
-        $activate = $request['activate'];
-
-        $campus = Campus::find($campusId);
-        if(empty ($nameCampus)) {
-            $nameCampus = $campus['name'];
-        }
-        if(empty($indicated)) {
-            $indicated = $campus['indicated'];
-        }
-        if(empty($contact)) {
-            $contact = $campus['contact'];
-        }
-        if(empty($activate)) {
-            $activate = $campus['activate'];
-        }
         $params = [
-            $campus['name'] = $nameCampus,
-            $campus['indicated'] = $indicated,
-            $campus['contact'] = $contact,
-            $campus['activate'] = $activate,
+            $campus['name'] = $request['name'],
+            $campus['indicated'] = $request['indicated'],
+            $campus['contact'] = $request['contact'],
+            $campus['activate'] = $request['activate'],
         ];
         $newInfoCampus = $campus->update($params);
         return $this->successRequest($newInfoCampus);
@@ -116,8 +111,9 @@ class CampusController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Campus $campus)
+    public function destroy($campusId)
     {
+        $campus = Campus::find($campusId);
         $deleteCampus = $campus->delete();
         return $this->successRequest($deleteCampus);
     }

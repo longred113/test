@@ -29,10 +29,10 @@ Route::prefix('dash-board-admin/campus-management')
     ->name('dash-board-admin/campus-management.')
     ->group(function() {
         Route::get('/', [CampusController::class, 'index'])->name('index');
-        Route::post('/', [CampusController::class, 'store'])->name('store');
-        Route::get('/{campus}', [CampusController::class, 'show'])->name('show');
-        Route::put( '/{campusId}', [CampusController::class, 'update'])->name('update');
-        Route::delete('/campus', [CampusController::class, 'destroy'])->name('destroy');
+        Route::post('/create', [CampusController::class, 'store'])->name('store');
+        Route::get('/{campusId}', [CampusController::class, 'show'])->name('show');
+        Route::put( '/update/{campusId}', [CampusController::class, 'update'])->name('update');
+        Route::delete('/{campusId}', [CampusController::class, 'destroy'])->name('destroy');
     });
 
 Route::resource('campus-manger', CampusManagerController::class);
