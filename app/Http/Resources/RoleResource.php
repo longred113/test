@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class Admin extends JsonResource
+class RoleResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,10 +15,9 @@ class Admin extends JsonResource
     public function toArray($request)
     {
         return [
-            'adminId' => $this->adminId,
+            'roleId' => $this->roleId,
             'name' => $this->name,
-            'email' => $this->email,
-            'password' => $this->password,
+            'activate' => $this->activate,
         ];
     }
 }

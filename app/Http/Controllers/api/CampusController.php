@@ -35,7 +35,7 @@ class CampusController extends Controller
             'name' => 'required',
             'indicated' => 'required',
             'contact' => 'required',
-            'activate' => 'required'
+            'activate' => 'required',
         ]);
         if ($validator->fails()) {
             return $validator->errors();
@@ -45,7 +45,7 @@ class CampusController extends Controller
             'name' => request('name'),
             'indicated' => request('indicated'),
             'contact' => request('contact'),
-            'activate' => request('activate')
+            'activate' => request('activate'),
         ];
         $newCampus = new CampusResource(Campus::create($params));
         return $newCampus;
@@ -77,14 +77,14 @@ class CampusController extends Controller
         if(empty($request->name)) {
             $request['name'] = $campus['name'];
         }
-        if(empty($request->name)) {
-            $request['name'] = $campus['name'];
+        if(empty($request->indicated)) {
+            $request['indicated'] = $campus['indicated'];
+        }
+        if(empty($request->contact)) {
+            $request['contact'] = $campus['contact'];
         }
         if(empty($request->name)) {
-            $request['name'] = $campus['name'];
-        }
-        if(empty($request->name)) {
-            $request['name'] = $campus['name'];
+            $request['activate'] = $campus['activate'];
         }
         $validator = validator::make($request->all(), [
             'name' => 'required',

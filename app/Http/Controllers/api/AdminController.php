@@ -83,7 +83,7 @@ class AdminController extends Controller
         $params = [
             $admin['name'] = $request['name'],
             $admin['email'] = $request['email'],
-            $admin['password'] = $request['password'],
+            $admin['password'] = Hash::make($request['password']),
         ];
         $newInfoAdmin = $admin->update($params);
         return $newInfoAdmin;

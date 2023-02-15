@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\RoleResource;
 use App\Models\Roles;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class RoleController extends Controller
 {
@@ -15,7 +17,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $data = Roles::all();
+        $data = RoleResource::collection(Roles::all());
         return $data;
     }
 
@@ -27,8 +29,20 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        $roleData = $request->all();
-        $newRole = Roles::create($roleData);
+        $validator = validator::make($request->all(), [
+            'roleId' => 'required|unique:campuses',
+            'name' => 'required',
+            'activate' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+        $params = [
+            'roleId' => request('roleId'),
+            'name' => request('name'),
+            'activate' => request('activate'),
+        ];
+        $newRole = new RoleResource(Roles::create($params));
         return $newRole;
     }
 
@@ -38,9 +52,11 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($roleId)
     {
-        //
+        $role = Roles::find($roleId);
+        $roleData = new RoleResource($role);
+        return $roleData;
     }
 
     /**
@@ -50,9 +66,30 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $roleId)
     {
-        //
+        $role = Roles::find($roleId);
+        if(empty($request->name)) {
+            $request['name'] = $role['name'];
+        }
+        if(empty($request->activate)) {
+            $request['activate'] = $role['activate'];
+        }
+
+        $validator = validator::make($request->all(), [
+            'name' => 'required',
+            'activate' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+
+        $params = [
+            $role['name'] = $request['name'],
+            $role['activate'] = $request['activate'],
+        ];
+        $newInfoRole = new RoleResource($role->update($params));
+        return $newInfoRole;
     }
 
     /**
@@ -63,6 +100,6 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        
     }
 }

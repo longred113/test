@@ -19,9 +19,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 Route::prefix('dash-board-admin')
     ->name('dash-board-admin.')
@@ -29,12 +29,12 @@ Route::prefix('dash-board-admin')
         Route::get('/', [AdminController::class, 'index'])->name('index');
         Route::post('/create', [AdminController::class, 'store'])->name('store');
         Route::get('/{adminId}', [AdminController::class, 'show'])->name('show');
-        Route::get('/update{adminId}', [AdminController::class, 'update'])->name('update');
-        Route::get('/{adminId}', [AdminController::class, 'destroy'])->name('destroy');
+        Route::put('/update/{adminId}', [AdminController::class, 'update'])->name('update');
+        Route::delete('/{adminId}', [AdminController::class, 'destroy'])->name('destroy');
     });
 
-Route::prefix('dash-board-admin/campus-management')
-    ->name('dash-board-admin/campus-management.')
+Route::prefix('campus-management')
+    ->name('campus-management.')
     ->group(function() {
         Route::get('/', [CampusController::class, 'index'])->name('index');
         Route::post('/create', [CampusController::class, 'store'])->name('store');
@@ -47,5 +47,15 @@ Route::resource('campus-manger', CampusManagerController::class);
 Route::resource('parent', ParentController::class);
 Route::resource('student', StudentController::class);
 Route::resource('teacher', TeacherController::class);
-Route::resource('roles', RoleController::class);
+
+Route::prefix('roles')
+    ->name('roles.')
+    ->group(function() {
+        Route::get('/', [RoleController::class, 'index'])->name('index');
+        Route::post('/create', [RoleController::class, 'store'])->name('store');
+        Route::get('/{roleId}', [RoleController::class, 'show'])->name('show');
+        Route::put( '/update/{roleId}', [RoleController::class, 'update'])->name('update');
+        Route::delete('/{roleId}', [RoleController::class, 'destroy'])->name('destroy');
+    });
+
 Route::resource('users', UserController::class);
