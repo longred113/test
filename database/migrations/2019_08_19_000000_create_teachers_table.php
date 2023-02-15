@@ -32,8 +32,6 @@ class CreateTeachersTable extends Migration
             $table->string('campusId')->nullable();
             $table->string('type')->nullable();
             $table->string('talkSamId')->nullable();
-            $table->string('studentId')->nullable();
-            $table->string('classId')->nullable();
             $table->timestamps();
         });
     }
