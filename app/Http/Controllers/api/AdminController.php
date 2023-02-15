@@ -19,7 +19,7 @@ class AdminController extends Controller
     public function index()
     {
         $adminsData = AdminResource::collection(Admin::all());
-        return $adminsData;
+        return $this->successAdminRequest($adminsData);
     }
 
     /**
@@ -31,14 +31,15 @@ class AdminController extends Controller
     public function store(Request $request)
     {
         $validator = validator::make($request->all(), [
-            'adminId' => 'required|unique:admins',
-            'name' => 'required',
-            'email' => 'required',
-            'password' => 'required',
+            'adminId' => 'required|string|unique:admins',
+            'name' => 'required|string',
+            'email' => 'required|string|unique:admins',
+            'password' => 'required|string|min:8',
         ]);
         if ($validator->fails()) {
             return $validator->errors();
         }
+
         $params = [
             'adminId' => request('adminId'),
             'name' => request('name'),
@@ -46,7 +47,7 @@ class AdminController extends Controller
             'password' => Hash::make(request('password')),
         ];
         $newAdmin = new AdminResource(Admin::create($params));
-        return $newAdmin;
+        return $this->successAdminRequest($newAdmin);
     }
 
     /**
@@ -59,7 +60,7 @@ class AdminController extends Controller
     {
         $admin = Admin::find($adminId);
         $adminData = new AdminResource($admin);
-        return $adminData;
+        return $this->successAdminRequest($adminData);
     }
 
     /**
@@ -72,21 +73,32 @@ class AdminController extends Controller
     public function update(Request $request, $adminId)
     {
         $admin = Admin::find($adminId);
+        if(empty($request->name)) {
+            $request['name'] = $admin['name'];
+        }
+        if(empty($request->activate)) {
+            $request['email'] = $admin['email'];
+        }
+        if(empty($request->activate)) {
+            $request['password'] = $admin['password'];
+        }
+
         $validator = validator::make($request->all(), [
-            'name' => 'required',
+            'name' => 'required|string',
             'email' => 'required|string|unique:admins',
             'password' => 'required|string|min:8',
         ]);
         if ($validator->fails()) {
             return $validator->errors();
         }
+        
         $params = [
             $admin['name'] = $request['name'],
             $admin['email'] = $request['email'],
-            $admin['password'] = $request['password'],
+            $admin['password'] = Hash::make($request['password']),
         ];
         $newInfoAdmin = $admin->update($params);
-        return $newInfoAdmin;
+        return $this->successAdminRequest($newInfoAdmin);
     }
 
     /**
@@ -99,6 +111,6 @@ class AdminController extends Controller
     {
         $admin = Admin::find($adminId);
         $deleteAdmin = $admin->delete();
-        return $this->successRequest($deleteAdmin);
+        return $this->successAdminRequest($deleteAdmin);
     }
 }

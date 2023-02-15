@@ -11,20 +11,27 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    protected function successRequest($newInfoCampusManager = array())
+    protected function successCampusRequest($data = array())
     {
-        // $response = array(
-        //     'error_code' => 0,
-        //     'message' => ['Successfully'],
-        //     'data' => $newInfoCampus,
-        //     );
-       
         return response()->json([
             'error_code' => 0,
             'message' => ['Successfully'],
-            'data CM' => $newInfoCampusManager,
+            'campusData' => $data,
         ],200);
-
+    }
+    protected function successRoleRequest($data = array()) {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'roleData' => $data,
+        ],200);
+    }
+    protected function successAdminRequest($data = array()) {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'adminData' => $data,
+        ],200);
     }
     protected function studentRequest($newInfostudent = array())
     {
