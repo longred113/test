@@ -6,6 +6,7 @@ use App\Http\Controllers\api\CampusController;
 use App\Http\Controllers\api\RoleController;
 use App\Http\Controllers\api\TeacherController;
 use App\Http\Controllers\api\UserController;
+use App\Http\Controllers\api\PackagesController;
 use App\Models\Teachers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -79,4 +80,14 @@ Route::prefix('admin-teacher-management')
         Route::get('/{teacherId}', [TeacherController::class, 'show'])->name('show');
         Route::put('/update/{teacherId}', [TeacherController::class, 'update'])->name('update');
         Route::delete('/{teacherId}', [TeacherController::class], 'destroy')->name('destroy');
+    });
+
+Route::prefix('packages')
+    ->name('packages.')
+    ->group(function() {
+        Route::get('/', [PackagesController::class, 'index'])->name('index');
+        Route::post('/create', [PackagesController::class, 'store'])->name('store');
+        Route::get('/{packageId}', [PackagesController::class, 'show'])->name('show');
+        Route::put( '/update/{packageId}', [PackagesController::class, 'update'])->name('update');
+        Route::delete('/{packageId}', [PackagesController::class, 'destroy'])->name('destroy');
     });

@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Packages extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'packageId';
+    protected $keyType = 'string';
+    public $incrementing = false;
     protected $fillable = [
         'packageId',
         'name',
