@@ -29,12 +29,12 @@ Route::prefix('dash-board-admin')
         Route::get('/', [AdminController::class, 'index'])->name('index');
         Route::post('/create', [AdminController::class, 'store'])->name('store');
         Route::get('/{adminId}', [AdminController::class, 'show'])->name('show');
-        Route::get('/update{adminId}', [AdminController::class, 'update'])->name('update');
-        Route::get('/{adminId}', [AdminController::class, 'destroy'])->name('destroy');
+        Route::put('/update{adminId}', [AdminController::class, 'update'])->name('update');
+        Route::delete('/{adminId}', [AdminController::class, 'destroy'])->name('destroy');
     });
 
-Route::prefix('dash-board-admin/campus-management')
-    ->name('dash-board-admin/campus-management.')
+Route::prefix('campus-management')
+    ->name('campus-management.')
     ->group(function() {
         Route::get('/', [CampusController::class, 'index'])->name('index');
         Route::post('/create', [CampusController::class, 'store'])->name('store');
@@ -44,7 +44,7 @@ Route::prefix('dash-board-admin/campus-management')
     });
 
 Route::prefix('campus-manger')
-    ->name('campus-manger')
+    ->name('campus-manger.')
     ->group(function() {
         Route::get('/', [CampusManagerController::class, 'index'])->name('index');
         Route::post('/create', [CampusManagerController::class, 'store'])->name('store');

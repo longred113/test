@@ -26,6 +26,8 @@ class CampusManager extends JsonResource
         'resignation'=>$this->resignation,
         'campusId'=>$this->campusId,
         'memo'=>$this->memo,
+        'offlineStudentId'=>$this->offlineStudentId,
+        'offlineTeacherId'=>$this->offlineTeacherId,
         // 'created_at' => $this->created_at->format('d/m/Y'),
         // 'updated_at' => $this->updated_at->format('d/m/Y'),
         ];

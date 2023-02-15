@@ -29,7 +29,41 @@ class CampusManagerController extends Controller
      */
     public function store(Request $request)
     {
-        
+        $validator = validator::make($request->all(), [
+            'campusManagerId' => 'required|unique:campus_managers',
+            'name' => 'required',
+            'email' => 'required',
+            'gender' => 'required',
+            'dateOfBirth' => 'required',
+            'country' => 'required',
+            'timeZone' => 'required',
+            'startDate' => 'required',
+            'resignation' => 'required',
+            'campusId' => 'required',
+            'memo' => 'required',
+            'offlineStudentId' => 'required',
+            'offlineTeacherId' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+        $params = [
+            'campusManagerId' => request('campusManagerId'),
+            'name' => request('name'),
+            'email' => request('email'),
+            'gender' => request('gender'),
+            'dateOfBirth' => request('dateOfBirth'),
+            'country' => request('country'),
+            'timeZone' => request('timeZone'),
+            'startDate' => request('startDate'),
+            'resignation' => request('resignation'),
+            'campusId' => request('campusId'),
+            'memo' => request('memo'),
+            'offlineStudentId' => request('offlineStudentId'),
+            'offlineTeacherId' => request('offlineTeacherId')
+        ];
+        $newCampusManager = new CampusManagerResource(CampusManager::create($params));
+        return $newCampusManager;
     }
 
     /**
