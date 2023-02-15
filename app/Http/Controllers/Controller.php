@@ -11,50 +11,50 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    protected function successCampusRequest($data = array())
+    protected function successCampusRequest($campusData = array())
     {
         return response()->json([
             'error_code' => 0,
             'message' => ['Successfully'],
-            'campusData' => $data,
+            'campusData' => $campusData,
         ],200);
     }
-    protected function successRoleRequest($data = array()) {
+    protected function successRoleRequest($roleData = array()) {
         return response()->json([
             'error_code' => 0,
             'message' => ['Successfully'],
-            'roleData' => $data,
+            'roleData' => $roleData,
         ],200);
     }
-    protected function successAdminRequest($data = array()) {
+    protected function successAdminRequest($adminData = array()) {
         return response()->json([
             'error_code' => 0,
             'message' => ['Successfully'],
-            'adminData' => $data,
+            'adminData' => $adminData,
         ],200);
     }
-    protected function studentRequest($newInfostudent = array())
+    protected function successStudentRequest($studentData = array())
     {
         return response()->json([
             'error_code' => 0,
             'message' => ['Successfully'],
-            'data student' => $newInfostudent,
+            'studentData' => $studentData,
         ],200);
     }
-    protected function teacherRequest($newInfoteacher = array())
+    protected function successTeacherRequest($teacherData = array())
     {
         return response()->json([
             'error_code' => 0,
             'message' => ['Successfully'],
-            'data teacher' => $newInfoteacher,
+            'teacherData' => $teacherData,
         ],200);
     }
-    protected function userRequest($newInfoUser = array())
+    protected function successUserRequest($userData = array())
     {
         return response()->json([
             'error_code' => 0,
             'message' => ['Successfully'],
-            'data user' => $newInfoUser,
+            'userData' => $userData,
         ],200);
     }
 }

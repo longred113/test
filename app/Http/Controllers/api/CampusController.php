@@ -84,7 +84,7 @@ class CampusController extends Controller
         if(empty($request->contact)) {
             $request['contact'] = $campus['contact'];
         }
-        if(empty($request->name)) {
+        if(empty($request->activate)) {
             $request['activate'] = $campus['activate'];
         }
 
