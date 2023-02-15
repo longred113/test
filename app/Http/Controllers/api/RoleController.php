@@ -17,8 +17,8 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $data = RoleResource::collection(Roles::all());
-        return $data;
+        $data = Roles::all();
+        return $this->successRoleRequest($data);
     }
 
     /**
@@ -30,20 +30,21 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         $validator = validator::make($request->all(), [
-            'roleId' => 'required|unique:campuses',
-            'name' => 'required',
+            'roleId' => 'required|string|unique:roles',
+            'name' => 'required|string',
             'activate' => 'required',
         ]);
         if ($validator->fails()) {
             return $validator->errors();
         }
+        
         $params = [
             'roleId' => request('roleId'),
             'name' => request('name'),
             'activate' => request('activate'),
         ];
         $newRole = new RoleResource(Roles::create($params));
-        return $newRole;
+        return $this->successRoleRequest($newRole);
     }
 
     /**
@@ -56,7 +57,7 @@ class RoleController extends Controller
     {
         $role = Roles::find($roleId);
         $roleData = new RoleResource($role);
-        return $roleData;
+        return $this->successRoleRequest($roleData);
     }
 
     /**
@@ -89,7 +90,7 @@ class RoleController extends Controller
             $role['activate'] = $request['activate'],
         ];
         $newInfoRole = new RoleResource($role->update($params));
-        return $newInfoRole;
+        return $this->successRoleRequest($newInfoRole);
     }
 
     /**
@@ -98,8 +99,10 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($roleId)
     {
-        
+        $role = Roles::find($roleId);
+        $deleteRole = $role->delete();
+        return $this->successRoleRequest($deleteRole);
     }
 }

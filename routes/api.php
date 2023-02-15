@@ -33,8 +33,8 @@ Route::prefix('dash-board-admin')
         Route::delete('/{adminId}', [AdminController::class, 'destroy'])->name('destroy');
     });
 
-Route::prefix('campus-management')
-    ->name('campus-management.')
+Route::prefix('admin-campus-management')
+    ->name('admin-campus-management.')
     ->group(function() {
         Route::get('/', [CampusController::class, 'index'])->name('index');
         Route::post('/create', [CampusController::class, 'store'])->name('store');
@@ -48,8 +48,8 @@ Route::resource('parent', ParentController::class);
 Route::resource('student', StudentController::class);
 Route::resource('teacher', TeacherController::class);
 
-Route::prefix('roles')
-    ->name('roles.')
+Route::prefix('admin-role-management')
+    ->name('admin-role-management.')
     ->group(function() {
         Route::get('/', [RoleController::class, 'index'])->name('index');
         Route::post('/create', [RoleController::class, 'store'])->name('store');

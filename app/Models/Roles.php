@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Roles extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'roleId';
+    protected $keyType = 'string';
+    public $incrementing = false;
     protected $fillable = [
         'roleId',
         'name',
