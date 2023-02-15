@@ -11,6 +11,14 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    protected function successRequest($data = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'CM_Data' => $data,
+        ],200);
+    }
     protected function successCampusRequest($data = array())
     {
         return response()->json([
@@ -55,6 +63,14 @@ class Controller extends BaseController
             'error_code' => 0,
             'message' => ['Successfully'],
             'data user' => $newInfoUser,
+        ],200);
+    }
+     protected function PackagesRequest($Packages = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'data Packages' => $Packages,
         ],200);
     }
 }
