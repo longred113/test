@@ -17,7 +17,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $data = Roles::all();
+        $data = RoleResource::collection(Roles::all());
         return $this->successRoleRequest($data);
     }
 
@@ -37,7 +37,7 @@ class RoleController extends Controller
         if ($validator->fails()) {
             return $validator->errors();
         }
-        
+
         $params = [
             'roleId' => request('roleId'),
             'name' => request('name'),
@@ -89,7 +89,7 @@ class RoleController extends Controller
             $role['name'] = $request['name'],
             $role['activate'] = $request['activate'],
         ];
-        $newInfoRole = new RoleResource($role->update($params));
+        $newInfoRole = $role->update($params);
         return $this->successRoleRequest($newInfoRole);
     }
 
