@@ -11,7 +11,7 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    protected function successRequest($newInfoCampus = array())
+    protected function successRequest($newInfoCampusManager = array())
     {
         // $response = array(
         //     'error_code' => 0,
@@ -22,8 +22,32 @@ class Controller extends BaseController
         return response()->json([
             'error_code' => 0,
             'message' => ['Successfully'],
-            'data' => $newInfoCampus,
+            'data CM' => $newInfoCampusManager,
         ],200);
 
+    }
+    protected function studentRequest($newInfostudent = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'data student' => $newInfostudent,
+        ],200);
+    }
+    protected function teacherRequest($newInfoteacher = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'data teacher' => $newInfoteacher,
+        ],200);
+    }
+    protected function userRequest($newInfoUser = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'data user' => $newInfoUser,
+        ],200);
     }
 }

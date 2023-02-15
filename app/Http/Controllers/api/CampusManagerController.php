@@ -17,8 +17,8 @@ class CampusManagerController extends Controller
      */
     public function index()
     {
-        $data = CampusManager::all();
-        return $data;
+        $data = CampusManagerResource::collection(CampusManager::all());
+        return $this->successRequest($data);
     }
 
     /**
@@ -32,17 +32,17 @@ class CampusManagerController extends Controller
         $validator = validator::make($request->all(), [
             'campusManagerId' => 'required|unique:campus_managers',
             'name' => 'required',
-            'email' => 'required',
-            'gender' => 'required',
-            'dateOfBirth' => 'required',
-            'country' => 'required',
-            'timeZone' => 'required',
-            'startDate' => 'required',
-            'resignation' => 'required',
-            'campusId' => 'required',
-            'memo' => 'required',
-            'offlineStudentId' => 'required',
-            'offlineTeacherId' => 'required'
+            // 'email' => 'required',
+            // 'gender' => 'required',
+            // 'dateOfBirth' => 'required',
+            // 'country' => 'required',
+            // 'timeZone' => 'required',
+            // 'startDate' => 'required',
+            // 'resignation' => 'required',
+            // 'campusId' => 'required',
+            // 'memo' => 'required',
+            // 'offlineStudentId' => 'required',
+            // 'offlineTeacherId' => 'required'
         ]);
         if ($validator->fails()) {
             return $validator->errors();
@@ -72,9 +72,11 @@ class CampusManagerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($campusManagerId)
     {
-        //
+        $CampusManager = CampusManager::find($campusManagerId);
+        $CampusManagerData = new CampusManagerResource($CampusManager);
+        return $this->successRequest($CampusManagerData);
     }
 
     /**
@@ -84,9 +86,78 @@ class CampusManagerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CampusManager $CampusManager)
+    public function update(Request $request, $campusManagerId)
     {
-
+        $campusManager = CampusManager::find($campusManagerId);
+        if(empty($request->name)) {
+            $request['name'] = $campusManager['name'];
+        }
+        // if(empty($request->email)) {
+        //     $request['email'] = $campusManager['email'];
+        // }
+        // if(empty($request->gender)) {
+        //     $request['gender'] = $campusManager['gender'];
+        // }
+        // if(empty($request->dateOfBirth)) {
+        //     $request['dateOfBirth'] = $campusManager['dateOfBirth'];
+        // }
+        // if(empty($request->country)) {
+        //     $request['country'] = $campusManager['country'];
+        // }
+        // if(empty($request->timeZone)) {
+        //     $request['timeZone'] = $campusManager['timeZone'];
+        // }
+        // if(empty($request->startDate)) {
+        //     $request['startDate'] = $campusManager['startDate'];
+        // }
+        // if(empty($request->resignation)) {
+        //     $request['resignation'] = $campusManager['resignation'];
+        // }
+        //  if(empty($request->campusId)) {
+        //     $request['campusId'] = $campusManager['campusId'];
+        // }
+        // if(empty($request->memo)) {
+        //     $request['memo'] = $campusManager['memo'];
+        // }
+        // if(empty($request->offlineStudentId)) {
+        //     $request['offlineStudentId'] = $campusManager['offlineStudentId'];
+        // }
+        // if(empty($request->offlineTeacherId)) {
+        //     $request['offlineTeacherId'] = $campusManager['offlineTeacherId'];
+        // }
+        $validator = validator::make($request->all(), [
+            'name' => 'required',
+            // 'email' => 'required',
+            // 'gender' => 'required',
+            // 'dateOfBirth' => 'required',
+            // 'country' => 'required',
+            // 'timeZone' => 'required',
+            // 'startDate' => 'required',
+            // 'resignation' => 'required',
+            // 'campusId' => 'required',
+            // 'memo' => 'required',
+            // 'offlineStudentId' => 'required',
+            // 'offlineTeacherId' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+        $params = [
+            $campusManager['name'] = $request['name'],
+            $campusManager['email'] = $request['email'],
+            $campusManager['gender'] = $request['gender'],
+            $campusManager['dateOfBirth'] = $request['dateOfBirth'],
+            $campusManager['country'] = $request['country'],
+            $campusManager['timeZone'] = $request['timeZone'],
+            $campusManager['startDate'] = $request['startDate'],
+            $campusManager['resignation'] = $request['resignation'],
+            $campusManager['campusId'] = $request['campusId'],
+            $campusManager['memo'] = $request['memo'],
+            $campusManager['offlineStudentId'] = $request['offlineStudentId'],
+            $campusManager['offlineTeacherId'] = $request['offlineTeacherId'],
+        ];
+        $newInfoCampusManager = $campusManager->update($params);
+        return $this->successRequest($newInfoCampusManager);
     }
 
     /**
@@ -95,8 +166,10 @@ class CampusManagerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($campusManagerId)
     {
-        //
+        $campusManager = CampusManager::find($campusManagerId);
+        $deleteCampusManager = $campusManager->delete();
+        return $this->successRequest($deleteCampusManager);
     }
 }

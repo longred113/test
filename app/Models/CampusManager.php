@@ -19,7 +19,9 @@ class CampusManager extends Model
         'startDate',
         'resignation',
         'campusId',
-        'memo'
+        'memo',
+        'offlineStudentId',
+        'offlineTeacherId',
     ];
     protected $primaryKey = 'campusManagerId';
 }
