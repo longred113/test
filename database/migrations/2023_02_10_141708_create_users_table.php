@@ -19,6 +19,10 @@ class CreateUsersTable extends Migration
             $table->string('email')->nullable();
             $table->string('password')->nullable();
             $table->string('roleId')->nullable();
+            $table->string('teacherId')->nullable();
+            $table->string('studentId')->nullable();
+            $table->string('parentId')->nullable();
+            $table->string('CampusManagerId')->nullable();
             $table->timestamps();
         });
     }

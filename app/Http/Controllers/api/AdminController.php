@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\AdminResource;
 use App\Models\Admin;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -16,7 +18,7 @@ class AdminController extends Controller
      */
     public function index()
     {
-        $adminsData = Admin::all();
+        $adminsData = AdminResource::collection(Admin::all());
         return $adminsData;
     }
 
@@ -28,8 +30,22 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
-        $adminData = $request->all();
-        $newAdmin = Admin::create($adminData);
+        $validator = validator::make($request->all(), [
+            'adminId' => 'required|unique:admins',
+            'name' => 'required',
+            'email' => 'required',
+            'password' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+        $params = [
+            'adminId' => request('adminId'),
+            'name' => request('name'),
+            'email' => request('email'),
+            'password' => Hash::make(request('password')),
+        ];
+        $newAdmin = new AdminResource(Admin::create($params));
         return $newAdmin;
     }
 
@@ -39,9 +55,11 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($adminId)
     {
-        //
+        $admin = Admin::find($adminId);
+        $adminData = new AdminResource($admin);
+        return $adminData;
     }
 
     /**
@@ -51,9 +69,24 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $adminId)
     {
-        //
+        $admin = Admin::find($adminId);
+        $validator = validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required|string|unique:admins',
+            'password' => 'required|string|min:8',
+        ]);
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+        $params = [
+            $admin['name'] = $request['name'],
+            $admin['email'] = $request['email'],
+            $admin['password'] = $request['password'],
+        ];
+        $newInfoAdmin = $admin->update($params);
+        return $newInfoAdmin;
     }
 
     /**
@@ -62,8 +95,10 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($adminId)
     {
-        //
+        $admin = Admin::find($adminId);
+        $deleteAdmin = $admin->delete();
+        return $this->successRequest($deleteAdmin);
     }
 }

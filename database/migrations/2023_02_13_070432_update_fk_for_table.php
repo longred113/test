@@ -15,27 +15,25 @@ class UpdateFkForTable extends Migration
     {
         Schema::table('parents', function (Blueprint $table) {
             $table->foreign('studentIds')->references('studentId')->on('students')->onDelete('cascade');
-            $table->foreign('parentId')->references('userId')->on('users')->onDelete('cascade');
         });
         Schema::table('students', function (Blueprint $table) {
-            $table->foreign('studentId')->references('userId')->on('users')->onDelete('cascade');
             $table->foreign('campusId')->references('campusId')->on('campuses')->onDelete('cascade');
             $table->foreign('classId')->references('classId')->on('classes')->onDelete('cascade');
         });
         Schema::table('campus_managers', function (Blueprint $table) {
-            $table->foreign('campusManagerId')->references('userId')->on('users')->onDelete('cascade');
             $table->foreign('campusId')->references('campusId')->on('campuses')->onDelete('cascade');
             $table->foreign('offlineStudentId')->references('studentId')->on('students')->onDelete('cascade');
             $table->foreign('offlineTeacherId')->references('teacherId')->on('teachers')->onDelete('cascade');
         });
         Schema::table('teachers', function (Blueprint $table) {
-            $table->foreign('teacherId')->references('userId')->on('users')->onDelete('cascade');
             $table->foreign('campusId')->references('campusId')->on('campuses')->onDelete('cascade');
-            $table->foreign('studentId')->references('studentId')->on('students')->onDelete('cascade');
-            $table->foreign('classId')->references('classId')->on('classes')->onDelete('cascade');
         });
         Schema::table('users', function (Blueprint $table) {
             $table->foreign('roleId')->references('roleId')->on('roles')->onDelete('cascade');
+            $table->foreign('parentId')->references('parentId')->on('parents')->onDelete('cascade');
+            $table->foreign('studentId')->references('studentId')->on('students')->onDelete('cascade');
+            $table->foreign('campusManagerId')->references('campusManagerId')->on('campus_managers')->onDelete('cascade');
+            $table->foreign('teacherId')->references('teacherId')->on('teachers')->onDelete('cascade');
         });
         Schema::table('enrollment', function (Blueprint $table) {
             $table->foreign('studentId')->references('studentId')->on('students')->onDelete('cascade');
