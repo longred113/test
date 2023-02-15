@@ -23,7 +23,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::resource('admin', AdminController::class);
+Route::prefix('dash-board-admin')
+    ->name('dash-board-admin.')
+    ->group(function() {
+        Route::get('/', [AdminController::class, 'index'])->name('index');
+        Route::post('/create', [AdminController::class, 'store'])->name('store');
+        Route::get('/{adminId}', [AdminController::class, 'show'])->name('show');
+        Route::get('/update{adminId}', [AdminController::class, 'update'])->name('update');
+        Route::get('/{adminId}', [AdminController::class, 'destroy'])->name('destroy');
+    });
 
 Route::prefix('dash-board-admin/campus-management')
     ->name('dash-board-admin/campus-management.')
