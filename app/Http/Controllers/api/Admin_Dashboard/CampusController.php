@@ -48,7 +48,7 @@ class CampusController extends Controller
             'contact' => request('contact'),
             'activate' => request('activate'),
         ];
-        $newCampus = Campus::create($params);
+        $newCampus = new CampusResource(Campus::create($params));
         return $this->successCampusRequest($newCampus);
     }
 
@@ -61,8 +61,8 @@ class CampusController extends Controller
     public function show($campusId)
     {
         $campus = Campus::find($campusId);
-        $campusesData = $campus;
-        return $this->successCampusRequest($campusesData);
+        $campusData = new CampusResource($campus);
+        return $this->successCampusRequest($campusData);
     }
 
     /**

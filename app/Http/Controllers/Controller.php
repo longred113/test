@@ -11,74 +11,58 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    protected function successRequest($data = array())
+    protected function successCampusRequest($campusData = array())
     {
         return response()->json([
             'error_code' => 0,
             'message' => ['Successfully'],
-            'CM_Data' => $data,
+            'campusData' => $campusData,
         ],200);
     }
-    protected function successCampusRequest($data = array())
+    protected function successRoleRequest($roleData = array()) {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'roleData' => $roleData,
+        ],200);
+    }
+    protected function successAdminRequest($adminData = array()) {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'adminData' => $adminData,
+        ],200);
+    }
+    protected function successStudentRequest($studentData = array())
     {
         return response()->json([
             'error_code' => 0,
             'message' => ['Successfully'],
-            'campusData' => $data,
+            'studentData' => $studentData,
         ],200);
     }
-    protected function successRoleRequest($data = array()) {
-        return response()->json([
-            'error_code' => 0,
-            'message' => ['Successfully'],
-            'roleData' => $data,
-        ],200);
-    }
-    protected function successAdminRequest($data = array()) {
-        return response()->json([
-            'error_code' => 0,
-            'message' => ['Successfully'],
-            'adminData' => $data,
-        ],200);
-    }
-    protected function studentRequest($newInfostudent = array())
+    protected function successTeacherRequest($teacherData = array())
     {
         return response()->json([
             'error_code' => 0,
             'message' => ['Successfully'],
-            'data student' => $newInfostudent,
+            'teacherData' => $teacherData,
         ],200);
     }
-    protected function teacherRequest($newInfoteacher = array())
+    protected function successUserRequest($userData = array())
     {
         return response()->json([
             'error_code' => 0,
             'message' => ['Successfully'],
-            'data teacher' => $newInfoteacher,
+            'userData' => $userData,
         ],200);
     }
-    protected function userRequest($newInfoUser = array())
-    {
-        return response()->json([
-            'error_code' => 0,
-            'message' => ['Successfully'],
-            'data user' => $newInfoUser,
-        ],200);
-    }
-     protected function PackagesRequest($Packages = array())
-    {
-        return response()->json([
-            'error_code' => 0,
-            'message' => ['Successfully'],
-            'data Packages' => $Packages,
-        ],200);
-    }
-    protected function productsRequest($product = array())
-    {
-        return response()->json([
-            'error_code' => 0,
-            'message' => ['Successfully'],
-            'data product' => $product,
-        ],200);
-    }
+    protected function successPackagesRequest($packagesData = array())
+   {
+       return response()->json([
+           'error_code' => 0,
+           'message' => ['Successfully'],
+           'packagesData' => $packagesData,
+       ],200);
+   }
 }

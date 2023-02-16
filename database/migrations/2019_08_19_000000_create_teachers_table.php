@@ -28,7 +28,7 @@ class CreateTeachersTable extends Migration
             $table->string('resume')->nullable();
             $table->string('certificate')->nullable();
             $table->string('contract')->nullable();
-            $table->integer('basicPoin')->nullable();
+            $table->integer('basicPoint')->nullable();
             $table->string('campusId')->nullable();
             $table->string('type')->nullable();
             $table->string('talkSamId')->nullable();

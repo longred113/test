@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Teachers extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'teacherId';
+    protected $keyType = 'string';
+    public $incrementing = false;
     protected $fillable = [
         'teacherId',
         'name',
@@ -24,6 +27,8 @@ class Teachers extends Model
         'certificate',
         'contract',
         'basicPoint',
-        'campusId'
+        'campusId',
+        'type',
+        'talkSamId',
     ];
 }

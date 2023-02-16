@@ -4,8 +4,10 @@ use App\Http\Controllers\api\AdminController;
 use App\Http\Controllers\api\CampusManagerController;
 use App\Http\Controllers\api\CampusController;
 use App\Http\Controllers\api\RoleController;
+use App\Http\Controllers\api\TeacherController;
 use App\Http\Controllers\api\UserController;
 use App\Http\Controllers\api\PackagesController;
+use App\Models\Teachers;
 use App\Http\Controllers\api\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -45,8 +47,8 @@ Route::prefix('admin-campus-management')
         Route::delete('/{campusId}', [CampusController::class, 'destroy'])->name('destroy');
     });
 
-Route::prefix('campus-manger')
-    ->name('campus-manger.')
+Route::prefix('admin-campus-manger')
+    ->name('admin-campus-manger.')
     ->group(function() {
         Route::get('/', [CampusManagerController::class, 'index'])->name('index');
         Route::post('/create', [CampusManagerController::class, 'store'])->name('store');
@@ -55,7 +57,6 @@ Route::prefix('campus-manger')
         Route::delete('/{campusManagerId}', [CampusManagerController::class, 'destroy'])->name('destroy');
     });
 
-Route::resource('campus-manger', CampusManagerController::class);
 Route::resource('parent', ParentController::class);
 Route::resource('student', StudentController::class);
 Route::resource('teacher', TeacherController::class);
@@ -71,6 +72,16 @@ Route::prefix('admin-role-management')
     });
 
 Route::resource('users', UserController::class);
+
+Route::prefix('admin-teacher-management')
+    ->name('admin-teacher-management')
+    ->group(function() {
+        Route::get('/', [TeacherController::class, 'index'])->name('index');
+        Route::post('/create', [TeacherController::class, 'store'])->name('store');
+        Route::get('/{teacherId}', [TeacherController::class, 'show'])->name('show');
+        Route::put('/update/{teacherId}', [TeacherController::class, 'update'])->name('update');
+        Route::delete('/{teacherId}', [TeacherController::class], 'destroy')->name('destroy');
+    });
 
 Route::prefix('packages')
     ->name('packages.')
