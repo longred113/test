@@ -57,13 +57,12 @@ class Controller extends BaseController
             'userData' => $userData,
         ],200);
     }
-}
-     protected function successPackagesRequest($packagesdata = array())
-    {
-        return response()->json([
-            'error_code' => 0,
-            'message' => ['Successfully'],
-            'packagesData' => $packagesdata,
-        ],200);
-    }
+    protected function successPackagesRequest($packagesData = array())
+   {
+       return response()->json([
+           'error_code' => 0,
+           'message' => ['Successfully'],
+           'packagesData' => $packagesData,
+       ],200);
+   }
 }
