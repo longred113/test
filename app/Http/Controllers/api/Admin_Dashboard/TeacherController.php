@@ -35,8 +35,10 @@ class TeacherController extends Controller
      */
     public function store(Request $request)
     {
-        $campusId = Campus::get('campusId');
-        $nameCampus = Campus::where($campusId, 'campusId')->get('name');
+        $campusIds = Campus::select('campusId')->get();
+        foreach ($campusIds as $campusId) {
+            $campusName = Campus::whereIn('campusId', $campusId)->get('name');
+        }
         $validator = validator::make($request->all(), [
             'teacherId' => 'required|string|unique:teachers',
             'name' => 'required|string',
@@ -60,17 +62,6 @@ class TeacherController extends Controller
         if ($validator->failed()) {
             return $validator->errors();
         }
-        $inputCampusId = $campusId::get($request->campusId);
-        dd($inputCampusId);
-        if (!empty($request->campusId)) {
-            var_dump($request->campusId == $campusId::find($request->campusId));
-            if ($request->campusId == $campusId) {
-                $request['campusId'] = $campusId;
-            } else {
-                echo 'effff';
-            }
-            
-        }
         $params = [
             'teacherId' => request('teacherId'),
             'name' => request('name'),
@@ -91,7 +82,6 @@ class TeacherController extends Controller
             'type' => request('type'),
             'talkSamId' => request('talkSamId'),
         ];
-        dd($params);
         $newTeacherData = new TeacherResource(Teachers::create($params));
         return $this->successTeacherRequest($newTeacherData);
     }
@@ -102,9 +92,11 @@ class TeacherController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($teacherId)
     {
-        //
+        $teacher = Teachers::find($teacherId);
+        $teacherData = new TeacherResource($teacher);
+        return $this->successTeacherRequest($teacherData);
     }
 
     /**
@@ -114,9 +106,53 @@ class TeacherController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $teacherId)
     {
-        //
+        $teacher = Teachers::find($teacherId);
+        $validator = validator::make($request->all(), [
+            'name' => 'required|string',
+            // 'email' => 'required|string|unique:teachers',
+            // 'gender' => 'required|string',
+            // 'dateOfBirth' => 'required|date',
+            // 'status' => 'required|string',
+            // 'activate' => 'required',
+            // 'country' => 'required|string',
+            // 'timeZone' => 'required|string',
+            // 'startDate' => 'required|string',
+            // 'resignation' => 'required',
+            // 'resume' => 'required|string',
+            // 'certificate' => 'required|string',
+            // 'contract' => 'required|string',
+            // 'basicPoint' => 'required|integer',
+            // 'type' => 'required|string',
+            // 'talkSamId' => 'require|string',
+            'campusId' => 'required|string',
+        ]);
+        if ($validator->failed()) {
+            return $validator->errors();
+        }
+
+        $params = [
+            $teacher['name'] = $request['name'],
+            $teacher['email'] = $request['email'],
+            $teacher['dateOfBirth'] = $request['dateOfBirth'],
+            $teacher['status'] = $request['status'],
+            $teacher['activate'] = $request['activate'],
+            $teacher['country'] = $request['country'],
+            $teacher['timeZone'] = $request['timeZone'],
+            $teacher['startDate'] = $request['startDate'],
+            $teacher['resignation'] = $request['resignation'],
+            $teacher['resume'] = $request['resume'],
+            $teacher['certificate'] = $request['certificate'],
+            $teacher['contract'] = $request['contract'],
+            $teacher['basicPoint'] = $request['basicPoint'],
+            $teacher['type'] = $request['type'],
+            $teacher['talkSamId'] = $request['talkSamId'],
+            $teacher['campusId'] = $request['campusId'],
+        ];
+
+        $newInfoTeacher = $teacher->update($params);
+        return $this->successTeacherRequest($newInfoTeacher);
     }
 
     /**

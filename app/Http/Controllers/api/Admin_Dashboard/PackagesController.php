@@ -17,7 +17,7 @@ class PackagesController extends Controller
     public function index()
     {
         $data = PackagesResource::collection(Packages::all());
-        return $this->PackagesRequest($data);
+        return $this->successPackagesRequest($data);
     }
 
     /**
@@ -57,7 +57,7 @@ class PackagesController extends Controller
             'activate' => request('activate'),
         ];
         $newPackages = Packages::create($params);
-        return $this->PackagesRequest($newPackages);
+        return $this->successPackagesRequest($newPackages);
     }
 
     /**
@@ -70,7 +70,7 @@ class PackagesController extends Controller
     {
         $package = Packages::find($packageId);
         $packageData = $package;
-        return $this->PackagesRequest($packageData);
+        return $this->successPackagesRequest($packageData);
     }
 
     /**
@@ -124,7 +124,7 @@ class PackagesController extends Controller
             $packages['activate'] = $request['activate'],
         ];
         $newInfoPackages = $packages->update($params);
-        return $this->PackagesRequest($newInfoPackages);
+        return $this->successPackagesRequest($newInfoPackages);
     }
 
     /**
@@ -137,6 +137,6 @@ class PackagesController extends Controller
     {
         $package = Packages::find($packageId);
         $deletePackages = $package->delete();
-        return $this->PackagesRequest($deletePackages);
+        return $this->successPackagesRequest($deletePackages);
     }
 }
