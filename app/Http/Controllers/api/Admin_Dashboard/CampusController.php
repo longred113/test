@@ -139,8 +139,11 @@ class CampusController extends Controller
         }
 
         $campusActivate = Campus::find($this->request->get('campusId'));
-        if($campusActivate == 1) {
-            
+        foreach ($campusActivate as $activate) {
+            if($activate == 1) {
+                
+            }
+
         }
         // echo $campusId;
         // $campus = Campus::find($campusId);

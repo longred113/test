@@ -81,11 +81,19 @@ class Controller extends BaseController
         ],200);
     }
     protected function successPackagesRequest($packagesData = array())
-   {
-       return response()->json([
-           'error_code' => 0,
-           'message' => ['Successfully'],
-           'packagesData' => $packagesData,
-       ],200);
-   }
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'packagesData' => $packagesData,
+        ],200);
+    }
+    protected function successProductsRequest($productData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'productData' => $productData,
+        ],200);
+    }
 }

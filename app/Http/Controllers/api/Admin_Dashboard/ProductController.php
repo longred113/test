@@ -17,7 +17,7 @@ class ProductController extends Controller
     public function index()
     {
         $data = ProductsResource::collection(Products::all());
-        return $this->productsRequest($data);
+        return $this->successProductsRequest($data);
     }
 
     /**
@@ -52,7 +52,7 @@ class ProductController extends Controller
             'activate' => request('activate'),
         ];
         $newProducts = new ProductsResource(Products::create($params));
-        return $newProducts;
+        return $this->successProductsRequest($newProducts);
     }
 
     /**
@@ -65,7 +65,7 @@ class ProductController extends Controller
     {
         $Products = Products::find($productId);
         $ProductsData = new ProductsResource($Products);
-        return $this->productsRequest($ProductsData);
+        return $this->successProductsRequest($ProductsData);
     }
 
     /**
@@ -136,6 +136,6 @@ class ProductController extends Controller
     {
         $product = Products::find($productId);
         $deleteProducts = $product->delete();
-        return $this->successRequest($deleteProducts);
+        return $this->successProductsRequest($deleteProducts);
     }
 }
