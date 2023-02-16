@@ -73,4 +73,12 @@ class Controller extends BaseController
             'data Packages' => $Packages,
         ],200);
     }
+    protected function productsRequest($product = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'data product' => $product,
+        ],200);
+    }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\api\CampusController;
 use App\Http\Controllers\api\RoleController;
 use App\Http\Controllers\api\UserController;
 use App\Http\Controllers\api\PackagesController;
+use App\Http\Controllers\api\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -79,4 +80,14 @@ Route::prefix('packages')
         Route::get('/{packageId}', [PackagesController::class, 'show'])->name('show');
         Route::put( '/update/{packageId}', [PackagesController::class, 'update'])->name('update');
         Route::delete('/{packageId}', [PackagesController::class, 'destroy'])->name('destroy');
+    });
+
+Route::prefix('admin-product-management')
+    ->name('admin-product-management.')
+    ->group(function() {
+        Route::get('/', [ProductController::class, 'index'])->name('index');
+        Route::post('/create', [ProductController::class, 'store'])->name('store');
+        Route::get('/{productId}', [ProductController::class, 'show'])->name('show');
+        Route::put( '/update/{productId}', [ProductController::class, 'update'])->name('update');
+        Route::delete('/{productId}', [ProductController::class, 'destroy'])->name('destroy');
     });
