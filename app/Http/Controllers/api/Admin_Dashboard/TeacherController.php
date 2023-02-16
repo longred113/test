@@ -16,6 +16,13 @@ use function PHPUnit\Framework\returnSelf;
 
 class TeacherController extends Controller
 {
+    protected Request $request;
+
+    public function __construct(
+        Request $request
+    ) {
+        $this->request = $request;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -165,6 +172,27 @@ class TeacherController extends Controller
     {
         $teacher = Teachers::find($teacherId);
         $deleteTeacher = $teacher->delete();
+        return $this->successTeacherRequest($deleteTeacher);
+    }
+
+    public function multiDeleteTeacher()
+    {
+        $validator = validator::make($this->request->all(), [
+            'teacherId' => 'string|required_without:teacherIds',
+            'teacherIds' => 'array|required_without:teacherId'
+        ]);
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+
+        if (!empty($this->request->get('teacherId'))) {
+            $ids[] = $this->request->get('teacherId');
+        } else {
+            $ids = $this->request->get('teacherIds');
+        }
+        foreach ($ids as $id) {
+            $deleteTeacher = Teachers::where('teacherId', $id)->delete();
+        }
         return $this->successTeacherRequest($deleteTeacher);
     }
 }

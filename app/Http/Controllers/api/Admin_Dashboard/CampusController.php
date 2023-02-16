@@ -132,21 +132,27 @@ class CampusController extends Controller
     public function switchActivate()
     {
         $validator = validator::make($this->request->all(), [
-            'campusId' => 'required',
+            'campusId' => 'string|required_without:campusIds',
+            'campusIds' => 'array|required_without:campusId'
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator);
         }
-
-        $campusActivate = Campus::find($this->request->get('campusId'));
-        foreach ($campusActivate as $activate) {
-            if($activate == 1) {
-                
-            }
-
+        
+        if (!empty($this->request->get('campusId'))) {
+            $ids[] = $this->request->get('campusId');
+        } else {
+            $ids = $this->request->get('campusIds');
         }
-        // echo $campusId;
-        // $campus = Campus::find($campusId);
-        // echo $campus;
+        $campuses = Campus::find(($ids));
+        foreach ($campuses as $campus) {
+            if ($campus['activate'] == 1) {
+                Campus::where('campusId', $campus['campusId'])->update(['activate' => 0]);
+            }
+            else{
+                Campus::where('campusId', $campus['campusId'])->update(['activate' => 1]);
+            }
+        }
+        return $this->successCampusRequest();
     }
 }

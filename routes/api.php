@@ -8,6 +8,7 @@ use App\Http\Controllers\api\Admin_Dashboard\TeacherController;
 use App\Http\Controllers\api\Admin_Dashboard\UserController;
 use App\Http\Controllers\api\Admin_Dashboard\PackagesController;
 use App\Http\Controllers\api\Admin_Dashboard\ProductController;
+use App\Http\Controllers\api\Admin_Dashboard\UnitController;
 use App\Models\Teachers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -58,10 +59,6 @@ Route::prefix('admin-campus-manger')
         Route::delete('/{campusManagerId}', [CampusManagerController::class, 'destroy'])->name('destroy');
     });
 
-Route::resource('parent', ParentController::class);
-Route::resource('student', StudentController::class);
-Route::resource('teacher', TeacherController::class);
-
 Route::prefix('admin-role-management')
     ->name('admin-role-management.')
     ->group(function() {
@@ -81,7 +78,8 @@ Route::prefix('admin-teacher-management')
         Route::post('/create', [TeacherController::class, 'store'])->name('store');
         Route::get('/{teacherId}', [TeacherController::class, 'show'])->name('show');
         Route::put('/update/{teacherId}', [TeacherController::class, 'update'])->name('update');
-        Route::delete('/{teacherId}', [TeacherController::class], 'destroy')->name('destroy');
+        Route::delete('/{teacherId}', [TeacherController::class, 'destroy'])->name('destroy');
+        Route::post('/', [TeacherController::class, 'multiDeleteTeacher'])->name('multiDeleteTeacher');
     });
 
 Route::prefix('packages')
@@ -102,4 +100,14 @@ Route::prefix('admin-product-management')
         Route::get('/{productId}', [ProductController::class, 'show'])->name('show');
         Route::put( '/update/{productId}', [ProductController::class, 'update'])->name('update');
         Route::delete('/{productId}', [ProductController::class, 'destroy'])->name('destroy');
+    });
+
+Route::prefix('admin-unit-management')
+    ->name('admin-unit-management.')
+    ->group(function() {
+        Route::get('/', [UnitController::class, 'index'])->name('index');
+        Route::post('/create', [UnitController::class, 'store'])->name('store');
+        Route::get('/{productId}', [UnitController::class, 'show'])->name('show');
+        Route::put( '/update/{productId}', [UnitController::class, 'update'])->name('update');
+        Route::delete('/{productId}', [UnitController::class, 'destroy'])->name('destroy');
     });

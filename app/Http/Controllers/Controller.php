@@ -96,4 +96,12 @@ class Controller extends BaseController
             'productData' => $productData,
         ],200);
     }
+    protected function successUnitRequest($unitData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'productData' => $unitData,
+        ],200);
+    } 
 }
