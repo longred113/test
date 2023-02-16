@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\api\Admin_Dashboard;
+namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;

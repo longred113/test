@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\Controllers\api\AdminController;
-use App\Http\Controllers\api\CampusManagerController;
-use App\Http\Controllers\api\CampusController;
-use App\Http\Controllers\api\RoleController;
-use App\Http\Controllers\api\TeacherController;
-use App\Http\Controllers\api\UserController;
-use App\Http\Controllers\api\PackagesController;
+use App\Http\Controllers\api\Admin_Dashboard\AdminController;
+use App\Http\Controllers\api\Admin_Dashboard\CampusController;
+use App\Http\Controllers\api\Admin_Dashboard\ClassController;
+use App\Http\Controllers\api\Admin_Dashboard\RoleController;
+use App\Http\Controllers\api\Admin_Dashboard\TeacherController;
+use App\Http\Controllers\api\Admin_Dashboard\UserController;
+use App\Http\Controllers\api\Admin_Dashboard\PackagesController;
 use App\Models\Teachers;
 use App\Http\Controllers\api\ProductController;
 use Illuminate\Http\Request;

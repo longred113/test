@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\api\Admin_Dashboard;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -134,7 +134,7 @@ class ProductController extends Controller
      */
     public function destroy($productId)
     {
-          $product = Products::find($productId);
+        $product = Products::find($productId);
         $deleteProducts = $product->delete();
         return $this->successRequest($deleteProducts);
     }
