@@ -7,8 +7,8 @@ use App\Http\Controllers\api\Admin_Dashboard\RoleController;
 use App\Http\Controllers\api\Admin_Dashboard\TeacherController;
 use App\Http\Controllers\api\Admin_Dashboard\UserController;
 use App\Http\Controllers\api\Admin_Dashboard\PackagesController;
+use App\Http\Controllers\api\Admin_Dashboard\ProductController;
 use App\Models\Teachers;
-use App\Http\Controllers\api\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -45,6 +45,7 @@ Route::prefix('admin-campus-management')
         Route::get('/{campusId}', [CampusController::class, 'show'])->name('show');
         Route::put( '/update/{campusId}', [CampusController::class, 'update'])->name('update');
         Route::delete('/{campusId}', [CampusController::class, 'destroy'])->name('destroy');
+        Route::put('/', [CampusController::class, 'switchActivate'])->name('switchActivate');
     });
 
 Route::prefix('admin-campus-manger')

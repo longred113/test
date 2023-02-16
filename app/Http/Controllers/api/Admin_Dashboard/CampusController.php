@@ -11,6 +11,14 @@ use Illuminate\Support\Facades\Validator;
 
 class CampusController extends Controller
 {
+    protected Request $request;
+
+    public function __construct(
+        Request $request
+        )       
+    {
+        $this->request = $request;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -119,5 +127,23 @@ class CampusController extends Controller
         $campus = Campus::find($campusId);
         $deleteCampus = $campus->delete();
         return $this->successCampusRequest($deleteCampus);
+    }
+
+    public function switchActivate()
+    {
+        $validator = validator::make($this->request->all(), [
+            'campusId' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return $this->errorBadRequest($validator);
+        }
+
+        $campusActivate = Campus::find($this->request->get('campusId'));
+        if($campusActivate == 1) {
+            
+        }
+        // echo $campusId;
+        // $campus = Campus::find($campusId);
+        // echo $campus;
     }
 }
