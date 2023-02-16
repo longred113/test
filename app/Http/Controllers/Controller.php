@@ -11,14 +11,6 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    protected function successRequest($data = array())
-    {
-        return response()->json([
-            'error_code' => 0,
-            'message' => ['Successfully'],
-            'CM_Data' => $data,
-        ],200);
-    }
     protected function successCampusRequest($campusData = array())
     {
         return response()->json([
@@ -65,13 +57,13 @@ class Controller extends BaseController
             'userData' => $userData,
         ],200);
     }
-     protected function PackagesRequest($Packages = array())
+}
+     protected function successPackagesRequest($packagesdata = array())
     {
         return response()->json([
             'error_code' => 0,
             'message' => ['Successfully'],
-            'data Packages' => $Packages,
+            'packagesData' => $packagesdata,
         ],200);
     }
-
 }
