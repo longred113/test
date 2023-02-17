@@ -70,8 +70,6 @@ Route::prefix('admin-role-management')
         Route::delete('/{roleId}', [RoleController::class, 'destroy'])->name('destroy');
     });
 
-Route::resource('users', UserController::class);
-
 Route::prefix('admin-teacher-management')
     ->name('admin-teacher-management')
     ->group(function() {
@@ -101,6 +99,7 @@ Route::prefix('admin-product-management')
         Route::get('/{productId}', [ProductController::class, 'show'])->name('show');
         Route::put( '/update/{productId}', [ProductController::class, 'update'])->name('update');
         Route::delete('/{productId}', [ProductController::class, 'destroy'])->name('destroy');
+        Route::put('/update-package', [ProductController::class, 'updatePackage'])->name('updatePackage');
     });
 
 Route::prefix('admin-unit-management')
@@ -121,4 +120,14 @@ Route::prefix('admin-match-activity-management')
         Route::get('/{matchedActivityId}', [MatchedActivityController::class, 'show'])->name('show');
         Route::put('/update/{matchedActivityId}', [MatchedActivityController::class, 'update'])->name('update');
         Route::delete('/{matchedActivityId}', [MatchedActivityController::class, 'destroy'])->name('destroy');
+    });
+
+Route::prefix('admin-class-management')
+    ->name('admin-class-management.')
+    ->group(function() {
+        Route::get('/', [ClassController::class, 'index'])->name('index');
+        Route::post('/create', [ClassController::class, 'store'])->name('store');
+        Route::get('/{classId}', [ClassController::class, 'show'])->name('show');
+        Route::put('/update/{classId}', [ClassController::class, 'update'])->name('update');
+        Route::delete('/{classId}', [ClassController::class, 'destroy'])->name('destroy');
     });

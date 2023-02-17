@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Classes extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'classId';
+    protected $keyType = 'string';
+    public $incrementing = false;
     protected $fillable = [
         'classId',
         'productId',
@@ -18,6 +21,6 @@ class Classes extends Model
         'classday',
         'classTimeSlot',
         'classStartDate',
-        'status'
+        'status',
     ];
 }

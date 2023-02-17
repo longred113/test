@@ -112,4 +112,12 @@ class Controller extends BaseController
             'productData' => $matchedActivityData,
         ],200);
     }
+    protected function successClassRequest($classData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'productData' => $classData,
+        ],200);
+    }
 }

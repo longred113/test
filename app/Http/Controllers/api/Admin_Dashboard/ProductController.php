@@ -7,8 +7,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Products;
 use App\Http\Resources\Products as ProductsResource;
+use App\Models\Packages;
+use Facade\Ignition\Support\Packagist\Package;
+
 class ProductController extends Controller
 {
+    protected Request $request;
+
+    public function __construct(
+        Request $request
+    ) {
+        $this->request = $request;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -28,7 +38,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-         $validator = validator::make($request->all(), [
+        $validator = validator::make($request->all(), [
             'productId' => 'required|unique:products',
             'packageId' => 'required',
             'name' => 'required',
@@ -81,7 +91,7 @@ class ProductController extends Controller
         // if(empty($request->packageId)) {
         //     $request['packageId'] = $products['packageId'];
         // }
-        if(empty($request->name)) {
+        if (empty($request->name)) {
             $request['name'] = $products['name'];
         }
         // if(empty($request->startLevel)) {
@@ -111,7 +121,7 @@ class ProductController extends Controller
         if ($validator->fails()) {
             return $validator->errors();
         }
-        
+
         $params = [
             $products['productId'] = $request['productId'],
             $products['packageId'] = $request['packageId'],
@@ -137,5 +147,21 @@ class ProductController extends Controller
         $product = Products::find($productId);
         $deleteProducts = $product->delete();
         return $this->successProductsRequest($deleteProducts);
+    }
+
+    public function updatePackage()
+    {
+        $validator = Validator::make($this->request->all(), [
+            'productId' => 'string|required',
+            'packageId' => 'required|integer',
+        ]);
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+        $inputProductId = $this->request['productId'];
+        $product = Products::find($inputProductId);
+        $inputPackageId = $this->request['packageId'];
+        $newPackageId = $product->update(['packageId'=>$inputPackageId]);
+        return $this->successProductsRequest($newPackageId);
     }
 }
