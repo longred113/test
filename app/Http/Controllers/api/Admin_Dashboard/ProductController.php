@@ -110,7 +110,7 @@ class ProductController extends Controller
         //     $request['activate'] = $products['activate'];
         // }
         $validator = validator::make($request->all(), [
-            // 'packageId' => 'required|string',
+            'packageId' => 'required|integer',
             'name' => 'required|string',
             // 'startLevel' => 'required|string',
             // 'endLevel' => 'required',

@@ -3,12 +3,14 @@
 use App\Http\Controllers\api\Admin_Dashboard\AdminController;
 use App\Http\Controllers\api\Admin_Dashboard\CampusController;
 use App\Http\Controllers\api\Admin_Dashboard\ClassController;
+use App\Http\Controllers\api\Admin_Dashboard\ClassMatchActivityController;
 use App\Http\Controllers\api\Admin_Dashboard\MatchedActivityController;
 use App\Http\Controllers\api\Admin_Dashboard\RoleController;
 use App\Http\Controllers\api\Admin_Dashboard\TeacherController;
 use App\Http\Controllers\api\Admin_Dashboard\UserController;
 use App\Http\Controllers\api\Admin_Dashboard\PackagesController;
 use App\Http\Controllers\api\Admin_Dashboard\ProductController;
+use App\Http\Controllers\api\Admin_Dashboard\StudentController;
 use App\Http\Controllers\api\Admin_Dashboard\UnitController;
 use App\Http\Controllers\api\Campus_Dashboard\OffStudentController;
 use App\Http\Controllers\api\Campus_Dashboard\OffTeachController;
@@ -99,7 +101,7 @@ Route::prefix('admin-product-management')
         Route::post('/create', [ProductController::class, 'store'])->name('store');
         Route::get('/{productId}', [ProductController::class, 'show'])->name('show');
         Route::put( '/update/{productId}', [ProductController::class, 'update'])->name('update');
-        Route::put( '/add-pakage/{productId}', [ProductController::class, 'addPackages'])->name('addPackages');
+        Route::put( '/add-package/{productId}', [ProductController::class, 'addPackages'])->name('addPackages');
         Route::delete('/{productId}', [ProductController::class, 'destroy'])->name('destroy');
         Route::put('/update-package', [ProductController::class, 'updatePackage'])->name('updatePackage');
     });
@@ -156,4 +158,24 @@ Route::prefix('admin-class-management')
         Route::get('/{classId}', [ClassController::class, 'show'])->name('show');
         Route::put('/update/{classId}', [ClassController::class, 'update'])->name('update');
         Route::delete('/{classId}', [ClassController::class, 'destroy'])->name('destroy');
+    });
+
+Route::prefix('admin-class-match-activity-management')
+    ->name('admin-class-match-activity-management.')
+    ->group(function() {
+        Route::get('/', [ClassMatchActivityController::class, 'index'])->name('index');
+        Route::post('/create', [ClassMatchActivityController::class, 'store'])->name('store');
+        Route::get('/{classId}?{matchedActivityId}', [ClassMatchActivityController::class, 'show'])->name('show');
+        Route::put('/update/{classId}?{matchedActivityId}', [ClassMatchActivityController::class, 'update'])->name('update');
+        Route::delete('/{classId}?{matchedActivityId}', [ClassMatchActivityController::class, 'destroy'])->name('destroy');
+    });
+
+Route::prefix('admin-student-management')
+    ->name('admin-student-management.')
+    ->group(function() {
+        Route::get('/', [StudentController::class, 'index'])->name('index');
+        Route::post('/create', [StudentController::class, 'store'])->name('store');
+        Route::get('/{studentId}', [StudentController::class, 'show'])->name('show');
+        Route::put('/update/{studentId}', [StudentController::class, 'update'])->name('update');
+        Route::delete('/{studentId}', [StudentController::class, 'destroy'])->name('destroy');
     });
