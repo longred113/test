@@ -29,6 +29,7 @@ class Student extends JsonResource
             'basicPoint' => $this->basicPoint,
             'campusId' => $this->campusId,
             'type' => $this->type,
+            'status' => $this->status,
             'classId'=> $this->classId,            
         ];
     }

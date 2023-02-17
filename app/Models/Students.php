@@ -27,6 +27,7 @@ class Students extends Model
         'basicPoint',
         'campusId',
         'type',
+        'status',
         'classId',
     ];
 }
