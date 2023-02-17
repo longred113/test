@@ -39,7 +39,7 @@ class PackagesController extends Controller
     public function store(Request $request)
     {
         $validator = validator::make($request->all(), [
-            'packageId' => 'required|string|unique:packages',
+            'packageId' => 'required|integer|unique:packages',
             'name' => 'required|string',
             // 'startLevel' => 'required|string',
             // 'endLevel' => 'required|string',

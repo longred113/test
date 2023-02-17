@@ -103,5 +103,13 @@ class Controller extends BaseController
             'message' => ['Successfully'],
             'productData' => $unitData,
         ],200);
-    } 
+    }
+    protected function successMatchedActivityRequest($matchedActivityData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'productData' => $matchedActivityData,
+        ],200);
+    }
 }
