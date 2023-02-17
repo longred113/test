@@ -11,6 +11,29 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    protected function errorBadRequest($message = '', $data = [])
+    {
+        if (is_array($message)) {
+            $tmp = array();
+            foreach ($message as $key => $value) {
+                if (is_array($value)) {
+                    $tmp[] = $value[0];
+                } else {
+                    $tmp[] = $value;
+                }
+            }
+            $message = $tmp;
+        } else {
+            $message = array($message);
+        }
+
+        $response = array(
+            'error_code' => 400,
+            'message' => $message,
+            'data' => $data
+        );
+        return response()->array($response, 400);
+    }
     protected function successCampusRequest($campusData = array())
     {
         return response()->json([
@@ -58,11 +81,27 @@ class Controller extends BaseController
         ],200);
     }
     protected function successPackagesRequest($packagesData = array())
-   {
-       return response()->json([
-           'error_code' => 0,
-           'message' => ['Successfully'],
-           'packagesData' => $packagesData,
-       ],200);
-   }
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'packagesData' => $packagesData,
+        ],200);
+    }
+    protected function successProductsRequest($productData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'productData' => $productData,
+        ],200);
+    }
+    protected function successUnitRequest($unitData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'productData' => $unitData,
+        ],200);
+    } 
 }

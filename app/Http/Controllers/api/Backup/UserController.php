@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\api\Admin_Dashboard;
+namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -14,7 +15,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $usersData = User::all();
+        return $usersData;
     }
 
     /**
@@ -25,7 +27,9 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $userData = $request->all();
+        $newUser = User::create($userData);
+        return $newUser;
     }
 
     /**

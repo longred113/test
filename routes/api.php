@@ -1,15 +1,15 @@
 <?php
 
 use App\Http\Controllers\api\Admin_Dashboard\AdminController;
-use App\Http\Controllers\api\Admin_Dashboard\CampusManagerController;
 use App\Http\Controllers\api\Admin_Dashboard\CampusController;
+use App\Http\Controllers\api\Admin_Dashboard\ClassController;
 use App\Http\Controllers\api\Admin_Dashboard\RoleController;
 use App\Http\Controllers\api\Admin_Dashboard\TeacherController;
 use App\Http\Controllers\api\Admin_Dashboard\UserController;
 use App\Http\Controllers\api\Admin_Dashboard\PackagesController;
-use App\Http\Controllers\api\Campus_Dashboard\OffTeachController;
+use App\Http\Controllers\api\Admin_Dashboard\ProductController;
+use App\Http\Controllers\api\Admin_Dashboard\UnitController;
 use App\Models\Teachers;
-use App\Http\Controllers\api\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -46,6 +46,7 @@ Route::prefix('admin-campus-management')
         Route::get('/{campusId}', [CampusController::class, 'show'])->name('show');
         Route::put( '/update/{campusId}', [CampusController::class, 'update'])->name('update');
         Route::delete('/{campusId}', [CampusController::class, 'destroy'])->name('destroy');
+        Route::put('/', [CampusController::class, 'switchActivate'])->name('switchActivate');
     });
 
 Route::prefix('admin-campus-manger')
@@ -57,10 +58,6 @@ Route::prefix('admin-campus-manger')
         Route::put( '/update/{campusManagerId}', [CampusManagerController::class, 'update'])->name('update');
         Route::delete('/{campusManagerId}', [CampusManagerController::class, 'destroy'])->name('destroy');
     });
-
-Route::resource('parent', ParentController::class);
-Route::resource('student', StudentController::class);
-Route::resource('teacher', TeacherController::class);
 
 Route::prefix('admin-role-management')
     ->name('admin-role-management.')
@@ -81,7 +78,8 @@ Route::prefix('admin-teacher-management')
         Route::post('/create', [TeacherController::class, 'store'])->name('store');
         Route::get('/{teacherId}', [TeacherController::class, 'show'])->name('show');
         Route::put('/update/{teacherId}', [TeacherController::class, 'update'])->name('update');
-        Route::delete('/{teacherId}', [TeacherController::class], 'destroy')->name('destroy');
+        Route::delete('/{teacherId}', [TeacherController::class, 'destroy'])->name('destroy');
+        Route::post('/', [TeacherController::class, 'multiDeleteTeacher'])->name('multiDeleteTeacher');
     });
 
 Route::prefix('packages')
@@ -124,4 +122,14 @@ Route::prefix('campus-student')
         Route::get('/{studentId}', [OffStudentController::class, 'show'])->name('show');
         Route::put( '/update/{studentId}', [OffStudentController::class, 'update'])->name('update');
         Route::delete('/{studentId}', [OffStudentController::class, 'destroy'])->name('destroy');
+    });
+
+Route::prefix('admin-unit-management')
+    ->name('admin-unit-management.')
+    ->group(function() {
+        Route::get('/', [UnitController::class, 'index'])->name('index');
+        Route::post('/create', [UnitController::class, 'store'])->name('store');
+        Route::get('/{productId}', [UnitController::class, 'show'])->name('show');
+        Route::put( '/update/{productId}', [UnitController::class, 'update'])->name('update');
+        Route::delete('/{productId}', [UnitController::class, 'destroy'])->name('destroy');
     });

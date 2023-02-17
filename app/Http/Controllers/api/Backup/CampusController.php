@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\api\Admin_Dashboard;
+namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CampusResource;
@@ -11,14 +11,6 @@ use Illuminate\Support\Facades\Validator;
 
 class CampusController extends Controller
 {
-    protected Request $request;
-
-    public function __construct(
-        Request $request
-        )       
-    {
-        $this->request = $request;
-    }
     /**
      * Display a listing of the resource.
      *
@@ -127,32 +119,5 @@ class CampusController extends Controller
         $campus = Campus::find($campusId);
         $deleteCampus = $campus->delete();
         return $this->successCampusRequest($deleteCampus);
-    }
-
-    public function switchActivate()
-    {
-        $validator = validator::make($this->request->all(), [
-            'campusId' => 'string|required_without:campusIds',
-            'campusIds' => 'array|required_without:campusId'
-        ]);
-        if ($validator->fails()) {
-            return $this->errorBadRequest($validator);
-        }
-        
-        if (!empty($this->request->get('campusId'))) {
-            $ids[] = $this->request->get('campusId');
-        } else {
-            $ids = $this->request->get('campusIds');
-        }
-        $campuses = Campus::find(($ids));
-        foreach ($campuses as $campus) {
-            if ($campus['activate'] == 1) {
-                Campus::where('campusId', $campus['campusId'])->update(['activate' => 0]);
-            }
-            else{
-                Campus::where('campusId', $campus['campusId'])->update(['activate' => 1]);
-            }
-        }
-        return $this->successCampusRequest();
     }
 }
