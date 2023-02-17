@@ -3,6 +3,7 @@
 use App\Http\Controllers\api\Admin_Dashboard\AdminController;
 use App\Http\Controllers\api\Admin_Dashboard\CampusController;
 use App\Http\Controllers\api\Admin_Dashboard\ClassController;
+use App\Http\Controllers\api\Admin_Dashboard\MatchedActivityController;
 use App\Http\Controllers\api\Admin_Dashboard\RoleController;
 use App\Http\Controllers\api\Admin_Dashboard\TeacherController;
 use App\Http\Controllers\api\Admin_Dashboard\UserController;
@@ -136,4 +137,14 @@ Route::prefix('admin-unit-management')
         Route::get('/{productId}', [UnitController::class, 'show'])->name('show');
         Route::put( '/update/{productId}', [UnitController::class, 'update'])->name('update');
         Route::delete('/{productId}', [UnitController::class, 'destroy'])->name('destroy');
+    });
+
+Route::prefix('admin-match-activity-management')
+    ->name('admin-match-activity-management.')
+    ->group(function() {
+        Route::get('/', [MatchedActivityController::class, 'index'])->name('index');
+        Route::post('/create', [MatchedActivityController::class, 'store'])->name('store');
+        Route::get('/{matchedActivityId}', [MatchedActivityController::class, 'show'])->name('show');
+        Route::put('/update/{matchedActivityId}', [MatchedActivityController::class, 'update'])->name('update');
+        Route::delete('/{matchedActivityId}', [MatchedActivityController::class, 'destroy'])->name('destroy');
     });

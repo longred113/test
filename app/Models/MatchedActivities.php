@@ -8,11 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class MatchedActivities extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'matchedActivityId';
+    protected $keyType = 'string';
+    public $incrementing = false;
     protected $fillable = [
-        'matchActivityId',
+        'matchedActivityId',
         'productId',
         'name',
         'type',
         'time',
+        'unitId',
     ];
 }
