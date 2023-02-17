@@ -44,6 +44,7 @@ class PackagesController extends Controller
             // 'startLevel' => 'required|string',
             // 'endLevel' => 'required|string',
             // 'activate' => 'required',
+            // 'detail' => 'required',
         ]);
         if ($validator->fails()) {
             return $validator->errors();
@@ -55,6 +56,7 @@ class PackagesController extends Controller
             'startLevel' => request('startLevel'),
             'endLevel' => request('endLevel'),
             'activate' => request('activate'),
+            'detail' => request('detail'),
         ];
         $newPackages = Packages::create($params);
         return $this->successPackagesRequest($newPackages);
@@ -106,12 +108,16 @@ class PackagesController extends Controller
         if(empty($request->activate)) {
             $request['activate'] = $packages['activate'];
         }
+        if(empty($request->activate)) {
+            $request['detail'] = $packages['detail'];
+        }
 
         $validator = validator::make($request->all(), [
             'name' => 'required|string',
             // 'startLevel' => 'required|string',
             // 'endLevel' => 'required|string',
             // 'activate' => 'required'
+            // 'detail' => 'required'
         ]);
         if ($validator->fails()) {
             return $validator->errors();
@@ -122,6 +128,7 @@ class PackagesController extends Controller
             $packages['startLevel'] = $request['startLevel'],
             $packages['endLevel'] = $request['endLevel'],
             $packages['activate'] = $request['activate'],
+            $packages['detail'] = $request['detail'],
         ];
         $newInfoPackages = $packages->update($params);
         return $this->successPackagesRequest($newInfoPackages);

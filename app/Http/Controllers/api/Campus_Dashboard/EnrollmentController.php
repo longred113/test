@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Students;
-use App\Http\Resources\Student as StudentsResource;
+use App\Http\Resources\Student;
 
-class OffStudentController extends Controller
+class EnrollmentController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,8 +17,18 @@ class OffStudentController extends Controller
      */
     public function index()
     {
-        $data = StudentsResource::collection(Students::get()->where('type', 'off'));
+         $data = Student::collection(Students::where('status', 'Approved')->orWhere('status', 'Applied')->get());
         return $this->successStudentRequest($data);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
     }
 
     /**
@@ -44,7 +54,7 @@ class OffStudentController extends Controller
             // 'basicPoint' => 'required',
             // 'campusId' => 'required',
             // 'type' => 'required',
-            // 'classId' => 'required',           
+            // 'status' => 'required',           
             
         ]);
         if ($validator->fails()) {
@@ -65,12 +75,13 @@ class OffStudentController extends Controller
             // 'basicPoint' => request('basicPoint'),
             'campusId' => request('campusId'),
             // 'type' => request('type'),
-            // 'classId' => request('classId'),
+            //'status' => request('status'),
+            // 'status' => request('status'),
          
             
         ];
-        $newStudents = new StudentsResource(Students::create($params));
-        return $newStudents;
+        $newEnrollment = new Student(Students::create($params));
+        return $newEnrollment;
     }
 
     /**
@@ -82,8 +93,19 @@ class OffStudentController extends Controller
     public function show($studentId)
     {
         $Students = Students::find($studentId);
-        $StudentsData = new StudentsResource($Students);
+        $StudentsData = new Student($Students);
         return $this->successStudentRequest($StudentsData);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
     }
 
     /**
@@ -153,7 +175,7 @@ class OffStudentController extends Controller
             // 'basicPoint' => 'required',
             // 'campusId' => 'required',
             // 'type' => 'required',
-            // 'classId' => 'required',  
+            // 'status' => 'required',  
         ]);
         if ($validator->fails()) {
             return $validator->errors();
@@ -174,7 +196,7 @@ class OffStudentController extends Controller
             $students['basicPoint'] = $request['basicPoint'],
             $students['campusId'] = $request['campusId'],
             $students['type'] = $request['type'],
-            $students['classId'] = $request['classId'],
+            $students['status'] = $request['status'],
             
             
             
@@ -191,7 +213,7 @@ class OffStudentController extends Controller
      */
     public function destroy($studentId)
     {
-        $student = Students::find($studentId);
+         $student = Students::find($studentId);
         $deleteStudents = $student->delete();
         return $this->successStudentRequest($deleteStudents);
     }

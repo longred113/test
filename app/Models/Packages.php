@@ -17,5 +17,6 @@ class Packages extends Model
         'startLevel',
         'endLevel',
         'activate',
+        'detail',
     ];
 }
