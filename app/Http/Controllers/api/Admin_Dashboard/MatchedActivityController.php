@@ -47,7 +47,7 @@ class MatchedActivityController extends Controller
         if ($validator->fails()) {
             return $validator->errors();
         }
-        
+
         $params = [
             'matchedActivityId' => $this->request['matchedActivityId'],
             'productId' => $this->request['productId'],
@@ -95,11 +95,11 @@ class MatchedActivityController extends Controller
         }
 
         $params = [
-            $matchedActivity['productId'] => $this->request['productId'],
-            $matchedActivity['name'] => $this->request['name'],
-            $matchedActivity['type'] => $this->request['type'],
-            $matchedActivity['time'] => $this->request['time'],
-            $matchedActivity['unitId'] => $this->request['unitId'],
+            $matchedActivity['productId'] = $this->request['productId'],
+            $matchedActivity['name'] = $this->request['name'],
+            $matchedActivity['type'] = $this->request['type'],
+            $matchedActivity['time'] = $this->request['time'],
+            $matchedActivity['unitId'] = $this->request['unitId'],
         ];
 
         $newInfoMatchedActivity = $matchedActivity->update($params);

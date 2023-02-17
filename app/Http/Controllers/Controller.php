@@ -101,7 +101,7 @@ class Controller extends BaseController
         return response()->json([
             'error_code' => 0,
             'message' => ['Successfully'],
-            'productData' => $unitData,
+            'unitData' => $unitData,
         ],200);
     }
     protected function successMatchedActivityRequest($matchedActivityData = array())
@@ -109,7 +109,23 @@ class Controller extends BaseController
         return response()->json([
             'error_code' => 0,
             'message' => ['Successfully'],
-            'productData' => $matchedActivityData,
+            'matchedActivityData' => $matchedActivityData,
+        ],200);
+    }
+    protected function successClassRequest($classData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'ClassData' => $classData,
+        ],200);
+    }
+    protected function successClassMatchActivityRequest($classMatchActivityData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'classMatchActivityData' => $classMatchActivityData,
         ],200);
     }
 }

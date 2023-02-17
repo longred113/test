@@ -22,6 +22,7 @@ class CreateStudentsTable extends Migration
             $table->string('dateOfBirth')->nullable();
             $table->string('country')->nullable();
             $table->string('timeZone')->nullable();
+            $table->string('status')->nullable();
             $table->date('joinedDate')->nullable();
             $table->date('withDrawal')->nullable();
             $table->string('introduction')->nullable();
@@ -29,7 +30,6 @@ class CreateStudentsTable extends Migration
             $table->integer('basicPoint')->nullable();
             $table->string('campusId')->nullable();
             $table->string('type')->nullable();
-            $table->string('classId')->nullable();
             $table->timestamps();
         });
     }

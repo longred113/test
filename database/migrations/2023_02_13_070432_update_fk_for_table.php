@@ -18,7 +18,6 @@ class UpdateFkForTable extends Migration
         });
         Schema::table('students', function (Blueprint $table) {
             $table->foreign('campusId')->references('campusId')->on('campuses')->onDelete('cascade');
-            $table->foreign('classId')->references('classId')->on('classes')->onDelete('cascade');
         });
         Schema::table('campus_managers', function (Blueprint $table) {
             $table->foreign('campusId')->references('campusId')->on('campuses')->onDelete('cascade');

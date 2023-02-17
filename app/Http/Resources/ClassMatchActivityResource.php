@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class Packages extends JsonResource
+class ClassMatchActivityResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,12 +15,9 @@ class Packages extends JsonResource
     public function toArray($request)
     {
         return [
-            'packageId' => $this->packageId,
-            'name' => $this->name,
-            'startLevel' => $this->startLevel,
-            'endLevel' => $this->endLevel,
-            'activate' => $this->activate,
-            'detail' => $this->detail,
+        'classId' => $this->classId,
+        'matchedActivityId' => $this->matchActivityId,
+        'status' => $this->status,
         ];
     }
 }
