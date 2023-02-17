@@ -9,7 +9,8 @@ use App\Http\Controllers\api\Admin_Dashboard\UserController;
 use App\Http\Controllers\api\Admin_Dashboard\PackagesController;
 use App\Http\Controllers\api\Admin_Dashboard\ProductController;
 use App\Http\Controllers\api\Admin_Dashboard\UnitController;
-use App\Models\Teachers;
+use App\Http\Controllers\api\Campus_Dashboard\OffStudentController;
+use App\Http\Controllers\api\Campus_Dashboard\OffTeachController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -99,6 +100,7 @@ Route::prefix('admin-product-management')
         Route::post('/create', [ProductController::class, 'store'])->name('store');
         Route::get('/{productId}', [ProductController::class, 'show'])->name('show');
         Route::put( '/update/{productId}', [ProductController::class, 'update'])->name('update');
+        Route::put( '/add-pakage/{productId}', [ProductController::class, 'addPackages'])->name('addPackages');
         Route::delete('/{productId}', [ProductController::class, 'destroy'])->name('destroy');
     });
 
@@ -114,8 +116,8 @@ Route::prefix('campus-teacherOff')
         Route::delete('/{teacherId}', [OffTeachController::class, 'destroy'])->name('destroy');
     });
 
-Route::prefix('campus-student')
-    ->name('campus-student.')
+Route::prefix('campus-studentOff')
+    ->name('campus-studentOff.')
     ->group(function() {
         Route::get('/', [OffStudentController::class, 'index'])->name('index');
         Route::post('/create', [OffStudentController::class, 'store'])->name('store');
@@ -123,6 +125,8 @@ Route::prefix('campus-student')
         Route::put( '/update/{studentId}', [OffStudentController::class, 'update'])->name('update');
         Route::delete('/{studentId}', [OffStudentController::class, 'destroy'])->name('destroy');
     });
+
+// CAMPUS END
 
 Route::prefix('admin-unit-management')
     ->name('admin-unit-management.')
