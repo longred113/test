@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\api\Admin_Dashboard;
-
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CampusResource;
 use App\Http\Resources\TeacherResource;
@@ -190,6 +189,7 @@ class TeacherController extends Controller
         } else {
             $ids = $this->request->get('teacherIds');
         }
+        dd($ids);
         foreach ($ids as $id) {
             $deleteTeacher = Teachers::where('teacherId', $id)->delete();
         }

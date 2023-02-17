@@ -148,6 +148,24 @@ class ProductController extends Controller
         $deleteProducts = $product->delete();
         return $this->successProductsRequest($deleteProducts);
     }
+    public function addPackages(Request $request, $productId)
+    {
+        $products = Products::find($productId);
+        if(empty($request->packageId)) {
+            $request['packageId'] = $products['packageId'];
+        }
+        $validator = validator::make($request->all(), [
+            'packageId' => 'required|string',
+        ]);
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+        $params = [
+            $products['packageId'] = $request['packageId'],
+        ];
+        $newAddpakage = $products->update($params);
+        return $this->successProductsRequest($newAddpakage);
+    }
 
     public function updatePackage()
     {
