@@ -15,12 +15,12 @@ class MatchedActivityResource extends JsonResource
     public function toArray($request)
     {
         return [
-        'matchedActivityId' => $this->matchedActivityId,
-        'productId' => $this->productId,
-        'name' => $this->name,
-        'type' => $this->type,
-        'time' => $this->time,
-        'unitId' => $this->unitId,
+            'matchedActivityId' => $this->matchedActivityId,
+            'productId' => $this->productId,
+            'name' => $this->name,
+            'type' => $this->type,
+            'time' => $this->time,
+            'unitId' => $this->unitId,
         ];
     }
 }

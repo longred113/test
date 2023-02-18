@@ -61,11 +61,19 @@ class ClassMatchActivityController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($classId,$matchedActivityId)
+    public function show()
     {
-        $classMatchedActivity = ClassMatchActivities::find($classId, $matchedActivityId);
-        $classMatchedActivityData = new ClassMatchActivityResource($classMatchedActivity);
-        return $this->successClassMatchActivityRequest($classMatchedActivityData);
+        $validator = Validator::make($this->request->all(), [
+            'classId' => 'string|required',
+            'matchedActivityId' => 'string|required',
+        ]);
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+        $classId = $this->request['classId'];
+        $matchedActivityId = $this->request['matchedActivityId'];
+        $classMatchedActivity = ClassMatchActivities::where('classId', $classId)->where('matchedActivityId', $matchedActivityId)->get();
+        return $this->successClassMatchActivityRequest($classMatchedActivity);
     }
 
     /**
@@ -75,25 +83,24 @@ class ClassMatchActivityController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update($classId, $matchedActivityId)
+    public function update()
     {
-        $classMatchedActivity = ClassMatchActivities::find($classId, $matchedActivityId);
         $validator = Validator::make($this->request->all(), [
             'classId' => 'string|required',
             'matchedActivityId' => 'string|required',
-            'status' => 'string|required',
         ]);
         if ($validator->fails()) {
             return $validator->errors();
         }
-
+        $classId = $this->request['classId'];
+        $matchedActivityId = $this->request['matchedActivityId'];
         $params = [
-            $classMatchedActivity['classId'] = $this->request['classId'],
-            $classMatchedActivity['matchedActivityId'] = $this->request['matchedActivityId'],
-            $classMatchedActivity['status'] = $this->request['status'],
+            'classId' => $this->request['classId'],
+            'matchedActivityId' => $this->request['matchedActivityId'],
+            'status' => $this->request['status'],
         ];
 
-        $newClassMatchedActivityData = $classMatchedActivity->update($params);
+        $newClassMatchedActivityData = ClassMatchActivities::where('classId', $classId)->where('matchedActivityId', $matchedActivityId)->update($params);
         return $this->successClassMatchActivityRequest($newClassMatchedActivityData);
     }
 
@@ -105,7 +112,7 @@ class ClassMatchActivityController extends Controller
      */
     public function destroy($classId, $matchedActivityId)
     {
-        $classMatchedActivity = ClassMatchActivities::find($classId, $matchedActivityId);
+        $classMatchedActivity = ClassMatchActivities::where('classId', $classId)->where('matchedActivityId',$matchedActivityId);
         $deleteClassMatchedActivity = $classMatchedActivity->delete();
         return $this->successClassMatchActivityRequest($deleteClassMatchedActivity);
     }

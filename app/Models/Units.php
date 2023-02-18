@@ -13,7 +13,6 @@ class Units extends Model
     public $incrementing = false;
     protected $fillable = [
         'unitId',
-        'matchedActivityId',
         'productId',
         'name',
         'startDate',

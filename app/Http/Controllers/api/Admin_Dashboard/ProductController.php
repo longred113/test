@@ -155,7 +155,7 @@ class ProductController extends Controller
             $request['packageId'] = $products['packageId'];
         }
         $validator = validator::make($request->all(), [
-            'packageId' => 'required|string',
+            'packageId' => 'required|integer',
         ]);
         if ($validator->fails()) {
             return $validator->errors();
