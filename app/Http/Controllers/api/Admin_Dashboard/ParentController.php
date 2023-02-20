@@ -57,9 +57,11 @@ class ParentController extends Controller
             'name' => $this->request['name'],
             'email' => $this->request['email'],
             'phone' => $this->request['phone'],
-            'studentIds' => $studentIds,
         ];
         $newParentData = new ParentResource(Parents::create($params));
+        foreach ($studentIds as $studentId) {
+            
+        }
         return $this->successParentRequest($newParentData);
     }
 

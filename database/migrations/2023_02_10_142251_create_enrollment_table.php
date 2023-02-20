@@ -13,7 +13,7 @@ class CreateEnrollmentTable extends Migration
      */
     public function up()
     {
-        Schema::create('enrollment', function (Blueprint $table) {
+        Schema::create('enrollments', function (Blueprint $table) {
             $table->string('studentName')->nullable();
             $table->string('studentId')->nullable();
             $table->string('talkSamId')->nullable();
@@ -32,6 +32,6 @@ class CreateEnrollmentTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('enrollment');
+        Schema::dropIfExists('enrollments');
     }
 }
