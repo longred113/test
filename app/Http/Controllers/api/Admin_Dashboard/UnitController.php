@@ -38,7 +38,6 @@ class UnitController extends Controller
     {
         $validator = Validator::make($this->request->all(), [
             'unitId' => 'string|required|unique:units',
-            // 'matchedActivityId' => 'string|required',
             // 'productId' => 'string|required',
             'name' => 'string|required',
             // 'startDate' => 'required',
@@ -50,7 +49,6 @@ class UnitController extends Controller
 
         $params = [
             'unitId' => $this->request['unitId'],
-            'matchActivityId' => $this->request['matchActivityId'],
             'productId' => $this->request['productId'],
             'name' => $this->request['name'],
             'startDate' => $this->request['startDate'],
@@ -84,8 +82,7 @@ class UnitController extends Controller
     {
         $unit = Units::find($unitId);
         $validator = Validator::make($this->request->all(), [
-            // 'matchedActivityId' => 'string|required',
-            // 'productId' => 'string|required',
+            'productId' => 'string|required',
             'name' => 'string|required',
             // 'startDate' => 'required',
             // 'endDate' => 'required',
@@ -94,7 +91,6 @@ class UnitController extends Controller
             return $validator->errors();
         }
         $params = [
-            $unit['matchedActivityId'] = $this->request['matchedActivityId'],
             $unit['productId'] = $this->request['productId'],
             $unit['name'] = $this->request['name'],
             $unit['startDate'] = $this->request['startDate'],

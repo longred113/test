@@ -8,11 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Parents extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'parentId';
+    protected $keyType = 'string';
+    public $incrementing = false;
     protected $fillable = [
         'parentId',
         'name',
         'email',
         'phone',
-        'childrenIds',
+        'studentIds',
     ];
 }

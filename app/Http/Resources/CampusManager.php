@@ -15,21 +15,21 @@ class CampusManager extends JsonResource
     public function toArray($request)
     {
         return [
-        'campusManagerId' => $this->campusManagerId,
-        'name' => $this->name,
-        'email'=>$this->email,
-        'gender'=>$this->gender,
-        'dateOfBirth'=>$this->dateOfBirth,
-        'country'=>$this->country,
-        'timeZone'=>$this->timeZone,
-        'startDate'=>$this->startDate,
-        'resignation'=>$this->resignation,
-        'campusId'=>$this->campusId,
-        'memo'=>$this->memo,
-        'offlineStudentId'=>$this->offlineStudentId,
-        'offlineTeacherId'=>$this->offlineTeacherId,
-        // 'created_at' => $this->created_at->format('d/m/Y'),
-        // 'updated_at' => $this->updated_at->format('d/m/Y'),
+            'campusManagerId' => $this->campusManagerId,
+            'name' => $this->name,
+            'email' => $this->email,
+            'gender' => $this->gender,
+            'dateOfBirth' => $this->dateOfBirth,
+            'country' => $this->country,
+            'timeZone' => $this->timeZone,
+            'startDate' => $this->startDate,
+            'resignation' => $this->resignation,
+            'campusId' => $this->campusId,
+            'memo' => $this->memo,
+            'offlineStudentId' => $this->offlineStudentId,
+            'offlineTeacherId' => $this->offlineTeacherId,
+            // 'created_at' => $this->created_at->format('d/m/Y'),
+            // 'updated_at' => $this->updated_at->format('d/m/Y'),
         ];
     }
 }

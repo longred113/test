@@ -63,7 +63,6 @@ class UpdateFkForTable extends Migration
             $table->foreign('campusId')->references('campusId')->on('campuses')->onDelete('cascade');
         });
         Schema::table('units', function (Blueprint $table) {
-            $table->foreign('matchedActivityId')->references('matchedActivityId')->on('matched_activities')->onDelete('cascade');
             $table->foreign('productId')->references('productId')->on('products')->onDelete('cascade');
         });
         Schema::table('class_reports', function (Blueprint $table) {

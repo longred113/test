@@ -128,4 +128,12 @@ class Controller extends BaseController
             'classMatchActivityData' => $classMatchActivityData,
         ],200);
     }
+    protected function successParentRequest($parentData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'parentData' => $parentData,
+        ],200);
+    }
 }

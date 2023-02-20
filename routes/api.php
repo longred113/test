@@ -9,6 +9,7 @@ use App\Http\Controllers\api\Admin_Dashboard\RoleController;
 use App\Http\Controllers\api\Admin_Dashboard\TeacherController;
 use App\Http\Controllers\api\Admin_Dashboard\UserController;
 use App\Http\Controllers\api\Admin_Dashboard\PackagesController;
+use App\Http\Controllers\api\Admin_Dashboard\ParentController;
 use App\Http\Controllers\api\Admin_Dashboard\ProductController;
 use App\Http\Controllers\api\Admin_Dashboard\StudentController;
 use App\Http\Controllers\api\Admin_Dashboard\UnitController;
@@ -177,9 +178,9 @@ Route::prefix('admin-class-match-activity-management')
     ->group(function() {
         Route::get('/', [ClassMatchActivityController::class, 'index'])->name('index');
         Route::post('/create', [ClassMatchActivityController::class, 'store'])->name('store');
-        Route::get('/{classId}?{matchedActivityId}', [ClassMatchActivityController::class, 'show'])->name('show');
-        Route::put('/update/{classId}?{matchedActivityId}', [ClassMatchActivityController::class, 'update'])->name('update');
-        Route::delete('/{classId}?{matchedActivityId}', [ClassMatchActivityController::class, 'destroy'])->name('destroy');
+        Route::post('/show', [ClassMatchActivityController::class, 'show'])->name('show');
+        Route::put('/update', [ClassMatchActivityController::class, 'update'])->name('update');
+        Route::delete('/{classId}/{matchedActivityId}', [ClassMatchActivityController::class, 'destroy'])->name('destroy');
     });
 
 Route::prefix('admin-student-management')
@@ -190,6 +191,16 @@ Route::prefix('admin-student-management')
         Route::get('/{studentId}', [StudentController::class, 'show'])->name('show');
         Route::put('/update/{studentId}', [StudentController::class, 'update'])->name('update');
         Route::delete('/{studentId}', [StudentController::class, 'destroy'])->name('destroy');
+    });
+
+Route::prefix('admin-parent-management')
+    ->name('admin-parent-management.')
+    ->group(function() {
+        Route::get('/', [ParentController::class, 'index'])->name('index');
+        Route::post('/create', [ParentController::class, 'store'])->name('store');
+        Route::get('/{parentId}', [ParentController::class, 'show'])->name('show');
+        Route::put('/update/{parentId}', [ParentController::class, 'update'])->name('update');
+        Route::delete('/{parentId}', [ParentController::class, 'destroy'])->name('destroy');
     });
 
 Route::prefix('admin-enrollment')

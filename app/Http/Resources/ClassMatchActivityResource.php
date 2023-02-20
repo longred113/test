@@ -15,9 +15,9 @@ class ClassMatchActivityResource extends JsonResource
     public function toArray($request)
     {
         return [
-        'classId' => $this->classId,
-        'matchedActivityId' => $this->matchActivityId,
-        'status' => $this->status,
+            'classId' => $this->classId,
+            'matchedActivityId' => $this->matchedActivityId,
+            'status' => $this->status,
         ];
     }
 }

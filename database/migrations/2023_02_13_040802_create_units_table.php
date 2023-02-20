@@ -15,7 +15,6 @@ class CreateUnitsTable extends Migration
     {
         Schema::create('units', function (Blueprint $table) {
             $table->string('unitId')->primary();
-            $table->string('matchedActivityId')->nullable();
             $table->string('productId')->nullable();
             $table->string('name')->nullable();
             $table->date('startDate')->nullable();

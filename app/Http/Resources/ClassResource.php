@@ -15,16 +15,16 @@ class ClassResource extends JsonResource
     public function toArray($request)
     {
         return [
-        'classId' => $this->classId,
-        'productId' => $this->productId,
-        'name' => $this->name,
-        'numberOfStudent' => $this->numberOfStudent,
-        'subject' => $this->subject,
-        'onlineTeacher' => $this->onlineTeacher,
-        'classday' => $this->classday,
-        'classTimeSlot' => $this->classTimeSlot,
-        'classStartDate' => $this->classStartDate,
-        'status' => $this->status,
+            'classId' => $this->classId,
+            'productId' => $this->productId,
+            'name' => $this->name,
+            'numberOfStudent' => $this->numberOfStudent,
+            'subject' => $this->subject,
+            'onlineTeacher' => $this->onlineTeacher,
+            'classday' => $this->classday,
+            'classTimeSlot' => $this->classTimeSlot,
+            'classStartDate' => $this->classStartDate,
+            'status' => $this->status,
         ];
     }
 }
