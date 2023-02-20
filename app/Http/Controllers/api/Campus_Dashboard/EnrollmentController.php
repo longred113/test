@@ -19,7 +19,7 @@ class EnrollmentController extends Controller
     {
          $data = Student::collection(Students::where('status', 'Approved')->orWhere('status', 'Applied')->get());
         return $this->successStudentRequest($data);
-    }S
+    }
 
     /**
      * Show the form for creating a new resource.
