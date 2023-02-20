@@ -13,6 +13,7 @@ use App\Http\Controllers\api\Admin_Dashboard\ParentController;
 use App\Http\Controllers\api\Admin_Dashboard\ProductController;
 use App\Http\Controllers\api\Admin_Dashboard\StudentController;
 use App\Http\Controllers\api\Admin_Dashboard\UnitController;
+use App\Http\Controllers\api\Admin_Dashboard\EnrollmentControllerA;
 use App\Http\Controllers\api\Campus_Dashboard\OffStudentController;
 use App\Http\Controllers\api\Campus_Dashboard\OffTeachController;
 use App\Http\Controllers\api\Campus_Dashboard\EnrollmentController;
@@ -200,4 +201,14 @@ Route::prefix('admin-parent-management')
         Route::get('/{parentId}', [ParentController::class, 'show'])->name('show');
         Route::put('/update/{parentId}', [ParentController::class, 'update'])->name('update');
         Route::delete('/{parentId}', [ParentController::class, 'destroy'])->name('destroy');
+    });
+
+Route::prefix('admin-enrollment')
+    ->name('admin-enrollment.')
+    ->group(function() {
+        Route::get('/', [EnrollmentControllerA::class, 'index'])->name('index');
+        Route::post('/create', [EnrollmentControllerA::class, 'store'])->name('store');
+        Route::get('/{studentId}', [EnrollmentControllerA::class, 'show'])->name('show');
+        Route::put('/update/{studentId}', [EnrollmentControllerA::class, 'update'])->name('update');
+        Route::delete('/{studentId}', [EnrollmentControllerA::class, 'destroy'])->name('destroy');
     });

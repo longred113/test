@@ -17,7 +17,7 @@ class OffTeachController extends Controller
      */
     public function index()
     {
-        $data = TeacherResource::collection(Teachers::where('type', 'off')->orWhere('type', 'onl')->get());
+        $data = TeacherResource::collection(Teachers::where('type', 'off')->get());
         // $data = TeacherResource::get()->where('type', 'off');
         return $this->successTeacherRequest($data);
     }

@@ -43,6 +43,7 @@ class ProductController extends Controller
             'packageId' => 'required',
             'name' => 'required',
             // 'startLevel' => 'required',
+            // 'level' => 'required',
             // 'endLevel' => 'required',
             // 'details' => 'required',
             // 'image' => 'required',
@@ -56,6 +57,7 @@ class ProductController extends Controller
             'packageId' => request('packageId'),
             'name' => request('name'),
             'startLevel' => request('startLevel'),
+            'level' => request('level'),
             'endLevel' => request('endLevel'),
             'details' => request('details'),
             'image' => request('image'),
@@ -97,6 +99,9 @@ class ProductController extends Controller
         // if(empty($request->startLevel)) {
         //     $request['startLevel'] = $products['startLevel'];
         // }
+        // if(empty($request->level)) {
+        //     $request['level'] = $products['level'];
+        // }
         // if(empty($request->endLevel)) {
         //     $request['endLevel'] = $products['endLevel'];
         // }
@@ -113,6 +118,7 @@ class ProductController extends Controller
             'packageId' => 'required|integer',
             'name' => 'required|string',
             // 'startLevel' => 'required|string',
+            // 'level' => 'required',
             // 'endLevel' => 'required',
             // 'details' => 'required',
             // 'image' => 'required',
@@ -127,6 +133,7 @@ class ProductController extends Controller
             $products['packageId'] = $request['packageId'],
             $products['name'] = $request['name'],
             $products['startLevel'] = $request['startLevel'],
+            $products['level'] = $request['level'],
             $products['endLevel'] = $request['endLevel'],
             $products['details'] = $request['details'],
             $products['image'] = $request['image'],

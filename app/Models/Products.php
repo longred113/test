@@ -17,6 +17,7 @@ class Products extends Model
         'packageId',
         'name',
         'startLevel',
+        'level',
         'endLevel',
         'details',
         'image',
