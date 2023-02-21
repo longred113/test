@@ -8,6 +8,10 @@ use App\Models\Users;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use App\Helpers\Helper;
+use App\Models\Roles;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class UserController extends Controller
 {
@@ -35,40 +39,47 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store()
+    public function store($userParams)
     {
-        $validator = Validator::make($this->request->all(), [
-            'userId' => 'string|required|unique:users',
-            'name' => 'string|required',
-            'email' => 'string|required|unique:users',
-            'password' => 'string|required|min:8',
-            'roleId' => 'string|required',
-        ]);
-        if ($validator->fails()) {
-            return $validator->errors();
-        }
+        // $validator = Validator::make($this->request->all(), [
+        //     'userId' => 'string|required|unique:users',
+        //     'name' => 'string|required',
+        //     'email' => 'string|required|unique:users',
+        //     'password' => 'string|required|min:8',
+        //     'roleId' => 'string|required',
+        // ]);
+        // if ($validator->fails()) {
+        //     return $validator->errors();
+        // }
+        // $id = Str::uuid()->toString();
+        $userId = Helper::IDGenerator(new Users, 'userId', 5, 'US');
         $params = [
-            'userId' => $this->request['userId'],
-            'name' => $this->request['name'],
-            'email' => $this->request['email'],
-            'password' => $this->request['password'],
-            'roleId' => $this->request['roleId'],
+            'userId' => $userId,
+            'name' => $userParams['name'],
+            'email' => $userParams['email'],
+            'password' => $userParams['password'],
         ];
-        if (!empty($this->request['teacherId'])) {
-            $params['teacherId'] = $this->request['teacherId'];
+        $roles = Roles::all();
+        foreach($roles as $role) {
+            if (!empty($userParams['teacherId'])) {
+                $params['teacherId'] = $userParams['teacherId'];
+                $params['roleId'] = $role->where('name', 'teacher')->get('roleId');
+            }
+            if (!empty($userParams['studentId'])) {
+                $params['studentId'] = $userParams['studentId'];
+                $params['roleId'] = $role->where('name', 'student')->get('roleId');
+            }
+            if (!empty($userParams['parentId'])) {
+                $params['parentId'] = $userParams['parentId'];
+                $params['roleId'] = $role->where('name', 'parent')->get('roleId');
+            }
+            if (!empty($userParams['campusManagerId'])) {
+                $params['campusManagerId'] = $userParams['campusManagerId'];
+                $params['roleId'] = $role->where('name', 'campus manager')->get('roleId');
+            }
         }
-        if (!empty($this->request['studentId'])) {
-            $params['studentId'] = $this->request['studentId'];
-        }
-        if (!empty($this->request['parentId'])) {
-            $params['parentId'] = $this->request['parentId'];
-        }
-        if (!empty($this->request['campusManagerId'])) {
-            $params['campusManagerId'] = $this->request['campusManagerId'];
-        }
-        dd($params);
         $newUserData = new UserResource(Users::create($params));
-        return $this->successUserRequest($newUserData);
+        return $newUserData;
     }
 
     /**

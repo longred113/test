@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api\Admin_Dashboard;
 
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\RoleResource;
 use App\Models\Roles;
@@ -30,16 +31,15 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         $validator = validator::make($request->all(), [
-            'roleId' => 'required|string|unique:roles',
             'name' => 'required|string',
             'activate' => 'required',
         ]);
         if ($validator->fails()) {
             return $validator->errors();
         }
-
+        $roleId = Helper::IDRoleGenerator(new Roles(), 'roleId', 5, 'RL');
         $params = [
-            'roleId' => request('roleId'),
+            'roleId' => $roleId,
             'name' => request('name'),
             'activate' => request('activate'),
         ];

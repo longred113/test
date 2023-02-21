@@ -11,14 +11,14 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    protected function errorBadRequest($message = '', $data = [])
-    {
-        $response = array(
-            'error_code' => 0,
-            'message' => ['Successfully'],
-            'campusData' => $campusData,
-        ],200);
-    }
+    // protected function errorBadRequest($message = '', $data = [])
+    // {
+    //     $response = array(-
+    //         'error_code' => 0,
+    //         'message' => ['Successfully'],
+    //         'campusData' => $campusData,
+    //     ],200);
+    // }
     protected function successRoleRequest($roleData = array()) {
         return response()->json([
             'error_code' => 0,

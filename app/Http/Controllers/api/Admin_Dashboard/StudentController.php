@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\api\Admin_Dashboard;
 
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentResource;
+use App\Models\Roles;
 use App\Models\Students;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -37,9 +39,9 @@ class StudentController extends Controller
     public function store()
     {
         $validator = Validator::make($this->request->all(), [
-            'studentId' => 'string|required|unique:students',
             'name' => 'string|required',
             'email' => 'string|required|unique:students',
+            'password' => 'string|required|min:8',
             // 'gender' => 'string|required',
             // 'dateOfBirth' => 'date|required',
             // 'country' => 'string|required',
@@ -56,9 +58,9 @@ class StudentController extends Controller
         if ($validator->fails()) {
             return $validator->errors();
         }
-
-        $params = [
-            'studentId' => $this->request['studentId'],
+        $studentId = Helper::IDGenerator(new Students, 'studentId', 5, 'ST');
+        $studentParams = [
+            'studentId' => $studentId,
             'name' => $this->request['name'],
             'email' => $this->request['email'],
             'gender' => $this->request['gender'],
@@ -74,7 +76,15 @@ class StudentController extends Controller
             'campusId' => $this->request['campusId'],
             'type' => $this->request['type'],
         ];
-        $newStudentData = new StudentResource(Students::create($params));
+
+        $userParams = [
+            'name' => $this->request['name'],
+            'email' => $this->request['email'],
+            'password' => $this->request['password'],
+            'studentId' => $studentId,
+        ];
+        $newStudentData = new StudentResource(Students::create($studentParams));
+        UserController::store($userParams);
         return $this->successStudentRequest($newStudentData);
     }
 

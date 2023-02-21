@@ -14,7 +14,7 @@ class UpdateFkForTable extends Migration
     public function up()
     {
         Schema::table('parents', function (Blueprint $table) {
-            $table->foreign('studentIds')->references('studentId')->on('students')->onDelete('cascade');
+            $table->foreign('studentId')->references('studentId')->on('students')->onDelete('cascade');
         });
         Schema::table('students', function (Blueprint $table) {
             $table->foreign('campusId')->references('campusId')->on('campuses')->onDelete('cascade');
