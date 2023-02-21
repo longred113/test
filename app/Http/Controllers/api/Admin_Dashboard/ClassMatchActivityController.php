@@ -100,7 +100,8 @@ class ClassMatchActivityController extends Controller
             'status' => $this->request['status'],
         ];
 
-        $newClassMatchedActivityData = ClassMatchActivities::where('classId', $classId)->where('matchedActivityId', $matchedActivityId)->update($params);
+        $newClassMatchedActivityData = ClassMatchActivities::where('classId', $classId)
+        ->where('matchedActivityId', $matchedActivityId)->update($params);
         return $this->successClassMatchActivityRequest($newClassMatchedActivityData);
     }
 

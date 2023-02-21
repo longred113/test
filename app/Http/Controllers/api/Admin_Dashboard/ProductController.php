@@ -57,7 +57,7 @@ class ProductController extends Controller
             'packageId' => request('packageId'),
             'name' => request('name'),
             'startLevel' => request('startLevel'),
-            'level' => request('level'),
+            // 'level' => request('level'),
             'endLevel' => request('endLevel'),
             'details' => request('details'),
             'image' => request('image'),
@@ -90,9 +90,9 @@ class ProductController extends Controller
     public function update(Request $request, $productId)
     {
         $products = Products::find($productId);
-        // if(empty($request->packageId)) {
-        //     $request['packageId'] = $products['packageId'];
-        // }
+        if(empty($request->packageId)) {
+            $request['packageId'] = $products['packageId'];
+        }
         if (empty($request->name)) {
             $request['name'] = $products['name'];
         }
@@ -114,7 +114,7 @@ class ProductController extends Controller
         // if (empty($request->activate)) {
         //     $request['activate'] = $products['activate'];
         // }
-        $validator = validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'packageId' => 'required|integer',
             'name' => 'required|string',
             // 'startLevel' => 'required|string',
@@ -140,7 +140,7 @@ class ProductController extends Controller
             $products['activate'] = $request['activate'],
         ];
         $newInfoProducts = $products->update($params);
-        return $this->productsRequest($newInfoProducts);
+        return $this->successProductsRequest($newInfoProducts);
     }
 
     /**
@@ -170,8 +170,8 @@ class ProductController extends Controller
         $params = [
             $products['packageId'] = $request['packageId'],
         ];
-        $newAddpakage = $products->update($params);
-        return $this->successProductsRequest($newAddpakage);
+        $newAddPackage = $products->update($params);
+        return $this->successProductsRequest($newAddPackage);
     }
 
     public function updatePackage()

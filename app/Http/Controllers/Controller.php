@@ -13,30 +13,7 @@ class Controller extends BaseController
 
     protected function errorBadRequest($message = '', $data = [])
     {
-        if (is_array($message)) {
-            $tmp = array();
-            foreach ($message as $key => $value) {
-                if (is_array($value)) {
-                    $tmp[] = $value[0];
-                } else {
-                    $tmp[] = $value;
-                }
-            }
-            $message = $tmp;
-        } else {
-            $message = array($message);
-        }
-
         $response = array(
-            'error_code' => 400,
-            'message' => $message,
-            'data' => $data
-        );
-        return response()->array($response, 400);
-    }
-    protected function successCampusRequest($campusData = array())
-    {
-        return response()->json([
             'error_code' => 0,
             'message' => ['Successfully'],
             'campusData' => $campusData,

@@ -15,6 +15,7 @@ use App\Http\Controllers\api\Admin_Dashboard\StudentController;
 use App\Http\Controllers\api\Admin_Dashboard\UnitController;
 use App\Http\Controllers\api\Admin_Dashboard\ClassFeedbackController;
 use App\Http\Controllers\api\Admin_Dashboard\EnrollmentControllerA;
+use App\Http\Controllers\api\Admin_Dashboard\StudentClassController;
 use App\Http\Controllers\api\Campus_Dashboard\OffStudentController;
 use App\Http\Controllers\api\Campus_Dashboard\OffTeachController;
 use App\Http\Controllers\api\Campus_Dashboard\EnrollmentController;
@@ -223,4 +224,22 @@ Route::prefix('admin-class-feedback')
         Route::get('/show', [ClassFeedbackController::class, 'show'])->name('show');
         Route::put('/update', [ClassFeedbackController::class, 'update'])->name('update');
         Route::delete('/{studentId}', [ClassFeedbackController::class, 'destroy'])->name('destroy');
+Route::prefix('admin-user-management')
+    ->name('admin-user-management.')
+    ->group(function() {
+        Route::get('/', [UserController::class, 'index'])->name('index');
+        Route::post('/create', [UserController::class, 'store'])->name('store');
+        Route::get('/{userId}', [UserController::class, 'show'])->name('show');
+        Route::put('/update/{userId}', [UserController::class, 'update'])->name('update');
+        Route::delete('/{userId}', [UserController::class, 'destroy'])->name('destroy');
+    });
+
+Route::prefix('admin-student-class-management')
+    ->name('admin-student-class-management.')
+    ->group(function() {
+        Route::get('/', [StudentClassController::class, 'index'])->name('index');
+        Route::post('/create', [StudentClassController::class, 'store'])->name('store');
+        Route::get('/show', [StudentClassController::class, 'show'])->name('show');
+        Route::put('/update', [StudentClassController::class, 'update'])->name('update');
+        Route::delete('/', [StudentClassController::class, 'destroy'])->name('destroy');
     });
