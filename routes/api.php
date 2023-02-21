@@ -13,10 +13,12 @@ use App\Http\Controllers\api\Admin_Dashboard\ParentController;
 use App\Http\Controllers\api\Admin_Dashboard\ProductController;
 use App\Http\Controllers\api\Admin_Dashboard\StudentController;
 use App\Http\Controllers\api\Admin_Dashboard\UnitController;
+use App\Http\Controllers\api\Admin_Dashboard\ClassFeedbackController;
 use App\Http\Controllers\api\Admin_Dashboard\EnrollmentControllerA;
 use App\Http\Controllers\api\Campus_Dashboard\OffStudentController;
 use App\Http\Controllers\api\Campus_Dashboard\OffTeachController;
 use App\Http\Controllers\api\Campus_Dashboard\EnrollmentController;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -103,8 +105,8 @@ Route::prefix('admin-product-management')
         Route::get('/', [ProductController::class, 'index'])->name('index');
         Route::post('/create', [ProductController::class, 'store'])->name('store');
         Route::get('/{productId}', [ProductController::class, 'show'])->name('show');
-        Route::put( '/update/{productId}', [ProductController::class, 'update'])->name('update');
-        Route::put( '/add-package/{productId}', [ProductController::class, 'addPackages'])->name('addPackages');
+        Route::put('/update/{productId}', [ProductController::class, 'update'])->name('update');
+        Route::put('/add-package/{productId}', [ProductController::class, 'addPackages'])->name('addPackages');
         Route::delete('/{productId}', [ProductController::class, 'destroy'])->name('destroy');
         Route::put('/update-package', [ProductController::class, 'updatePackage'])->name('updatePackage');
     });
@@ -211,4 +213,14 @@ Route::prefix('admin-enrollment')
         Route::get('/{studentId}', [EnrollmentControllerA::class, 'show'])->name('show');
         Route::put('/update/{studentId}', [EnrollmentControllerA::class, 'update'])->name('update');
         Route::delete('/{studentId}', [EnrollmentControllerA::class, 'destroy'])->name('destroy');
+    });
+
+Route::prefix('admin-class-feedback')
+    ->name('admin-class-feedback.')
+    ->group(function() {
+        Route::get('/', [ClassFeedbackController::class, 'index'])->name('index');
+        Route::post('/create', [ClassFeedbackController::class, 'store'])->name('store');
+        Route::get('/show', [ClassFeedbackController::class, 'show'])->name('show');
+        Route::put('/update', [ClassFeedbackController::class, 'update'])->name('update');
+        Route::delete('/{studentId}', [ClassFeedbackController::class, 'destroy'])->name('destroy');
     });

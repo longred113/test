@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class ClassFeedbacks extends Model
 {
     use HasFactory;
+    // protected $primaryKey = '';
+    protected $keyType = 'string';
+    public $incrementing = false;
     protected $fillable = [
         'teacherId',
         'classId',

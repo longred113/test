@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Enrollment extends Model
 {
-    protected $primaryKey = 'studentId';
+    // protected $primaryKey = '';
     protected $keyType = 'string';
     public $incrementing = false;
     use HasFactory;

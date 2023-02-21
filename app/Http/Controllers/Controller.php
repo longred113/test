@@ -112,6 +112,14 @@ class Controller extends BaseController
             'matchedActivityData' => $matchedActivityData,
         ],200);
     }
+    protected function successClassFeedback($matchedClassFeedbackData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'matchedClassFeedbackData' => $matchedClassFeedbackData,
+        ],200);
+    }
     protected function successClassRequest($classData = array())
     {
         return response()->json([
