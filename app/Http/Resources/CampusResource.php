@@ -19,7 +19,10 @@ class CampusResource extends JsonResource
             'name' => $this->name,
             'indicated' => $this->indicated,
             'contact' => $this->contact,
+<<<<<<< HEAD
             'activate' => $this->activate,
+=======
+>>>>>>> 8c921956d2c9cf2cfbc93d33eb35c28f8fd16936
         ];
     }
 }

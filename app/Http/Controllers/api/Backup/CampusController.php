@@ -19,7 +19,11 @@ class CampusController extends Controller
     public function index()
     {
         $campusesData = CampusResource::collection(Campus::all());
+<<<<<<< HEAD:app/Http/Controllers/api/Backup/CampusController.php
         return $this->successCampusRequest($campusesData);
+=======
+        return $campusesData;
+>>>>>>> 8c921956d2c9cf2cfbc93d33eb35c28f8fd16936:app/Http/Controllers/api/CampusController.php
     }
 
     /**
@@ -49,7 +53,11 @@ class CampusController extends Controller
             'activate' => request('activate'),
         ];
         $newCampus = new CampusResource(Campus::create($params));
+<<<<<<< HEAD:app/Http/Controllers/api/Backup/CampusController.php
         return $this->successCampusRequest($newCampus);
+=======
+        return $newCampus;
+>>>>>>> 8c921956d2c9cf2cfbc93d33eb35c28f8fd16936:app/Http/Controllers/api/CampusController.php
     }
 
     /**
@@ -61,8 +69,13 @@ class CampusController extends Controller
     public function show($campusId)
     {
         $campus = Campus::find($campusId);
+<<<<<<< HEAD:app/Http/Controllers/api/Backup/CampusController.php
         $campusData = new CampusResource($campus);
         return $this->successCampusRequest($campusData);
+=======
+        $campusesData = new CampusResource($campus);
+        return $campusesData;
+>>>>>>> 8c921956d2c9cf2cfbc93d33eb35c28f8fd16936:app/Http/Controllers/api/CampusController.php
     }
 
     /**
@@ -78,6 +91,7 @@ class CampusController extends Controller
         if(empty($request->name)) {
             $request['name'] = $campus['name'];
         }
+<<<<<<< HEAD:app/Http/Controllers/api/Backup/CampusController.php
         if(empty($request->indicated)) {
             $request['indicated'] = $campus['indicated'];
         }
@@ -88,6 +102,17 @@ class CampusController extends Controller
             $request['activate'] = $campus['activate'];
         }
 
+=======
+        if(empty($request->name)) {
+            $request['name'] = $campus['name'];
+        }
+        if(empty($request->name)) {
+            $request['name'] = $campus['name'];
+        }
+        if(empty($request->name)) {
+            $request['name'] = $campus['name'];
+        }
+>>>>>>> 8c921956d2c9cf2cfbc93d33eb35c28f8fd16936:app/Http/Controllers/api/CampusController.php
         $validator = validator::make($request->all(), [
             'name' => 'required|string',
             'indicated' => 'required|string',
@@ -97,7 +122,10 @@ class CampusController extends Controller
         if ($validator->fails()) {
             return $validator->errors();
         }
+<<<<<<< HEAD:app/Http/Controllers/api/Backup/CampusController.php
         
+=======
+>>>>>>> 8c921956d2c9cf2cfbc93d33eb35c28f8fd16936:app/Http/Controllers/api/CampusController.php
         $params = [
             $campus['name'] = $request['name'],
             $campus['indicated'] = $request['indicated'],
