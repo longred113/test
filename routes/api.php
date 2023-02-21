@@ -39,19 +39,11 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('dash-board-admin')
     ->name('dash-board-admin.')
     ->group(function() {
-<<<<<<< HEAD
         Route::get('/', [AdminController::class, 'index'])->name('index');
         Route::post('/create', [AdminController::class, 'store'])->name('store');
         Route::get('/{adminId}', [AdminController::class, 'show'])->name('show');
         Route::put('/update/{adminId}', [AdminController::class, 'update'])->name('update');
         Route::delete('/{adminId}', [AdminController::class, 'destroy'])->name('destroy');
-=======
-        Route::get('/', [CampusController::class, 'index'])->name('index');
-        Route::post('/create', [CampusController::class, 'store'])->name('store');
-        Route::get('/{campusId}', [CampusController::class, 'show'])->name('show');
-        Route::put( '/update/{campusId}', [CampusController::class, 'update'])->name('update');
-        Route::delete('/{campusId}', [CampusController::class, 'destroy'])->name('destroy');
->>>>>>> 8c921956d2c9cf2cfbc93d33eb35c28f8fd16936
     });
 
 Route::prefix('admin-campus-management')
