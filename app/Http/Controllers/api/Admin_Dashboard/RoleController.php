@@ -8,6 +8,7 @@ use App\Http\Resources\RoleResource;
 use App\Models\Roles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class RoleController extends Controller
 {
@@ -37,7 +38,7 @@ class RoleController extends Controller
         if ($validator->fails()) {
             return $validator->errors();
         }
-        $roleId = Helper::IDRoleGenerator(new Roles(), 'roleId', 5, 'RL');
+        $roleId = IdGenerator::generate(['table'=>'roles', 'trow' => 'roleId', 'length' => 8, 'prefix' => 'RL-']);
         $params = [
             'roleId' => $roleId,
             'name' => request('name'),

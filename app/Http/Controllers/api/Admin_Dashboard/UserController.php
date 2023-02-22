@@ -42,17 +42,15 @@ class UserController extends Controller
     public function store($userParams)
     {
         // $validator = Validator::make($this->request->all(), [
-        //     'userId' => 'string|required|unique:users',
         //     'name' => 'string|required',
         //     'email' => 'string|required|unique:users',
         //     'password' => 'string|required|min:8',
-        //     'roleId' => 'string|required',
+        //     // 'roleId' => 'string|required',
         // ]);
         // if ($validator->fails()) {
         //     return $validator->errors();
         // }
-        // $id = Str::uuid()->toString();
-        $userId = Helper::IDGenerator(new Users, 'userId', 5, 'US');
+        $userId = IdGenerator::generate(['table'=>'users', 'trow' => 'userId', 'length' => 8, 'prefix' => 'US-']);
         $params = [
             'userId' => $userId,
             'name' => $userParams['name'],
@@ -61,21 +59,29 @@ class UserController extends Controller
         ];
         $roles = Roles::all();
         foreach($roles as $role) {
-            if (!empty($userParams['teacherId'])) {
+            if(!empty($userParams['teacherId'])) {
                 $params['teacherId'] = $userParams['teacherId'];
-                $params['roleId'] = $role->where('name', 'teacher')->get('roleId');
+                if ($role['name'] == 'teacher') {
+                    $params['roleId'] = $role['roleId'];
+                }
             }
-            if (!empty($userParams['studentId'])) {
+            if(!empty($userParams['studentId'])) {
                 $params['studentId'] = $userParams['studentId'];
-                $params['roleId'] = $role->where('name', 'student')->get('roleId');
+                if ($role['name'] == 'student') {
+                    $params['roleId'] = $role['roleId'];
+                }
             }
-            if (!empty($userParams['parentId'])) {
+            if(!empty($userParams['parentId'])) {
                 $params['parentId'] = $userParams['parentId'];
-                $params['roleId'] = $role->where('name', 'parent')->get('roleId');
+                if ($role['name'] == 'parent') {
+                    $params['roleId'] = $role['roleId'];
+                }
             }
-            if (!empty($userParams['campusManagerId'])) {
+            if(!empty($userParams['campusManagerId'])) {
                 $params['campusManagerId'] = $userParams['campusManagerId'];
-                $params['roleId'] = $role->where('name', 'campus manager')->get('roleId');
+                if ($role['name'] == 'campus manager') {
+                    $params['roleId'] = $role['roleId'];
+                }
             }
         }
         $newUserData = new UserResource(Users::create($params));

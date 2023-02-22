@@ -9,6 +9,7 @@ use App\Models\Roles;
 use App\Models\Students;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class StudentController extends Controller
 {
@@ -58,7 +59,7 @@ class StudentController extends Controller
         if ($validator->fails()) {
             return $validator->errors();
         }
-        $studentId = Helper::IDGenerator(new Students, 'studentId', 5, 'ST');
+        $studentId = IdGenerator::generate(['table'=>'students', 'trow' => 'studentId', 'length' => 8, 'prefix' => 'ST-']);
         $studentParams = [
             'studentId' => $studentId,
             'name' => $this->request['name'],

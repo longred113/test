@@ -150,7 +150,7 @@ class CampusController extends Controller
                 Campus::where('campusId', $campus['campusId'])->update(['activate' => 0]);
             }
             else{
-                Campus::where('campusId', $campus['campusId'])->update(['activate' => 1]);
+                Campus::where('campusId', $campus['campusId'])->update(['activate' => 0]);
             }
         }
         return $this->successCampusRequest();
