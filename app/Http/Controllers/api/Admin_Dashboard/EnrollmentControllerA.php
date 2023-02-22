@@ -26,7 +26,7 @@ class EnrollmentControllerA extends Controller
     public function index()
     {
         $data = EnrollmentResource::collection(Enrollment::all());
-        return $this->successStudentRequest($data);
+        return $this->successEnrollmentRequest($data);
     }
 
     /**
@@ -65,7 +65,7 @@ class EnrollmentControllerA extends Controller
             'submitted' => $this->request['submitted'],
         ];
         $newEnrollment = new EnrollmentResource(Enrollment::create($params));
-        return $newEnrollment;
+        return $this->successEnrollmentRequest($newEnrollment);
     }
 
     /**

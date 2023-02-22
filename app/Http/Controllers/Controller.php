@@ -126,7 +126,47 @@ class Controller extends BaseController
         return response()->json([
             'error_code' => 0,
             'message' => ['Successfully'],
-            'parentData' => $campusData,
+            'campusData' => $campusData,
+        ],200);
+    }
+    protected function successCampusManagerRequest($campusManagerData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'campusManagerData' => $campusManagerData,
+        ],200);
+    }
+    protected function successEnrollmentRequest($enrollmentData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'enrollmentData' => $enrollmentData,
+        ],200);
+    }
+    protected function successStudentClassRequest($studentClassData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'studentClassData' => $studentClassData,
+        ],200);
+    }
+    protected function successClassBoardRequest($classBoardData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'classBoardData' => $classBoardData,
+        ],200);
+    }
+    protected function successClassMaterialRequest($classMaterialData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'classMaterialData' => $classMaterialData,
         ],200);
     }
 }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\api\Admin_Dashboard\AdminController;
 use App\Http\Controllers\api\Admin_Dashboard\CampusController;
+use App\Http\Controllers\api\Admin_Dashboard\ClassBoardController;
 use App\Http\Controllers\api\Admin_Dashboard\ClassController;
 use App\Http\Controllers\api\Admin_Dashboard\ClassMatchActivityController;
 use App\Http\Controllers\api\Admin_Dashboard\MatchedActivityController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\api\Admin_Dashboard\ProductController;
 use App\Http\Controllers\api\Admin_Dashboard\StudentController;
 use App\Http\Controllers\api\Admin_Dashboard\UnitController;
 use App\Http\Controllers\api\Admin_Dashboard\ClassFeedbackController;
+use App\Http\Controllers\api\Admin_Dashboard\ClassMaterialController;
 use App\Http\Controllers\api\Admin_Dashboard\EnrollmentControllerA;
 use App\Http\Controllers\api\Admin_Dashboard\StudentClassController;
 use App\Http\Controllers\api\Campus_Dashboard\OffStudentController;
@@ -244,3 +246,24 @@ Route::prefix('admin-student-class-management')
         Route::put('/update', [StudentClassController::class, 'update'])->name('update');
         Route::delete('/', [StudentClassController::class, 'destroy'])->name('destroy');
     });
+
+Route::prefix('admin-class-board-management')
+    ->name('admin-class-board-management.')
+    ->group(function() {
+        Route::get('/', [ClassBoardController::class, 'index'])->name('index');
+        Route::post('/create', [ClassBoardController::class, 'store'])->name('store');
+        Route::get('/show', [ClassBoardController::class, 'show'])->name('show');
+        Route::put('/update', [ClassBoardController::class, 'update'])->name('update');
+        Route::delete('/', [ClassBoardController::class, 'destroy'])->name('destroy');
+    });
+
+Route::prefix('admin-class-material-management')
+    ->name('admin-class-material-management.')
+    ->group(function() {
+        Route::get('/', [ClassMaterialController::class, 'index'])->name('index');
+        Route::post('/create', [ClassMaterialController::class, 'store'])->name('store');
+        Route::get('/show', [ClassMaterialController::class, 'show'])->name('show');
+        Route::put('/update', [ClassMaterialController::class, 'update'])->name('update');
+        Route::delete('/', [ClassMaterialController::class, 'destroy'])->name('destroy');
+    });
+    
