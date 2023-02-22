@@ -41,9 +41,9 @@ class CampusController extends Controller
     {
         $validator = validator::make($request->all(), [
             'name' => 'required|string',
-            'indicated' => 'required|string',
-            'contact' => 'required|string',
-            'activate' => 'required',
+            // 'indicated' => 'required|string',
+            // 'contact' => 'required|string',
+            // 'activate' => 'required',
         ]);
         if ($validator->fails()) {
             return $validator->errors();

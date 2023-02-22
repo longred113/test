@@ -121,4 +121,12 @@ class Controller extends BaseController
             'parentData' => $parentData,
         ],200);
     }
+    protected function successCampusRequest($campusData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'parentData' => $campusData,
+        ],200);
+    }
 }

@@ -15,6 +15,7 @@ class ClassFeedbackResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'classFeedbackId' => $this->classFeedbackId,
             'teacherId' => $this->teacherId,
             'classId' => $this->classId,
             'studentId' => $this->studentId,

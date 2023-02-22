@@ -221,9 +221,9 @@ Route::prefix('admin-class-feedback')
     ->group(function() {
         Route::get('/', [ClassFeedbackController::class, 'index'])->name('index');
         Route::post('/create', [ClassFeedbackController::class, 'store'])->name('store');
-        Route::get('/show', [ClassFeedbackController::class, 'show'])->name('show');
-        Route::put('/update', [ClassFeedbackController::class, 'update'])->name('update');
-        Route::delete('/{studentId}', [ClassFeedbackController::class, 'destroy'])->name('destroy');
+        Route::get('/{classFeedbackId}', [ClassFeedbackController::class, 'show'])->name('show');
+        Route::put('/update/{classFeedbackId}', [ClassFeedbackController::class, 'update'])->name('update');
+        Route::delete('/{classFeedbackId}', [ClassFeedbackController::class, 'destroy'])->name('destroy');
     });
 
 Route::prefix('admin-user-management')
