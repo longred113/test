@@ -18,6 +18,7 @@ class CreatePackagesTable extends Migration
             $table->string('name')->nullable();
             $table->string('startLevel')->nullable();
             $table->string('endLevel')->nullable();
+            $table->string('details')->nullable();
             $table->boolean('activate')->nullable();
             $table->timestamps();
         });

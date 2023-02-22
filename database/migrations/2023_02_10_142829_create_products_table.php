@@ -17,6 +17,7 @@ class CreateProductsTable extends Migration
             $table->string('productId')->primary();
             $table->integer('packageId')->nullable()->unsigned();
             $table->string('name')->nullable();
+            $table->string('level')->nullable();
             $table->string('startLevel')->nullable();
             $table->string('endLevel')->nullable();
             $table->string('details')->nullable();

@@ -14,6 +14,7 @@ class CreateClassFeedbacksTable extends Migration
     public function up()
     {
         Schema::create('class_feedbacks', function (Blueprint $table) {
+            $table->string('classFeedbackId')->primary();
             $table->string('teacherId')->nullable();
             $table->string('classId')->nullable();
             $table->string('studentId')->nullable();

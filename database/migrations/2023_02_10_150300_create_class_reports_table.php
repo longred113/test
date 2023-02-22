@@ -14,6 +14,7 @@ class CreateClassReportsTable extends Migration
     public function up()
     {
         Schema::create('class_reports', function (Blueprint $table) {
+            $table->string('classReportId')->primary();
             $table->string('teacherId')->nullable();
             $table->string('classId')->nullable();
             $table->string('studentId')->nullable();

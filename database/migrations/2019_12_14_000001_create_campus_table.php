@@ -18,6 +18,7 @@ class CreateCampusTable extends Migration
             $table->string('name')->nullable();
             $table->string('indicated')->nullable();
             $table->string('contact')->nullable();
+            $table->date('signedDate')->nullable();
             $table->boolean('activate')->nullable();
             $table->timestamps();
         });

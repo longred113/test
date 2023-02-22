@@ -24,6 +24,8 @@ class CreateClassesTable extends Migration
             $table->string('classTimeSlot')->nullable();
             $table->date('classStartDate')->nullable();
             $table->string('status')->nullable();
+            $table->string('typeOfClass')->nullable();
+            $table->string('initialTextbook')->nullable();
             $table->timestamps();
         });
     }

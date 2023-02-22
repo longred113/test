@@ -14,6 +14,7 @@ class CreateEnrollmentTable extends Migration
     public function up()
     {
         Schema::create('enrollments', function (Blueprint $table) {
+            $table->string('enrollmentId')->primary();
             $table->string('studentName')->nullable();
             $table->string('studentId')->nullable();
             $table->string('talkSamId')->nullable();
@@ -21,6 +22,7 @@ class CreateEnrollmentTable extends Migration
             $table->string('level')->nullable();
             $table->string('subject')->nullable();
             $table->string('status')->nullable();
+            $table->boolean('submitted')->nullable();
             $table->timestamps();
         });
     }
