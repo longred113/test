@@ -52,7 +52,8 @@ class ClassFeedbackController extends Controller
 
         $classFeedbackId = IdGenerator::generate(['table'=>'class_feedbacks', 'trow' => 'classFeedbackId', 'length' => 9, 'prefix' => 'CFB-']);
         $params = [
-            'teacherId' => $classFeedbackId,
+            'classFeedbackId' => $classFeedbackId,
+            'teacherId' => $this->request['teacherId'],
             'classId' => $this->request['classId'],
             'studentId' => $this->request['studentId'],
             'campusId' => $this->request['campusId'],
@@ -60,7 +61,7 @@ class ClassFeedbackController extends Controller
             'satisfaction' => $this->request['satisfaction'],
             'comment' => $this->request['comment'],
         ];
-
+       
         $newClassFeedback = new ClassFeedbackResource(ClassFeedbacks::create($params));
         return $this->successClassFeedback($newClassFeedback);
     }
@@ -71,27 +72,11 @@ class ClassFeedbackController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show()
+    public function show($ClassFeedback)
     {
-        $validator = Validator::make($this->request->all(), [
-            'teacherId' => 'string|required',
-            // 'classId' => 'string|required',
-            // 'studentId' => 'string|required',
-            // 'campusId' => 'string|required',
-            // 'date' => 'string|required',
-            // 'satisfaction' => 'string|required',
-            // 'comment' => 'string|required',
-        ]);
-        if ($validator->fails()) {
-            return $validator->errors();
-        }
-        $teacherId = $this->request['teacherId'];
-        $classId = $this->request['classId'];
-        $studentId = $this->request['studentId'];
-        $campusId = $this->request['campusId'];
-        // $ClassFeedbacksId = $this->request['ClassFeedbacksId'];
-        $ClassFeedbacks = ClassFeedbacks::where('teacherId', $teacherId)->where('classId', $classId)->where('studentId', $studentId)->where('campusId', $campusId)->get();
-        return $this->successClassFeedback($ClassFeedbacks);
+        $ClassFeedbacks = ClassFeedbacks::find($ClassFeedback);
+        $ClassFeedbacksData = new ClassFeedbackResource($ClassFeedbacks);
+        return $this->successClassFeedback($ClassFeedbacksData);
     }
 
     /**
@@ -101,39 +86,34 @@ class ClassFeedbackController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update()
+    public function update($classFeedbackId)
     {
+        $classFeedback = ClassFeedbacks::find($classFeedbackId);
         $validator = Validator::make($this->request->all(), [
-            'teacherId' => 'string|required',
+            // 'teacherId' => 'string|required',
             // 'classId' => 'string|required',
             // 'studentId' => 'string|required',
             // 'campusId' => 'string|required',
             // 'date' => 'string|required',
             // 'satisfaction' => 'string|required',
-            // 'comment' => 'string|required',
+            'comment' => 'string|required',
         ]);
         if ($validator->fails()) {
             return $validator->errors();
         }
-        $teacherId = $this->request['teacherId'];
-        $classId = $this->request['classId'];
-        $studentId = $this->request['studentId'];
-        $campusId = $this->request['campusId'];
-        $date = $this->request['date'];
-        $satisfaction = $this->request['satisfaction'];
-        $comment = $this->request['comment'];
+
         $params = [
-            'teacherId' => $this->request['teacherId'],
-            'classId' => $this->request['classId'],
-            'studentId' => $this->request['studentId'],
-            'campusId' => $this->request['campusId'],
-            'date' => $this->request['date'],
-            'satisfaction' => $this->request['satisfaction'],
-            'comment' => $this->request['comment'],
+            $classFeedback['teacherId'] = $this->request['teacherId'],
+            $classFeedback['classId'] = $this->request['classId'],
+            $classFeedback['studentId'] = $this->request['studentId'],
+            $classFeedback['campusId'] = $this->request['campusId'],
+            $classFeedback['date'] = $this->request['date'],
+            $classFeedback['satisfaction'] = $this->request['satisfaction'],
+            $classFeedback['comment'] = $this->request['comment'],
         ];
 
-        $ClassFeedbacksData = ClassFeedbacks::where('teacherId', $teacherId)->where('classId', $classId)->where('studentId', $studentId)->where('campusId', $campusId)->update($params);
-        return $this->successClassFeedback($ClassFeedbacksData);
+        $newClassFeedbacksData = $classFeedback->update($params);
+        return $this->successClassFeedback($newClassFeedbacksData);
     
     }
 
@@ -143,10 +123,10 @@ class ClassFeedbackController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($classFeedbackId)
     {
-        // $classMatchedActivity = ClassMatchActivities::where('classId', $classId)->where('matchedActivityId',$matchedActivityId);
-        // $deleteClassMatchedActivity = $classMatchedActivity->delete();
-        // return $this->successClassMatchActivityRequest($deleteClassMatchedActivity);
+        $ClassFeedback = ClassFeedbacks::find($classFeedbackId);
+        $deleteClassFeedback = $ClassFeedback->delete();
+        return $this->successClassFeedback($deleteClassFeedback);
     }
 }
