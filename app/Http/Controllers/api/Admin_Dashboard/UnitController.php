@@ -83,6 +83,18 @@ class UnitController extends Controller
     public function update($unitId)
     {
         $unit = Units::find($unitId);
+        if(empty($this->request['productId'])) {
+            $this->request['productId'] = $unit['productId'];
+        }
+        if(empty($this->request['name'])) {
+            $this->request['name'] = $unit['name'];
+        }
+        if(empty($this->request['startDate'])) {
+            $this->request['startDate'] = $unit['startDate'];
+        }
+        if(empty($this->request['endDate'])) {
+            $this->request['endDate'] = $unit['endDate'];
+        }
         $validator = Validator::make($this->request->all(), [
             'productId' => 'string|required',
             'name' => 'string|required',

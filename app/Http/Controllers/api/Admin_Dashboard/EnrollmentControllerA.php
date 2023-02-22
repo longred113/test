@@ -11,6 +11,13 @@ use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class EnrollmentControllerA extends Controller
 {
+    protected Request $request;
+
+    public function __construct(
+        Request $request
+    ) {
+        $this->request = $request;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -28,9 +35,9 @@ class EnrollmentControllerA extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        $validator = validator::make($request->all(), [
+        $validator = validator::make($this->request->all(), [
             'studentId' => 'required|unique:enrollments',
             'studentName' => 'required',
             // 'talkSamId' => 'required',
@@ -39,6 +46,7 @@ class EnrollmentControllerA extends Controller
             // 'level' => 'required',
             // 'subject' => 'required',
             // 'status' => 'required',
+            'submittedDate' => 'date|required',
         ]);
         if ($validator->fails()) {
             return $validator->errors();
@@ -47,13 +55,14 @@ class EnrollmentControllerA extends Controller
         $enrollmentId = IdGenerator::generate(['table'=>'enrollments', 'trow' => 'enrollmentId', 'length' => 8, 'prefix' => 'ER-']);
         $params = [
             'studentId' => $enrollmentId,
-            'studentName' => request('studentName'),
-            'talkSamId' => request('talkSamId'),
-            'campusName' => request('campusName'),
-            'activate' => request('activate'),
-            'level' => request('level'),
-            'subject' => request('subject'),
-            'status' => request('status'),
+            'studentName' => $this->request['studentName'],
+            'talkSamId' => $this->request['talkSamId'],
+            'campusName' => $this->request['campusName'],
+            'activate' => $this->request['activate'],
+            'level' => $this->request['level'],
+            'subject' => $this->request['subject'],
+            'status' => $this->request['status'],
+            'submitted' => $this->request['submitted'],
         ];
         $newEnrollment = new EnrollmentResource(Enrollment::create($params));
         return $newEnrollment;

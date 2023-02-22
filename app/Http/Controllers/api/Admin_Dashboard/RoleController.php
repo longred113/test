@@ -12,6 +12,14 @@ use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class RoleController extends Controller
 {
+    protected Request $request;
+
+    public function __construct(
+        Request $request
+        )       
+    {
+        $this->request = $request;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -29,9 +37,9 @@ class RoleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        $validator = validator::make($request->all(), [
+        $validator = validator::make($this->request->all(), [
             'name' => 'required|string',
             'activate' => 'required',
         ]);
@@ -41,8 +49,8 @@ class RoleController extends Controller
         $roleId = IdGenerator::generate(['table'=>'roles', 'trow' => 'roleId', 'length' => 8, 'prefix' => 'RL-']);
         $params = [
             'roleId' => $roleId,
-            'name' => request('name'),
-            'activate' => request('activate'),
+            'name' => $this->request['name'],
+            'activate' => $this->request['activate'],
         ];
         $newRole = new RoleResource(Roles::create($params));
         return $this->successRoleRequest($newRole);
@@ -68,17 +76,17 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $roleId)
+    public function update($roleId)
     {
         $role = Roles::find($roleId);
-        if(empty($request->name)) {
-            $request['name'] = $role['name'];
+        if(empty($this->request['name'])) {
+            $this->request['name'] = $role['name'];
         }
-        if(empty($request->activate)) {
-            $request['activate'] = $role['activate'];
+        if(empty($this->request['activate'])) {
+            $this->request['activate'] = $role['activate'];
         }
 
-        $validator = validator::make($request->all(), [
+        $validator = validator::make($this->request->all(), [
             'name' => 'required',
             'activate' => 'required',
         ]);
@@ -87,8 +95,8 @@ class RoleController extends Controller
         }
 
         $params = [
-            $role['name'] = $request['name'],
-            $role['activate'] = $request['activate'],
+            $role['name'] = $this->request['name'],
+            $role['activate'] = $this->request['activate'],
         ];
         $newInfoRole = $role->update($params);
         return $this->successRoleRequest($newInfoRole);

@@ -9,6 +9,13 @@ use App\Models\Packages;
 use App\Http\Resources\Packages as PackagesResource;
 class PackagesController extends Controller
 {
+    protected Request $request;
+
+    public function __construct(
+        Request $request
+    ) {
+        $this->request = $request;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -36,25 +43,25 @@ class PackagesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        $validator = validator::make($request->all(), [
+        $validator = validator::make($this->request->all(), [
             'name' => 'required|string',
             // 'startLevel' => 'required|string',
             // 'endLevel' => 'required|string',
             // 'activate' => 'required',
-            // 'detail' => 'required',
+            // 'details' => 'required',
         ]);
         if ($validator->fails()) {
             return $validator->errors();
         }
 
         $params = [
-            'name' => request('name'),
-            'startLevel' => request('startLevel'),
-            'endLevel' => request('endLevel'),
-            'activate' => request('activate'),
-            'detail' => request('detail'),
+            'name' => $this->request('name'),
+            'startLevel' => $this->request('startLevel'),
+            'endLevel' => $this->request('endLevel'),
+            'activate' => $this->request('activate'),
+            'details' => $this->request('details'),
         ];
         $newPackages = Packages::create($params);
         return $this->successPackagesRequest($newPackages);
@@ -94,20 +101,20 @@ class PackagesController extends Controller
     public function update(Request $request, $packageId)
     {
         $packages = Packages::find($packageId);
-        if(empty($request->name)) {
-            $request['name'] = $packages['name'];
+        if(empty($this->request['name'])) {
+            $this->request['name'] = $packages['name'];
         }
-        if(empty($request->startLevel)) {
-            $request['startLevel'] = $packages['startLevel'];
+        if(empty($this->request['startLevel'])) {
+            $this->request['startLevel'] = $packages['startLevel'];
         }
-        if(empty($request->endLevel)) {
-            $request['endLevel'] = $packages['endLevel'];
+        if(empty($this->request['endLevel'])) {
+            $this->request['endLevel'] = $packages['endLevel'];
         }
-        if(empty($request->activate)) {
-            $request['activate'] = $packages['activate'];
+        if(empty($this->request['activate'])) {
+            $this->request['activate'] = $packages['activate'];
         }
-        if(empty($request->activate)) {
-            $request['detail'] = $packages['detail'];
+        if(empty($this->request['details'])) {
+            $this->request['details'] = $packages['details'];
         }
 
         $validator = validator::make($request->all(), [
@@ -115,18 +122,18 @@ class PackagesController extends Controller
             // 'startLevel' => 'required|string',
             // 'endLevel' => 'required|string',
             // 'activate' => 'required'
-            // 'detail' => 'required'
+            // 'details' => 'required'
         ]);
         if ($validator->fails()) {
             return $validator->errors();
         }
         
         $params = [
-            $packages['name'] = $request['name'],
-            $packages['startLevel'] = $request['startLevel'],
-            $packages['endLevel'] = $request['endLevel'],
-            $packages['activate'] = $request['activate'],
-            $packages['detail'] = $request['detail'],
+            $packages['name'] = $this->request['name'],
+            $packages['startLevel'] = $this->request['startLevel'],
+            $packages['endLevel'] = $this->request['endLevel'],
+            $packages['activate'] = $this->request['activate'],
+            $packages['details'] = $this->request['details'],
         ];
         $newInfoPackages = $packages->update($params);
         return $this->successPackagesRequest($newInfoPackages);

@@ -20,7 +20,7 @@ class Packages extends JsonResource
             'startLevel' => $this->startLevel,
             'endLevel' => $this->endLevel,
             'activate' => $this->activate,
-            'detail' => $this->detail,
+            'details' => $this->details,
         ];
     }
 }

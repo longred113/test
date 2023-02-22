@@ -90,6 +90,15 @@ class ParentController extends Controller
     public function update($parentId)
     {
         $parent = Parents::find($parentId);
+        if(empty($this->request['name'])) {
+            $this->request['name'] = $parent['name'];
+        }
+        if(empty($this->request['email'])) {
+            $this->request['email'] = $parent['email'];
+        }
+        if(empty($this->request['phone'])) {
+            $this->request['phone'] = $parent['phone'];
+        }
         $validator = Validator::make($this->request->all(), [
             'name' => 'string|required',
             'email' => 'string|required|unique:parents',

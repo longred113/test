@@ -15,6 +15,7 @@ class Enrollment extends JsonResource
     public function toArray($request)
     {
         return [
+            'enrollmentId' => $this->enrollmentId,
             'studentId' => $this->studentId,
             'studentName' => $this->studentName,
             'talkSamId' => $this->talkSamId,
@@ -23,6 +24,7 @@ class Enrollment extends JsonResource
             'level' => $this->level,
             'subject' => $this->subject,
             'status' => $this->status,
+            'submittedDate' => $this->submittedDate,
         ];
     }
 }

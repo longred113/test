@@ -10,6 +10,7 @@ use App\Models\Students;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
+use Illuminate\Validation\Rule;
 
 class StudentController extends Controller
 {
@@ -29,6 +30,11 @@ class StudentController extends Controller
     {
         $studentsData = StudentResource::collection(Students::all());
         return $this->successStudentRequest($studentsData);
+    }
+    public function studentWithdrawalList() 
+    {
+        $studentWithdrawal = StudentResource::collection(Students::where('type', 'online-break')->orWhere('offline-break')->get);
+        return $this->successStudentRequest($studentWithdrawal);
     }
 
     /**
@@ -54,7 +60,7 @@ class StudentController extends Controller
             // 'talkSamId' => 'string|required',
             // 'basicPoint' => 'integer|required',
             'campusId' => 'string|required',
-            'type' => 'string|required',
+            'type' => [Rule::in(['online', 'offline', 'online-break', 'offline-break', 'reserve', 'wait-for-approval'])],
         ]);
         if ($validator->fails()) {
             return $validator->errors();

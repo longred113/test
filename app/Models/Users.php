@@ -21,5 +21,6 @@ class Users extends Model
         'studentId',
         'parentId',
         'campusManagerId',
+        'activate',
     ];
 }

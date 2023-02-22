@@ -25,6 +25,8 @@ class ClassResource extends JsonResource
             'classTimeSlot' => $this->classTimeSlot,
             'classStartDate' => $this->classStartDate,
             'status' => $this->status,
+            'initialTextbook' => $this->initialTextbook,
+            'typeOfClass' => $this->typeOfClass,
         ];
     }
 }

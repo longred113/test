@@ -33,6 +33,8 @@ class TeacherResource extends JsonResource
             'campusId' => $this->campusId,
             'type' => $this->type,
             'talkSamId' => $this->talkSamId,
+            'role' => $this->role,
+            'memo' => $this->memo,
         ];
     }
 }

@@ -40,15 +40,16 @@ class TeacherController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
         $campusIds = Campus::select('campusId')->get();
         foreach ($campusIds as $campusId) {
             $campusName = Campus::whereIn('campusId', $campusId)->get('name');
         }
-        $validator = validator::make($request->all(), [
+        $validator = validator::make($this->request->all(), [
             'name' => 'required|string',
-            // 'email' => 'required|string|unique:teachers',
+            'email' => 'required|string|unique:teachers',
+            'password' => 'required|string|min:8',
             // 'gender' => 'required|string',
             // 'dateOfBirth' => 'required|date',
             // 'status' => 'required|string',
@@ -64,6 +65,8 @@ class TeacherController extends Controller
             // 'type' => 'required|string',
             // 'talkSamId' => 'require|string',
             'campusId' => 'required|string',
+            // 'role' => 'string',
+            // 'memo' => 'string',
         ]);
         if ($validator->failed()) {
             return $validator->errors();
@@ -72,25 +75,35 @@ class TeacherController extends Controller
         $teacherId = IdGenerator::generate(['table'=>'teachers', 'trow' => 'teacherId', 'length' => 8, 'prefix' => 'TC-']);
         $params = [
             'teacherId' => $teacherId,
-            'name' => request('name'),
-            'email' => request('email'),
-            'gender' => request('gender'),
-            'dateOfBirth' => request('dateOfBirth'),
-            'status' => request('status'),
-            'activate' => request('activate'),
-            'country' => request('country'),
-            'timeZone' => request('timeZone'),
-            'startDate' => request('startDate'),
-            'resignation' => request('resignation'),
-            'resume' => request('resume'),
-            'certificate' => request('certificate'),
-            'contract' => request('contract'),
-            'basicPoint' => request('basicPoint'),
-            'campusId' => request('campusId'),
-            'type' => request('type'),
-            'talkSamId' => request('talkSamId'),
+            'name' => $this->request['name'],
+            'email' => $this->request['email'],
+            'gender' => $this->request['gender'],
+            'dateOfBirth' => $this->request['dateOfBirth'],
+            'status' => $this->request['status'],
+            'activate' => $this->request['activate'],
+            'country' => $this->request['country'],
+            'timeZone' => $this->request['timeZone'],
+            'startDate' => $this->request['startDate'],
+            'resignation' => $this->request['resignation'],
+            'resume' => $this->request['resume'],
+            'certificate' => $this->request['certificate'],
+            'contract' => $this->request['contract'],
+            'basicPoint' => $this->request['basicPoint'],
+            'campusId' => $this->request['campusId'],
+            'type' => $this->request['type'],
+            'talkSamId' => $this->request['talkSamId'],
+            'role' => $this->request['role'],
+            'memo' => $this->request['memo'],
+        ];
+
+        $userParams = [
+            'name' => $this->request['name'],
+            'email' => $this->request['email'],
+            'password' => $this->request['password'],
+            'teacherId' => $teacherId,
         ];
         $newTeacherData = new TeacherResource(Teachers::create($params));
+        UserController::store($userParams);
         return $this->successTeacherRequest($newTeacherData);
     }
 
@@ -135,28 +148,32 @@ class TeacherController extends Controller
             // 'type' => 'required|string',
             // 'talkSamId' => 'require|string',
             'campusId' => 'required|string',
+            'role' => 'string',
+            'memo' => 'string',
         ]);
         if ($validator->failed()) {
             return $validator->errors();
         }
 
         $params = [
-            $teacher['name'] = $request['name'],
-            $teacher['email'] = $request['email'],
-            $teacher['dateOfBirth'] = $request['dateOfBirth'],
-            $teacher['status'] = $request['status'],
-            $teacher['activate'] = $request['activate'],
-            $teacher['country'] = $request['country'],
-            $teacher['timeZone'] = $request['timeZone'],
-            $teacher['startDate'] = $request['startDate'],
-            $teacher['resignation'] = $request['resignation'],
-            $teacher['resume'] = $request['resume'],
-            $teacher['certificate'] = $request['certificate'],
-            $teacher['contract'] = $request['contract'],
-            $teacher['basicPoint'] = $request['basicPoint'],
-            $teacher['type'] = $request['type'],
-            $teacher['talkSamId'] = $request['talkSamId'],
-            $teacher['campusId'] = $request['campusId'],
+            $teacher['name'] = $this->request['name'],
+            $teacher['email'] = $this->request['email'],
+            $teacher['dateOfBirth'] = $this->request['dateOfBirth'],
+            $teacher['status'] = $this->request['status'],
+            $teacher['activate'] = $this->request['activate'],
+            $teacher['country'] = $this->request['country'],
+            $teacher['timeZone'] = $this->request['timeZone'],
+            $teacher['startDate'] = $this->request['startDate'],
+            $teacher['resignation'] = $this->request['resignation'],
+            $teacher['resume'] = $this->request['resume'],
+            $teacher['certificate'] = $this->request['certificate'],
+            $teacher['contract'] = $this->request['contract'],
+            $teacher['basicPoint'] = $this->request['basicPoint'],
+            $teacher['type'] = $this->request['type'],
+            $teacher['talkSamId'] = $this->request['talkSamId'],
+            $teacher['campusId'] = $this->request['campusId'],
+            $teacher['role'] = $this->request['role'],
+            $teacher['memo'] = $this->request['memo'],
         ];
 
         $newInfoTeacher = $teacher->update($params);

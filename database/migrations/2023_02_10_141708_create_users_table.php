@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('studentId')->nullable();
             $table->string('parentId')->nullable();
             $table->string('CampusManagerId')->nullable();
+            $table->boolean('activate')->nullable();
             $table->timestamps();
         });
     }

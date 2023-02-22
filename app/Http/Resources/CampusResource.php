@@ -19,6 +19,7 @@ class CampusResource extends JsonResource
             'name' => $this->name,
             'indicated' => $this->indicated,
             'contact' => $this->contact,
+            'signedDate' => $this->signedDate,
             'activate' => $this->activate,
         ];
     }

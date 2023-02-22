@@ -84,6 +84,9 @@ class UserController extends Controller
                 }
             }
         }
+        if(!empty($userParams)){
+            $params['activate'] = 1;
+        }
         $newUserData = new UserResource(Users::create($params));
         return $newUserData;
     }

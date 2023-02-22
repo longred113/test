@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class UpdateFkForTable extends Migration
+class CreateFkForTable extends Migration
 {
     /**
      * Run the migrations.
@@ -70,6 +70,12 @@ class UpdateFkForTable extends Migration
             $table->foreign('classId')->references('classId')->on('classes')->onDelete('cascade');
             $table->foreign('studentId')->references('studentId')->on('students')->onDelete('cascade');
             $table->foreign('campusId')->references('campusId')->on('campuses')->onDelete('cascade');
+        });
+        Schema::table('class_boards', function (Blueprint $table) {
+            $table->foreign('class')->references('classId')->on('classes')->onDelete('cascade');
+        });
+        Schema::table('class_materials', function (Blueprint $table) {
+            $table->foreign('class')->references('classId')->on('classes')->onDelete('cascade');
         });
     }
 

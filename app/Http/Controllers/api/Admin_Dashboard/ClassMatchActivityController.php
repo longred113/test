@@ -85,6 +85,7 @@ class ClassMatchActivityController extends Controller
      */
     public function update()
     {
+        
         $validator = Validator::make($this->request->all(), [
             'classId' => 'string|required',
             'matchedActivityId' => 'string|required',

@@ -12,6 +12,14 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
+    protected Request $request;
+
+    public function __construct(
+        Request $request
+        )       
+    {
+        $this->request = $request;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -29,9 +37,9 @@ class AdminController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        $validator = validator::make($request->all(), [
+        $validator = validator::make($this->request->all(), [
             'name' => 'required|string',
             'email' => 'required|string|unique:admins',
             'password' => 'required|string|min:8',
@@ -43,9 +51,9 @@ class AdminController extends Controller
         $adminId = IdGenerator::generate(['table'=>'admins', 'trow' => 'adminId', 'length' => 8, 'prefix' => 'AD-']);
         $params = [
             'adminId' => $adminId,
-            'name' => request('name'),
-            'email' => request('email'),
-            'password' => request('password'),
+            'name' => $this->request['name'],
+            'email' => $this->request['email'],
+            'password' => $this->request['password'],
         ];
         $newAdmin = new AdminResource(Admin::create($params));
         return $this->successAdminRequest($newAdmin);
@@ -71,20 +79,20 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $adminId)
+    public function update($adminId)
     {
         $admin = Admin::find($adminId);
-        if(empty($request->name)) {
-            $request['name'] = $admin['name'];
+        if(empty($this->request['name'])) {
+            $this->request['name'] = $admin['name'];
         }
-        if(empty($request->activate)) {
-            $request['email'] = $admin['email'];
+        if(empty($this->request['activate'])) {
+            $this->request['email'] = $admin['email'];
         }
-        if(empty($request->activate)) {
-            $request['password'] = $admin['password'];
+        if(empty($request['password'])) {
+            $this->request['password'] = $admin['password'];
         }
 
-        $validator = validator::make($request->all(), [
+        $validator = validator::make($this->request->all(), [
             'name' => 'required|string',
             'email' => 'required|string|unique:admins',
             'password' => 'required|string|min:8',
@@ -94,9 +102,9 @@ class AdminController extends Controller
         }
         
         $params = [
-            $admin['name'] = $request['name'],
-            $admin['email'] = $request['email'],
-            $admin['password'] = $request['password'],
+            $admin['name'] = $this->request['name'],
+            $admin['email'] = $this->request['email'],
+            $admin['password'] = $this->request['password'],
         ];
         $newInfoAdmin = $admin->update($params);
         return $this->successAdminRequest($newInfoAdmin);

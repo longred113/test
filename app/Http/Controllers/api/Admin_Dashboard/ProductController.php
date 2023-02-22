@@ -37,9 +37,9 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        $validator = validator::make($request->all(), [
+        $validator = validator::make($this->request->all(), [
             'packageId' => 'required',
             'name' => 'required',
             // 'startLevel' => 'required',
@@ -56,14 +56,14 @@ class ProductController extends Controller
         $productId = IdGenerator::generate(['table'=>'products', 'trow' => 'productId', 'length' => 8, 'prefix' => 'PD-']);
         $params = [
             'productId' => $productId,
-            'packageId' => request('packageId'),
-            'name' => request('name'),
-            'startLevel' => request('startLevel'),
-            // 'level' => request('level'),
-            'endLevel' => request('endLevel'),
-            'details' => request('details'),
-            'image' => request('image'),
-            'activate' => request('activate'),
+            'packageId' => $this->request('packageId'),
+            'name' => $this->request('name'),
+            'level' => $this->request('level'),
+            'startLevel' => $this->request('startLevel'),
+            'endLevel' => $this->request('endLevel'),
+            'details' => $this->request('details'),
+            'image' => $this->request('image'),
+            'activate' => $this->request('activate'),
         ];
         $newProducts = new ProductsResource(Products::create($params));
         return $this->successProductsRequest($newProducts);
@@ -89,34 +89,34 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $productId)
+    public function update($productId)
     {
         $products = Products::find($productId);
-        if(empty($request->packageId)) {
-            $request['packageId'] = $products['packageId'];
+        if(empty($this->request['packageId'])) {
+            $this->request['packageId'] = $products['packageId'];
         }
-        if (empty($request->name)) {
-            $request['name'] = $products['name'];
+        if (empty($this->request['name'])) {
+            $this->request['name'] = $products['name'];
         }
-        // if(empty($request->startLevel)) {
-        //     $request['startLevel'] = $products['startLevel'];
+        // if(empty($this->request['startLevel'])) {
+        //     $this->request['startLevel'] = $products['startLevel'];
         // }
-        // if(empty($request->level)) {
-        //     $request['level'] = $products['level'];
+        // if(empty($this->request['level'])) {
+        //     $this->request['level'] = $products['level'];
         // }
-        // if(empty($request->endLevel)) {
-        //     $request['endLevel'] = $products['endLevel'];
+        // if(empty($this->request['endLevel'])) {
+        //     $this->request['endLevel'] = $products['endLevel'];
         // }
-        // if(empty($request->details)) {
-        //     $request['details'] = $products['details'];
+        // if(empty($this->request['details'])) {
+        //     $this->request['details'] = $products['details'];
         // }
-        // if(empty($request->image)) {
-        //     $request['image'] = $products['image'];
+        // if(empty($this->request['image'])) {
+        //     $this->request['image'] = $products['image'];
         // }
-        // if (empty($request->activate)) {
-        //     $request['activate'] = $products['activate'];
+        // if (empty($this->request['activate'])) {
+        //     $this->request['activate'] = $products['activate'];
         // }
-        $validator = Validator::make($request->all(), [
+        $validator = Validator::make($this->request->all(), [
             'packageId' => 'required|integer',
             'name' => 'required|string',
             // 'startLevel' => 'required|string',
@@ -131,15 +131,15 @@ class ProductController extends Controller
         }
 
         $params = [
-            $products['productId'] = $request['productId'],
-            $products['packageId'] = $request['packageId'],
-            $products['name'] = $request['name'],
-            $products['startLevel'] = $request['startLevel'],
-            $products['level'] = $request['level'],
-            $products['endLevel'] = $request['endLevel'],
-            $products['details'] = $request['details'],
-            $products['image'] = $request['image'],
-            $products['activate'] = $request['activate'],
+            $products['productId'] = $this->request['productId'],
+            $products['packageId'] = $this->request['packageId'],
+            $products['name'] = $this->request['name'],
+            $products['startLevel'] = $this->request['startLevel'],
+            $products['level'] = $this->request['level'],
+            $products['endLevel'] = $this->request['endLevel'],
+            $products['details'] = $this->request['details'],
+            $products['image'] = $this->request['image'],
+            $products['activate'] = $this->request['activate'],
         ];
         $newInfoProducts = $products->update($params);
         return $this->successProductsRequest($newInfoProducts);

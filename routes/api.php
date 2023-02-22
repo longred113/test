@@ -19,7 +19,6 @@ use App\Http\Controllers\api\Admin_Dashboard\StudentClassController;
 use App\Http\Controllers\api\Campus_Dashboard\OffStudentController;
 use App\Http\Controllers\api\Campus_Dashboard\OffTeachController;
 use App\Http\Controllers\api\Campus_Dashboard\EnrollmentController;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 

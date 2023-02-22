@@ -47,6 +47,8 @@ class ClassController extends Controller
             // 'classTimeSlot' => 'string|required',
             // 'classStartDate' => 'date|required',
             // 'status' => 'string|required',
+            'typeOfClass' => 'string',
+            'initialTextbook' => 'string',
         ]);
         if ($validator->fails()) {
             return $validator->errors();
@@ -64,6 +66,8 @@ class ClassController extends Controller
             'classTimeSlot' => $this->request['classTimeSlot'],
             'classStartDate' => $this->request['classStartDate'],
             'status' => $this->request['status'],
+            'typeOfClass' => $this->request['typeOfClass'],
+            'initialTextbook' => $this->request['initialTextbook'],
         ];
         $newClass = new ClassResource(Classes::create($params));
         return $this->successClassRequest($newClass);
@@ -92,6 +96,39 @@ class ClassController extends Controller
     public function update($classId)
     {
         $class = Classes::find($classId);
+        if(empty($this->request['productId'])) {
+            $this->request['productId'] = $class['productId'];
+        }
+        if(empty($this->request['name'])) {
+            $this->request['name'] = $class['name'];
+        }
+        if(empty($this->request['numberOfStudent'])) {
+            $this->request['numberOfStudent'] = $class['numberOfStudent'];
+        }
+        if(empty($this->request['subject'])) {
+            $this->request['subject'] = $class['subject'];
+        }
+        if(empty($this->request['onlineTeacher'])) {
+            $this->request['onlineTeacher'] = $class['onlineTeacher'];
+        }
+        if(empty($this->request['classday'])) {
+            $this->request['classday'] = $class['classday'];
+        }
+        if(empty($this->request['classTimeSlot'])) {
+            $this->request['classTimeSlot'] = $class['classTimeSlot'];
+        }
+        if(empty($this->request['classStartDate'])) {
+            $this->request['classStartDate'] = $class['classStartDate'];
+        }
+        if(empty($this->request['status'])) {
+            $this->request['status'] = $class['status'];
+        }
+        if(empty($this->request['typeOfClass'])) {
+            $this->request['typeOfClass'] = $class['typeOfClass'];
+        }
+        if(empty($this->request['initialTextbook'])) {
+            $this->request['initialTextbook'] = $class['initialTextbook'];
+        }
         $validator = Validator::make($this->request->all(), [
             'productId' => 'string|required',
             'name' => 'string|required',
@@ -102,6 +139,8 @@ class ClassController extends Controller
             // 'classTimeSlot' => 'string|required',
             // 'classStartDate' => 'date|required',
             // 'status' => 'string|required',
+            'typeOfClass' => 'string',
+            'initialTextbook' => 'string',
         ]);
         if ($validator->fails()) {
             return $validator->errors();
@@ -117,6 +156,8 @@ class ClassController extends Controller
             $class['classTimeSlot'] = $this->request['classTimeSlot'],
             $class['classStartDate'] = $this->request['classStartDate'],
             $class['status'] = $this->request['status'],
+            $class['typeOfClass'] = $this->request['typeOfClass'],
+            $class['initialTextbook'] = $this->request['initialTextbook'],
         ];
         $newInfoClass = $class->update($params);
         return $this->successClassRequest($newInfoClass);

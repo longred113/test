@@ -21,6 +21,6 @@ class Enrollment extends Model
         'level',
         'subject',
         'status',
-        'submitted',
+        'submittedDate',
     ];
 }

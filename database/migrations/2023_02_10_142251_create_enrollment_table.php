@@ -22,7 +22,7 @@ class CreateEnrollmentTable extends Migration
             $table->string('level')->nullable();
             $table->string('subject')->nullable();
             $table->string('status')->nullable();
-            $table->boolean('submitted')->nullable();
+            $table->date('submittedDate')->nullable();
             $table->timestamps();
         });
     }

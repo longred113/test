@@ -37,12 +37,13 @@ class CampusController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        $validator = validator::make($request->all(), [
+        $validator = validator::make($this->request->all(), [
             'name' => 'required|string',
             'indicated' => 'required|string',
             'contact' => 'required|string',
+            'signedDate' => 'date',
             'activate' => 'required',
         ]);
         if ($validator->fails()) {
@@ -52,10 +53,11 @@ class CampusController extends Controller
         $campusId = IdGenerator::generate(['table'=>'campuses', 'trow' => 'campusId', 'length' => 8, 'prefix' => 'CP-']);
         $params = [
             'campusId' => $campusId,
-            'name' => request('name'),
-            'indicated' => request('indicated'),
-            'contact' => request('contact'),
-            'activate' => request('activate'),
+            'name' => $this->request['name'],
+            'indicated' => $this->request['indicated'],
+            'contact' => $this->request['contact'],
+            'signedDate' => $this->request['signedDate'],
+            'activate' => $this->request['activate'],
         ];
         $newCampus = new CampusResource(Campus::create($params));
         return $this->successCampusRequest($newCampus);
@@ -81,23 +83,26 @@ class CampusController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $campusId)
+    public function update($campusId)
     {
         $campus = Campus::find($campusId);
-        if(empty($request->name)) {
-            $request['name'] = $campus['name'];
+        if(empty($this->request['name'])) {
+            $this->request['name'] = $campus['name'];
         }
-        if(empty($request->indicated)) {
-            $request['indicated'] = $campus['indicated'];
+        if(empty($this->request['indicated'])) {
+            $this->request['indicated'] = $campus['indicated'];
         }
-        if(empty($request->contact)) {
-            $request['contact'] = $campus['contact'];
+        if(empty($this->request['contact'])) {
+            $this->request['contact'] = $campus['contact'];
         }
-        if(empty($request->activate)) {
-            $request['activate'] = $campus['activate'];
+        if(empty($this->request['signedDate'])) {
+            $this->request['signedDate'] = $campus['signedDate'];
+        }
+        if(empty($this->request['activate'])) {
+            $this->request['activate'] = $campus['activate'];
         }
 
-        $validator = validator::make($request->all(), [
+        $validator = validator::make($this->request->all(), [
             'name' => 'required|string',
             'indicated' => 'required|string',
             'contact' => 'required|string',
@@ -108,10 +113,10 @@ class CampusController extends Controller
         }
         
         $params = [
-            $campus['name'] = $request['name'],
-            $campus['indicated'] = $request['indicated'],
-            $campus['contact'] = $request['contact'],
-            $campus['activate'] = $request['activate'],
+            $campus['name'] = $this->request['name'],
+            $campus['indicated'] = $this->request['indicated'],
+            $campus['contact'] = $this->request['contact'],
+            $campus['activate'] = $this->request['activate'],
         ];
         $newInfoCampus = $campus->update($params);
         return $this->successCampusRequest($newInfoCampus);
