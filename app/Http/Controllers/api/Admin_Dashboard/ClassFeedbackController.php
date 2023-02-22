@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\ClassFeedbacks;
 use App\Http\Resources\ClassFeedbackResource;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
+
 class ClassFeedbackController extends Controller
 {
     protected Request $request;
@@ -48,8 +50,9 @@ class ClassFeedbackController extends Controller
             return $validator->errors();
         }
 
+        $classFeedbackId = IdGenerator::generate(['table'=>'class_feedbacks', 'trow' => 'classFeedbackId', 'length' => 9, 'prefix' => 'CFB-']);
         $params = [
-            'teacherId' => $this->request['teacherId'],
+            'teacherId' => $classFeedbackId,
             'classId' => $this->request['classId'],
             'studentId' => $this->request['studentId'],
             'campusId' => $this->request['campusId'],
@@ -142,8 +145,8 @@ class ClassFeedbackController extends Controller
      */
     public function destroy($id)
     {
-        $classMatchedActivity = ClassMatchActivities::where('classId', $classId)->where('matchedActivityId',$matchedActivityId);
-        $deleteClassMatchedActivity = $classMatchedActivity->delete();
-        return $this->successClassMatchActivityRequest($deleteClassMatchedActivity);
+        // $classMatchedActivity = ClassMatchActivities::where('classId', $classId)->where('matchedActivityId',$matchedActivityId);
+        // $deleteClassMatchedActivity = $classMatchedActivity->delete();
+        // return $this->successClassMatchActivityRequest($deleteClassMatchedActivity);
     }
 }

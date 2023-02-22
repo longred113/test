@@ -7,6 +7,7 @@ use App\Http\Resources\TeacherResource;
 use App\Models\Campus;
 use App\Models\Teachers;
 use Error;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use TypeError;
@@ -46,7 +47,6 @@ class TeacherController extends Controller
             $campusName = Campus::whereIn('campusId', $campusId)->get('name');
         }
         $validator = validator::make($request->all(), [
-            'teacherId' => 'required|string|unique:teachers',
             'name' => 'required|string',
             // 'email' => 'required|string|unique:teachers',
             // 'gender' => 'required|string',
@@ -68,8 +68,10 @@ class TeacherController extends Controller
         if ($validator->failed()) {
             return $validator->errors();
         }
+
+        $teacherId = IdGenerator::generate(['table'=>'teachers', 'trow' => 'teacherId', 'length' => 8, 'prefix' => 'TC-']);
         $params = [
-            'teacherId' => request('teacherId'),
+            'teacherId' => $teacherId,
             'name' => request('name'),
             'email' => request('email'),
             'gender' => request('gender'),

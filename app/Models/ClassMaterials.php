@@ -5,18 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Packages extends Model
+class ClassMaterials extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'packageId';
+    protected $primaryKey = 'classMaterialId';
     protected $keyType = 'string';
     public $incrementing = false;
     protected $fillable = [
-        'packageId',
-        'name',
-        'startLevel',
-        'endLevel',
-        'activate',
-        'details',
+        'classMaterialId',
+        'writer',
+        'class',
+        'title',
+        'view',
+        'date',
     ];
 }

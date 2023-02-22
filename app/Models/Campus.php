@@ -16,6 +16,7 @@ class Campus extends Model
         'name',
         'indicated',
         'contact',
+        'signedDate',
         'activate',
     ];
 }

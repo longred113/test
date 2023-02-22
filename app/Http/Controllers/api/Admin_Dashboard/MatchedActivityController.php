@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\Admin_Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\MatchedActivityResource;
 use App\Models\MatchedActivities;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -37,7 +38,6 @@ class MatchedActivityController extends Controller
     public function store()
     {
         $validator = Validator::make($this->request->all(), [
-            'matchedActivityId' => 'string|required|unique:matched_activities',
             'productId' => 'required',
             'name' => 'string|required',
             'type' => 'string|required',
@@ -48,8 +48,9 @@ class MatchedActivityController extends Controller
             return $validator->errors();
         }
 
+        $matchedActivityId = IdGenerator::generate(['table'=>'matched_activities', 'trow' => 'matchedActivityId', 'length' => 8, 'prefix' => 'MA-']);
         $params = [
-            'matchedActivityId' => $this->request['matchedActivityId'],
+            'matchedActivityId' => $matchedActivityId,
             'productId' => $this->request['productId'],
             'name' => $this->request['name'],
             'type' => $this->request['type'],

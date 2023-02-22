@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\Admin_Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UnitResource;
 use App\Models\Units;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -47,8 +48,9 @@ class UnitController extends Controller
             return $validator->errors();
         }
 
+        $unitId = IdGenerator::generate(['table'=>'units', 'trow' => 'unitId', 'length' => 8, 'prefix' => 'UN-']);
         $params = [
-            'unitId' => $this->request['unitId'],
+            'unitId' => $unitId,
             'productId' => $this->request['productId'],
             'name' => $this->request['name'],
             'startDate' => $this->request['startDate'],

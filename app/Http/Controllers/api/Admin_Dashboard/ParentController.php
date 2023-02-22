@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\Admin_Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ParentResource;
 use App\Models\Parents;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -37,7 +38,6 @@ class ParentController extends Controller
     public function store()
     {
         $validator = Validator::make($this->request->all(), [
-            'parentId' => 'string|required|unique:parents',
             'name' => 'string|required',
             'email' => 'string|required|unique:parents',
             'phone' => 'string|required',
@@ -47,13 +47,15 @@ class ParentController extends Controller
         if ($validator->fails()) {
             return $validator->errors();
         }
+
+        $parentId = IdGenerator::generate(['table'=>'parents', 'trow' => 'parentId', 'length' => 8, 'prefix' => 'PA-']);
         if (!empty($this->request->get('studentId'))) {
             $studentIds[] = $this->request->get('studentId');
         } else {
             $studentIds = $this->request->get('studentIds');
         }
         $params = [
-            'parentId' => $this->request['parentId'],
+            'parentId' => $parentId,
             'name' => $this->request['name'],
             'email' => $this->request['email'],
             'phone' => $this->request['phone'],

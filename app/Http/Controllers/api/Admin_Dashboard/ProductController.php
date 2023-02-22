@@ -9,6 +9,7 @@ use App\Models\Products;
 use App\Http\Resources\Products as ProductsResource;
 use App\Models\Packages;
 use Facade\Ignition\Support\Packagist\Package;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class ProductController extends Controller
 {
@@ -39,7 +40,6 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $validator = validator::make($request->all(), [
-            'productId' => 'required|unique:products',
             'packageId' => 'required',
             'name' => 'required',
             // 'startLevel' => 'required',
@@ -52,8 +52,10 @@ class ProductController extends Controller
         if ($validator->fails()) {
             return $validator->errors();
         }
+
+        $productId = IdGenerator::generate(['table'=>'products', 'trow' => 'productId', 'length' => 8, 'prefix' => 'PD-']);
         $params = [
-            'productId' => request('productId'),
+            'productId' => $productId,
             'packageId' => request('packageId'),
             'name' => request('name'),
             'startLevel' => request('startLevel'),

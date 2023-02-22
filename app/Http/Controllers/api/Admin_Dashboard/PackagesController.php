@@ -39,7 +39,6 @@ class PackagesController extends Controller
     public function store(Request $request)
     {
         $validator = validator::make($request->all(), [
-            'packageId' => 'required|integer|unique:packages',
             'name' => 'required|string',
             // 'startLevel' => 'required|string',
             // 'endLevel' => 'required|string',
@@ -51,7 +50,6 @@ class PackagesController extends Controller
         }
 
         $params = [
-            'packageId' => request('packageId'),
             'name' => request('name'),
             'startLevel' => request('startLevel'),
             'endLevel' => request('endLevel'),

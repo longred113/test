@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\Admin_Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ClassResource;
 use App\Models\Classes;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -37,7 +38,6 @@ class ClassController extends Controller
     public function store()
     {
         $validator = Validator::make($this->request->all(), [
-            'classId' => 'string|required|unique:classes',
             'productId' => 'string|required',
             'name' => 'string|required',
             // 'numberOfStudent' => 'integer|required',
@@ -52,8 +52,9 @@ class ClassController extends Controller
             return $validator->errors();
         }
 
+        $classId = IdGenerator::generate(['table'=>'classes', 'trow' => 'classId', 'length' => 8, 'prefix' => 'CL-']);
         $params = [
-            'classId' => $this->request['classId'],
+            'classId' => $classId,
             'productId' => $this->request['productId'],
             'name' => $this->request['name'],
             'numberOfStudent' => $this->request['numberOfStudent'],

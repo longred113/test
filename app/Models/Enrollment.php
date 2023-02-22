@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Enrollment extends Model
 {
-    // protected $primaryKey = '';
+    protected $primaryKey = 'enrollmentId';
     protected $keyType = 'string';
     public $incrementing = false;
     use HasFactory;
     protected $fillable = [
+        'enrollmentId',
         'studentId',
         'studentName',
         'talkSamId',
@@ -20,5 +21,6 @@ class Enrollment extends Model
         'level',
         'subject',
         'status',
+        'submitted',
     ];
 }

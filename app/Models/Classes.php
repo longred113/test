@@ -22,5 +22,7 @@ class Classes extends Model
         'classTimeSlot',
         'classStartDate',
         'status',
+        'typeOfClass',
+        'initialTextbook',
     ];
 }

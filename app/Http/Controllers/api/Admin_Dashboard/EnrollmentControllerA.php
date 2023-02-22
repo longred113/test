@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Enrollment;
 use App\Http\Resources\Enrollment as EnrollmentResource;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class EnrollmentControllerA extends Controller
 {
@@ -42,8 +43,10 @@ class EnrollmentControllerA extends Controller
         if ($validator->fails()) {
             return $validator->errors();
         }
+
+        $enrollmentId = IdGenerator::generate(['table'=>'enrollments', 'trow' => 'enrollmentId', 'length' => 8, 'prefix' => 'ER-']);
         $params = [
-            'studentId' => request('studentId'),
+            'studentId' => $enrollmentId,
             'studentName' => request('studentName'),
             'talkSamId' => request('talkSamId'),
             'campusName' => request('campusName'),

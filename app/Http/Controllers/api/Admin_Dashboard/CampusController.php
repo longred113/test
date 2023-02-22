@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\CampusResource;
 use App\Models\Campus;
 use GrahamCampbell\ResultType\Success;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -39,7 +40,6 @@ class CampusController extends Controller
     public function store(Request $request)
     {
         $validator = validator::make($request->all(), [
-            'campusId' => 'required|string|unique:campuses',
             'name' => 'required|string',
             'indicated' => 'required|string',
             'contact' => 'required|string',
@@ -49,8 +49,9 @@ class CampusController extends Controller
             return $validator->errors();
         }
 
+        $campusId = IdGenerator::generate(['table'=>'campuses', 'trow' => 'campusId', 'length' => 8, 'prefix' => 'CP-']);
         $params = [
-            'campusId' => request('campusId'),
+            'campusId' => $campusId,
             'name' => request('name'),
             'indicated' => request('indicated'),
             'contact' => request('contact'),

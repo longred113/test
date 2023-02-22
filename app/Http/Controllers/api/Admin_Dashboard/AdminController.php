@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\Admin_Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AdminResource;
 use App\Models\Admin;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
@@ -31,7 +32,6 @@ class AdminController extends Controller
     public function store(Request $request)
     {
         $validator = validator::make($request->all(), [
-            'adminId' => 'required|string|unique:admins',
             'name' => 'required|string',
             'email' => 'required|string|unique:admins',
             'password' => 'required|string|min:8',
@@ -40,11 +40,12 @@ class AdminController extends Controller
             return $validator->errors();
         }
 
+        $adminId = IdGenerator::generate(['table'=>'admins', 'trow' => 'adminId', 'length' => 8, 'prefix' => 'AD-']);
         $params = [
-            'adminId' => request('adminId'),
+            'adminId' => $adminId,
             'name' => request('name'),
             'email' => request('email'),
-            'password' => Hash::make(request('password')),
+            'password' => request('password'),
         ];
         $newAdmin = new AdminResource(Admin::create($params));
         return $this->successAdminRequest($newAdmin);
@@ -95,7 +96,7 @@ class AdminController extends Controller
         $params = [
             $admin['name'] = $request['name'],
             $admin['email'] = $request['email'],
-            $admin['password'] = Hash::make($request['password']),
+            $admin['password'] = $request['password'],
         ];
         $newInfoAdmin = $admin->update($params);
         return $this->successAdminRequest($newInfoAdmin);

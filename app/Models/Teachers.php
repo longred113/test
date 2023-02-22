@@ -30,5 +30,7 @@ class Teachers extends Model
         'campusId',
         'type',
         'talkSamId',
+        'role',
+        'memo',
     ];
 }

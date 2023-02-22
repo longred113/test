@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\CampusManager;
 use App\Http\Resources\CampusManager as CampusManagerResource;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class CampusManagerController extends Controller
 {
@@ -30,7 +31,6 @@ class CampusManagerController extends Controller
     public function store(Request $request)
     {
         $validator = validator::make($request->all(), [
-            'campusManagerId' => 'required|unique:campus_managers',
             'name' => 'required',
             // 'email' => 'required',
             // 'gender' => 'required',
@@ -47,8 +47,10 @@ class CampusManagerController extends Controller
         if ($validator->fails()) {
             return $validator->errors();
         }
+
+        $campusManagerId = IdGenerator::generate(['table'=>'campus_mangers', 'trow' => 'campusManagerId', 'length' => 9, 'prefix' => 'CPM-']);
         $params = [
-            'campusManagerId' => request('campusManagerId'),
+            'campusManagerId' => $campusManagerId,
             'name' => request('name'),
             'email' => request('email'),
             'gender' => request('gender'),
