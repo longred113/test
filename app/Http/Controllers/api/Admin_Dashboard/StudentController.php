@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentResource;
 use App\Models\Roles;
 use App\Models\Students;
+use App\Models\Users;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
@@ -31,10 +32,18 @@ class StudentController extends Controller
         $studentsData = StudentResource::collection(Students::all());
         return $this->successStudentRequest($studentsData);
     }
+
     public function studentWithdrawalList() 
     {
-        $studentWithdrawal = StudentResource::collection(Students::where('type', 'online-break')->orWhere('offline-break')->get);
+        $studentWithdrawal = StudentResource::collection(Students::where('type', 'online-break')->orWhere('type', 'offline-break')->get());
         return $this->successStudentRequest($studentWithdrawal);
+    }
+
+    public function studentJoinedList()
+    {
+        $studentId = Users::get('studentId');
+        $joinedStudent = Students::whereIn('studentId', $studentId)->where('type', 'online')->get();
+        return $this->successStudentRequest($joinedStudent);
     }
 
     /**

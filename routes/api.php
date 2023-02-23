@@ -152,9 +152,9 @@ Route::prefix('admin-unit-management')
     ->group(function() {
         Route::get('/', [UnitController::class, 'index'])->name('index');
         Route::post('/create', [UnitController::class, 'store'])->name('store');
-        Route::get('/{productId}', [UnitController::class, 'show'])->name('show');
-        Route::put( '/update/{productId}', [UnitController::class, 'update'])->name('update');
-        Route::delete('/{productId}', [UnitController::class, 'destroy'])->name('destroy');
+        Route::get('/{unitId}', [UnitController::class, 'show'])->name('show');
+        Route::put( '/update/{unitId}', [UnitController::class, 'update'])->name('update');
+        Route::delete('/{unitId}', [UnitController::class, 'destroy'])->name('destroy');
     });
 
 Route::prefix('admin-match-activity-management')
@@ -191,10 +191,12 @@ Route::prefix('admin-student-management')
     ->name('admin-student-management.')
     ->group(function() {
         Route::get('/', [StudentController::class, 'index'])->name('index');
+        Route::get('/joined', [StudentController::class, 'studentJoinedList'])->name('studentJoinedList');
+        Route::get('/withdrawal', [StudentController::class, 'studentWithdrawalList'])->name('studentWithdrawalList');
         Route::post('/create', [StudentController::class, 'store'])->name('store');
         Route::get('/{studentId}', [StudentController::class, 'show'])->name('show');
         Route::put('/update/{studentId}', [StudentController::class, 'update'])->name('update');
-        Route::delete('/{studentId}', [StudentController::class, 'destroy'])->name('destroy');
+        Route::delete('/{studentId}', [StudentController::class, 'destroy'])->name('destroy'); 
     });
 
 Route::prefix('admin-parent-management')
