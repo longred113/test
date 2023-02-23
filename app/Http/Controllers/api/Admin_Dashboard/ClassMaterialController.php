@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\Admin_Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ClassMaterialResource;
 use App\Models\ClassMaterials;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -47,7 +48,9 @@ class ClassMaterialController extends Controller
             return $validator->errors();
         }
 
+        $classMaterialId = IdGenerator::generate(['table'=>'class_materials', 'trow' => 'classMaterialId', 'length' => 7, 'prefix' => 'CM']);
         $params = [
+            'classMaterialId' => $classMaterialId,
             'writer' => $this->request['writer'],
             'class' => $this->request['class'],
             'title' => $this->request['title'],
@@ -69,6 +72,7 @@ class ClassMaterialController extends Controller
     {
         $classMaterial = ClassMaterials::find($classMaterialId);
         $classMaterialData = new ClassMaterialResource($classMaterial);
+        return $this->successClassMaterialRequest($classMaterialData);
     }
 
     /**
@@ -80,7 +84,43 @@ class ClassMaterialController extends Controller
      */
     public function update($classMaterialId)
     {
-        //
+        $classMaterial = ClassMaterials::find($classMaterialId);
+        if(empty($this->request['writer'])){
+            $this->request['writer'] = $classMaterial['writer'];
+        }
+        if(empty($this->request['class'])){
+            $this->request['class'] = $classMaterial['class'];
+        }
+        if(empty($this->request['title'])){
+            $this->request['title'] = $classMaterial['title'];
+        }
+        if(empty($this->request['view'])){
+            $this->request['view'] = $classMaterial['view'];
+        }
+        if(empty($this->request['date'])){
+            $this->request['date'] = $classMaterial['date'];
+        }
+        $validator = Validator::make($this->request->all(), [
+            'writer' => 'string|required',
+            'class' => 'string|required',
+            'title' => 'string|required',
+            'view' => 'integer|required',
+            'date' => 'date|required',
+        ]);
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+
+        $params = [
+            $classMaterial['writer'] = $this->request['writer'],
+            $classMaterial['class'] = $this->request['class'],
+            $classMaterial['title'] = $this->request['title'],
+            $classMaterial['view'] = $this->request['view'],
+            $classMaterial['date'] = $this->request['date'],
+        ];
+
+        $newInfoClassMaterial = $classMaterial->update($params);
+        return $
     }
 
     /**

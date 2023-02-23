@@ -40,7 +40,6 @@ class ProductController extends Controller
     public function store()
     {
         $validator = validator::make($this->request->all(), [
-            'packageId' => 'required',
             'name' => 'required',
             // 'startLevel' => 'required',
             // 'level' => 'required',
@@ -52,18 +51,18 @@ class ProductController extends Controller
         if ($validator->fails()) {
             return $validator->errors();
         }
-
+        
         $productId = IdGenerator::generate(['table'=>'products', 'trow' => 'productId', 'length' => 7, 'prefix' => 'PD']);
         $params = [
             'productId' => $productId,
-            'packageId' => $this->request('packageId'),
-            'name' => $this->request('name'),
-            'level' => $this->request('level'),
-            'startLevel' => $this->request('startLevel'),
-            'endLevel' => $this->request('endLevel'),
-            'details' => $this->request('details'),
-            'image' => $this->request('image'),
-            'activate' => $this->request('activate'),
+            'packageId' => $this->request['packageId'],
+            'name' => $this->request['name'],
+            'level' => $this->request['level'],
+            'startLevel' => $this->request['startLevel'],
+            'endLevel' => $this->request['endLevel'],
+            'details' => $this->request['details'],
+            'image' => $this->request['image'],
+            'activate' => $this->request['activate'],
         ];
         $newProducts = new ProductsResource(Products::create($params));
         return $this->successProductsRequest($newProducts);
@@ -117,7 +116,7 @@ class ProductController extends Controller
         //     $this->request['activate'] = $products['activate'];
         // }
         $validator = Validator::make($this->request->all(), [
-            'packageId' => 'required|integer',
+            'packageId' => 'integer',
             'name' => 'required|string',
             // 'startLevel' => 'required|string',
             // 'level' => 'required',
