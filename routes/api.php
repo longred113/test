@@ -91,8 +91,8 @@ Route::prefix('admin-teacher-management')
         Route::post('/', [TeacherController::class, 'multiDeleteTeacher'])->name('multiDeleteTeacher');
     });
 
-Route::prefix('packages')
-    ->name('packages.')
+Route::prefix('admin-package-management')
+    ->name('admin-package-management.')
     ->group(function() {
         Route::get('/', [PackagesController::class, 'index'])->name('index');
         Route::post('/create', [PackagesController::class, 'store'])->name('store');

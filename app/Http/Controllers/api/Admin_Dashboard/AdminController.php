@@ -48,7 +48,7 @@ class AdminController extends Controller
             return $validator->errors();
         }
 
-        $adminId = IdGenerator::generate(['table'=>'admins', 'trow' => 'adminId', 'length' => 8, 'prefix' => 'AD-']);
+        $adminId = IdGenerator::generate(['table'=>'admins', 'trow' => 'adminId', 'length' => 7, 'prefix' => 'AD']);
         $params = [
             'adminId' => $adminId,
             'name' => $this->request['name'],

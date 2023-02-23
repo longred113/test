@@ -15,7 +15,6 @@ class Packages extends JsonResource
     public function toArray($request)
     {
         return [
-            'packageId' => $this->packageId,
             'name' => $this->name,
             'startLevel' => $this->startLevel,
             'endLevel' => $this->endLevel,

@@ -48,7 +48,7 @@ class UnitController extends Controller
             return $validator->errors();
         }
 
-        $unitId = IdGenerator::generate(['table'=>'units', 'trow' => 'unitId', 'length' => 8, 'prefix' => 'UN-']);
+        $unitId = IdGenerator::generate(['table'=>'units', 'trow' => 'unitId', 'length' => 7, 'prefix' => 'UN']);
         $params = [
             'unitId' => $unitId,
             'productId' => $this->request['productId'],

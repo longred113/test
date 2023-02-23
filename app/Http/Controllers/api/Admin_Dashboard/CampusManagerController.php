@@ -55,7 +55,7 @@ class CampusManagerController extends Controller
             return $validator->errors();
         }
 
-        $campusManagerId = IdGenerator::generate(['table'=>'campus_mangers', 'trow' => 'campusManagerId', 'length' => 9, 'prefix' => 'CPM-']);
+        $campusManagerId = IdGenerator::generate(['table'=>'campus_mangers', 'trow' => 'campusManagerId', 'length' => 8, 'prefix' => 'CPM']);
         $params = [
             'campusManagerId' => $campusManagerId,
             'name' => $this->request('name'),

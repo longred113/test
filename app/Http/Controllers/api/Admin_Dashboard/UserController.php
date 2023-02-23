@@ -50,7 +50,7 @@ class UserController extends Controller
         // if ($validator->fails()) {
         //     return $validator->errors();
         // }
-        $userId = IdGenerator::generate(['table'=>'users', 'trow' => 'userId', 'length' => 8, 'prefix' => 'US-']);
+        $userId = IdGenerator::generate(['table'=>'users', 'trow' => 'userId', 'length' => 7, 'prefix' => 'US']);
         $params = [
             'userId' => $userId,
             'name' => $userParams['name'],

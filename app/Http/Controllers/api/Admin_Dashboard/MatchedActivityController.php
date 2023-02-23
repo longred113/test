@@ -48,7 +48,7 @@ class MatchedActivityController extends Controller
             return $validator->errors();
         }
 
-        $matchedActivityId = IdGenerator::generate(['table'=>'matched_activities', 'trow' => 'matchedActivityId', 'length' => 8, 'prefix' => 'MA-']);
+        $matchedActivityId = IdGenerator::generate(['table'=>'matched_activities', 'trow' => 'matchedActivityId', 'length' => 7, 'prefix' => 'MA']);
         $params = [
             'matchedActivityId' => $matchedActivityId,
             'productId' => $this->request['productId'],

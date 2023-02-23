@@ -50,7 +50,7 @@ class CampusController extends Controller
             return $validator->errors();
         }
 
-        $campusId = IdGenerator::generate(['table'=>'campuses', 'trow' => 'campusId', 'length' => 8, 'prefix' => 'CP-']);
+        $campusId = IdGenerator::generate(['table'=>'campuses', 'trow' => 'campusId', 'length' => 7, 'prefix' => 'CP']);
         $params = [
             'campusId' => $campusId,
             'name' => $this->request['name'],

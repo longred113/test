@@ -52,7 +52,7 @@ class EnrollmentControllerA extends Controller
             return $validator->errors();
         }
 
-        $enrollmentId = IdGenerator::generate(['table'=>'enrollments', 'trow' => 'enrollmentId', 'length' => 8, 'prefix' => 'ER-']);
+        $enrollmentId = IdGenerator::generate(['table'=>'enrollments', 'trow' => 'enrollmentId', 'length' => 7, 'prefix' => 'ER']);
         $params = [
             'studentId' => $enrollmentId,
             'studentName' => $this->request['studentName'],

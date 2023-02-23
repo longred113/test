@@ -46,7 +46,7 @@ class RoleController extends Controller
         if ($validator->fails()) {
             return $validator->errors();
         }
-        $roleId = IdGenerator::generate(['table'=>'roles', 'trow' => 'roleId', 'length' => 8, 'prefix' => 'RL-']);
+        $roleId = IdGenerator::generate(['table'=>'roles', 'trow' => 'roleId', 'length' => 7, 'prefix' => 'RL']);
         $params = [
             'roleId' => $roleId,
             'name' => $this->request['name'],

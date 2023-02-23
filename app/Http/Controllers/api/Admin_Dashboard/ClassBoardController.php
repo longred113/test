@@ -48,7 +48,7 @@ class ClassBoardController extends Controller
             return $validator->errors();
         }
 
-        $classBoardId = IdGenerator::generate(['table'=>'class_boards', 'trow' => 'classBoardId', 'length' => 8, 'prefix' => 'CB-']);
+        $classBoardId = IdGenerator::generate(['table'=>'class_boards', 'trow' => 'classBoardId', 'length' => 7, 'prefix' => 'CB']);
         $params = [
             'classBoardId' => $classBoardId,
             'writer' => $this->request['writer'],
@@ -84,7 +84,43 @@ class ClassBoardController extends Controller
      */
     public function update($classBoardId)
     {
-        //
+        $classBoard = ClassBoards::find($classBoardId);
+        if(!empty($this->request['writer'])){
+            $this->request['writer'] = $classBoard['writer'];
+        }
+        if(!empty($this->request['class'])){
+            $this->request['class'] = $classBoard['class'];
+        }
+        if(!empty($this->request['title'])){
+            $this->request['title'] = $classBoard['title'];
+        }
+        if(!empty($this->request['view'])){
+            $this->request['view'] = $classBoard['view'];
+        }
+        if(!empty($this->request['date'])){
+            $this->request['date'] = $classBoard['date'];
+        }
+        $validator = Validator::make($this->request->all(), [
+            'writer' => 'string|required',
+            'class' => 'string|required',
+            'title' => 'string|required',
+            'view' => 'integer|required',
+            'date' => 'date|required',
+        ]);
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+
+        $params = [
+            $classBoard['writer'] = $this->request['writer'],
+            $classBoard['class'] = $this->request['class'],
+            $classBoard['title'] = $this->request['title'],
+            $classBoard['view'] = $this->request['view'],
+            $classBoard['date'] = $this->request['date'],
+        ];
+
+        $newInfoClassBoard = $classBoard->update($params);
+        return $this->successClassBoardRequest($newInfoClassBoard);
     }
 
     /**
@@ -95,6 +131,8 @@ class ClassBoardController extends Controller
      */
     public function destroy($classBoardId)
     {
-        //
+        $classBoard = ClassBoards::find($classBoardId);
+        $deleteClassBoard = $classBoard->delete($classBoard);
+        return $this->successClassBoardRequest($deleteClassBoard);
     }
 }

@@ -65,7 +65,7 @@ class StudentController extends Controller
         if ($validator->fails()) {
             return $validator->errors();
         }
-        $studentId = IdGenerator::generate(['table'=>'students', 'trow' => 'studentId', 'length' => 8, 'prefix' => 'ST-']);
+        $studentId = IdGenerator::generate(['table'=>'students', 'trow' => 'studentId', 'length' => 7, 'prefix' => 'ST']);
         $studentParams = [
             'studentId' => $studentId,
             'name' => $this->request['name'],

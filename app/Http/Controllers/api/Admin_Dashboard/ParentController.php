@@ -48,7 +48,7 @@ class ParentController extends Controller
             return $validator->errors();
         }
 
-        $parentId = IdGenerator::generate(['table'=>'parents', 'trow' => 'parentId', 'length' => 8, 'prefix' => 'PA-']);
+        $parentId = IdGenerator::generate(['table'=>'parents', 'trow' => 'parentId', 'length' => 7, 'prefix' => 'PA']);
         if (!empty($this->request->get('studentId'))) {
             $studentIds[] = $this->request->get('studentId');
         } else {

@@ -57,13 +57,13 @@ class PackagesController extends Controller
         }
 
         $params = [
-            'name' => $this->request('name'),
-            'startLevel' => $this->request('startLevel'),
-            'endLevel' => $this->request('endLevel'),
-            'activate' => $this->request('activate'),
-            'details' => $this->request('details'),
+            'name' => $this->request['name'],
+            'startLevel' => $this->request['startLevel'],
+            'endLevel' => $this->request['endLevel'],
+            'activate' => $this->request['activate'],
+            'details' => $this->request['details'],
         ];
-        $newPackages = Packages::create($params);
+        $newPackages = new PackagesResource(Packages::create($params));
         return $this->successPackagesRequest($newPackages);
     }
 

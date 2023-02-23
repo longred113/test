@@ -53,7 +53,7 @@ class ProductController extends Controller
             return $validator->errors();
         }
 
-        $productId = IdGenerator::generate(['table'=>'products', 'trow' => 'productId', 'length' => 8, 'prefix' => 'PD-']);
+        $productId = IdGenerator::generate(['table'=>'products', 'trow' => 'productId', 'length' => 7, 'prefix' => 'PD']);
         $params = [
             'productId' => $productId,
             'packageId' => $this->request('packageId'),

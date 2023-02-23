@@ -72,7 +72,7 @@ class TeacherController extends Controller
             return $validator->errors();
         }
 
-        $teacherId = IdGenerator::generate(['table'=>'teachers', 'trow' => 'teacherId', 'length' => 8, 'prefix' => 'TC-']);
+        $teacherId = IdGenerator::generate(['table'=>'teachers', 'trow' => 'teacherId', 'length' => 7, 'prefix' => 'TC']);
         $params = [
             'teacherId' => $teacherId,
             'name' => $this->request['name'],
