@@ -97,10 +97,10 @@ class TeacherController extends Controller
         ];
 
         $userParams = [
+            'teacherId' => $teacherId,
             'name' => $this->request['name'],
             'email' => $this->request['email'],
             'password' => $this->request['password'],
-            'teacherId' => $teacherId,
         ];
         $newTeacherData = new TeacherResource(Teachers::create($params));
         UserController::store($userParams);
@@ -116,7 +116,14 @@ class TeacherController extends Controller
     public function show($teacherId)
     {
         $teacher = Teachers::find($teacherId);
-        $teacherData = new TeacherResource($teacher);
+        $joinData = Teachers::join('campuses','teachers.campusId', '=', 'campuses.campusId')->where('teacherId', $teacherId)->get();
+        foreach($joinData as $join) {
+            $data = $join['name'];
+        }
+        $teacherData = [];
+        $teacherData = $teacher;
+        $teacherData['campusName'] = $data; 
+        return $teacherData;
         return $this->successTeacherRequest($teacherData);
     }
 
