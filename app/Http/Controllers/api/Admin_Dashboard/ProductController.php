@@ -27,8 +27,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $data = ProductsResource::collection(Products::all());
-        return $this->successProductsRequest($data);
+        // $data = ProductsResource::collection(Products::all());
+        // return $this->successProductsRequest($data);
+        $joinData = Products::join('packages','products.packageId', '=', 'packages.packageId')->get();
+        return $joinData;
     }
 
     /**
