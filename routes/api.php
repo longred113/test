@@ -252,9 +252,9 @@ Route::prefix('admin-class-board-management')
     ->group(function() {
         Route::get('/', [ClassBoardController::class, 'index'])->name('index');
         Route::post('/create', [ClassBoardController::class, 'store'])->name('store');
-        Route::get('/show', [ClassBoardController::class, 'show'])->name('show');
-        Route::put('/update', [ClassBoardController::class, 'update'])->name('update');
-        Route::delete('/', [ClassBoardController::class, 'destroy'])->name('destroy');
+        Route::get('/{classBoardId}', [ClassBoardController::class, 'show'])->name('show');
+        Route::put('/update/{classBoardId}', [ClassBoardController::class, 'update'])->name('update');
+        Route::delete('/{classBoardId}', [ClassBoardController::class, 'destroy'])->name('destroy');
     });
 
 Route::prefix('admin-class-material-management')
@@ -262,8 +262,8 @@ Route::prefix('admin-class-material-management')
     ->group(function() {
         Route::get('/', [ClassMaterialController::class, 'index'])->name('index');
         Route::post('/create', [ClassMaterialController::class, 'store'])->name('store');
-        Route::get('/show', [ClassMaterialController::class, 'show'])->name('show');
-        Route::put('/update', [ClassMaterialController::class, 'update'])->name('update');
-        Route::delete('/', [ClassMaterialController::class, 'destroy'])->name('destroy');
+        Route::get('/{classMaterialId}', [ClassMaterialController::class, 'show'])->name('show');
+        Route::put('/update/{classMaterialId}', [ClassMaterialController::class, 'update'])->name('update');
+        Route::delete('/{classMaterialId}', [ClassMaterialController::class, 'destroy'])->name('destroy');
     });
     
