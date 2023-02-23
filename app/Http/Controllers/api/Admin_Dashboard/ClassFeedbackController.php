@@ -50,7 +50,7 @@ class ClassFeedbackController extends Controller
             return $validator->errors();
         }
 
-        $classFeedbackId = IdGenerator::generate(['table'=>'class_feedbacks', 'trow' => 'classFeedbackId', 'length' => 8, 'prefix' => 'CFB-']);
+        $classFeedbackId = IdGenerator::generate(['table'=>'class_feedbacks', 'trow' => 'classFeedbackId', 'length' => 8, 'prefix' => 'CFB']);
         $params = [
             'classFeedbackId' => $classFeedbackId,
             'teacherId' => $this->request['teacherId'],

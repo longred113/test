@@ -52,7 +52,7 @@ class ClassReportController extends Controller
             return $validator->errors();
         }
 
-        $classReportId = IdGenerator::generate(['table'=>'class_reports', 'trow' => 'classReportId', 'length' => 9, 'prefix' => 'CRB-']);
+        $classReportId = IdGenerator::generate(['table'=>'class_reports', 'trow' => 'classReportId', 'length' => 8, 'prefix' => 'CRB']);
         $params = [
             'classReportId' => $classReportId,
             'teacherId' => $this->request['teacherId'],
@@ -79,6 +79,7 @@ class ClassReportController extends Controller
      */
     public function show($ClassReport)
     {
+      
         $ClassReports = ClassReports::find($ClassReport);
         $ClassReportsData = new ClassReportsResource($ClassReports);
         return $this->successClassReport($ClassReportsData);
@@ -91,9 +92,41 @@ class ClassReportController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update($classReportId)
     {
-        //
+        $ClassReport = ClassReports::find($classReportId);
+        $validator = Validator::make($this->request->all(), [
+            // 'teacherId' => 'string|required',
+            // 'classId' => 'string|required',
+            // 'studentId' => 'string|required',
+            // 'campusId' => 'string|required',
+            // 'status' => 'string|required',
+            // 'date' => 'string|required',
+            // 'preparation' => 'string|required',
+            // 'attitude' => 'string|required',
+            // 'participation' => 'string|required',
+            'comment' => 'string|required',
+        ]);
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+
+        $params = [
+            $ClassReport['teacherId'] = $this->request['teacherId'],
+            $ClassReport['classId'] = $this->request['classId'],
+            $ClassReport['studentId'] = $this->request['studentId'],
+            $ClassReport['campusId'] = $this->request['campusId'],
+            $ClassReport['status'] = $this->request['status'],
+            $ClassReport['date'] = $this->request['date'],
+            $ClassReport['preparation'] = $this->request['preparation'],
+            $ClassReport['attitude'] = $this->request['attitude'],
+            $ClassReport['participation'] = $this->request['participation'],
+            $ClassReport['comment'] = $this->request['comment'],
+        ];
+
+        $newClassReportsData = $ClassReport->update($params);
+        return $this->successClassReport($newClassReportsData);
+    
     }
 
     /**
@@ -102,8 +135,10 @@ class ClassReportController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($classReportId)
     {
-        //
+        $ClassReport = ClassReports::find($classReportId);
+        $deleteClassReport = $ClassReport->delete();
+        return $this->successClassReport($deleteClassReport);
     }
 }
