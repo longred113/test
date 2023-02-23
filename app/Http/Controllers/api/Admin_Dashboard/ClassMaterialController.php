@@ -120,7 +120,7 @@ class ClassMaterialController extends Controller
         ];
 
         $newInfoClassMaterial = $classMaterial->update($params);
-        return $
+        return $this->successClassMaterialRequest($newInfoClassMaterial);
     }
 
     /**
@@ -131,6 +131,8 @@ class ClassMaterialController extends Controller
      */
     public function destroy($classMaterialId)
     {
-        //
+        $classMaterial = ClassMaterials::find($classMaterialId);
+        $deleteClassMaterial = $classMaterial->delete();
+        return $this->successClassMaterialRequest($deleteClassMaterial);
     }
 }
