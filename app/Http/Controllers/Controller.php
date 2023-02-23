@@ -105,6 +105,14 @@ class Controller extends BaseController
             'ClassData' => $classData,
         ],200);
     }
+    protected function successClassReport($ClassReportData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'ClassReportData' => $ClassReportData,
+        ],200);
+    }
     protected function successClassMatchActivityRequest($classMatchActivityData = array())
     {
         return response()->json([
