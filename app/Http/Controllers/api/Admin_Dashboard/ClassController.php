@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\Admin_Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ClassResource;
 use App\Models\Classes;
+use App\Models\Teachers;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -37,6 +38,7 @@ class ClassController extends Controller
      */
     public function store()
     {
+        $onlineTeacher = Teachers::where('type', 'online')->get();
         $validator = Validator::make($this->request->all(), [
             'productId' => 'string|required',
             'name' => 'string|required',
