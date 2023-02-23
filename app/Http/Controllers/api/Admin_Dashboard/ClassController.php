@@ -54,7 +54,7 @@ class ClassController extends Controller
             return $validator->errors();
         }
 
-        $classId = IdGenerator::generate(['table'=>'classes', 'trow' => 'classId', 'length' => 8, 'prefix' => 'CL-']);
+        $classId = IdGenerator::generate(['table'=>'classes', 'trow' => 'classId', 'length' => 7, 'prefix' => 'CL']);
         $params = [
             'classId' => $classId,
             'productId' => $this->request['productId'],
