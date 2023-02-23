@@ -14,6 +14,7 @@ use App\Http\Controllers\api\Admin_Dashboard\ParentController;
 use App\Http\Controllers\api\Admin_Dashboard\ProductController;
 use App\Http\Controllers\api\Admin_Dashboard\StudentController;
 use App\Http\Controllers\api\Admin_Dashboard\UnitController;
+use App\Http\Controllers\api\Admin_Dashboard\ClassReportController;
 use App\Http\Controllers\api\Admin_Dashboard\ClassFeedbackController;
 use App\Http\Controllers\api\Admin_Dashboard\ClassMaterialController;
 use App\Http\Controllers\api\Admin_Dashboard\EnrollmentControllerA;
@@ -268,4 +269,12 @@ Route::prefix('admin-class-material-management')
         Route::put('/update/{classMaterialId}', [ClassMaterialController::class, 'update'])->name('update');
         Route::delete('/{classMaterialId}', [ClassMaterialController::class, 'destroy'])->name('destroy');
     });
-    
+Route::prefix('admin-class-report')
+    ->name('admin-class-report.')
+    ->group(function() {
+        Route::get('/', [ClassReportController::class, 'index'])->name('index');
+        Route::post('/create', [ClassReportController::class, 'store'])->name('store');
+        Route::get('/{classReportId}', [ClassReportController::class, 'show'])->name('show');
+        Route::put('/update/{classReportId}', [ClassReportController::class, 'update'])->name('update');
+        Route::delete('/{classReportId}', [ClassReportController::class, 'destroy'])->name('destroy');
+    });

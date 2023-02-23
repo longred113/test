@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ClassReports extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'classFeedbackId';
+    protected $primaryKey = 'classReportId';
     protected $keyType = 'string';
     public $incrementing = false;
     protected $fillable = [
