@@ -54,13 +54,13 @@ class StudyPlannerController extends Controller
         $studyPlanner = MatchedActivities::whereIn('matchedActivityId', $matchedActivityIds)->get();
         
         foreach($studyPlanner as $todoList) {
-            if($todoList['type'] == 'todo') {
+            if(!empty($todoList['type'] == 'todo')) {
                 $todoStudyPlanner = $todoList;
             }
-            if($todoList['type'] == 'done') {
+            if(!empty($todoList['type'] == 'done')) {
                 $doneStudyPlanner = $todoList;
             }
-            if($todoList['type'] == 'incomplete') {
+            if(!empty($todoList['type'] == 'incomplete')) {
                 $incompleteStudyPlanner = $todoList;
             }
         }

@@ -177,4 +177,20 @@ class Controller extends BaseController
             'classMaterialData' => $classMaterialData,
         ],200);
     }
+    protected function successClassProductRequest($classProductData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'classProductData' => $classProductData,
+        ],200);
+    }
+    protected function successProductPackageRequest($productPackageData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'productPackageData' => $productPackageData,
+        ],200);
+    }
 }
