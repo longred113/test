@@ -23,6 +23,7 @@ use App\Http\Controllers\api\Campus_Dashboard\OffStudentController;
 use App\Http\Controllers\api\Campus_Dashboard\OffTeachController;
 use App\Http\Controllers\api\Campus_Dashboard\EnrollmentController;
 use App\Http\Controllers\api\Teacher_Dashboard\StudyPlannerController;
+use App\Http\Controllers\api\Student_Dashboard\StudyPlannerSController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -293,3 +294,14 @@ Route::prefix('teacher-study-planner')
     });
 //END TEACHER DASHBOARD
 
+//START STUDENT DASHBOARD
+Route::prefix('student-study-planner')
+    ->name('student-study-planner.')
+    ->group(function () {
+        Route::get('/{studentId}', [StudyPlannerSController::class, 'showStuClass'])->name('showStuClass');
+        Route::post('/create', [StudyPlannerSController::class, 'store'])->name('store');
+        Route::get('/show/{classId}', [StudyPlannerSController::class, 'showStudentInClass'])->name('showStudentInClass');
+        Route::put('/update', [StudyPlannerSController::class, 'update'])->name('update');
+        Route::delete('/', [StudyPlannerSController::class, 'destroy'])->name('destroy');
+    });
+//END STUDENT DASHBOARD
