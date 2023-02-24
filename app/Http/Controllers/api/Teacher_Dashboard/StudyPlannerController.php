@@ -45,7 +45,9 @@ class StudyPlannerController extends Controller
 
         $studentStudyPlanner = classes::join('student_classes', 'classes.classId', '=', 'student_classes.classId')
         ->join('class_match_activities', 'classes.classId', '=', 'class_match_activities.classId')->get();
-        $studyPlanner = MatchedActivities::whereIn('matchedActivityId', $studentStudyPlanner['matchedActivityId'])->get();
+        foreach($studentStudyPlanner as $student) {
+            $studyPlanner = MatchedActivities::where('matchedActivityId', $student['matchedActivityId'])->get();
+        }
         return $studyPlanner;
         return $this->successStudentRequest($students);
     }
