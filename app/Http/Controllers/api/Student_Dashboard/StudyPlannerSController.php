@@ -28,14 +28,13 @@ class StudyPlannerSController extends Controller
      */
     public function showStuClass($studentId)
     {
-       
-        $studentClass = StudentClasses::join('classes', 'student_classes.classId', "=", 'classes.classId')->where('studentId',$studentId)->get();
+        $studentClass = StudentClasses::join('classes', 'student_classes.classId', "=", 'classes.classId')
+        ->where('studentId',$studentId)->get();
         return($studentClass);
     }
-
-    public function index()
+    public function showStudyPlanner()
     {
-        //
+    
     }
     /**
      * Store a newly created resource in storage.

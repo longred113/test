@@ -17,13 +17,16 @@ use App\Http\Controllers\api\Admin_Dashboard\UnitController;
 use App\Http\Controllers\api\Admin_Dashboard\ClassReportController;
 use App\Http\Controllers\api\Admin_Dashboard\ClassFeedbackController;
 use App\Http\Controllers\api\Admin_Dashboard\ClassMaterialController;
+use App\Http\Controllers\api\Admin_Dashboard\ClassProductController;
 use App\Http\Controllers\api\Admin_Dashboard\EnrollmentControllerA;
+use App\Http\Controllers\api\Admin_Dashboard\ProductPackageController;
 use App\Http\Controllers\api\Admin_Dashboard\StudentClassController;
 use App\Http\Controllers\api\Campus_Dashboard\OffStudentController;
 use App\Http\Controllers\api\Campus_Dashboard\OffTeachController;
 use App\Http\Controllers\api\Campus_Dashboard\EnrollmentController;
 use App\Http\Controllers\api\Teacher_Dashboard\StudyPlannerController;
 use App\Http\Controllers\api\Student_Dashboard\StudyPlannerSController;
+use App\Models\ProductPackages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -89,8 +92,8 @@ Route::prefix('admin-teacher-management')
     ->group(function () {
         Route::get('/', [TeacherController::class, 'index'])->name('index');
         Route::post('/create', [TeacherController::class, 'store'])->name('store');
-        Route::get('/{teacherId}', [TeacherController::class, 'show'])->name('show');
         Route::get('/online-teacher', [TeacherController::class, 'showOnlineTeacher'])->name('showOnlineTeacher');
+        Route::get('/{teacherId}', [TeacherController::class, 'show'])->name('show');
         Route::put('/update/{teacherId}', [TeacherController::class, 'update'])->name('update');
         Route::delete('/{teacherId}', [TeacherController::class, 'destroy'])->name('destroy');
         Route::post('/', [TeacherController::class, 'multiDeleteTeacher'])->name('multiDeleteTeacher');
@@ -248,6 +251,26 @@ Route::prefix('admin-class-report')
         Route::put('/update/{classReportId}', [ClassReportController::class, 'update'])->name('update');
         Route::delete('/{classReportId}', [ClassReportController::class, 'destroy'])->name('destroy');
     });
+
+Route::prefix('admin-class-product-management')
+    ->name('admin-class-product-management.')
+    ->group(function () {
+        Route::get('/', [ClassProductController::class, 'index'])->name('index');
+        Route::post('/create', [ClassProductController::class, 'store'])->name('store');
+        Route::get('/{classProductId}', [ClassProductController::class, 'show'])->name('show');
+        Route::put('/update/{classProductId}', [ClassProductController::class, 'update'])->name('update');
+        Route::delete('/{classProductId}', [ClassProductController::class, 'destroy'])->name('destroy');
+    });
+
+Route::prefix('admin-product-package-management')
+    ->name('admin-product-package-management.')
+    ->group(function () {
+        Route::get('/', [ProductPackageController::class, 'index'])->name('index');
+        Route::post('/create', [ProductPackageController::class, 'store'])->name('store');
+        Route::get('/{productPackageId}', [ProductPackageController::class, 'show'])->name('show');
+        Route::put('/update/{productPackageId}', [ProductPackageController::class, 'update'])->name('update');
+        Route::delete('/{productPackageId}', [ProductPackageController::class, 'destroy'])->name('destroy');
+    });
 //END ADMIN DASHBOARD
 
 // START CAMPUS DASHBOARD
@@ -289,6 +312,7 @@ Route::prefix('teacher-study-planner')
         Route::get('/{teacherId}', [StudyPlannerController::class, 'showClasses'])->name('showClasses');
         Route::post('/create', [StudyPlannerController::class, 'store'])->name('store');
         Route::get('/show/{classId}', [StudyPlannerController::class, 'showStudentInClass'])->name('showStudentInClass');
+        Route::get('/to-do-list/{studentId}', [StudyPlannerController::class, 'getToDoListOfStudent'])->name('getToDoListOfStudent');
         Route::put('/update', [StudyPlannerController::class, 'update'])->name('update');
         Route::delete('/', [StudyPlannerController::class, 'destroy'])->name('destroy');
     });
