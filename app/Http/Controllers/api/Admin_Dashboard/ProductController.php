@@ -57,7 +57,6 @@ class ProductController extends Controller
         $productId = IdGenerator::generate(['table'=>'products', 'trow' => 'productId', 'length' => 7, 'prefix' => 'PD']);
         $params = [
             'productId' => $productId,
-            'packageId' => $this->request['packageId'],
             'name' => $this->request['name'],
             'level' => $this->request['level'],
             'startLevel' => $this->request['startLevel'],
@@ -93,9 +92,6 @@ class ProductController extends Controller
     public function update($productId)
     {
         $products = Products::find($productId);
-        if(empty($this->request['packageId'])) {
-            $this->request['packageId'] = $products['packageId'];
-        }
         if (empty($this->request['name'])) {
             $this->request['name'] = $products['name'];
         }
@@ -118,7 +114,6 @@ class ProductController extends Controller
         //     $this->request['activate'] = $products['activate'];
         // }
         $validator = Validator::make($this->request->all(), [
-            'packageId' => 'integer',
             'name' => 'required|string',
             // 'startLevel' => 'required|string',
             // 'level' => 'required',

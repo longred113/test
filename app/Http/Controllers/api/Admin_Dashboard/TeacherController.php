@@ -34,6 +34,12 @@ class TeacherController extends Controller
         return $this->successTeacherRequest($teachersData);
     }
 
+    public function showOnlineTeacher()
+    {
+        $teacherData = TeacherResource::collection(Teachers::where('type', 'online')->get());
+        return $this->successTeacherRequest($teacherData);
+    }
+
     /**
      * Store a newly created resource in storage.
      *

@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class ClassMatchActivities extends Model
 {
     use HasFactory;
-    // protected $primaryKey = 'classId';
-    // protected $foreignKey = 'matchedActivityId';
+    protected $primaryKey = 'classMatchActivityId';
     protected $keyType = 'string';
     public $incrementing = false;
     protected $fillable = [
+        'classMatchActivityId',
         'classId',
         'matchedActivityId',
         'status',

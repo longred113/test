@@ -5,22 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-
-class Products extends Model
+class ProductPackages extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'productId';
+    protected $primaryKey = 'productPackageId';
     protected $keyType = 'string';
     public $incrementing = false;
     protected $fillable = [
+        'productPackageId',
         'productId',
-        'name',
-        'level',
-        'startLevel',
-        'level',
-        'endLevel',
-        'details',
-        'image',
-        'activate',
-    ];
+        'packageId',
+        'status',
+    ]; 
 }

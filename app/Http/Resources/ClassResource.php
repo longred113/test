@@ -16,7 +16,6 @@ class ClassResource extends JsonResource
     {
         return [
             'classId' => $this->classId,
-            'productId' => $this->productId,
             'name' => $this->name,
             'numberOfStudent' => $this->numberOfStudent,
             'subject' => $this->subject,

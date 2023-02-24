@@ -40,7 +40,6 @@ class ClassController extends Controller
     {
         $onlineTeacher = Teachers::where('type', 'online')->get();
         $validator = Validator::make($this->request->all(), [
-            'productId' => 'string|required',
             'name' => 'string|required',
             // 'numberOfStudent' => 'integer|required',
             // 'subject' => 'string|required',
@@ -59,7 +58,6 @@ class ClassController extends Controller
         $classId = IdGenerator::generate(['table'=>'classes', 'trow' => 'classId', 'length' => 7, 'prefix' => 'CL']);
         $params = [
             'classId' => $classId,
-            'productId' => $this->request['productId'],
             'name' => $this->request['name'],
             'numberOfStudent' => $this->request['numberOfStudent'],
             'subject' => $this->request['subject'],
@@ -98,9 +96,6 @@ class ClassController extends Controller
     public function update($classId)
     {
         $class = Classes::find($classId);
-        if(empty($this->request['productId'])) {
-            $this->request['productId'] = $class['productId'];
-        }
         if(empty($this->request['name'])) {
             $this->request['name'] = $class['name'];
         }
@@ -132,7 +127,6 @@ class ClassController extends Controller
             $this->request['initialTextbook'] = $class['initialTextbook'];
         }
         $validator = Validator::make($this->request->all(), [
-            'productId' => 'string|required',
             'name' => 'string|required',
             'numberOfStudent' => 'integer|required',
             // 'subject' => 'string|required',
@@ -149,7 +143,6 @@ class ClassController extends Controller
         }
 
         $params = [
-            $class['productId'] = $this->request['productId'],
             $class['name'] = $this->request['name'],
             $class['numberOfStudent'] = $this->request['numberOfStudent'],
             $class['subject'] = $this->request['subject'],

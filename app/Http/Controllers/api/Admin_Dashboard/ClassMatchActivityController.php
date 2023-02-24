@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\Admin_Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ClassMatchActivityResource;
 use App\Models\ClassMatchActivities;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -45,7 +46,9 @@ class ClassMatchActivityController extends Controller
             return $validator->errors();
         }
 
+        $classMatchActivityId = IdGenerator::generate(['table'=>'class_match_activities', 'trow' => 'classMatchActivityId', 'length' => 8, 'prefix' => 'CMA']);
         $params = [
+            'classMatchActivityId' => $classMatchActivityId,
             'classId' => $this->request['classId'],
             'matchedActivityId' => $this->request['matchedActivityId'],
             'status' => $this->request['status'],

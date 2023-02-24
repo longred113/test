@@ -13,7 +13,6 @@ class Classes extends Model
     public $incrementing = false;
     protected $fillable = [
         'classId',
-        'productId',
         'name',
         'numberOfStudent',
         'subject',

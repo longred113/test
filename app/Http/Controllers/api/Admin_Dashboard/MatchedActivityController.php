@@ -38,11 +38,11 @@ class MatchedActivityController extends Controller
     public function store()
     {
         $validator = Validator::make($this->request->all(), [
-            'productId' => 'required',
+            // 'productId' => 'required',
             'name' => 'string|required',
             'type' => 'string|required',
             'time' => 'integer|required',
-            'unitId' => 'string|required',
+            // 'unitId' => 'string|required',
         ]);
         if ($validator->fails()) {
             return $validator->errors();

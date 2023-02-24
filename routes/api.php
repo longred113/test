@@ -22,6 +22,7 @@ use App\Http\Controllers\api\Admin_Dashboard\StudentClassController;
 use App\Http\Controllers\api\Campus_Dashboard\OffStudentController;
 use App\Http\Controllers\api\Campus_Dashboard\OffTeachController;
 use App\Http\Controllers\api\Campus_Dashboard\EnrollmentController;
+use App\Http\Controllers\api\Teacher_Dashboard\StudyPlannerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -40,9 +41,10 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
+// START ADMIN DASHBOARD
 Route::prefix('dash-board-admin')
     ->name('dash-board-admin.')
-    ->group(function() {
+    ->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('index');
         Route::post('/create', [AdminController::class, 'store'])->name('store');
         Route::get('/{adminId}', [AdminController::class, 'show'])->name('show');
@@ -52,41 +54,42 @@ Route::prefix('dash-board-admin')
 
 Route::prefix('admin-campus-management')
     ->name('admin-campus-management.')
-    ->group(function() {
+    ->group(function () {
         Route::get('/', [CampusController::class, 'index'])->name('index');
         Route::post('/create', [CampusController::class, 'store'])->name('store');
         Route::get('/{campusId}', [CampusController::class, 'show'])->name('show');
-        Route::put( '/update/{campusId}', [CampusController::class, 'update'])->name('update');
+        Route::put('/update/{campusId}', [CampusController::class, 'update'])->name('update');
         Route::delete('/{campusId}', [CampusController::class, 'destroy'])->name('destroy');
         Route::put('/', [CampusController::class, 'switchActivate'])->name('switchActivate');
     });
 
 Route::prefix('admin-campus-manger')
     ->name('admin-campus-manger.')
-    ->group(function() {
+    ->group(function () {
         Route::get('/', [CampusManagerController::class, 'index'])->name('index');
         Route::post('/create', [CampusManagerController::class, 'store'])->name('store');
         Route::get('/{campusManagerId}', [CampusManagerController::class, 'show'])->name('show');
-        Route::put( '/update/{campusManagerId}', [CampusManagerController::class, 'update'])->name('update');
+        Route::put('/update/{campusManagerId}', [CampusManagerController::class, 'update'])->name('update');
         Route::delete('/{campusManagerId}', [CampusManagerController::class, 'destroy'])->name('destroy');
     });
 
 Route::prefix('admin-role-management')
     ->name('admin-role-management.')
-    ->group(function() {
+    ->group(function () {
         Route::get('/', [RoleController::class, 'index'])->name('index');
         Route::post('/create', [RoleController::class, 'store'])->name('store');
         Route::get('/{roleId}', [RoleController::class, 'show'])->name('show');
-        Route::put( '/update/{roleId}', [RoleController::class, 'update'])->name('update');
+        Route::put('/update/{roleId}', [RoleController::class, 'update'])->name('update');
         Route::delete('/{roleId}', [RoleController::class, 'destroy'])->name('destroy');
     });
 
 Route::prefix('admin-teacher-management')
     ->name('admin-teacher-management')
-    ->group(function() {
+    ->group(function () {
         Route::get('/', [TeacherController::class, 'index'])->name('index');
         Route::post('/create', [TeacherController::class, 'store'])->name('store');
         Route::get('/{teacherId}', [TeacherController::class, 'show'])->name('show');
+        Route::get('/online-teacher', [TeacherController::class, 'showOnlineTeacher'])->name('showOnlineTeacher');
         Route::put('/update/{teacherId}', [TeacherController::class, 'update'])->name('update');
         Route::delete('/{teacherId}', [TeacherController::class, 'destroy'])->name('destroy');
         Route::post('/', [TeacherController::class, 'multiDeleteTeacher'])->name('multiDeleteTeacher');
@@ -94,17 +97,17 @@ Route::prefix('admin-teacher-management')
 
 Route::prefix('admin-package-management')
     ->name('admin-package-management.')
-    ->group(function() {
+    ->group(function () {
         Route::get('/', [PackagesController::class, 'index'])->name('index');
         Route::post('/create', [PackagesController::class, 'store'])->name('store');
         Route::get('/{packageId}', [PackagesController::class, 'show'])->name('show');
-        Route::put( '/update/{packageId}', [PackagesController::class, 'update'])->name('update');
+        Route::put('/update/{packageId}', [PackagesController::class, 'update'])->name('update');
         Route::delete('/{packageId}', [PackagesController::class, 'destroy'])->name('destroy');
     });
 
 Route::prefix('admin-product-management')
     ->name('admin-product-management.')
-    ->group(function() {
+    ->group(function () {
         Route::get('/', [ProductController::class, 'index'])->name('index');
         Route::post('/create', [ProductController::class, 'store'])->name('store');
         Route::get('/{productId}', [ProductController::class, 'show'])->name('show');
@@ -114,53 +117,19 @@ Route::prefix('admin-product-management')
         Route::put('/update-package', [ProductController::class, 'updatePackage'])->name('updatePackage');
     });
 
-// CAMPUS
-
-Route::prefix('campus-teacherOff')
-    ->name('campus-teacherOff.')
-    ->group(function() {
-        Route::get('/', [OffTeachController::class, 'index'])->name('index');
-        Route::post('/create', [OffTeachController::class, 'store'])->name('store');
-        Route::get('/{teacherId}', [OffTeachController::class, 'show'])->name('show');
-        Route::put( '/update/{teacherId}', [OffTeachController::class, 'update'])->name('update');
-        Route::delete('/{teacherId}', [OffTeachController::class, 'destroy'])->name('destroy');
-    });
-
-Route::prefix('campus-studentOff')
-    ->name('campus-studentOff.')
-    ->group(function() {
-        Route::get('/', [OffStudentController::class, 'index'])->name('index');
-        Route::post('/create', [OffStudentController::class, 'store'])->name('store');
-        Route::get('/{studentId}', [OffStudentController::class, 'show'])->name('show');
-        Route::put( '/update/{studentId}', [OffStudentController::class, 'update'])->name('update');
-        Route::delete('/{studentId}', [OffStudentController::class, 'destroy'])->name('destroy');
-    });
-
-Route::prefix('campus-enrollment')
-    ->name('campus-enrollment.')
-    ->group(function() {
-        Route::get('/', [EnrollmentController::class, 'index'])->name('index');
-        Route::post('/create', [EnrollmentController::class, 'store'])->name('store');
-        Route::get('/{studentId}', [EnrollmentController::class, 'show'])->name('show');
-        Route::put( '/update/{studentId}', [EnrollmentController::class, 'update'])->name('update');
-        Route::delete('/{studentId}', [EnrollmentController::class, 'destroy'])->name('destroy');
-    });
-
-// CAMPUS END
-
 Route::prefix('admin-unit-management')
     ->name('admin-unit-management.')
-    ->group(function() {
+    ->group(function () {
         Route::get('/', [UnitController::class, 'index'])->name('index');
         Route::post('/create', [UnitController::class, 'store'])->name('store');
         Route::get('/{unitId}', [UnitController::class, 'show'])->name('show');
-        Route::put( '/update/{unitId}', [UnitController::class, 'update'])->name('update');
+        Route::put('/update/{unitId}', [UnitController::class, 'update'])->name('update');
         Route::delete('/{unitId}', [UnitController::class, 'destroy'])->name('destroy');
     });
 
 Route::prefix('admin-match-activity-management')
     ->name('admin-match-activity-management.')
-    ->group(function() {
+    ->group(function () {
         Route::get('/', [MatchedActivityController::class, 'index'])->name('index');
         Route::post('/create', [MatchedActivityController::class, 'store'])->name('store');
         Route::get('/{matchedActivityId}', [MatchedActivityController::class, 'show'])->name('show');
@@ -170,7 +139,7 @@ Route::prefix('admin-match-activity-management')
 
 Route::prefix('admin-class-management')
     ->name('admin-class-management.')
-    ->group(function() {
+    ->group(function () {
         Route::get('/', [ClassController::class, 'index'])->name('index');
         Route::post('/create', [ClassController::class, 'store'])->name('store');
         Route::get('/{classId}', [ClassController::class, 'show'])->name('show');
@@ -180,7 +149,7 @@ Route::prefix('admin-class-management')
 
 Route::prefix('admin-class-match-activity-management')
     ->name('admin-class-match-activity-management.')
-    ->group(function() {
+    ->group(function () {
         Route::get('/', [ClassMatchActivityController::class, 'index'])->name('index');
         Route::post('/create', [ClassMatchActivityController::class, 'store'])->name('store');
         Route::post('/show', [ClassMatchActivityController::class, 'show'])->name('show');
@@ -190,19 +159,19 @@ Route::prefix('admin-class-match-activity-management')
 
 Route::prefix('admin-student-management')
     ->name('admin-student-management.')
-    ->group(function() {
+    ->group(function () {
         Route::get('/', [StudentController::class, 'index'])->name('index');
         Route::get('/joined', [StudentController::class, 'studentJoinedList'])->name('studentJoinedList');
         Route::get('/withdrawal', [StudentController::class, 'studentWithdrawalList'])->name('studentWithdrawalList');
         Route::post('/create', [StudentController::class, 'store'])->name('store');
         Route::get('/{studentId}', [StudentController::class, 'show'])->name('show');
         Route::put('/update/{studentId}', [StudentController::class, 'update'])->name('update');
-        Route::delete('/{studentId}', [StudentController::class, 'destroy'])->name('destroy'); 
+        Route::delete('/{studentId}', [StudentController::class, 'destroy'])->name('destroy');
     });
 
 Route::prefix('admin-parent-management')
     ->name('admin-parent-management.')
-    ->group(function() {
+    ->group(function () {
         Route::get('/', [ParentController::class, 'index'])->name('index');
         Route::post('/create', [ParentController::class, 'store'])->name('store');
         Route::get('/{parentId}', [ParentController::class, 'show'])->name('show');
@@ -212,7 +181,7 @@ Route::prefix('admin-parent-management')
 
 Route::prefix('admin-enrollment')
     ->name('admin-enrollment.')
-    ->group(function() {
+    ->group(function () {
         Route::get('/', [EnrollmentControllerA::class, 'index'])->name('index');
         Route::post('/create', [EnrollmentControllerA::class, 'store'])->name('store');
         Route::get('/{studentId}', [EnrollmentControllerA::class, 'show'])->name('show');
@@ -222,7 +191,7 @@ Route::prefix('admin-enrollment')
 
 Route::prefix('admin-class-feedback')
     ->name('admin-class-feedback.')
-    ->group(function() {
+    ->group(function () {
         Route::get('/', [ClassFeedbackController::class, 'index'])->name('index');
         Route::post('/create', [ClassFeedbackController::class, 'store'])->name('store');
         Route::get('/{classFeedbackId}', [ClassFeedbackController::class, 'show'])->name('show');
@@ -232,7 +201,7 @@ Route::prefix('admin-class-feedback')
 
 Route::prefix('admin-user-management')
     ->name('admin-user-management.')
-    ->group(function() {
+    ->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('index');
         Route::post('/create', [UserController::class, 'store'])->name('store');
         Route::get('/{userId}', [UserController::class, 'show'])->name('show');
@@ -242,7 +211,7 @@ Route::prefix('admin-user-management')
 
 Route::prefix('admin-student-class-management')
     ->name('admin-student-class-management.')
-    ->group(function() {
+    ->group(function () {
         Route::get('/', [StudentClassController::class, 'index'])->name('index');
         Route::post('/create', [StudentClassController::class, 'store'])->name('store');
         Route::get('/show', [StudentClassController::class, 'show'])->name('show');
@@ -252,7 +221,7 @@ Route::prefix('admin-student-class-management')
 
 Route::prefix('admin-class-board-management')
     ->name('admin-class-board-management.')
-    ->group(function() {
+    ->group(function () {
         Route::get('/', [ClassBoardController::class, 'index'])->name('index');
         Route::post('/create', [ClassBoardController::class, 'store'])->name('store');
         Route::get('/{classBoardId}', [ClassBoardController::class, 'show'])->name('show');
@@ -262,7 +231,7 @@ Route::prefix('admin-class-board-management')
 
 Route::prefix('admin-class-material-management')
     ->name('admin-class-material-management.')
-    ->group(function() {
+    ->group(function () {
         Route::get('/', [ClassMaterialController::class, 'index'])->name('index');
         Route::post('/create', [ClassMaterialController::class, 'store'])->name('store');
         Route::get('/{classMaterialId}', [ClassMaterialController::class, 'show'])->name('show');
@@ -271,10 +240,56 @@ Route::prefix('admin-class-material-management')
     });
 Route::prefix('admin-class-report')
     ->name('admin-class-report.')
-    ->group(function() {
+    ->group(function () {
         Route::get('/', [ClassReportController::class, 'index'])->name('index');
         Route::post('/create', [ClassReportController::class, 'store'])->name('store');
         Route::get('/{classReportId}', [ClassReportController::class, 'show'])->name('show');
         Route::put('/update/{classReportId}', [ClassReportController::class, 'update'])->name('update');
         Route::delete('/{classReportId}', [ClassReportController::class, 'destroy'])->name('destroy');
     });
+//END ADMIN DASHBOARD
+
+// START CAMPUS DASHBOARD
+Route::prefix('campus-teacherOff')
+    ->name('campus-teacherOff.')
+    ->group(function () {
+        Route::get('/', [OffTeachController::class, 'index'])->name('index');
+        Route::post('/create', [OffTeachController::class, 'store'])->name('store');
+        Route::get('/{teacherId}', [OffTeachController::class, 'show'])->name('show');
+        Route::put('/update/{teacherId}', [OffTeachController::class, 'update'])->name('update');
+        Route::delete('/{teacherId}', [OffTeachController::class, 'destroy'])->name('destroy');
+    });
+
+Route::prefix('campus-studentOff')
+    ->name('campus-studentOff.')
+    ->group(function () {
+        Route::get('/', [OffStudentController::class, 'index'])->name('index');
+        Route::post('/create', [OffStudentController::class, 'store'])->name('store');
+        Route::get('/{studentId}', [OffStudentController::class, 'show'])->name('show');
+        Route::put('/update/{studentId}', [OffStudentController::class, 'update'])->name('update');
+        Route::delete('/{studentId}', [OffStudentController::class, 'destroy'])->name('destroy');
+    });
+
+Route::prefix('campus-enrollment')
+    ->name('campus-enrollment.')
+    ->group(function () {
+        Route::get('/', [EnrollmentController::class, 'index'])->name('index');
+        Route::post('/create', [EnrollmentController::class, 'store'])->name('store');
+        Route::get('/{studentId}', [EnrollmentController::class, 'show'])->name('show');
+        Route::put('/update/{studentId}', [EnrollmentController::class, 'update'])->name('update');
+        Route::delete('/{studentId}', [EnrollmentController::class, 'destroy'])->name('destroy');
+    });  
+// CAMPUS DASHBOARD END
+
+//START TEACHER DASHBOARD
+Route::prefix('teacher-study-planner')
+    ->name('teacher-study-planner.')
+    ->group(function () {
+        Route::get('/{teacherId}', [StudyPlannerController::class, 'showClasses'])->name('showClasses');
+        Route::post('/create', [StudyPlannerController::class, 'store'])->name('store');
+        Route::get('/show/{classId}', [StudyPlannerController::class, 'showStudentInClass'])->name('showStudentInClass');
+        Route::put('/update', [StudyPlannerController::class, 'update'])->name('update');
+        Route::delete('/', [StudyPlannerController::class, 'destroy'])->name('destroy');
+    });
+//END TEACHER DASHBOARD
+
