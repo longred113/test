@@ -88,8 +88,8 @@ Route::prefix('admin-teacher-management')
     ->group(function () {
         Route::get('/', [TeacherController::class, 'index'])->name('index');
         Route::post('/create', [TeacherController::class, 'store'])->name('store');
-        Route::get('/{teacherId}', [TeacherController::class, 'show'])->name('show');
         Route::get('/online-teacher', [TeacherController::class, 'showOnlineTeacher'])->name('showOnlineTeacher');
+        Route::get('/{teacherId}', [TeacherController::class, 'show'])->name('show');
         Route::put('/update/{teacherId}', [TeacherController::class, 'update'])->name('update');
         Route::delete('/{teacherId}', [TeacherController::class, 'destroy'])->name('destroy');
         Route::post('/', [TeacherController::class, 'multiDeleteTeacher'])->name('multiDeleteTeacher');
@@ -288,6 +288,7 @@ Route::prefix('teacher-study-planner')
         Route::get('/{teacherId}', [StudyPlannerController::class, 'showClasses'])->name('showClasses');
         Route::post('/create', [StudyPlannerController::class, 'store'])->name('store');
         Route::get('/show/{classId}', [StudyPlannerController::class, 'showStudentInClass'])->name('showStudentInClass');
+        Route::get('/to-do-list/{studentId}', [StudyPlannerController::class, 'getToDoListOfStudent'])->name('getToDoListOfStudent');
         Route::put('/update', [StudyPlannerController::class, 'update'])->name('update');
         Route::delete('/', [StudyPlannerController::class, 'destroy'])->name('destroy');
     });

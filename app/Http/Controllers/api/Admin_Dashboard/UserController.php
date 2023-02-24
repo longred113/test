@@ -39,7 +39,7 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store($userParams)
+    public static function store($userParams)
     {
         // $validator = Validator::make($this->request->all(), [
         //     'name' => 'string|required',

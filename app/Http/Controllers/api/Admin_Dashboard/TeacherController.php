@@ -36,6 +36,7 @@ class TeacherController extends Controller
 
     public function showOnlineTeacher()
     {
+        
         $teacherData = TeacherResource::collection(Teachers::where('type', 'online')->get());
         return $this->successTeacherRequest($teacherData);
     }
@@ -126,11 +127,10 @@ class TeacherController extends Controller
         foreach($joinData as $join) {
             $data = $join['name'];
         }
-        $teacherData = [];
-        $teacherData = $teacher;
-        $teacherData['campusName'] = $data; 
-        return $teacherData;
-        return $this->successTeacherRequest($teacherData);
+        $showTeacherData = [];
+        $showTeacherData = $teacher;
+        $showTeacherData['campusName'] = $data; 
+        return $this->successTeacherRequest($showTeacherData);
     }
 
     /**

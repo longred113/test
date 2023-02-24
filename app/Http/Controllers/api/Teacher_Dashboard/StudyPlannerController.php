@@ -42,14 +42,29 @@ class StudyPlannerController extends Controller
     {
         $studentIds = StudentClasses::where('classId', $classId)->get('studentId');
         $students = Students::whereIn('studentId', $studentIds)->get();
+        return $this->successStudentRequest($students);
+    }
 
+    public function getToDoListOfStudent($studentId)
+    {
         $studentStudyPlanner = classes::join('student_classes', 'classes.classId', '=', 'student_classes.classId')
-        ->join('class_match_activities', 'classes.classId', '=', 'class_match_activities.classId')->get();
-        foreach($studentStudyPlanner as $student) {
-            $studyPlanner = MatchedActivities::where('matchedActivityId', $student['matchedActivityId'])->get();
+        ->join('class_match_activities', 'classes.classId', '=', 'class_match_activities.classId')->where('studentId', $studentId)->get();
+        
+        $matchedActivityIds = $studentStudyPlanner->pluck('matchedActivityId')->toArray();
+        $studyPlanner = MatchedActivities::whereIn('matchedActivityId', $matchedActivityIds)->get();
+        
+        foreach($studyPlanner as $todoList) {
+            if($todoList['type'] == 'todo') {
+                $todoStudyPlanner = $todoList;
+            }
+            if($todoList['type'] == 'done') {
+                $doneStudyPlanner = $todoList;
+            }
+            if($todoList['type'] == 'incomplete') {
+                $incompleteStudyPlanner = $todoList;
+            }
         }
         return $studyPlanner;
-        return $this->successStudentRequest($students);
     }
 
     /**
