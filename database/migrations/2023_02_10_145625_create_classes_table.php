@@ -15,7 +15,6 @@ class CreateClassesTable extends Migration
     {
         Schema::create('classes', function (Blueprint $table) {
             $table->string('classId')->primary();
-            $table->string('productId')->nullable();
             $table->string('name')->nullable();
             $table->integer('numberOfStudent')->nullable();
             $table->string('subject')->nullable();

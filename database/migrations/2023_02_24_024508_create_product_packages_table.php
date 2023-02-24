@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateClassMatchActivitiesTable extends Migration
+class CreateProductPackagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateClassMatchActivitiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('class_match_activities', function (Blueprint $table) {
-            $table->string('classMatchActivityId')->primary();
-            $table->string('classId')->nullable();
-            $table->string('matchedActivityId')->nullable();
+        Schema::create('product_packages', function (Blueprint $table) {
+            $table->string('productPackageId')->primary();
+            $table->integer('packageId')->nullable()->unsigned();
+            $table->string('productId')->nullable();
             $table->string('status')->nullable();
             $table->timestamps();
         });
@@ -29,6 +29,6 @@ class CreateClassMatchActivitiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('class_match_activities');
+        Schema::dropIfExists('product_packages');
     }
 }
