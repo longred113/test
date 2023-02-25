@@ -325,6 +325,7 @@ Route::prefix('student-study-planner')
         Route::get('/{studentId}', [StudyPlannerSController::class, 'showStuClass'])->name('showStuClass');
         Route::post('/create', [StudyPlannerSController::class, 'store'])->name('store');
         Route::get('/show/{classId}', [StudyPlannerSController::class, 'showStudentInClass'])->name('showStudentInClass');
+        Route::put('/update-status-study-planner/{matchedActivityId}', [StudyPlannerSController::class, 'showStudentInClass'])->name('showStudentInClass');
         Route::put('/update', [StudyPlannerSController::class, 'update'])->name('update');
         Route::delete('/', [StudyPlannerSController::class, 'destroy'])->name('destroy');
     });
