@@ -32,9 +32,26 @@ class StudyPlannerSController extends Controller
         ->where('studentId',$studentId)->get();
         return($studentClass);
     }
-    public function showStudyPlanner()
+    public function showStudyPlanner($studentId)
     {
-    
+        $studentStudyPlanner = classes::join('student_classes', 'classes.classId', '=', 'student_classes.classId')
+        ->join('class_match_activities', 'classes.classId', '=', 'class_match_activities.classId')->where('studentId', $studentId)->get();
+        
+        $matchedActivityIds = $studentStudyPlanner->pluck('matchedActivityId')->toArray();
+        $studyPlanner = MatchedActivities::whereIn('matchedActivityId', $matchedActivityIds)->get();
+        
+        foreach($studyPlanner as $todoList) {
+            if(!empty($todoList['type'] == 'todo')) {
+                $todoStudyPlanner = $todoList;
+            }
+            if(!empty($todoList['type'] == 'done')) {
+                $doneStudyPlanner = $todoList;
+            }
+            if(!empty($todoList['type'] == 'incomplete')) {
+                $incompleteStudyPlanner = $todoList;
+            }
+        }
+        return $studyPlanner;
     }
     /**
      * Store a newly created resource in storage.
