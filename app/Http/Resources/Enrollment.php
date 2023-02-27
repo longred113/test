@@ -20,7 +20,6 @@ class Enrollment extends JsonResource
             'studentName' => $this->studentName,
             'talkSamId' => $this->talkSamId,
             'campusName' => $this->campusName,
-            'activate' => $this->activate,
             'level' => $this->level,
             'subject' => $this->subject,
             'status' => $this->status,

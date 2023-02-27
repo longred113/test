@@ -17,7 +17,6 @@ class Enrollment extends Model
         'studentName',
         'talkSamId',
         'campusName',
-        'activate',
         'level',
         'subject',
         'status',

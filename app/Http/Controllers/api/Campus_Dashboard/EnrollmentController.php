@@ -17,8 +17,10 @@ class EnrollmentController extends Controller
      */
     public function index()
     {
-         $data = Student::collection(Students::where('status', 'Approved')->orWhere('status', 'Applied')->get());
-        return $this->successStudentRequest($data);
+        // $data = Student::collection(Students::where('status', 'Approved')->orWhere('status', 'Applied')->get());
+        // return $this->successStudentRequest($data);
+
+        
     }
 
     /**
