@@ -193,4 +193,12 @@ class Controller extends BaseController
             'productPackageData' => $productPackageData,
         ],200);
     }
+    protected function successStudyPlannerRequest($studyPlannerData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'studyPlannerData' => $studyPlannerData,
+        ],200);
+    }
 }

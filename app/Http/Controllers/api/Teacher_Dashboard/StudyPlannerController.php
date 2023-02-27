@@ -10,6 +10,7 @@ use App\Models\StudentClasses;
 use App\Models\Students;
 use App\Models\Teachers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class StudyPlannerController extends Controller
 {
@@ -65,6 +66,23 @@ class StudyPlannerController extends Controller
             }
         }
         return $studyPlanner;
+    }
+
+    public function updateStatusOfStudyPlanner($matchedActivityId)
+    {
+        $matchedActivity = MatchedActivities::find($matchedActivityId);
+        $validator = Validator::make($this->request->all, [
+            'type' => 'string',
+        ]);
+        if($validator->fails()){
+            return $validator->errors();
+        }
+
+        $params = [
+            $matchedActivity['type'] = $this->request['type'],
+        ];
+        $newType = $matchedActivity->update($params);
+        return $this->successStudyPlannerRequest($newType);
     }
 
     /**

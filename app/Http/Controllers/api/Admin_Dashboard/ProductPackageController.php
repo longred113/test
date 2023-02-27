@@ -39,7 +39,7 @@ class ProductPackageController extends Controller
     {
         $validator = Validator::make($this->request->all(), [
             'productId' => 'string|required',
-            'packageId' => 'string|required',
+            'packageId' => 'integer|required',
             'status' => 'string|required',
         ]);
         if ($validator->fails()) {
@@ -80,7 +80,32 @@ class ProductPackageController extends Controller
      */
     public function update($productPackageId)
     {
-        //
+        $productPackage = ProductPackages::find($productPackageId);
+        if(empty($this->request['productId'])){
+            $this->request['productId'] = $productPackage['productId'];
+        }
+        if(empty($this->request['packageId'])){
+            $this->request['packageId'] = $productPackage['packageId'];
+        }
+        if(empty($this->request['status'])){
+            $this->request['status'] = $productPackage['status'];
+        }
+        $validator = Validator::make($this->request->all(), [
+            'productId' => 'string|required',
+            'packageId' => 'integer|required',
+            'status' => 'string|required',
+        ]);
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+
+        $params = [
+            $productPackage['productId'] = $this->request['productId'],
+            $productPackage['packageId'] = $this->request['packageId'],
+            $productPackage['status'] = $this->request['status'],
+        ];
+        $newInfoProductPackageId = $productPackage->update($params);
+        return $this->successProductPackageRequest($newInfoProductPackageId);
     }
 
     /**

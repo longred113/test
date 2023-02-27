@@ -78,9 +78,34 @@ class ClassProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update($classProductId)
     {
-        //
+        $classProduct = ClassProducts::find($classProductId);
+        if(empty($this->request['classId'])) {
+            $this->request['classId'] = $classProduct['classId'];
+        }
+        if(empty($this->request['productId'])) {
+            $this->request['productId'] = $classProduct['productId'];
+        }
+        if(empty($this->request['status'])) {
+            $this->request['status'] = $classProduct['status'];
+        }
+        $validator = Validator::make($this->request->all(), [
+            'productId' => 'string|required',
+            'classId' => 'string|required',
+            'status' => 'string|required',
+        ]);
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+
+        $params = [
+            $classProduct['productId'] = $this->request['productId'],
+            $classProduct['classId'] = $this->request['classId'],
+            $classProduct['status'] = $this->request['status'],
+        ];
+        $newInfoClassProduct =  $classProduct->update($params);
+        return $this->successClassProductRequest($newInfoClassProduct); 
     }
 
     /**
