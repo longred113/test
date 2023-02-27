@@ -21,6 +21,8 @@ use App\Http\Controllers\api\Admin_Dashboard\ClassProductController;
 use App\Http\Controllers\api\Admin_Dashboard\EnrollmentControllerA;
 use App\Http\Controllers\api\Admin_Dashboard\ProductPackageController;
 use App\Http\Controllers\api\Admin_Dashboard\StudentClassController;
+use App\Http\Controllers\api\Admin_Dashboard\StudentMatchedActivityController;
+use App\Http\Controllers\api\Admin_Dashboard\StudentProductController;
 use App\Http\Controllers\api\Campus_Dashboard\OffStudentController;
 use App\Http\Controllers\api\Campus_Dashboard\OffTeachController;
 use App\Http\Controllers\api\Campus_Dashboard\EnrollmentController;
@@ -270,6 +272,26 @@ Route::prefix('admin-product-package-management')
         Route::get('/{productPackageId}', [ProductPackageController::class, 'show'])->name('show');
         Route::put('/update/{productPackageId}', [ProductPackageController::class, 'update'])->name('update');
         Route::delete('/{productPackageId}', [ProductPackageController::class, 'destroy'])->name('destroy');
+    });
+
+Route::prefix('admin-student-product-management')
+    ->name('admin-student-product-management.')
+    ->group(function () {
+        Route::get('/', [StudentProductController::class, 'index'])->name('index');
+        Route::post('/create', [StudentProductController::class, 'store'])->name('store');
+        Route::get('/{studentProductId}', [StudentProductController::class, 'show'])->name('show');
+        Route::put('/update/{studentProductId}', [StudentProductController::class, 'update'])->name('update');
+        Route::delete('/{studentProductId}', [StudentProductController::class, 'destroy'])->name('destroy');
+    });
+
+Route::prefix('admin-student-matched-activity-management')
+    ->name('admin-student-matched-activity-management.')
+    ->group(function () {
+        Route::get('/', [StudentMatchedActivityController::class, 'index'])->name('index');
+        Route::post('/create', [StudentMatchedActivityController::class, 'store'])->name('store');
+        Route::get('/{studentMatchedActivityId}', [StudentMatchedActivityController::class, 'show'])->name('show');
+        Route::put('/update/{studentMatchedActivityId}', [StudentMatchedActivityController::class, 'update'])->name('update');
+        Route::delete('/{studentMatchedActivityId}', [StudentMatchedActivityController::class, 'destroy'])->name('destroy');
     });
 //END ADMIN DASHBOARD
 

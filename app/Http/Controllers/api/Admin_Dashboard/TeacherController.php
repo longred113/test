@@ -56,7 +56,7 @@ class TeacherController extends Controller
         $validator = validator::make($this->request->all(), [
             'name' => 'required|string',
             'email' => 'required|string|unique:teachers',
-            'password' => 'required|string|min:8',
+            'password' => 'required|string',
             // 'gender' => 'required|string',
             // 'dateOfBirth' => 'required|date',
             // 'status' => 'required|string',

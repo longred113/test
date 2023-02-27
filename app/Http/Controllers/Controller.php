@@ -201,4 +201,20 @@ class Controller extends BaseController
             'studyPlannerData' => $studyPlannerData,
         ],200);
     }
+    protected function successStudentProductRequest($studentProductData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'studentProductData' => $studentProductData,
+        ],200);
+    }
+    protected function successStudentMatchedActivityRequest($studentMatchedActivityData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'studentMatchedActivityData' => $studentMatchedActivityData,
+        ],200);
+    }
 }

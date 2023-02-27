@@ -8,6 +8,7 @@ use App\Models\Classes;
 use App\Models\MatchedActivities;
 use App\Models\Products;
 use App\Models\StudentClasses;
+use App\Models\StudentMatchedActivities;
 use App\Models\Students;
 use App\Models\Teachers;
 use Illuminate\Http\Request;
@@ -68,10 +69,8 @@ class StudyPlannerController extends Controller
         // }
         // return $studyPlanner;
 
-        // $majoinCP = Products::join('matched_activities', 'products.productId', '=', 'matched_activities.productId')
-        // ->join('class_products', 'products.productId', '=', 'class_products.productId')->get();
-        // $part2 = $majoinCP->where()
-        // return $majoinCP;
+        $majoinCP = Students::join('student_matched_activities','students.studentId', '=', 'student_matched_activities.studentId')->get();
+        return $majoinCP;
     }
 
     public function updateStatusOfStudyPlanner($matchedActivityId)
