@@ -323,6 +323,7 @@ Route::prefix('student-study-planner')
     ->name('student-study-planner.')
     ->group(function () {
         Route::get('/{studentId}', [StudyPlannerSController::class, 'showStuClass'])->name('showStuClass');
+        Route::get('/StudyPlanner/{studentId}', [StudyPlannerSController::class, 'showStudyPlanner'])->name('showStudyPlanner');
         Route::post('/create', [StudyPlannerSController::class, 'store'])->name('store');
         Route::get('/show/{classId}', [StudyPlannerSController::class, 'showStudentInClass'])->name('showStudentInClass');
         Route::put('/update', [StudyPlannerSController::class, 'update'])->name('update');
