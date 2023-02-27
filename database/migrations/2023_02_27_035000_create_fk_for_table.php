@@ -36,6 +36,7 @@ class CreateFkForTable extends Migration
         });
         Schema::table('enrollments', function (Blueprint $table) {
             $table->foreign('studentId')->references('studentId')->on('students')->onDelete('cascade');
+            $table->foreign('campusId')->references('campusId')->on('campuses')->onDelete('cascade');
         });
         Schema::table('product_packages', function (Blueprint $table) {
             $table->foreign('packageId')->references('packageId')->on('packages')->onDelete('cascade');
@@ -44,6 +45,10 @@ class CreateFkForTable extends Migration
         Schema::table('class_products', function (Blueprint $table) {
             $table->foreign('classId')->references('classId')->on('classes')->onDelete('cascade');
             $table->foreign('productId')->references('productId')->on('products')->onDelete('cascade');
+        });
+        Schema::table('student_class_products', function (Blueprint $table) {
+            $table->foreign('classProductId')->references('classProductId')->on('class_products')->onDelete('cascade');
+            $table->foreign('studentId')->references('studentId')->on('students')->onDelete('cascade');
         });
         Schema::table('matched_activities', function (Blueprint $table) {
             $table->foreign('productId')->references('productId')->on('products')->onDelete('cascade');

@@ -15,10 +15,9 @@ class CreateEnrollmentTable extends Migration
     {
         Schema::create('enrollments', function (Blueprint $table) {
             $table->string('enrollmentId')->primary();
-            $table->string('studentName')->nullable();
             $table->string('studentId')->nullable();
             $table->string('talkSamId')->nullable();
-            $table->string('campusName')->nullable();
+            $table->string('campusId')->nullable();
             $table->string('level')->nullable();
             $table->string('subject')->nullable();
             $table->string('status')->nullable();

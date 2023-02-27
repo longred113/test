@@ -17,9 +17,8 @@ class Enrollment extends JsonResource
         return [
             'enrollmentId' => $this->enrollmentId,
             'studentId' => $this->studentId,
-            'studentName' => $this->studentName,
             'talkSamId' => $this->talkSamId,
-            'campusName' => $this->campusName,
+            'campusId' => $this->campusId,
             'activate' => $this->activate,
             'level' => $this->level,
             'subject' => $this->subject,
