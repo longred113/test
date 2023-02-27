@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\Admin_Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentClassResource;
 use App\Models\StudentClasses;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -39,13 +40,15 @@ class StudentClassController extends Controller
         $validator = Validator::make($this->request->all(), [
             'studentId' => 'string|required',
             'classId' => 'string|required',
-            'point' => 'integer|required',
+            'point' => 'integer',
         ]);
         if($validator->fails()){
             return $validator->errors();
         }
 
+        $studentClassId = IdGenerator::generate(['table'=>'student_classes', 'trow' => 'studentClassId', 'length' => 7, 'prefix' => 'SC']);
         $params = [
+            'studentClassId' => $studentClassId,
             'studentId' => $this->request['studentId'],
             'classId' => $this->request['classId'],
             'point' => $this->request['point'],

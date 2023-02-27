@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ClassResource;
 use App\Models\Classes;
 use App\Models\MatchedActivities;
+use App\Models\Products;
 use App\Models\StudentClasses;
 use App\Models\Students;
 use App\Models\Teachers;
@@ -48,24 +49,29 @@ class StudyPlannerController extends Controller
 
     public function getToDoListOfStudent($studentId)
     {
-        $studentStudyPlanner = classes::join('student_classes', 'classes.classId', '=', 'student_classes.classId')
-        ->join('class_match_activities', 'classes.classId', '=', 'class_match_activities.classId')->where('studentId', $studentId)->get();
+        // $studentStudyPlanner = classes::join('student_classes', 'classes.classId', '=', 'student_classes.classId')
+        // ->join('class_match_activities', 'classes.classId', '=', 'class_match_activities.classId')->where('studentId', $studentId)->get();
         
-        $matchedActivityIds = $studentStudyPlanner->pluck('matchedActivityId')->toArray();
-        $studyPlanner = MatchedActivities::whereIn('matchedActivityId', $matchedActivityIds)->get();
+        // $matchedActivityIds = $studentStudyPlanner->pluck('matchedActivityId')->toArray();
+        // $studyPlanner = MatchedActivities::whereIn('matchedActivityId', $matchedActivityIds)->get();
         
-        foreach($studyPlanner as $todoList) {
-            if(!empty($todoList['type'] == 'todo')) {
-                $todoStudyPlanner = $todoList;
-            }
-            if(!empty($todoList['type'] == 'done')) {
-                $doneStudyPlanner = $todoList;
-            }
-            if(!empty($todoList['type'] == 'incomplete')) {
-                $incompleteStudyPlanner = $todoList;
-            }
-        }
-        return $studyPlanner;
+        // foreach($studyPlanner as $todoList) {
+        //     if(!empty($todoList['type'] == 'todo')) {
+        //         $todoStudyPlanner = $todoList;
+        //     }
+        //     if(!empty($todoList['type'] == 'done')) {
+        //         $doneStudyPlanner = $todoList;
+        //     }
+        //     if(!empty($todoList['type'] == 'incomplete')) {
+        //         $incompleteStudyPlanner = $todoList;
+        //     }
+        // }
+        // return $studyPlanner;
+
+        // $majoinCP = Products::join('matched_activities', 'products.productId', '=', 'matched_activities.productId')
+        // ->join('class_products', 'products.productId', '=', 'class_products.productId')->get();
+        // $part2 = $majoinCP->where()
+        // return $majoinCP;
     }
 
     public function updateStatusOfStudyPlanner($matchedActivityId)

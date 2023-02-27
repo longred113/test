@@ -8,12 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class StudentClassProducts extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'studentClassProductId';
+    protected $primaryKey = 'studentProductId';
     protected $keyType = 'string';
     public $incrementing = false;
     protected $fillable = [
-        'studentClassProductId',
+        'studentProductId',
         'studentId',
-        'classProductId',
+        'productId',
     ];
 }

@@ -46,8 +46,8 @@ class CreateFkForTable extends Migration
             $table->foreign('classId')->references('classId')->on('classes')->onDelete('cascade');
             $table->foreign('productId')->references('productId')->on('products')->onDelete('cascade');
         });
-        Schema::table('student_class_products', function (Blueprint $table) {
-            $table->foreign('classProductId')->references('classProductId')->on('class_products')->onDelete('cascade');
+        Schema::table('student_products', function (Blueprint $table) {
+            $table->foreign('productId')->references('productId')->on('products')->onDelete('cascade');
             $table->foreign('studentId')->references('studentId')->on('students')->onDelete('cascade');
         });
         Schema::table('matched_activities', function (Blueprint $table) {
