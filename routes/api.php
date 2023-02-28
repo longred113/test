@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\api\Admin_Dashboard\AdminController;
 use App\Http\Controllers\api\Admin_Dashboard\CampusController;
+use App\Http\Controllers\api\Admin_Dashboard\CampusManagerController;
 use App\Http\Controllers\api\Admin_Dashboard\ClassBoardController;
 use App\Http\Controllers\api\Admin_Dashboard\ClassController;
 use App\Http\Controllers\api\Admin_Dashboard\ClassMatchActivityController;
@@ -280,6 +281,8 @@ Route::prefix('admin-student-product-management')
         Route::get('/', [StudentProductController::class, 'index'])->name('index');
         Route::post('/create', [StudentProductController::class, 'store'])->name('store');
         Route::get('/{studentProductId}', [StudentProductController::class, 'show'])->name('show');
+        Route::get('/display-by-product/{productId}', [StudentProductController::class, 'displayByProductId'])->name('getWithProductId');
+        Route::get('/display-by-student/{studentId}', [StudentProductController::class, 'displayByStudentId'])->name('getWithStudentId');
         Route::put('/update/{studentProductId}', [StudentProductController::class, 'update'])->name('update');
         Route::delete('/{studentProductId}', [StudentProductController::class, 'destroy'])->name('destroy');
     });

@@ -56,7 +56,7 @@ class StudentProductController extends Controller
         $newStudentProduct = new StudentProductResource(StudentProducts::create($params));
         return $this->successStudentProductRequest($newStudentProduct);
     }
-
+    
     /**
      * Display the specified resource.
      *
@@ -69,7 +69,19 @@ class StudentProductController extends Controller
         $studentProductData = new StudentProductResource($studentProduct);
         return $this->successStudentProductRequest($studentProductData);
     }
+    
+    public function displayByProductId($productId)
+    {
+        $studentProduct = StudentProducts::where('productId', $productId)->get();
+        return $this->successStudentProductRequest($studentProduct);
+    }
 
+    public function displayByStudentId($studentId)
+    {
+        $studentProduct = StudentProducts::where('studentId', $studentId)->get();
+        return $this->successStudentProductRequest($studentProduct);
+    }
+    
     /**
      * Update the specified resource in storage.
      *

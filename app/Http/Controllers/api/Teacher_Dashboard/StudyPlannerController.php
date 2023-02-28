@@ -50,11 +50,11 @@ class StudyPlannerController extends Controller
 
     public function getToDoListOfStudent($studentId)
     {
-        // $studentStudyPlanner = classes::join('student_classes', 'classes.classId', '=', 'student_classes.classId')
-        // ->join('class_match_activities', 'classes.classId', '=', 'class_match_activities.classId')->where('studentId', $studentId)->get();
+        $studentStudyPlanner = classes::join('student_classes', 'classes.classId', '=', 'student_classes.classId')
+        ->join('class_match_activities', 'classes.classId', '=', 'class_match_activities.classId')->where('studentId', $studentId)->get();
         
-        // $matchedActivityIds = $studentStudyPlanner->pluck('matchedActivityId')->toArray();
-        // $studyPlanner = MatchedActivities::whereIn('matchedActivityId', $matchedActivityIds)->get();
+        $matchedActivityIds = $studentStudyPlanner->pluck('matchedActivityId')->toArray();
+        $studyPlanner = MatchedActivities::whereIn('matchedActivityId', $matchedActivityIds)->get();
         
         // foreach($studyPlanner as $todoList) {
         //     if(!empty($todoList['type'] == 'todo')) {
@@ -67,7 +67,7 @@ class StudyPlannerController extends Controller
         //         $incompleteStudyPlanner = $todoList;
         //     }
         // }
-        // return $studyPlanner;
+        return $studyPlanner;
 
         $majoinCP = Students::join('student_matched_activities','students.studentId', '=', 'student_matched_activities.studentId')->get();
         return $majoinCP;
