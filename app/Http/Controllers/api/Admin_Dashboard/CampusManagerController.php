@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\CampusManager;
 use App\Http\Resources\CampusManager as CampusManagerResource;
+use App\Models\Campus;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class CampusManagerController extends Controller
@@ -46,7 +47,7 @@ class CampusManagerController extends Controller
             // 'timeZone' => 'required',
             // 'startDate' => 'required',
             // 'resignation' => 'required',
-            // 'campusId' => 'required',
+            'campusId' => 'required',
             // 'memo' => 'required',
             // 'offlineStudentId' => 'required',
             // 'offlineTeacherId' => 'required'
@@ -55,11 +56,14 @@ class CampusManagerController extends Controller
             return $validator->errors();
         }
 
-        $campusManagerId = IdGenerator::generate(['table'=>'campus_mangers', 'trow' => 'campusManagerId', 'length' => 8, 'prefix' => 'CPM']);
+        $campusManagerId = IdGenerator::generate(['table'=>'campus_managers', 'trow' => 'campusManagerId', 'length' => 8, 'prefix' => 'CPM']);
+        $email = Campus::where('campusId', $this->request['campusId'])->pluck('name')->map(function ($name) {
+            return $name. '@gmail.com';
+        })->first(); 
         $params = [
             'campusManagerId' => $campusManagerId,
             'name' => $this->request('name'),
-            'email' => $this->request('email'),
+            'email' => $email,
             'gender' => $this->request('gender'),
             'dateOfBirth' => $this->request('dateOfBirth'),
             'country' => $this->request('country'),
@@ -70,6 +74,10 @@ class CampusManagerController extends Controller
             'memo' => $this->request('memo'),
             'offlineStudentId' => $this->request('offlineStudentId'),
             'offlineTeacherId' => $this->request('offlineTeacherId')
+        ];
+        $userParams = [
+            'name' => $this->request['name'],
+            'email' => $this->request['email'],
         ];
         $newCampusManager = new CampusManagerResource(CampusManager::create($params));
         return $newCampusManager;
