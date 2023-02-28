@@ -299,10 +299,11 @@ Route::prefix('campus-enrollment')
     ->group(function () {
         Route::get('/', [EnrollmentController::class, 'index'])->name('index');
         Route::post('/create', [EnrollmentController::class, 'store'])->name('store');
+        Route::get('/showEnrollment/{level}', [EnrollmentController::class, 'showErollment'])->name('showErollment');
         Route::get('/{studentId}', [EnrollmentController::class, 'show'])->name('show');
         Route::put('/update/{studentId}', [EnrollmentController::class, 'update'])->name('update');
         Route::delete('/{studentId}', [EnrollmentController::class, 'destroy'])->name('destroy');
-    });  
+    });
 // CAMPUS DASHBOARD END
 
 //START TEACHER DASHBOARD
