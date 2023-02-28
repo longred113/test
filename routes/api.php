@@ -21,6 +21,8 @@ use App\Http\Controllers\api\Admin_Dashboard\ClassProductController;
 use App\Http\Controllers\api\Admin_Dashboard\EnrollmentControllerA;
 use App\Http\Controllers\api\Admin_Dashboard\ProductPackageController;
 use App\Http\Controllers\api\Admin_Dashboard\StudentClassController;
+use App\Http\Controllers\api\Admin_Dashboard\StudentMatchedActivityController;
+use App\Http\Controllers\api\Admin_Dashboard\StudentProductController;
 use App\Http\Controllers\api\Campus_Dashboard\OffStudentController;
 use App\Http\Controllers\api\Campus_Dashboard\OffTeachController;
 use App\Http\Controllers\api\Campus_Dashboard\EnrollmentController;
@@ -187,6 +189,8 @@ Route::prefix('admin-enrollment')
     ->name('admin-enrollment.')
     ->group(function () {
         Route::get('/', [EnrollmentControllerA::class, 'index'])->name('index');
+        Route::get('/Enroll/{level}', [EnrollmentControllerA::class, 'Enrollmentshow'])->name('Enrollmentshow');
+        Route::get('/Enrolls/{product}', [EnrollmentControllerA::class, 'showErollmentByPro'])->name('showErollmentByPro');
         Route::post('/create', [EnrollmentControllerA::class, 'store'])->name('store');
         Route::get('/{studentId}', [EnrollmentControllerA::class, 'show'])->name('show');
         Route::put('/update/{studentId}', [EnrollmentControllerA::class, 'update'])->name('update');
@@ -271,6 +275,26 @@ Route::prefix('admin-product-package-management')
         Route::put('/update/{productPackageId}', [ProductPackageController::class, 'update'])->name('update');
         Route::delete('/{productPackageId}', [ProductPackageController::class, 'destroy'])->name('destroy');
     });
+
+Route::prefix('admin-student-product-management')
+    ->name('admin-student-product-management.')
+    ->group(function () {
+        Route::get('/', [StudentProductController::class, 'index'])->name('index');
+        Route::post('/create', [StudentProductController::class, 'store'])->name('store');
+        Route::get('/{studentProductId}', [StudentProductController::class, 'show'])->name('show');
+        Route::put('/update/{studentProductId}', [StudentProductController::class, 'update'])->name('update');
+        Route::delete('/{studentProductId}', [StudentProductController::class, 'destroy'])->name('destroy');
+    });
+
+Route::prefix('admin-student-matched-activity-management')
+    ->name('admin-student-matched-activity-management.')
+    ->group(function () {
+        Route::get('/', [StudentMatchedActivityController::class, 'index'])->name('index');
+        Route::post('/create', [StudentMatchedActivityController::class, 'store'])->name('store');
+        Route::get('/{studentMatchedActivityId}', [StudentMatchedActivityController::class, 'show'])->name('show');
+        Route::put('/update/{studentMatchedActivityId}', [StudentMatchedActivityController::class, 'update'])->name('update');
+        Route::delete('/{studentMatchedActivityId}', [StudentMatchedActivityController::class, 'destroy'])->name('destroy');
+    });
 //END ADMIN DASHBOARD
 
 // START CAMPUS DASHBOARD
@@ -299,7 +323,8 @@ Route::prefix('campus-enrollment')
     ->group(function () {
         Route::get('/', [EnrollmentController::class, 'index'])->name('index');
         Route::post('/create', [EnrollmentController::class, 'store'])->name('store');
-        Route::get('/showEnrollment/{level}', [EnrollmentController::class, 'showErollment'])->name('showErollment');
+        Route::get('/showEnroll/{level}', [EnrollmentController::class, 'showErollment'])->name('showErollment');
+        Route::get('/showEnrolls/{level}', [EnrollmentController::class, 'showErollmentByPro'])->name('showErollmentByPro');
         Route::get('/{studentId}', [EnrollmentController::class, 'show'])->name('show');
         Route::put('/update/{studentId}', [EnrollmentController::class, 'update'])->name('update');
         Route::delete('/{studentId}', [EnrollmentController::class, 'destroy'])->name('destroy');

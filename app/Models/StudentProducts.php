@@ -5,16 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class StudentClasses extends Model
+class StudentProducts extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'studentClassId';
+    protected $primaryKey = 'studentProductId';
     protected $keyType = 'string';
     public $incrementing = false;
     protected $fillable = [
-        'studentClassId',
+        'studentProductId',
         'studentId',
-        'classId',
-        'point',
+        'productId',
     ];
 }

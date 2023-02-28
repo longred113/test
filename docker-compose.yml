@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  nginx:
+    container_name: nginx
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    depends_on:
+      - app
+      - db
+    volumes:
+      - ./scr:/var/www
+      - ./nginx/conf.d/:/etc/nginx/conf.
+
+  db:
+
+
+  phpmyadmin:
+
+
+
+  app:

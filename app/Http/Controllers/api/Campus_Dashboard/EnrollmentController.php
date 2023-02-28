@@ -34,6 +34,11 @@ class EnrollmentController extends Controller
         $data = ProductsResource::collection(Products::where('level', $level)->get());
         return $this->successEnrollmentRequest($data);
     }
+    public function showErollmentByPro($product)
+    {
+        $data = ProductsResource::collection(Products::where('product', $product)->get());
+        return $this->successEnrollmentRequest($data);
+    }
 
     /**
      * Show the form for creating a new resource.

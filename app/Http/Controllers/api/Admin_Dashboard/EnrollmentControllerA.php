@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Enrollment;
 use App\Http\Resources\Enrollment as EnrollmentResource;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
+use App\Models\Products;
+use App\Http\Resources\Products as ProductsResource;
 
 class EnrollmentControllerA extends Controller
 {
@@ -35,7 +37,18 @@ class EnrollmentControllerA extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store()
+
+     public function Enrollmentshow($level)
+     {
+        $data = ProductsResource::collection(Products::where('level', $level)->get());
+        return $this->successEnrollmentRequest($data);
+     }
+       public function showErollmentByPro($product)
+    {
+        $data = ProductsResource::collection(Products::where('product', $product)->get());
+        return $this->successEnrollmentRequest($data);
+    }
+     public function store()
     {
         $validator = validator::make($this->request->all(), [
             'studentId' => 'required|unique:enrollments',

@@ -14,9 +14,13 @@ class Enrollment extends Model
     protected $fillable = [
         'enrollmentId',
         'studentId',
-        'studentName',
         'talkSamId',
+<<<<<<< HEAD
         'campusName',
+=======
+        'campusId',
+        'activate',
+>>>>>>> 94f6a75f8843d825637b59b4a25a7b0f76274569
         'level',
         'subject',
         'status',
