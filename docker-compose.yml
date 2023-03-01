@@ -30,7 +30,7 @@ services:
     image: mysql:8.0
     container_name: mysql-lucete
     ports:
-      - 3306:3306
+      - 3307:3006
     volumes:
         - db-data:/var/lib/mysql
     environment:
