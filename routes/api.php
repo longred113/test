@@ -328,7 +328,7 @@ Route::prefix('campus-studentOff')
 Route::prefix('campus-enrollment')
     ->name('campus-enrollment.')
     ->group(function () {
-        Route::get('/', [EnrollmentController::class, 'index'])->name('index');
+        Route::get('/{campusId}/{productId}', [EnrollmentController::class, 'index'])->name('index');
         Route::post('/create', [EnrollmentController::class, 'store'])->name('store');
         Route::get('/showEnroll/{level}', [EnrollmentController::class, 'showErollment'])->name('showErollment');
         Route::get('/showEnrolls/{level}/{productId}', [EnrollmentController::class, 'showErollmentByPro'])->name('showErollmentByPro');

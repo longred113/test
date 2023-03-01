@@ -19,18 +19,20 @@ class EnrollmentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($campusId)
-    {
-        $data = Students::where('campusId', $campusId)->get();
-        return $data;
-        // return $this->successEnrollmentRequest($data);
-    }
-
+    
     public function showErollment($level)
     {
         $data = ProductsResource::collection(Products::where('level', $level)->get());
         return $this->successEnrollmentRequest($data);
     }
+    public function index($campusId,$productId)
+    {
+        $products = Students::join('student_products', 'students.studentId', '=', 'student_products.studentId')
+        ->where('campusId', $campusId)->where('productId', $productId)->get();
+        return $products;
+        // return $this->successEnrollmentRequest($data);
+    }
+
     public function showErollmentByPro($level, $productId)
     {
         $data = ProductsResource::collection(Products::where('level', $level)->where('productId', $productId)->get());
