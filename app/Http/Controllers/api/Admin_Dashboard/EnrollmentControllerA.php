@@ -51,13 +51,15 @@ class EnrollmentControllerA extends Controller
      public function store()
     {
         $validator = validator::make($this->request->all(), [
+            'enrollmentId' => 'required|unique:enrollments',
+            // 'studentName' => 'required',
             // 'talkSamId' => 'required',
             'campusId' => 'required',
             // 'activate' => 'required',
             // 'level' => 'required',
             // 'subject' => 'required',
             // 'status' => 'required',
-            'submittedDate' => 'date|required',
+            // 'submittedDate' => 'date|required',
         ]);
         if ($validator->fails()) {
             return $validator->errors();
@@ -65,7 +67,9 @@ class EnrollmentControllerA extends Controller
 
         $enrollmentId = IdGenerator::generate(['table'=>'enrollments', 'trow' => 'enrollmentId', 'length' => 7, 'prefix' => 'ER']);
         $params = [
+            'enrollmentId' => $enrollmentId,
             'talkSamId' => $this->request['talkSamId'],
+            'campusId' => $this->request['campusId'],
             'campusId' => $this->request['campusId'],
             'level' => $this->request['level'],
             'subject' => $this->request['subject'],
@@ -109,6 +113,9 @@ class EnrollmentControllerA extends Controller
         if(empty($this->request['level'])) {
             $this->request['level'] = $enrollment['level'];
         }
+        if(empty($this->request['campusId'])) {
+            $this->request['campusId'] = $enrollment['campusId'];
+        }
         if(empty($this->request['subject'])) {
             $this->request['subject'] = $enrollment['subject'];
         }
@@ -122,7 +129,7 @@ class EnrollmentControllerA extends Controller
             'studentId' => 'required',
             'studentId' => 'required',
             'talkSamId' => 'required',
-            'campusName' => 'required',
+            'campusId' => 'required',
             'level' => 'required',
             'subject' => 'required',
             'status' => 'required',
@@ -149,8 +156,10 @@ class EnrollmentControllerA extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($enrollmentId)
     {
-        //
+        $enrollment = Enrollment::find($enrollmentId);
+        $deleteEnrollment = $enrollment->delete();
+        return $this->successEnrollmentRequest($deleteEnrollment);
     }
 }

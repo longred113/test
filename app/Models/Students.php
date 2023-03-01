@@ -20,7 +20,6 @@ class Students extends Model
         'dateOfBirth',
         'country',
         'timeZone',
-        'status',
         'joinedDate',
         'withDrawal',
         'introduction',

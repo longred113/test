@@ -331,7 +331,7 @@ Route::prefix('campus-enrollment')
         Route::get('/', [EnrollmentController::class, 'index'])->name('index');
         Route::post('/create', [EnrollmentController::class, 'store'])->name('store');
         Route::get('/showEnroll/{level}', [EnrollmentController::class, 'showErollment'])->name('showErollment');
-        Route::get('/showEnrolls/{level}', [EnrollmentController::class, 'showErollmentByPro'])->name('showErollmentByPro');
+        Route::get('/showEnrolls/{level}/{productId}', [EnrollmentController::class, 'showErollmentByPro'])->name('showErollmentByPro');
         Route::get('/{studentId}', [EnrollmentController::class, 'show'])->name('show');
         Route::put('/update/{studentId}', [EnrollmentController::class, 'update'])->name('update');
         Route::delete('/{studentId}', [EnrollmentController::class, 'destroy'])->name('destroy');
