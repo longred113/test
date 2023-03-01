@@ -79,9 +79,9 @@ class EnrollmentController extends Controller
         if ($validator->fails()) {
             return $validator->errors();
         }
-                $enrollmentId = IdGenerator::generate(['table'=>'enrollments', 'trow' => 'enrollmentId', 'length' => 7, 'prefix' => 'ER']);
+        $enrollmentId = IdGenerator::generate(['table'=>'enrollments', 'trow' => 'enrollmentId', 'length' => 7, 'prefix' => 'ER']);
         $params = [
-            'studentId' => request('studentId'),
+            'studentId' => $enrollmentId,
             'name' => request('name'),
             'email' => request('email'),
             'gender' => request('gender'),
