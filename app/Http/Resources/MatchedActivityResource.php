@@ -18,7 +18,6 @@ class MatchedActivityResource extends JsonResource
             'matchedActivityId' => $this->matchedActivityId,
             'productId' => $this->productId,
             'name' => $this->name,
-            'type' => $this->type,
             'time' => $this->time,
             'unitId' => $this->unitId,
         ];

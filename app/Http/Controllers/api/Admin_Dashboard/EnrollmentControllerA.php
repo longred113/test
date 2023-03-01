@@ -54,7 +54,7 @@ class EnrollmentControllerA extends Controller
             'enrollmentId' => 'required|unique:enrollments',
             // 'studentName' => 'required',
             // 'talkSamId' => 'required',
-            // 'campusName' => 'required',
+            'campusId' => 'required',
             // 'activate' => 'required',
             // 'level' => 'required',
             // 'subject' => 'required',
@@ -69,6 +69,7 @@ class EnrollmentControllerA extends Controller
         $params = [
             'enrollmentId' => $enrollmentId,
             'talkSamId' => $this->request['talkSamId'],
+            'campusId' => $this->request['campusId'],
             'campusId' => $this->request['campusId'],
             'level' => $this->request['level'],
             'subject' => $this->request['subject'],
@@ -106,6 +107,9 @@ class EnrollmentControllerA extends Controller
         if(empty($this->request['talkSamId'])) {
             $this->request['talkSamId'] = $enrollment['talkSamId'];
         }
+        if(empty($this->request['campusId'])) {
+            $this->request['campusId'] = $enrollment['campusId'];
+        }
         if(empty($this->request['level'])) {
             $this->request['level'] = $enrollment['level'];
         }
@@ -122,6 +126,8 @@ class EnrollmentControllerA extends Controller
             $this->request['submittedDate'] = $enrollment['submittedDate'];
         }
         $validator = validator::make($this->request->all(), [
+            'studentId' => 'required',
+            'studentId' => 'required',
             'talkSamId' => 'required',
             'campusId' => 'required',
             'level' => 'required',

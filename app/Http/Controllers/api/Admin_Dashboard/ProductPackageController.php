@@ -71,6 +71,18 @@ class ProductPackageController extends Controller
         return $this->successProductPackageRequest($productPackageData);
     }
 
+    public function displayByProduct($productId)
+    {
+        $productPackage = ProductPackages::where('productId', $productId)->get();
+        return $this->successProductPackageRequest($productPackage);
+    }
+
+    public function displayByPackage($packageId)
+    {
+        $productPackage = ProductPackages::where('packageId', $packageId)->get();
+        return $this->successProductPackageRequest($productPackage);
+    }
+
     /**
      * Update the specified resource in storage.
      *

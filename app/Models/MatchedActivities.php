@@ -15,7 +15,6 @@ class MatchedActivities extends Model
         'matchedActivityId',
         'productId',
         'name',
-        'type',
         'time',
         'unitId',
     ];

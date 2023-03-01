@@ -13,10 +13,8 @@ class Enrollment extends Model
     use HasFactory;
     protected $fillable = [
         'enrollmentId',
-        'studentId',
         'talkSamId',
         'campusId',
-        'activate',
         'level',
         'subject',
         'status',

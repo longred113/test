@@ -71,6 +71,18 @@ class ClassProductController extends Controller
         return $this->successClassProductRequest($classProductData);
     }
 
+    public function displayByClass($classId)
+    {
+        $classProduct = ClassProducts::where('classId', $classId)->get();
+        return $this->successClassProductRequest($classProduct);
+    }
+    
+    public function displayByProduct($productId)
+    {
+        $classProduct = ClassProducts::where('productId', $productId)->get();
+        return $this->successClassProductRequest($classProduct);
+    }
+
     /**
      * Update the specified resource in storage.
      *

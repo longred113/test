@@ -79,6 +79,17 @@ class ClassMatchActivityController extends Controller
         return $this->successClassMatchActivityRequest($classMatchedActivity);
     }
 
+    public function displayByClass($classId)
+    {
+        $classMatchedActivity = ClassMatchActivities::where('classId', $classId)->get();
+        return $this->successClassMatchActivityRequest($classMatchedActivity);
+    }
+
+    public function displayByMatchActivity($matchedActivity)
+    {
+        $classMatchedActivity = ClassMatchActivities::where('matchedActivityId', $matchedActivity)->get();
+        return $this->successClassMatchActivityRequest($classMatchedActivity);
+    }
     /**
      * Update the specified resource in storage.
      *

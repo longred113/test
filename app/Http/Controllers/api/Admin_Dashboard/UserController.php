@@ -50,41 +50,41 @@ class UserController extends Controller
         // if ($validator->fails()) {
         //     return $validator->errors();
         // }
-        $userId = IdGenerator::generate(['table'=>'users', 'trow' => 'userId', 'length' => 7, 'prefix' => 'US']);
+        $userId = IdGenerator::generate(['table' => 'users', 'trow' => 'userId', 'length' => 7, 'prefix' => 'US']);
         $params = [
             'userId' => $userId,
             'name' => $userParams['name'],
             'email' => $userParams['email'],
             'password' => $userParams['password'],
         ];
+        if (!empty($userParams['teacherId'])) {
+            $params['teacherId'] = $userParams['teacherId'];
+        }
+        if (!empty($userParams['studentId'])) {
+            $params['studentId'] = $userParams['studentId'];
+        }
+        if (!empty($userParams['parentId'])) {
+            $params['parentId'] = $userParams['parentId'];
+        }
+        if (!empty($userParams['campusManagerId'])) {
+            $params['campusManagerId'] = $userParams['campusManagerId'];
+        }
         $roles = Roles::all();
-        foreach($roles as $role) {
-            if(!empty($userParams['teacherId'])) {
-                $params['teacherId'] = $userParams['teacherId'];
-                if ($role['name'] == 'teacher') {
-                    $params['roleId'] = $role['roleId'];
-                }
+        foreach ($roles as $role) {
+            if (!empty($userParams['teacherId']) && $role['name'] == 'teacher') {
+                $params['roleId'] = $role['roleId'];
             }
-            if(!empty($userParams['studentId'])) {
-                $params['studentId'] = $userParams['studentId'];
-                if ($role['name'] == 'student') {
-                    $params['roleId'] = $role['roleId'];
-                }
+            if (!empty($userParams['studentId']) && $role['name'] == 'student') {
+                $params['roleId'] = $role['roleId'];
             }
-            if(!empty($userParams['parentId'])) {
-                $params['parentId'] = $userParams['parentId'];
-                if ($role['name'] == 'parent') {
-                    $params['roleId'] = $role['roleId'];
-                }
+            if (!empty($userParams['parentId']) && $role['name'] == 'parent') {
+                $params['roleId'] = $role['roleId'];
             }
-            if(!empty($userParams['campusManagerId'])) {
-                $params['campusManagerId'] = $userParams['campusManagerId'];
-                if ($role['name'] == 'campus manager') {
-                    $params['roleId'] = $role['roleId'];
-                }
+            if (!empty($userParams['campusManagerId']) && $role['name'] == 'campus manager') {
+                $params['roleId'] = $role['roleId'];
             }
         }
-        if(!empty($userParams)){
+        if (!empty($userParams)) {
             $params['activate'] = 1;
         }
         $newUserData = new UserResource(Users::create($params));
