@@ -23,7 +23,7 @@ class UserResource extends JsonResource
             'teacherId' => $this->teacherId,
             'studentId' => $this->studentId,
             'parentId' => $this->parentId,
-            'campusManagerId' => $this->campusManagerId,
+            'CampusManagerId' => $this->CampusManagerId,
             'activate' => $this->activate,
         ];
     }
