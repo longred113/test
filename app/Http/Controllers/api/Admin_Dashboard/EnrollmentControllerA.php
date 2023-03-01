@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Enrollment;
 use App\Http\Resources\Enrollment as EnrollmentResource;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
+use App\Models\Products;
+use App\Http\Resources\Products as ProductsResource;
 
 class EnrollmentControllerA extends Controller
 {
@@ -35,7 +37,18 @@ class EnrollmentControllerA extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store()
+
+     public function Enrollmentshow($level)
+     {
+        $data = ProductsResource::collection(Products::where('level', $level)->get());
+        return $this->successEnrollmentRequest($data);
+     }
+       public function showErollmentByPro($level, $product)
+    {
+        $data = ProductsResource::collection(Products::where('product', $product)->where('product', $product)->get());
+        return $this->successEnrollmentRequest($data);
+    }
+     public function store()
     {
         $validator = validator::make($this->request->all(), [
             'studentId' => 'required|unique:enrollments',
@@ -58,12 +71,12 @@ class EnrollmentControllerA extends Controller
             'studentName' => $this->request['studentName'],
             'talkSamId' => $this->request['talkSamId'],
             'campusName' => $this->request['campusName'],
-            'activate' => $this->request['activate'],
             'level' => $this->request['level'],
             'subject' => $this->request['subject'],
             'status' => $this->request['status'],
             'submitted' => $this->request['submitted'],
         ];
+    
         $newEnrollment = new EnrollmentResource(Enrollment::create($params));
         return $this->successEnrollmentRequest($newEnrollment);
     }
@@ -74,9 +87,11 @@ class EnrollmentControllerA extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($enrollmentId)
     {
-        
+        $Enrollment = Enrollment::find($enrollmentId);
+        $EnrollmentData = new EnrollmentResource($Enrollment);
+        return $this->successEnrollmentRequest($EnrollmentData);
     }
 
     /**
@@ -86,9 +101,58 @@ class EnrollmentControllerA extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update($enrollmentId)
     {
-        //
+        $enrollment = Enrollment::find($enrollmentId);
+        if(empty($this->request['studentId'])) {
+            $this->request['studentId'] = $enrollment['studentId'];
+        }
+        if(empty($this->request['studentName'])) {
+            $this->request['studentName'] = $enrollment['studentName'];
+        }
+        if(empty($this->request['talkSamId'])) {
+            $this->request['talkSamId'] = $enrollment['talkSamId'];
+        }
+        if(empty($this->request['campusName'])) {
+            $this->request['campusName'] = $enrollment['campusName'];
+        }
+        if(empty($this->request['level'])) {
+            $this->request['level'] = $enrollment['level'];
+        }
+        if(empty($this->request['subject'])) {
+            $this->request['subject'] = $enrollment['subject'];
+        }
+        if(empty($this->request['status'])) {
+            $this->request['status'] = $enrollment['status'];
+        }
+        if(empty($this->request['submittedDate'])) {
+            $this->request['submittedDate'] = $enrollment['submittedDate'];
+        }
+        $validator = validator::make($this->request->all(), [
+            'studentId' => 'required',
+            'studentName' => 'required',
+            'talkSamId' => 'required',
+            'campusName' => 'required',
+            'level' => 'required',
+            'subject' => 'required',
+            'status' => 'required',
+            'submittedDate' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+        $params = [
+            $enrollment['studentId'] = $this->request['studentId'],
+            $enrollment['studentName'] = $this->request['studentName'],
+            $enrollment['talkSamId'] = $this->request['talkSamId'],
+            $enrollment['campusName'] = $this->request['campusName'],
+            $enrollment['level'] = $this->request['level'],
+            $enrollment['subject'] = $this->request['subject'],
+            $enrollment['status'] = $this->request['status'],
+            $enrollment['submittedDate'] = $this->request['submittedDate'],
+        ];
+        $newInfoEnrollment = $enrollment->update($params);
+        return $this->successEnrollmentRequest($newInfoEnrollment);
     }
 
     /**

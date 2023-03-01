@@ -190,6 +190,8 @@ Route::prefix('admin-enrollment')
     ->name('admin-enrollment.')
     ->group(function () {
         Route::get('/', [EnrollmentControllerA::class, 'index'])->name('index');
+        Route::get('/Enroll/{level}', [EnrollmentControllerA::class, 'Enrollmentshow'])->name('Enrollmentshow');
+        Route::get('/Enrolls/{product}', [EnrollmentControllerA::class, 'showErollmentByPro'])->name('showErollmentByPro');
         Route::post('/create', [EnrollmentControllerA::class, 'store'])->name('store');
         Route::get('/{studentId}', [EnrollmentControllerA::class, 'show'])->name('show');
         Route::put('/update/{studentId}', [EnrollmentControllerA::class, 'update'])->name('update');
@@ -328,10 +330,12 @@ Route::prefix('campus-enrollment')
     ->group(function () {
         Route::get('/', [EnrollmentController::class, 'index'])->name('index');
         Route::post('/create', [EnrollmentController::class, 'store'])->name('store');
+        Route::get('/showEnroll/{level}', [EnrollmentController::class, 'showErollment'])->name('showErollment');
+        Route::get('/showEnrolls/{level}', [EnrollmentController::class, 'showErollmentByPro'])->name('showErollmentByPro');
         Route::get('/{studentId}', [EnrollmentController::class, 'show'])->name('show');
         Route::put('/update/{studentId}', [EnrollmentController::class, 'update'])->name('update');
         Route::delete('/{studentId}', [EnrollmentController::class, 'destroy'])->name('destroy');
-    });  
+    });
 // CAMPUS DASHBOARD END
 
 //START TEACHER DASHBOARD

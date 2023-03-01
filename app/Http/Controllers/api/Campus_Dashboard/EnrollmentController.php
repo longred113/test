@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\api\Campus_Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\CampusManager;
+use App\Models\Products;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Enrollment;
 use App\Models\Students;
-use App\Http\Resources\Student;
+use App\Http\Resources\Products as ProductsResource;
+use App\Http\Resources\Enrollment as EnrollmentResource;
 
 class EnrollmentController extends Controller
 {
@@ -15,10 +19,25 @@ class EnrollmentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($studentId)
     {
-         $data = Student::collection(Students::where('status', 'Approved')->orWhere('status', 'Applied')->get());
+        $data = Student::collection(Students::where('status', 'Approved')->orWhere('status', 'Applied')->get());
         return $this->successStudentRequest($data);
+
+        // $enrollment = Enrollment::join('enrollments', 'students.studentId', "=", 'enrollments.studentId')
+        // ->where('studentId',$studentId)->get();
+        // return($enrollment);
+    }
+
+    public function showErollment($level)
+    {
+        $data = ProductsResource::collection(Products::where('level', $level)->get());
+        return $this->successEnrollmentRequest($data);
+    }
+    public function showErollmentByPro($level, $product)
+    {
+        $data = ProductsResource::collection(Products::where('level', $level)->where('product', $product)->get());
+        return $this->successEnrollmentRequest($data);
     }
 
     /**
@@ -60,23 +79,24 @@ class EnrollmentController extends Controller
         if ($validator->fails()) {
             return $validator->errors();
         }
+        $enrollmentId = IdGenerator::generate(['table'=>'enrollments', 'trow' => 'enrollmentId', 'length' => 7, 'prefix' => 'ER']);
         $params = [
-            'studentId' => request('studentId'),
+            'studentId' => $enrollmentId,
             'name' => request('name'),
-            // 'email' => request('email'),
-            // 'gender' => request('gender'),
-            // 'dateOfBirth' => request('dateOfBirth'),
-            // 'country' => request('country'),
-            // 'timeZone' => request('timeZone'),
-            // 'joinedDate' => request('joinedDate'),
-            // 'withDrawal' => request('withDrawal'),
-            // 'introduction' => request('introduction'),
-            // 'talkSamId' => request('talkSamId'),
-            // 'basicPoint' => request('basicPoint'),
+            'email' => request('email'),
+            'gender' => request('gender'),
+            'dateOfBirth' => request('dateOfBirth'),
+            'country' => request('country'),
+            'timeZone' => request('timeZone'),
+            'joinedDate' => request('joinedDate'),
+            'withDrawal' => request('withDrawal'),
+            'introduction' => request('introduction'),
+            'talkSamId' => request('talkSamId'),
+            'basicPoint' => request('basicPoint'),
             'campusId' => request('campusId'),
-            // 'type' => request('type'),
-            //'status' => request('status'),
-            // 'status' => request('status'),
+            'type' => request('type'),
+            'status' => request('status'),
+            'status' => request('status'),
          
             
         ];
