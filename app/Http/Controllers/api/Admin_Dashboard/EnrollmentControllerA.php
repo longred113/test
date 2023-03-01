@@ -51,10 +51,8 @@ class EnrollmentControllerA extends Controller
      public function store()
     {
         $validator = validator::make($this->request->all(), [
-            'studentId' => 'required|unique:enrollments',
-            'studentName' => 'required',
             // 'talkSamId' => 'required',
-            // 'campusName' => 'required',
+            'campusId' => 'required',
             // 'activate' => 'required',
             // 'level' => 'required',
             // 'subject' => 'required',
@@ -67,10 +65,8 @@ class EnrollmentControllerA extends Controller
 
         $enrollmentId = IdGenerator::generate(['table'=>'enrollments', 'trow' => 'enrollmentId', 'length' => 7, 'prefix' => 'ER']);
         $params = [
-            'studentId' => $enrollmentId,
-            'studentName' => $this->request['studentName'],
             'talkSamId' => $this->request['talkSamId'],
-            'campusName' => $this->request['campusName'],
+            'campusId' => $this->request['campusId'],
             'level' => $this->request['level'],
             'subject' => $this->request['subject'],
             'status' => $this->request['status'],
@@ -104,17 +100,11 @@ class EnrollmentControllerA extends Controller
     public function update($enrollmentId)
     {
         $enrollment = Enrollment::find($enrollmentId);
-        if(empty($this->request['studentId'])) {
-            $this->request['studentId'] = $enrollment['studentId'];
-        }
-        if(empty($this->request['studentName'])) {
-            $this->request['studentName'] = $enrollment['studentName'];
-        }
         if(empty($this->request['talkSamId'])) {
             $this->request['talkSamId'] = $enrollment['talkSamId'];
         }
-        if(empty($this->request['campusName'])) {
-            $this->request['campusName'] = $enrollment['campusName'];
+        if(empty($this->request['campusId'])) {
+            $this->request['campusId'] = $enrollment['campusId'];
         }
         if(empty($this->request['level'])) {
             $this->request['level'] = $enrollment['level'];
@@ -130,7 +120,7 @@ class EnrollmentControllerA extends Controller
         }
         $validator = validator::make($this->request->all(), [
             'studentId' => 'required',
-            'studentName' => 'required',
+            'studentId' => 'required',
             'talkSamId' => 'required',
             'campusName' => 'required',
             'level' => 'required',
@@ -142,10 +132,8 @@ class EnrollmentControllerA extends Controller
             return $validator->errors();
         }
         $params = [
-            $enrollment['studentId'] = $this->request['studentId'],
-            $enrollment['studentName'] = $this->request['studentName'],
             $enrollment['talkSamId'] = $this->request['talkSamId'],
-            $enrollment['campusName'] = $this->request['campusName'],
+            $enrollment['campusId'] = $this->request['campusId'],
             $enrollment['level'] = $this->request['level'],
             $enrollment['subject'] = $this->request['subject'],
             $enrollment['status'] = $this->request['status'],

@@ -13,6 +13,7 @@ class Students extends Model
     public $incrementing = false;
     protected $fillable = [
         'studentId',
+        'enrollmentId',
         'name',
         'email',
         'gender',
