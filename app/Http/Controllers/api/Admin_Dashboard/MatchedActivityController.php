@@ -40,7 +40,6 @@ class MatchedActivityController extends Controller
         $validator = Validator::make($this->request->all(), [
             // 'productId' => 'required',
             'name' => 'string|required',
-            'type' => 'string|required',
             'time' => 'integer|required',
             // 'unitId' => 'string|required',
         ]);
@@ -53,7 +52,6 @@ class MatchedActivityController extends Controller
             'matchedActivityId' => $matchedActivityId,
             'productId' => $this->request['productId'],
             'name' => $this->request['name'],
-            'type' => $this->request['type'],
             'time' => $this->request['time'],
             'unitId' => $this->request['unitId'],
         ];
@@ -87,7 +85,6 @@ class MatchedActivityController extends Controller
         $validator = Validator::make($this->request->all(), [
             'productId' => 'required',
             'name' => 'string|required',
-            'type' => 'string|required',
             'time' => 'integer|required',
             'unitId' => 'string|required',
         ]);
@@ -98,7 +95,6 @@ class MatchedActivityController extends Controller
         $params = [
             $matchedActivity['productId'] = $this->request['productId'],
             $matchedActivity['name'] = $this->request['name'],
-            $matchedActivity['type'] = $this->request['type'],
             $matchedActivity['time'] = $this->request['time'],
             $matchedActivity['unitId'] = $this->request['unitId'],
         ];

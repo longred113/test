@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\api\Admin_Dashboard;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\StudentMatchedActivityResource;
-use App\Models\StudentMatchedActivities;
+use App\Http\Resources\StudentClassMatchedActivityResource;
+use App\Models\StudentClassMatchedActivities;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
-class StudentMatchedActivityController extends Controller
+class StudentClassMatchedActivityController extends Controller
 {
     protected Request $request;
 
@@ -25,7 +26,7 @@ class StudentMatchedActivityController extends Controller
      */
     public function index()
     {
-        $studentMatchedActivitiesData = StudentMatchedActivityResource::collection(StudentMatchedActivities::all());
+        $studentMatchedActivitiesData = StudentClassMatchedActivityResource::collection(StudentClassMatchedActivities::all());
         return $this->successStudentMatchedActivityRequest($studentMatchedActivitiesData);
     }
 
@@ -40,20 +41,22 @@ class StudentMatchedActivityController extends Controller
         $validator = Validator::make($this->request->all(), [
             'studentId' => 'string|required',
             'matchedActivityId' => 'string|required',
-            'status' => 'string',
+            'classId' => 'string|required',
         ]);
         if($validator->fails()){
             return $validator->errors();
         }
 
-        $studentMatchedActivityId = IdGenerator::generate(['table'=>'student_matched_activities', 'trow' => 'studentMatchedActivityId', 'length' => 8, 'prefix' => 'SMA']);
+        $studentMatchedActivityId = IdGenerator::generate(['table'=>'student_class_matched_activities', 'trow' => 'studentClMaActivityId', 'length' => 9, 'prefix' => 'SCMA']);
         $params = [
-            'studentMatchedActivityId' => $studentMatchedActivityId,
+            'studentClMaActivityId' => $studentMatchedActivityId,
             'studentId' => $this->request['studentId'],
             'matchedActivityId' => $this->request['matchedActivityId'],
+            'classId' => $this->request['classId'],
+            'status' => 'to-do',
         ];
 
-        $newStudentMatchedActivity = new StudentMatchedActivityResource(StudentMatchedActivities::create($params));
+        $newStudentMatchedActivity = new StudentClassMatchedActivityResource(StudentClassMatchedActivities::create($params));
         return $this->successStudentMatchedActivityRequest($newStudentMatchedActivity);
     }
 
@@ -65,8 +68,8 @@ class StudentMatchedActivityController extends Controller
      */
     public function show($studentMatchedActivityId)
     {
-        $studentMatchedActivity = StudentMatchedActivities::find($studentMatchedActivityId);
-        $studentMatchedActivityData = new StudentMatchedActivityResource($studentMatchedActivity);
+        $studentMatchedActivity = StudentClassMatchedActivities::find($studentMatchedActivityId);
+        $studentMatchedActivityData = new StudentClassMatchedActivityResource($studentMatchedActivity);
         return $this->successStudentMatchedActivityRequest($studentMatchedActivityData);
     }
 
@@ -79,7 +82,7 @@ class StudentMatchedActivityController extends Controller
      */
     public function update($studentMatchedActivityId)
     {
-        $studentMatchedActivity = StudentMatchedActivities::find($studentMatchedActivityId);
+        $studentMatchedActivity = StudentClassMatchedActivities::find($studentMatchedActivityId);
         if(empty($this->request['studentId'])){
             $this->request['studentId'] = $studentMatchedActivity['studentId'];
         }
@@ -89,7 +92,7 @@ class StudentMatchedActivityController extends Controller
         $validator = Validator::make($this->request->all(), [
             'studentId' => 'string|required',
             'matchedActivityId' => 'string|required',
-            'status' => 'string',
+            'status' => [Rule::in(['to-do', 'incomplete', 'done'])],
         ]);
         if($validator->fails()){
             return $validator->errors();
@@ -98,6 +101,8 @@ class StudentMatchedActivityController extends Controller
         $params = [
             $studentMatchedActivity['studentId'] = $this->request['studentId'],
             $studentMatchedActivity['matchedActivityId'] = $this->request['matchedActivityId'],
+            $studentMatchedActivity['classId'] = $this->request['classId'],
+            $studentMatchedActivity['status'] = $this->request['status'],
         ];
         $newInfStudentMatchedActivity = $studentMatchedActivity->update($params);
         return $this->successStudentMatchedActivityRequest($newInfStudentMatchedActivity);
@@ -111,7 +116,7 @@ class StudentMatchedActivityController extends Controller
      */
     public function destroy($studentMatchedActivityId)
     {
-        $studentMatchedActivity = StudentMatchedActivities::find($studentMatchedActivityId);
+        $studentMatchedActivity = StudentClassMatchedActivities::find($studentMatchedActivityId);
         $deleteStudentMatchedActivity = $studentMatchedActivity->delete();
         return $this->successStudentMatchedActivityRequest($deleteStudentMatchedActivity);
     }

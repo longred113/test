@@ -9,6 +9,7 @@ use App\Models\CampusManager;
 use App\Http\Resources\CampusManager as CampusManagerResource;
 use App\Models\Campus;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
+use Illuminate\Support\Str;
 
 class CampusManagerController extends Controller
 {
@@ -60,27 +61,31 @@ class CampusManagerController extends Controller
         $email = Campus::where('campusId', $this->request['campusId'])->pluck('name')->map(function ($name) {
             return $name. '@gmail.com';
         })->first(); 
+        $userPassword = Str::random(8);
         $params = [
             'campusManagerId' => $campusManagerId,
-            'name' => $this->request('name'),
+            'name' => $this->request['name'],
             'email' => $email,
-            'gender' => $this->request('gender'),
-            'dateOfBirth' => $this->request('dateOfBirth'),
-            'country' => $this->request('country'),
-            'timeZone' => $this->request('timeZone'),
-            'startDate' => $this->request('startDate'),
-            'resignation' => $this->request('resignation'),
-            'campusId' => $this->request('campusId'),
-            'memo' => $this->request('memo'),
-            'offlineStudentId' => $this->request('offlineStudentId'),
-            'offlineTeacherId' => $this->request('offlineTeacherId')
+            'gender' => $this->request['gender'],
+            'dateOfBirth' => $this->request['dateOfBirth'],
+            'country' => $this->request['country'],
+            'timeZone' => $this->request['timeZone'],
+            'startDate' => $this->request['startDate'],
+            'resignation' => $this->request['resignation'],
+            'campusId' => $this->request['campusId'],
+            'memo' => $this->request['memo'],
+            'offlineStudentId' => $this->request['offlineStudentId'],
+            'offlineTeacherId' => $this->request['offlineTeacherId'],
         ];
         $userParams = [
+            'campusManagerId' => $campusManagerId,
             'name' => $this->request['name'],
-            'email' => $this->request['email'],
+            'email' => $email,
+            'password' => $userPassword,
         ];
         $newCampusManager = new CampusManagerResource(CampusManager::create($params));
-        return $newCampusManager;
+        UserController::store($userParams);
+        return $this->successCampusManagerRequest($newCampusManager);
     }
 
     /**

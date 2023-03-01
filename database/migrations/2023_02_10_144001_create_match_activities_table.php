@@ -17,7 +17,6 @@ class CreateMatchActivitiesTable extends Migration
             $table->string('matchedActivityId')->primary();
             $table->string('productId')->nullable();
             $table->string('name')->nullable();
-            $table->string('type')->nullable();
             $table->integer('time')->nullable();
             $table->string('unitId')->nullable();
             $table->timestamps();

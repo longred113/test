@@ -8,11 +8,14 @@ use App\Models\Classes;
 use App\Models\MatchedActivities;
 use App\Models\Products;
 use App\Models\StudentClasses;
+use App\Models\StudentClassMatchedActivities;
 use App\Models\StudentMatchedActivities;
 use App\Models\Students;
 use App\Models\Teachers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+
 
 class StudyPlannerController extends Controller
 {
@@ -48,36 +51,22 @@ class StudyPlannerController extends Controller
         return $this->successStudentRequest($students);
     }
 
-    public function getToDoListOfStudent($studentId)
+    public function getToDoListOfStudent($classId, $studentId)
     {
-        $studentStudyPlanner = classes::join('student_classes', 'classes.classId', '=', 'student_classes.classId')
-        ->join('class_match_activities', 'classes.classId', '=', 'class_match_activities.classId')->where('studentId', $studentId)->get();
-        
-        $matchedActivityIds = $studentStudyPlanner->pluck('matchedActivityId')->toArray();
-        $studyPlanner = MatchedActivities::whereIn('matchedActivityId', $matchedActivityIds)->get();
-        
-        // foreach($studyPlanner as $todoList) {
-        //     if(!empty($todoList['type'] == 'todo')) {
-        //         $todoStudyPlanner = $todoList;
-        //     }
-        //     if(!empty($todoList['type'] == 'done')) {
-        //         $doneStudyPlanner = $todoList;
-        //     }
-        //     if(!empty($todoList['type'] == 'incomplete')) {
-        //         $incompleteStudyPlanner = $todoList;
-        //     }
-        // }
-        return $studyPlanner;
+        $studentStudyPlanner = MatchedActivities::join('student_class_matched_activities','matched_activities.matchedActivityId', '=', 'student_class_matched_activities.matchedActivityId')
+        ->where('studentId', $studentId)->where('classId', $classId)->get();
 
-        $majoinCP = Students::join('student_matched_activities','students.studentId', '=', 'student_matched_activities.studentId')->get();
-        return $majoinCP;
+        $todoList = $studentStudyPlanner->where('status', 'to-do');
+        $doneList = $studentStudyPlanner->where('status', 'done');
+        $incomplete = $studentStudyPlanner->where('status', 'incomplete');
+        return $this->successStudyPlannerRequest($studentStudyPlanner);
     }
 
-    public function updateStatusOfStudyPlanner($matchedActivityId)
+    public function updateStatusOfStudyPlanner($studentClMaActivityId)
     {
-        $matchedActivity = MatchedActivities::find($matchedActivityId);
+        $matchedActivity = StudentClassMatchedActivities::find($studentClMaActivityId);
         $validator = Validator::make($this->request->all, [
-            'type' => 'string',
+            'type' => [Rule::in(['to-do', 'incomplete', 'done'])],
         ]);
         if($validator->fails()){
             return $validator->errors();

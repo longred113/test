@@ -5,16 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class StudentMatchedActivities extends Model
+class StudentClassMatchedActivities extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'studentMatchedActivityId';
+    protected $primaryKey = 'studentClMaActivityId';
     protected $keyType = 'string';
     public $incrementing = false;
     protected $fillable = [
-        'studentMatchedActivityId',
+        'studentClMaActivityId',
         'studentId',
         'matchedActivityId',
+        'classId',
         'status',
     ];
 }
