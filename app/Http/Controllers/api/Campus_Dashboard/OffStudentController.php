@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Students;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 use App\Http\Resources\Student as StudentsResource;
 
 class OffStudentController extends Controller
@@ -30,42 +31,31 @@ class OffStudentController extends Controller
     public function store(Request $request)
     {
         $validator = validator::make($request->all(), [
-            'studentId' => 'required|unique:students',
-            'name' => 'required',
-            // 'email' => 'required',
-            // 'gender' => 'required',
-            // 'dateOfBirth' => 'required',
-            // 'country' => 'required',
-            // 'timeZone' => 'required',
-            // 'joinedDate' => 'required',
-            // 'withDrawal' => 'required',
-            // 'introduction' => 'required',
-            // 'talkSamId' => 'required',
-            // 'basicPoint' => 'required',
-            // 'campusId' => 'required',
-            // 'type' => 'required',
-            // 'classId' => 'required',           
+           
+            'name' => 'required',        
             
         ]);
         if ($validator->fails()) {
             return $validator->errors();
         }
+        $studentId = IdGenerator::generate(['table'=>'students', 'trow' => 'studentId', 'length' => 7, 'prefix' => 'ST']);
         $params = [
-            'studentId' => request('studentId'),
+            'studentId' => $studentId,
             'name' => request('name'),
-            // 'email' => request('email'),
-            // 'gender' => request('gender'),
-            // 'dateOfBirth' => request('dateOfBirth'),
-            // 'country' => request('country'),
-            // 'timeZone' => request('timeZone'),
-            // 'joinedDate' => request('joinedDate'),
-            // 'withDrawal' => request('withDrawal'),
-            // 'introduction' => request('introduction'),
-            // 'talkSamId' => request('talkSamId'),
-            // 'basicPoint' => request('basicPoint'),
+            'enrollmentId' => request('enrollmentId'),
+            'email' => request('email'),
+            'gender' => request('gender'),
+            'dateOfBirth' => request('dateOfBirth'),
+            'country' => request('country'),
+            'timeZone' => request('timeZone'),
+            'joinedDate' => request('joinedDate'),
+            'withDrawal' => request('withDrawal'),
+            'introduction' => request('introduction'),
+            'talkSamId' => request('talkSamId'),
+            'basicPoint' => request('basicPoint'),
             'campusId' => request('campusId'),
-            // 'type' => request('type'),
-            // 'classId' => request('classId'),
+            'type' => request('type'),
+            
          
             
         ];
@@ -102,6 +92,9 @@ class OffStudentController extends Controller
         if(empty($request->email)) {
             $request['email'] = $students['email'];
         }
+        if(empty($request->enrollmentId)) {
+            $request['enrollmentId'] = $students['enrollmentId'];
+        }
         if(empty($request->gender)) {
             $request['gender'] = $students['gender'];
         }
@@ -135,25 +128,9 @@ class OffStudentController extends Controller
         if(empty($request->type)) {
             $request['type'] = $students['type'];
         }
-        if(empty($request->classId)) {
-            $request['classId'] = $students['classId'];
-        }
         
         $validator = validator::make($request->all(), [
             'name' => 'required|string',
-            // 'email' => 'required',
-            // 'gender' => 'required',
-            // 'dateOfBirth' => 'required',
-            // 'country' => 'required',
-            // 'timeZone' => 'required',
-            // 'joinedDate' => 'required',
-            // 'withDrawal' => 'required',
-            // 'introduction' => 'required',
-            // 'talkSamId' => 'required',
-            // 'basicPoint' => 'required',
-            // 'campusId' => 'required',
-            // 'type' => 'required',
-            // 'classId' => 'required',  
         ]);
         if ($validator->fails()) {
             return $validator->errors();
@@ -163,6 +140,7 @@ class OffStudentController extends Controller
             $students['studentId'] = $request['studentId'],
             $students['name'] = $request['name'],
             $students['email'] = $request['email'],
+            $students['enrollmentId'] = $request['enrollmentId'],
             $students['gender'] = $request['gender'],
             $students['dateOfBirth'] = $request['dateOfBirth'],
             $students['country'] = $request['country'],
@@ -174,7 +152,6 @@ class OffStudentController extends Controller
             $students['basicPoint'] = $request['basicPoint'],
             $students['campusId'] = $request['campusId'],
             $students['type'] = $request['type'],
-            $students['classId'] = $request['classId'],
             
             
             

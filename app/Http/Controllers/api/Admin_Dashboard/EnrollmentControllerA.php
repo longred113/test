@@ -51,15 +51,15 @@ class EnrollmentControllerA extends Controller
      public function store()
     {
         $validator = validator::make($this->request->all(), [
-            'studentId' => 'required|unique:enrollments',
-            'studentName' => 'required',
+            'enrollmentId' => 'required|unique:enrollments',
+            // 'studentName' => 'required',
             // 'talkSamId' => 'required',
             // 'campusName' => 'required',
             // 'activate' => 'required',
             // 'level' => 'required',
             // 'subject' => 'required',
             // 'status' => 'required',
-            'submittedDate' => 'date|required',
+            // 'submittedDate' => 'date|required',
         ]);
         if ($validator->fails()) {
             return $validator->errors();
@@ -67,10 +67,9 @@ class EnrollmentControllerA extends Controller
 
         $enrollmentId = IdGenerator::generate(['table'=>'enrollments', 'trow' => 'enrollmentId', 'length' => 7, 'prefix' => 'ER']);
         $params = [
-            'studentId' => $enrollmentId,
-            'studentName' => $this->request['studentName'],
+            'enrollmentId' => $enrollmentId,
             'talkSamId' => $this->request['talkSamId'],
-            'campusName' => $this->request['campusName'],
+            'campusId' => $this->request['campusId'],
             'level' => $this->request['level'],
             'subject' => $this->request['subject'],
             'status' => $this->request['status'],
@@ -104,20 +103,14 @@ class EnrollmentControllerA extends Controller
     public function update($enrollmentId)
     {
         $enrollment = Enrollment::find($enrollmentId);
-        if(empty($this->request['studentId'])) {
-            $this->request['studentId'] = $enrollment['studentId'];
-        }
-        if(empty($this->request['studentName'])) {
-            $this->request['studentName'] = $enrollment['studentName'];
-        }
         if(empty($this->request['talkSamId'])) {
             $this->request['talkSamId'] = $enrollment['talkSamId'];
         }
-        if(empty($this->request['campusName'])) {
-            $this->request['campusName'] = $enrollment['campusName'];
-        }
         if(empty($this->request['level'])) {
             $this->request['level'] = $enrollment['level'];
+        }
+        if(empty($this->request['campusId'])) {
+            $this->request['campusId'] = $enrollment['campusId'];
         }
         if(empty($this->request['subject'])) {
             $this->request['subject'] = $enrollment['subject'];
@@ -129,10 +122,8 @@ class EnrollmentControllerA extends Controller
             $this->request['submittedDate'] = $enrollment['submittedDate'];
         }
         $validator = validator::make($this->request->all(), [
-            'studentId' => 'required',
-            'studentName' => 'required',
             'talkSamId' => 'required',
-            'campusName' => 'required',
+            'campusId' => 'required',
             'level' => 'required',
             'subject' => 'required',
             'status' => 'required',
@@ -142,10 +133,8 @@ class EnrollmentControllerA extends Controller
             return $validator->errors();
         }
         $params = [
-            $enrollment['studentId'] = $this->request['studentId'],
-            $enrollment['studentName'] = $this->request['studentName'],
             $enrollment['talkSamId'] = $this->request['talkSamId'],
-            $enrollment['campusName'] = $this->request['campusName'],
+            $enrollment['campusId'] = $this->request['campusId'],
             $enrollment['level'] = $this->request['level'],
             $enrollment['subject'] = $this->request['subject'],
             $enrollment['status'] = $this->request['status'],
@@ -161,8 +150,10 @@ class EnrollmentControllerA extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($enrollmentId)
     {
-        //
+        $enrollment = Enrollment::find($enrollmentId);
+        $deleteEnrollment = $enrollment->delete();
+        return $this->successEnrollmentRequest($deleteEnrollment);
     }
 }

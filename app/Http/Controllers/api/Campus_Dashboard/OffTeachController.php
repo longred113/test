@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Teachers;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 use App\Http\Resources\TeacherResource;
 
 class OffTeachController extends Controller
@@ -31,7 +32,7 @@ class OffTeachController extends Controller
     public function store(Request $request)
     {
         $validator = validator::make($request->all(), [
-            'teacherId' => 'required|unique:teachers',
+            // 'teacherId' => 'required|unique:teachers',
             'name' => 'required',
             // 'email' => 'required',
             // 'gender' => 'required',
@@ -46,15 +47,18 @@ class OffTeachController extends Controller
             // 'certificate' => 'required',
             // 'contract' => 'required',
             // 'basicPoint' => 'required',
-            'campusId' => 'required',
+            // 'campusId' => 'required',
             // 'type' => 'required',
             // 'talkSamId' => 'required',
+            // 'role' => 'required',
+            // 'memo' => 'required',
         ]);
         if ($validator->fails()) {
             return $validator->errors();
         }
+        $teacherId = IdGenerator::generate(['table'=>'teachers', 'trow' => 'teacherId', 'length' => 7, 'prefix' => 'TC']);
         $params = [
-            'teacherId' => request('teacherId'),
+            'teacherId' => $teacherId,
             'name' => request('name'),
             'email' => request('email'),
             'gender' => request('gender'),
@@ -72,6 +76,8 @@ class OffTeachController extends Controller
             'campusId' => request('campusId'),
             'type' => request('type'),
             'talkSamId' => request('talkSamId'),
+            'role' => request('role'),
+            'memo' => request('memo'),
         ];
         $newTeachers = new TeacherResource(Teachers::create($params));
         return $newTeachers;
@@ -151,6 +157,12 @@ class OffTeachController extends Controller
         if (empty($request->talkSamId)) {
             $request['talkSamId'] = $teachers['talkSamId'];
         }
+        if(empty($request->role)) {
+            $request['role'] = $teachers['role'];
+        }
+        if (empty($request->memo)) {
+            $request['memo'] = $teachers['memo'];
+        }
         $validator = validator::make($request->all(), [
             'name' => 'required|string',
             // 'email' => 'required|string',
@@ -169,6 +181,8 @@ class OffTeachController extends Controller
             // 'campusId' => 'required',
             // 'type' => 'required',
             // 'talkSamId' => 'required',
+            // 'role' => 'required',
+            // 'memo' => 'required',
         ]);
         if ($validator->fails()) {
             return $validator->errors();
@@ -193,6 +207,8 @@ class OffTeachController extends Controller
             $teachers['campusId'] = $request['campusId'],
             $teachers['type'] = $request['type'],
             $teachers['talkSamId'] = $request['talkSamId'],
+            $teachers['role'] = $request['role'],
+            $teachers['memo'] = $request['memo'],
         ];
         $newInfoTeachers = $teachers->update($params);
         return $this->successTeacherRequest($newInfoTeachers);
