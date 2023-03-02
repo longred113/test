@@ -25,7 +25,7 @@ class OffStudentController extends Controller
 
     public function showStudentWithCampus($campusId)
     {
-        $studentData = Students::where('campusId', $campusId)->get();
+        $studentData = Students::where('campusId', $campusId)->where('type', 'offline')->get();
         $getStData = StudentResource::collection($studentData);
         return $this->successStudentRequest($getStData);
     }
