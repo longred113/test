@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Students;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use App\Http\Resources\Student as StudentsResource;
+use App\Http\Resources\StudentResource;
 
 class OffStudentController extends Controller
 {
@@ -20,6 +21,13 @@ class OffStudentController extends Controller
     {
         $data = StudentsResource::collection(Students::get()->where('type', 'off'));
         return $this->successStudentRequest($data);
+    }
+
+    public function showStudentWithCampus($campusId)
+    {
+        $studentData = Students::where('campusId', $campusId)->where('type', 'offline')->get();
+        $getStData = StudentResource::collection($studentData);
+        return $this->successStudentRequest($getStData);
     }
 
     /**
