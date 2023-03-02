@@ -322,6 +322,7 @@ Route::prefix('campus-studentOff')
         Route::get('/all', [OffStudentController::class, 'getAllEnrollment'])->name('getAllEnrollment');
         Route::post('/create', [OffStudentController::class, 'store'])->name('store');
         Route::get('/{studentId}', [OffStudentController::class, 'show'])->name('show');
+        Route::get('/campus-student/{campusId}', [OffStudentController::class, 'showStudentWithCampus'])->name('showStudentWithCampus');
         Route::put('/update/{studentId}', [OffStudentController::class, 'update'])->name('update');
         Route::delete('/{studentId}', [OffStudentController::class, 'destroy'])->name('destroy');
     });
