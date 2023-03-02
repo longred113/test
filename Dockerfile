@@ -14,9 +14,9 @@ RUN docker-php-ext-install pdo pdo_mysql bcmath curl opcache
 WORKDIR /var/www
 COPY --chown=www-data . .
 
-COPY ./Docker/php/php.ini /usr/local/etc/php/php.ini
-COPY ./Docker/php/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
-COPY ./Docker/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY ./docker/php/php.ini /usr/local/etc/php/php.ini
+COPY ./docker/php/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
+COPY ./docker/nginx/nginx.conf /etc/nginx/nginx.conf
 
 COPY --from=composer:2.3.5 /usr/bin/composer /usr/bin/composer
 
