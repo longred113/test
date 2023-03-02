@@ -11,6 +11,7 @@ use App\Models\Enrollment;
 use App\Http\Resources\Products as ProductsResource;
 use App\Http\Resources\Student as StudentResource;
 use App\Http\Resources\Enrollment as EnrollmentResource;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class EnrollmentController extends Controller
 {
@@ -19,8 +20,13 @@ class EnrollmentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    
-    public function showErollment($level)
+    public function getAllEnrollment()
+    {
+        $data = EnrollmentResource::collection(Enrollment::all());
+        return $this->successEnrollmentRequest($data);
+    }
+
+    public function showEnrollment($level)
     {
         $data = ProductsResource::collection(Products::where('level', $level)->get());
         return $this->successEnrollmentRequest($data);
@@ -58,8 +64,7 @@ class EnrollmentController extends Controller
     public function store(Request $request)
     {
         $validator = validator::make($request->all(), [
-            'campusId' => 'required|unique:campusId',
-          
+            'campusId' => 'required',
         ]);
         if ($validator->fails()) {
             return $validator->errors();
@@ -73,8 +78,6 @@ class EnrollmentController extends Controller
             'subject' => request('subject'),
             'status' => request('status'),
             'submittedDate' => request('submittedDate'),
-         
-            
         ];
         $newEnrollment = new EnrollmentResource(Enrollment::create($params));
         return $newEnrollment;
@@ -89,8 +92,7 @@ class EnrollmentController extends Controller
     public function show($Enrollment)
     {
         $Enrollments = Enrollment::find($Enrollment);
-        $EnrollmentsData = new Enrollment($Enrollments);
-        return $this->successEnrollmentRequest($EnrollmentsData);
+        return $this->successEnrollmentRequest($Enrollments);
     }
 
     /**
@@ -113,7 +115,7 @@ class EnrollmentController extends Controller
      */
     public function update(Request $request, $enrollmentId)
     {
-        $enrollments = Students::find($enrollmentId);
+        $enrollments = Enrollment::find($enrollmentId);
         if(empty($request->talkSamId)) {
             $request['talkSamId'] = $enrollments['talkSamId'];
         }

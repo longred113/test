@@ -31,9 +31,7 @@ class OffStudentController extends Controller
     public function store(Request $request)
     {
         $validator = validator::make($request->all(), [
-           
-            'name' => 'required',        
-            
+            'name' => 'required',   
         ]);
         if ($validator->fails()) {
             return $validator->errors();
