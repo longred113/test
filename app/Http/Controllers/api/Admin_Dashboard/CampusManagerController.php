@@ -28,7 +28,7 @@ class CampusManagerController extends Controller
     public function index()
     {
         $data = CampusManagerResource::collection(CampusManager::all());
-        return $this->successRequest($data);
+        return $this->successCampusManagerRequest($data);
     }
 
     /**
@@ -98,7 +98,7 @@ class CampusManagerController extends Controller
     {
         $CampusManager = CampusManager::find($campusManagerId);
         $CampusManagerData = new CampusManagerResource($CampusManager);
-        return $this->successRequest($CampusManagerData);
+        return $this->successCampusManagerRequest($CampusManagerData);
     }
 
     /**
@@ -179,7 +179,7 @@ class CampusManagerController extends Controller
             $campusManager['offlineTeacherId'] = $this->request['offlineTeacherId'],
         ];
         $newInfoCampusManager = $campusManager->update($params);
-        return $this->successRequest($newInfoCampusManager);
+        return $this->successCampusManagerRequest($newInfoCampusManager);
     }
 
     /**
@@ -192,6 +192,6 @@ class CampusManagerController extends Controller
     {
         $campusManager = CampusManager::find($campusManagerId);
         $deleteCampusManager = $campusManager->delete();
-        return $this->successRequest($deleteCampusManager);
+        return $this->successCampusManagerRequest($deleteCampusManager);
     }
 }
