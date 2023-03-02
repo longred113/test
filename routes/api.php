@@ -319,7 +319,6 @@ Route::prefix('campus-studentOff')
     ->name('campus-studentOff.')
     ->group(function () {
         Route::get('/', [OffStudentController::class, 'index'])->name('index');
-        Route::get('/all', [OffStudentController::class, 'getAllEnrollment'])->name('getAllEnrollment');
         Route::post('/create', [OffStudentController::class, 'store'])->name('store');
         Route::get('/{studentId}', [OffStudentController::class, 'show'])->name('show');
         Route::get('/campus-student/{campusId}', [OffStudentController::class, 'showStudentWithCampus'])->name('showStudentWithCampus');
@@ -337,6 +336,7 @@ Route::prefix('campus-enrollment')
         Route::get('/{enrollmentId}', [EnrollmentController::class, 'show'])->name('show');
         Route::put('/update/{studentId}', [EnrollmentController::class, 'update'])->name('update');
         Route::delete('/{studentId}', [EnrollmentController::class, 'destroy'])->name('destroy');
+        Route::get('/', [EnrollmentController::class, 'getAllEnrollment'])->name('getAllEnrollment');
     });
 // CAMPUS DASHBOARD END
 
