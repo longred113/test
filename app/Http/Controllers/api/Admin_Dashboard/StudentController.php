@@ -55,7 +55,6 @@ class StudentController extends Controller
     public function store()
     {
         $validator = Validator::make($this->request->all(), [
-            'enrollmentId' => 'string|required',
             'name' => 'string|required',
             'email' => 'string|required|unique:students',
             'password' => 'string|required|min:8',
@@ -78,7 +77,6 @@ class StudentController extends Controller
         $studentId = IdGenerator::generate(['table'=>'students', 'trow' => 'studentId', 'length' => 7, 'prefix' => 'ST']);
         $studentParams = [
             'studentId' => $studentId,
-            'enrollmentId' => $this->request['enrollmentId'],
             'name' => $this->request['name'],
             'email' => $this->request['email'],
             'gender' => $this->request['gender'],
@@ -130,7 +128,6 @@ class StudentController extends Controller
     {
         $student = Students::find($studentId);
         $validator = Validator::make($this->request->all(), [
-            'enrollmentId' => 'string|required',
             'name' => 'string|required',
             'email' => 'string|required',
             // 'gender' => 'string|required',
@@ -151,7 +148,6 @@ class StudentController extends Controller
         }
 
         $params = [
-            $student['enrollmentId'] = $this->request['enrollmentId'],
             $student['name'] = $this->request['name'],
             $student['email'] = $this->request['email'],
             $student['gender'] = $this->request['gender'],
