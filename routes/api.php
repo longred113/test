@@ -319,6 +319,7 @@ Route::prefix('campus-studentOff')
     ->name('campus-studentOff.')
     ->group(function () {
         Route::get('/', [OffStudentController::class, 'index'])->name('index');
+        Route::get('/all', [OffStudentController::class, 'getAllEnrollment'])->name('getAllEnrollment');
         Route::post('/create', [OffStudentController::class, 'store'])->name('store');
         Route::get('/{studentId}', [OffStudentController::class, 'show'])->name('show');
         Route::put('/update/{studentId}', [OffStudentController::class, 'update'])->name('update');
@@ -331,8 +332,8 @@ Route::prefix('campus-enrollment')
         Route::get('/{campusId}/{productId}', [EnrollmentController::class, 'index'])->name('index');
         Route::post('/create', [EnrollmentController::class, 'store'])->name('store');
         Route::get('/showEnroll/{level}', [EnrollmentController::class, 'showErollment'])->name('showErollment');
-        Route::get('/showEnrolls/{level}/{productId}', [EnrollmentController::class, 'showErollmentByPro'])->name('showErollmentByPro');
-        Route::get('/{studentId}', [EnrollmentController::class, 'show'])->name('show');
+        Route::get('/showEnrolls/{level}/{productId}', [EnrollmentController::class, 'showEnrollmentByPro'])->name('showEnrollmentByPro');
+        Route::get('/{enrollmentId}', [EnrollmentController::class, 'show'])->name('show');
         Route::put('/update/{studentId}', [EnrollmentController::class, 'update'])->name('update');
         Route::delete('/{studentId}', [EnrollmentController::class, 'destroy'])->name('destroy');
     });

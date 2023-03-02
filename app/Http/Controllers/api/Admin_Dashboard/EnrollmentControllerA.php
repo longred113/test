@@ -51,7 +51,7 @@ class EnrollmentControllerA extends Controller
      public function store()
     {
         $validator = validator::make($this->request->all(), [
-            'enrollmentId' => 'required|unique:enrollments',
+            // 'enrollmentId' => 'required|unique:enrollments',
             // 'studentName' => 'required',
             // 'talkSamId' => 'required',
             'campusId' => 'required',
@@ -70,13 +70,11 @@ class EnrollmentControllerA extends Controller
             'enrollmentId' => $enrollmentId,
             'talkSamId' => $this->request['talkSamId'],
             'campusId' => $this->request['campusId'],
-            'campusId' => $this->request['campusId'],
             'level' => $this->request['level'],
             'subject' => $this->request['subject'],
             'status' => $this->request['status'],
             'submitted' => $this->request['submitted'],
         ];
-    
         $newEnrollment = new EnrollmentResource(Enrollment::create($params));
         return $this->successEnrollmentRequest($newEnrollment);
     }
@@ -126,7 +124,6 @@ class EnrollmentControllerA extends Controller
             $this->request['submittedDate'] = $enrollment['submittedDate'];
         }
         $validator = validator::make($this->request->all(), [
-            'studentId' => 'required',
             'studentId' => 'required',
             'talkSamId' => 'required',
             'campusId' => 'required',
