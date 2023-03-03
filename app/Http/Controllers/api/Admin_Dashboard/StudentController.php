@@ -127,6 +127,48 @@ class StudentController extends Controller
     public function update($studentId)
     {
         $student = Students::find($studentId);
+        if (empty($this->request['name'])) {
+            $this->request['name'] = $student['name'];
+        }
+        if (empty($this->request['email'])) {
+            $this->request['email'] = $student['email'];
+        }
+        if (empty($this->request['gender'])) {
+            $this->request['gender'] = $student['gender'];
+        }
+        if (empty($this->request['dateOfBirth'])) {
+            $this->request['dateOfBirth'] = $student['dateOfBirth'];
+        }
+        if (empty($this->request['country'])) {
+            $this->request['country'] = $student['country'];
+        }
+        if (empty($this->request['timeZone'])) {
+            $this->request['timeZone'] = $student['timeZone'];
+        }
+        if (empty($this->request['status'])) {
+            $this->request['status'] = $student['status'];
+        }
+        if (empty($this->request['joinedDate'])) {
+            $this->request['joinedDate'] = $student['joinedDate'];
+        }
+        if (empty($this->request['withDrawal'])) {
+            $this->request['withDrawal'] = $student['withDrawal'];
+        }
+        if (empty($this->request['introduction'])) {
+            $this->request['introduction'] = $student['introduction'];
+        }
+        if (empty($this->request['talkSamId'])) {
+            $this->request['talkSamId'] = $student['talkSamId'];
+        }
+        if (empty($this->request['basicPoint'])) {
+            $this->request['basicPoint'] = $student['basicPoint'];
+        }
+        if (empty($this->request['campusId'])) {
+            $this->request['campusId'] = $student['campusId'];
+        }
+        if (empty($this->request['type'])) {
+            $this->request['type'] = $student['type'];
+        }
         $validator = Validator::make($this->request->all(), [
             'name' => 'string',
             'email' => 'string',
@@ -163,7 +205,6 @@ class StudentController extends Controller
             $student['campusId'] = $this->request['campusId'],
             $student['type'] = $this->request['type'],
         ];
-
         $newStudentInfoData = $student->update($params);
         return $this->successStudentRequest($newStudentInfoData);
     }
