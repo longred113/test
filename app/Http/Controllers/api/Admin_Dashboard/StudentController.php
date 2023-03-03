@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\api\Admin_Dashboard;
 
-use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentResource;
 use App\Models\Roles;
@@ -44,6 +43,24 @@ class StudentController extends Controller
         $studentId = Users::get('studentId');
         $joinedStudent = Students::whereIn('studentId', $studentId)->where('type', 'online')->get();
         return $this->successStudentRequest($joinedStudent);
+    }
+
+    public function getStudentWithId()
+    {
+        $validator = Validator::make($this->request->all(), [
+            'studentId' => 'string|required',
+        ]);
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+
+        if(!empty($this->request['studentId'])) {
+            $studentData = Students::find($this->request['studentId']);
+        }else {
+            $studentData = "";
+        }
+
+        return $this->successStudentRequest($studentData);
     }
 
     /**

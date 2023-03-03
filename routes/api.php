@@ -170,6 +170,7 @@ Route::prefix('admin-student-management')
         Route::get('/', [StudentController::class, 'index'])->name('index');
         Route::get('/joined', [StudentController::class, 'studentJoinedList'])->name('studentJoinedList');
         Route::get('/withdrawal', [StudentController::class, 'studentWithdrawalList'])->name('studentWithdrawalList');
+        Route::get('/student-with-id', [StudentController::class, 'getStudentWithId'])->name('getStudentWithId');
         Route::post('/create', [StudentController::class, 'store'])->name('store');
         Route::get('/{studentId}', [StudentController::class, 'show'])->name('show');
         Route::put('/update/{studentId}', [StudentController::class, 'update'])->name('update');
