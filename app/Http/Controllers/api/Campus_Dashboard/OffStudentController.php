@@ -157,10 +157,7 @@ class OffStudentController extends Controller
             $students['talkSamId'] = $request['talkSamId'],
             $students['basicPoint'] = $request['basicPoint'],
             $students['campusId'] = $request['campusId'],
-            $students['type'] = $request['type'],
-            
-            
-            
+            $students['type'] = $request['type'],          
         ];
         $newInfoStudents = $students->update($params);
         return $this->successStudentRequest($newInfoStudents);

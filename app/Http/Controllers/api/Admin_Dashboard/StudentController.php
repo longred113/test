@@ -128,8 +128,8 @@ class StudentController extends Controller
     {
         $student = Students::find($studentId);
         $validator = Validator::make($this->request->all(), [
-            'name' => 'string|required',
-            'email' => 'string|required',
+            'name' => 'string',
+            'email' => 'string',
             // 'gender' => 'string|required',
             // 'dateOfBirth' => 'date|required',
             // 'country' => 'string|required',
@@ -141,7 +141,7 @@ class StudentController extends Controller
             // 'talkSamId' => 'string|required',
             // 'basicPoint' => 'integer|required',
             'campusId' => 'string|required',
-            'type' => 'string|required',
+            'type' => 'string',
         ]);
         if ($validator->fails()) {
             return $validator->errors();
