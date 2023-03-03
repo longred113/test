@@ -45,21 +45,14 @@ class StudentController extends Controller
         return $this->successStudentRequest($joinedStudent);
     }
 
-    public function getStudentWithId()
+    public function getStudentWithId($studentId)
     {
-        $validator = Validator::make($this->request->all(), [
-            'studentId' => 'string|required',
-        ]);
-        if ($validator->fails()) {
-            return $validator->errors();
-        }
-
-        if(!empty($this->request['studentId'])) {
-            $studentData = Students::find($this->request['studentId']);
+        $student = Students::find($studentId);
+        if($student != NULL){
+            $studentData = $student;
         }else {
             $studentData = "";
         }
-
         return $this->successStudentRequest($studentData);
     }
 
