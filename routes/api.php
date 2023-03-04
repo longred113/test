@@ -214,6 +214,7 @@ Route::prefix('admin-user-management')
     ->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('index');
         Route::post('/create', [UserController::class, 'store'])->name('store');
+        Route::post('/create-new-user', [UserController::class, 'createUserAccount'])->name('createUserAccount');
         Route::get('/{userId}', [UserController::class, 'show'])->name('show');
         Route::put('/update/{userId}', [UserController::class, 'update'])->name('update');
         Route::delete('/{userId}', [UserController::class, 'destroy'])->name('destroy');

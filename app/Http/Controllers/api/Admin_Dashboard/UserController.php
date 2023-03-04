@@ -41,15 +41,6 @@ class UserController extends Controller
      */
     public static function store($userParams)
     {
-        // $validator = Validator::make($this->request->all(), [
-        //     'name' => 'string|required',
-        //     'email' => 'string|required|unique:users',
-        //     'password' => 'string|required|min:8',
-        //     // 'roleId' => 'string|required',
-        // ]);
-        // if ($validator->fails()) {
-        //     return $validator->errors();
-        // }
         $userId = IdGenerator::generate(['table' => 'users', 'trow' => 'userId', 'length' => 7, 'prefix' => 'US']);
         $params = [
             'userId' => $userId,
@@ -87,8 +78,59 @@ class UserController extends Controller
         if (!empty($userParams)) {
             $params['activate'] = 1;
         }
+        dd($params);
         $newUserData = new UserResource(Users::create($params));
         return $newUserData;
+    }
+
+    public function createUserAccount()
+    {
+        $validator = Validator::make($this->request->all(), [
+            'name' => 'string|required',
+            'email' => 'string|required|unique:users',
+            'password' => 'string|required|min:8',
+            'activate' => 'integer|required',
+        ]);
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+        $userId = IdGenerator::generate(['table' => 'users', 'trow' => 'userId', 'length' => 7, 'prefix' => 'US']);
+        $params = [
+            'userId' => $userId,
+            'name' => $this->request['name'],
+            'email' => $this->request['email'],
+            'password' => $this->request['password'],
+            'activate' => $this->request['activate'],
+        ];
+        if (!empty($this->request['teacherId'])) {
+            $params['teacherId'] = $this->request['teacherId'];
+        }
+        if (!empty($this->request['studentId'])) {
+            $params['studentId'] = $this->request['studentId'];
+        }
+        if (!empty($this->request['parentId'])) {
+            $params['parentId'] = $this->request['parentId'];
+        }
+        if (!empty($this->request['campusManagerId'])) {
+            $params['campusManagerId'] = $this->request['campusManagerId'];
+        }
+        $roles = Roles::all();
+        foreach ($roles as $role) {
+            if (!empty($this->request['teacherId']) && $role['name'] == 'teacher') {
+                $params['roleId'] = $role['roleId'];
+            }
+            if (!empty($this->request['studentId']) && $role['name'] == 'student') {
+                $params['roleId'] = $role['roleId'];
+            }
+            if (!empty($this->request['parentId']) && $role['name'] == 'parent') {
+                $params['roleId'] = $role['roleId'];
+            }
+            if (!empty($this->request['campusManagerId']) && $role['name'] == 'campus manager') {
+                $params['roleId'] = $role['roleId'];
+            }
+        }
+        $newUserData = new UserResource(Users::create($params));
+        return $this->successUserRequest($newUserData);
     }
 
     /**
