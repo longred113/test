@@ -138,6 +138,7 @@ Route::prefix('admin-match-activity-management')
         Route::get('/', [MatchedActivityController::class, 'index'])->name('index');
         Route::post('/create', [MatchedActivityController::class, 'store'])->name('store');
         Route::get('/{matchedActivityId}', [MatchedActivityController::class, 'show'])->name('show');
+        Route::get('/get-match-activity/{productId}', [MatchedActivityController::class, 'getMatchActivityFromProduct'])->name('getMatchActivityFromProduct');
         Route::put('/update/{matchedActivityId}', [MatchedActivityController::class, 'update'])->name('update');
         Route::delete('/{matchedActivityId}', [MatchedActivityController::class, 'destroy'])->name('destroy');
     });

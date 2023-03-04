@@ -72,6 +72,12 @@ class MatchedActivityController extends Controller
         return $this->successMatchedActivityRequest($matchedActivityData);
     }
 
+    public function getMatchActivityFromProduct($productId)
+    {
+        $matchedActivity = MatchedActivities::where('productId', $productId)->get();
+        return $matchedActivity;
+    }
+
     /**
      * Update the specified resource in storage.
      *
