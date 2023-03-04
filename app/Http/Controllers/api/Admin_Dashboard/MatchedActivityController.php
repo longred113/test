@@ -90,9 +90,9 @@ class MatchedActivityController extends Controller
         $matchedActivity = MatchedActivities::find($matchedActivityId);
         $validator = Validator::make($this->request->all(), [
             'productId' => 'required',
-            'name' => 'string|required',
-            'time' => 'integer|required',
-            'unitId' => 'string|required',
+            'name' => 'string',
+            'time' => 'integer',
+            'unitId' => 'string',
         ]);
         if ($validator->fails()) {
             return $validator->errors();
