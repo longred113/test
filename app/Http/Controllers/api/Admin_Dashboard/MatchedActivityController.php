@@ -88,6 +88,18 @@ class MatchedActivityController extends Controller
     public function update($matchedActivityId)
     {
         $matchedActivity = MatchedActivities::find($matchedActivityId);
+        if(empty($this->request['productId'])) {
+            $this->request['productId'] = $matchedActivity['productId'];
+        }
+        if(empty($this->request['name'])) {
+            $this->request['name'] = $matchedActivity['name'];
+        }
+        if(empty($this->request['time'])) {
+            $this->request['time'] = $matchedActivity['time'];
+        }
+        if(empty($this->request['unitId'])) {
+            $this->request['unitId'] = $matchedActivity['unitId'];
+        }
         $validator = Validator::make($this->request->all(), [
             'productId' => 'required',
             'name' => 'string',
