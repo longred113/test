@@ -71,6 +71,11 @@ class StudentMatchedActivityController extends Controller
         return $this->successStudentMatchedActivityRequest($studentMatchedActivityData);
     }
 
+    public function getMatchedActivityFromStudent($studentId) {
+        $studentMatchedActivity = StudentMatchedActivities::where('studentId', $studentId)->get();
+        return $this->successStudentMatchedActivityRequest($studentMatchedActivity);
+    }
+
     /**
      * Update the specified resource in storage.
      *

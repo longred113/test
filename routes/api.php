@@ -302,6 +302,7 @@ Route::prefix('admin-student-matched-activity-management')
         Route::get('/', [StudentMatchedActivityController::class, 'index'])->name('index');
         Route::post('/create', [StudentMatchedActivityController::class, 'store'])->name('store');
         Route::get('/{studentMatchedActivityId}', [StudentMatchedActivityController::class, 'show'])->name('show');
+        Route::get('/get-from-student/{studentId}', [StudentMatchedActivityController::class, 'getMatchedActivityFromStudent'])->name('getMatchedActivityFromStudent');
         Route::put('/update/{studentMatchedActivityId}', [StudentMatchedActivityController::class, 'update'])->name('update');
         Route::delete('/{studentMatchedActivityId}', [StudentMatchedActivityController::class, 'destroy'])->name('destroy');
     });
