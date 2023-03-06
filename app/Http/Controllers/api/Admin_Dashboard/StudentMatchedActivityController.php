@@ -47,9 +47,9 @@ class StudentMatchedActivityController extends Controller
             return $validator->errors();
         }
 
-        $studentMatchedActivityId = IdGenerator::generate(['table'=>'student_class_matched_activities', 'trow' => 'studentClMaActivityId', 'length' => 9, 'prefix' => 'SCMA']);
+        $studentMatchedActivityId = IdGenerator::generate(['table'=>'student_matched_activities', 'trow' => 'studentMatchedActivityId', 'length' => 8, 'prefix' => 'SMA']);
         $params = [
-            'studentClMaActivityId' => $studentMatchedActivityId,
+            'studentMatchedActivityId' => $studentMatchedActivityId,
             'studentId' => $this->request['studentId'],
             'matchedActivityId' => $this->request['matchedActivityId'],
             'name' => $this->request['name'],
