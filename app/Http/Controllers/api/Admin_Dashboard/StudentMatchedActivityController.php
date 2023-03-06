@@ -41,7 +41,6 @@ class StudentMatchedActivityController extends Controller
         $validator = Validator::make($this->request->all(), [
             'studentId' => 'string|required',
             'matchedActivityId' => 'string|required',
-            'classId' => 'string|required',
         ]);
         if($validator->fails()){
             return $validator->errors();
@@ -52,7 +51,6 @@ class StudentMatchedActivityController extends Controller
             'studentClMaActivityId' => $studentMatchedActivityId,
             'studentId' => $this->request['studentId'],
             'matchedActivityId' => $this->request['matchedActivityId'],
-            'classId' => $this->request['classId'],
             'status' => 'to-do',
         ];
 
@@ -101,7 +99,6 @@ class StudentMatchedActivityController extends Controller
         $params = [
             $studentMatchedActivity['studentId'] = $this->request['studentId'],
             $studentMatchedActivity['matchedActivityId'] = $this->request['matchedActivityId'],
-            $studentMatchedActivity['classId'] = $this->request['classId'],
             $studentMatchedActivity['status'] = $this->request['status'],
         ];
         $newInfStudentMatchedActivity = $studentMatchedActivity->update($params);
