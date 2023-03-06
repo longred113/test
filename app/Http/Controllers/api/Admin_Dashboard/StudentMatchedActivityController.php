@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\api\Admin_Dashboard;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\StudentClassMatchedActivityResource;
-use App\Models\StudentClassMatchedActivities;
+use App\Http\Resources\StudentMatchedActivityResource;
+use App\Models\StudentMatchedActivities;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
-class StudentClassMatchedActivityController extends Controller
+class StudentMatchedActivityController extends Controller
 {
     protected Request $request;
 
@@ -26,7 +26,7 @@ class StudentClassMatchedActivityController extends Controller
      */
     public function index()
     {
-        $studentMatchedActivitiesData = StudentClassMatchedActivityResource::collection(StudentClassMatchedActivities::all());
+        $studentMatchedActivitiesData = StudentMatchedActivityResource::collection(StudentMatchedActivities::all());
         return $this->successStudentMatchedActivityRequest($studentMatchedActivitiesData);
     }
 
@@ -56,7 +56,7 @@ class StudentClassMatchedActivityController extends Controller
             'status' => 'to-do',
         ];
 
-        $newStudentMatchedActivity = new StudentClassMatchedActivityResource(StudentClassMatchedActivities::create($params));
+        $newStudentMatchedActivity = new StudentMatchedActivityResource(StudentMatchedActivities::create($params));
         return $this->successStudentMatchedActivityRequest($newStudentMatchedActivity);
     }
 
@@ -68,8 +68,8 @@ class StudentClassMatchedActivityController extends Controller
      */
     public function show($studentMatchedActivityId)
     {
-        $studentMatchedActivity = StudentClassMatchedActivities::find($studentMatchedActivityId);
-        $studentMatchedActivityData = new StudentClassMatchedActivityResource($studentMatchedActivity);
+        $studentMatchedActivity = StudentMatchedActivities::find($studentMatchedActivityId);
+        $studentMatchedActivityData = new StudentMatchedActivityResource($studentMatchedActivity);
         return $this->successStudentMatchedActivityRequest($studentMatchedActivityData);
     }
 
@@ -82,7 +82,7 @@ class StudentClassMatchedActivityController extends Controller
      */
     public function update($studentMatchedActivityId)
     {
-        $studentMatchedActivity = StudentClassMatchedActivities::find($studentMatchedActivityId);
+        $studentMatchedActivity = StudentMatchedActivities::find($studentMatchedActivityId);
         if(empty($this->request['studentId'])){
             $this->request['studentId'] = $studentMatchedActivity['studentId'];
         }
@@ -116,7 +116,7 @@ class StudentClassMatchedActivityController extends Controller
      */
     public function destroy($studentMatchedActivityId)
     {
-        $studentMatchedActivity = StudentClassMatchedActivities::find($studentMatchedActivityId);
+        $studentMatchedActivity = StudentMatchedActivities::find($studentMatchedActivityId);
         $deleteStudentMatchedActivity = $studentMatchedActivity->delete();
         return $this->successStudentMatchedActivityRequest($deleteStudentMatchedActivity);
     }

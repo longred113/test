@@ -22,7 +22,7 @@ use App\Http\Controllers\api\Admin_Dashboard\ClassProductController;
 use App\Http\Controllers\api\Admin_Dashboard\EnrollmentControllerA;
 use App\Http\Controllers\api\Admin_Dashboard\ProductPackageController;
 use App\Http\Controllers\api\Admin_Dashboard\StudentClassController;
-use App\Http\Controllers\api\Admin_Dashboard\StudentClassMatchedActivityController;
+use App\Http\Controllers\api\Admin_Dashboard\StudentMatchedActivityController;
 use App\Http\Controllers\api\Admin_Dashboard\StudentProductController;
 use App\Http\Controllers\api\Campus_Dashboard\OffStudentController;
 use App\Http\Controllers\api\Campus_Dashboard\OffTeachController;
@@ -296,14 +296,14 @@ Route::prefix('admin-student-product-management')
         Route::delete('/{studentProductId}', [StudentProductController::class, 'destroy'])->name('destroy');
     });
 
-Route::prefix('admin-student-class-matched-activity-management')
-    ->name('admin-student-class-matched-activity-management.')
+Route::prefix('admin-student-matched-activity-management')
+    ->name('admin-student-matched-activity-management.')
     ->group(function () {
-        Route::get('/', [StudentClassMatchedActivityController::class, 'index'])->name('index');
-        Route::post('/create', [StudentClassMatchedActivityController::class, 'store'])->name('store');
-        Route::get('/{studentClMaActivityId}', [StudentClassMatchedActivityController::class, 'show'])->name('show');
-        Route::put('/update/{studentClMaActivityId}', [StudentClassMatchedActivityController::class, 'update'])->name('update');
-        Route::delete('/{studentClassMatchedActivityId}', [StudentClassMatchedActivityController::class, 'destroy'])->name('destroy');
+        Route::get('/', [StudentMatchedActivityController::class, 'index'])->name('index');
+        Route::post('/create', [StudentMatchedActivityController::class, 'store'])->name('store');
+        Route::get('/{studentMatchedActivityId}', [StudentMatchedActivityController::class, 'show'])->name('show');
+        Route::put('/update/{studentMatchedActivityId}', [StudentMatchedActivityController::class, 'update'])->name('update');
+        Route::delete('/{studentMatchedActivityId}', [StudentMatchedActivityController::class, 'destroy'])->name('destroy');
     });
 //END ADMIN DASHBOARD
 
