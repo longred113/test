@@ -41,6 +41,7 @@ class StudentMatchedActivityController extends Controller
         $validator = Validator::make($this->request->all(), [
             'studentId' => 'string|required',
             'matchedActivityId' => 'string|required',
+            'name' => 'string',
         ]);
         if($validator->fails()){
             return $validator->errors();
@@ -51,6 +52,7 @@ class StudentMatchedActivityController extends Controller
             'studentClMaActivityId' => $studentMatchedActivityId,
             'studentId' => $this->request['studentId'],
             'matchedActivityId' => $this->request['matchedActivityId'],
+            'name' => $this->request['name'],
             'status' => 'to-do',
         ];
 
@@ -92,9 +94,13 @@ class StudentMatchedActivityController extends Controller
         if(empty($this->request['matchedActivity'])){
             $this->request['matchedActivity'] = $studentMatchedActivity['matchedActivity'];
         }
+        if(empty($this->request['name'])){
+            $this->request['name'] = $studentMatchedActivity['name'];
+        }
         $validator = Validator::make($this->request->all(), [
             'studentId' => 'string|required',
             'matchedActivityId' => 'string|required',
+            'name' => 'string',
             'status' => [Rule::in(['to-do', 'incomplete', 'done'])],
         ]);
         if($validator->fails()){
@@ -104,6 +110,7 @@ class StudentMatchedActivityController extends Controller
         $params = [
             $studentMatchedActivity['studentId'] = $this->request['studentId'],
             $studentMatchedActivity['matchedActivityId'] = $this->request['matchedActivityId'],
+            $studentMatchedActivity['name'] = $this->request['name'],
             $studentMatchedActivity['status'] = $this->request['status'],
         ];
         $newInfStudentMatchedActivity = $studentMatchedActivity->update($params);

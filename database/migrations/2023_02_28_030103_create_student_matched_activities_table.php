@@ -17,6 +17,7 @@ class CreateStudentMatchedActivitiesTable extends Migration
             $table->string('studentMatchedActivityId')->primary();
             $table->string('studentId')->nullable();
             $table->string('matchedActivityId')->nullable();
+            $table->string('name')->nullable();
             $table->string('status')->nullable();
             $table->timestamps();
         });

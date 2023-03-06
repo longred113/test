@@ -18,6 +18,7 @@ class StudentMatchedActivityResource extends JsonResource
             'studentMatchedActivityId' => $this->studentMatchedActivityId,
             'studentId' => $this->studentId,
             'matchedActivityId' => $this->matchedActivityId,
+            'name' => $this->name,
             'status' => $this->status,
         ];
     }
