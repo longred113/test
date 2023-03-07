@@ -150,6 +150,7 @@ Route::prefix('admin-class-management')
         Route::get('/', [ClassController::class, 'index'])->name('index');
         Route::post('/create', [ClassController::class, 'store'])->name('store');
         Route::get('/{classId}', [ClassController::class, 'show'])->name('show');
+        Route::get('/get-class/{onlineTeacher}', [ClassController::class, 'getClassFromTeacher'])->name('getClassFromTeacher');
         Route::put('/update/{classId}', [ClassController::class, 'update'])->name('update');
         Route::delete('/{classId}', [ClassController::class, 'destroy'])->name('destroy');
     });

@@ -86,6 +86,12 @@ class ClassController extends Controller
         return $this->successClassRequest($classData);
     }
 
+    public function getClassFromTeacher($onlineTeacher)
+    {
+        $class = Classes::where('onlineTeacher', $onlineTeacher)->get();
+        return $this->successClassRequest($class);
+    }
+
     /**
      * Update the specified resource in storage.
      *
