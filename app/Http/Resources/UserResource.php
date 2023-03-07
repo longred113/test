@@ -24,6 +24,7 @@ class UserResource extends JsonResource
             'studentId' => $this->studentId,
             'parentId' => $this->parentId,
             'CampusManagerId' => $this->CampusManagerId,
+            'campusId' => $this->campusId,
             'activate' => $this->activate,
         ];
     }

@@ -42,6 +42,9 @@ class UserController extends Controller
     public static function store($userParams)
     {
         $userId = IdGenerator::generate(['table' => 'users', 'trow' => 'userId', 'length' => 7, 'prefix' => 'US']);
+        if (empty($userParams['name'])) {
+            $userParams['name'] = "";
+        }
         $params = [
             'userId' => $userId,
             'name' => $userParams['name'],
@@ -60,6 +63,9 @@ class UserController extends Controller
         if (!empty($userParams['campusManagerId'])) {
             $params['campusManagerId'] = $userParams['campusManagerId'];
         }
+        if (!empty($userParams['campusId'])) {
+            $params['campusId'] = $userParams['campusId'];
+        }
         $roles = Roles::all();
         foreach ($roles as $role) {
             if (!empty($userParams['teacherId']) && $role['name'] == 'teacher') {
@@ -72,6 +78,9 @@ class UserController extends Controller
                 $params['roleId'] = $role['roleId'];
             }
             if (!empty($userParams['campusManagerId']) && $role['name'] == 'campus manager') {
+                $params['roleId'] = $role['roleId'];
+            }
+            if (!empty($userParams['campusId']) && $role['name'] == 'campus manager') {
                 $params['roleId'] = $role['roleId'];
             }
         }

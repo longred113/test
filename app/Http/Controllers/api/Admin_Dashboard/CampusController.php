@@ -9,6 +9,7 @@ use GrahamCampbell\ResultType\Success;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class CampusController extends Controller
 {
@@ -47,10 +48,12 @@ class CampusController extends Controller
             'activate' => 'required',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $campusId = IdGenerator::generate(['table'=>'campuses', 'trow' => 'campusId', 'length' => 7, 'prefix' => 'CP']);
+        $email = $this->request['name']. '@gmail.com';
+        $userPassword = Str::random(8);
         $params = [
             'campusId' => $campusId,
             'name' => $this->request['name'],
@@ -59,7 +62,13 @@ class CampusController extends Controller
             'signedDate' => $this->request['signedDate'],
             'activate' => $this->request['activate'],
         ];
+        $userParams = [
+            'campusId' => $campusId,
+            'email' => $email,
+            'password' => $userPassword,
+        ];
         $newCampus = new CampusResource(Campus::create($params));
+        UserController::store($userParams);
         return $this->successCampusRequest($newCampus);
     }
 
