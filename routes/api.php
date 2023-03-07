@@ -355,6 +355,7 @@ Route::prefix('teacher-study-planner')
         Route::post('/create', [StudyPlannerController::class, 'store'])->name('store');
         Route::get('/show/{classId}', [StudyPlannerController::class, 'showStudentInClass'])->name('showStudentInClass');
         Route::get('/to-do-list/{classId}/{studentId}', [StudyPlannerController::class, 'getToDoListOfStudent'])->name('getToDoListOfStudent');
+        Route::put('/update-status/{studentMatchedActivityId}', [StudyPlannerController::class, 'updateStatusOfStudyPlanner'])->name('updateStatusOfStudyPlanner');
         Route::put('/update', [StudyPlannerController::class, 'update'])->name('update');
         Route::delete('/', [StudyPlannerController::class, 'destroy'])->name('destroy');
     });
@@ -368,7 +369,7 @@ Route::prefix('student-study-planner')
         Route::get('/StudyPlanner/{studentId}', [StudyPlannerSController::class, 'showStudyPlanner'])->name('showStudyPlanner');
         Route::post('/create', [StudyPlannerSController::class, 'store'])->name('store');
         Route::get('/show/{classId}', [StudyPlannerSController::class, 'showStudentInClass'])->name('showStudentInClass');
-        Route::put('/update-status-study-planner/{matchedActivityId}', [StudyPlannerSController::class, 'showStudentInClass'])->name('showStudentInClass');
+        // Route::put('/update-status-study-planner/{matchedActivityId}', [StudyPlannerSController::class, 'showStudentInClass'])->name('showStudentInClass');
         Route::put('/update', [StudyPlannerSController::class, 'update'])->name('update');
         Route::delete('/', [StudyPlannerSController::class, 'destroy'])->name('destroy');
     });

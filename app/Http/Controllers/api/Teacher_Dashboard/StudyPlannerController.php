@@ -52,8 +52,10 @@ class StudyPlannerController extends Controller
 
     public function getToDoListOfStudent($classId, $studentId)
     {
-        $studentStudyPlanner = MatchedActivities::join('student_class_matched_activities','matched_activities.matchedActivityId', '=', 'student_class_matched_activities.matchedActivityId')
-        ->where('studentId', $studentId)->where('classId', $classId)->get();
+        $studentStudyPlanner = MatchedActivities::join('student_matched_activities','matched_activities.matchedActivityId', '=', 'student_matched_activities.matchedActivityId')
+        ->join('student_classes', 'student_classes.studentId', '=', 'student_matched_activities.studentId')
+        ->where('student_matched_activities.studentId', $studentId)->where('student_classes.classId', $classId)->get();
+        return $studentStudyPlanner;
 
         $todoList = $studentStudyPlanner->where('status', 'to-do');
         $doneList = $studentStudyPlanner->where('status', 'done');
@@ -61,20 +63,19 @@ class StudyPlannerController extends Controller
         return $this->successStudyPlannerRequest($studentStudyPlanner);
     }
 
-    public function updateStatusOfStudyPlanner($studentClMaActivityId)
+    public function updateStatusOfStudyPlanner($studentMatchedActivityId)
     {
-        $matchedActivity = StudentMatchedActivities::find($studentClMaActivityId);
-        $validator = Validator::make($this->request->all, [
-            'type' => [Rule::in(['to-do', 'incomplete', 'done'])],
+        $studentMatchedActivity = StudentMatchedActivities::find($studentMatchedActivityId);
+        $validator = Validator::make($this->request->all(), [
+            'status' => [Rule::in(['to-do', 'incomplete', 'done'])],
         ]);
         if($validator->fails()){
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
-
         $params = [
-            $matchedActivity['type'] = $this->request['type'],
+            $matchedActivity['status'] = $this->request['status'],
         ];
-        $newType = $matchedActivity->update($params);
+        $newType = $studentMatchedActivity->update($params);
         return $this->successStudyPlannerRequest($newType);
     }
 
