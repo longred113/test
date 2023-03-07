@@ -73,7 +73,7 @@ class StudyPlannerController extends Controller
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
         $params = [
-            $matchedActivity['status'] = $this->request['status'],
+            $studentMatchedActivity['status'] = $this->request['status'],
         ];
         $newType = $studentMatchedActivity->update($params);
         return $this->successStudyPlannerRequest($newType);
