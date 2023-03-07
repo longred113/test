@@ -57,10 +57,10 @@ class CampusManagerController extends Controller
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
-        $campusManagerId = IdGenerator::generate(['table'=>'campus_managers', 'trow' => 'campusManagerId', 'length' => 8, 'prefix' => 'CPM']);
+        $campusManagerId = IdGenerator::generate(['table' => 'campus_managers', 'trow' => 'campusManagerId', 'length' => 8, 'prefix' => 'CPM']);
         $email = Campus::where('campusId', $this->request['campusId'])->pluck('name')->map(function ($name) {
-            return $name. '@gmail.com';
-        })->first(); 
+            return $name . '@gmail.com';
+        })->first();
         $userPassword = Str::random(8);
         $params = [
             'campusManagerId' => $campusManagerId,
@@ -111,42 +111,42 @@ class CampusManagerController extends Controller
     public function update($campusManagerId)
     {
         $campusManager = CampusManager::find($campusManagerId);
-        if(empty($this->request['name'])) {
+        if (empty($this->request['name'])) {
             $this->request['name'] = $campusManager['name'];
         }
-        // if(empty($this->request['email'])) {
-        //     $this->request['email'] = $campusManager['email'];
-        // }
-        // if(empty($this->request['gender'])) {
-        //     $this->request['gender'] = $campusManager['gender'];
-        // }
-        // if(empty($this->request['dateOfBirth'])) {
-        //     $this->request['dateOfBirth'] = $campusManager['dateOfBirth'];
-        // }
-        // if(empty($this->request['country'])) {
-        //     $this->request['country'] = $campusManager['country'];
-        // }
-        // if(empty($this->request['timeZone'])) {
-        //     $this->request['timeZone'] = $campusManager['timeZone'];
-        // }
-        // if(empty($this->request['startDate'])) {
-        //     $this->request['startDate'] = $campusManager['startDate'];
-        // }
-        // if(empty($this->request['resignation'])) {
-        //     $this->request['resignation'] = $campusManager['resignation'];
-        // }
-        //  if(empty($this->request['campusId'])) {
-        //     $this->request['campusId'] = $campusManager['campusId'];
-        // }
-        // if(empty($this->request['memo'])) {
-        //     $this->request['memo'] = $campusManager['memo'];
-        // }
-        // if(empty($this->request['offlineStudentId'])) {
-        //     $this->request['offlineStudentId'] = $campusManager['offlineStudentId'];
-        // }
-        // if(empty($this->request['offlineTeacherId'])) {
-        //     $this->request['offlineTeacherId'] = $campusManager['offlineTeacherId'];
-        // }
+        if (empty($this->request['email'])) {
+            $this->request['email'] = $campusManager['email'];
+        }
+        if (empty($this->request['gender'])) {
+            $this->request['gender'] = $campusManager['gender'];
+        }
+        if (empty($this->request['dateOfBirth'])) {
+            $this->request['dateOfBirth'] = $campusManager['dateOfBirth'];
+        }
+        if (empty($this->request['country'])) {
+            $this->request['country'] = $campusManager['country'];
+        }
+        if (empty($this->request['timeZone'])) {
+            $this->request['timeZone'] = $campusManager['timeZone'];
+        }
+        if (empty($this->request['startDate'])) {
+            $this->request['startDate'] = $campusManager['startDate'];
+        }
+        if (empty($this->request['resignation'])) {
+            $this->request['resignation'] = $campusManager['resignation'];
+        }
+        if (empty($this->request['campusId'])) {
+            $this->request['campusId'] = $campusManager['campusId'];
+        }
+        if (empty($this->request['memo'])) {
+            $this->request['memo'] = $campusManager['memo'];
+        }
+        if (empty($this->request['offlineStudentId'])) {
+            $this->request['offlineStudentId'] = $campusManager['offlineStudentId'];
+        }
+        if (empty($this->request['offlineTeacherId'])) {
+            $this->request['offlineTeacherId'] = $campusManager['offlineTeacherId'];
+        }
         $validator = validator::make($this->request->all(), [
             'name' => 'required',
             // 'email' => 'required',

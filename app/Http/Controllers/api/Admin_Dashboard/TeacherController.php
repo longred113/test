@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\api\Admin_Dashboard;
+
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CampusResource;
 use App\Http\Resources\TeacherResource;
@@ -36,7 +37,7 @@ class TeacherController extends Controller
 
     public function showOnlineTeacher()
     {
-        
+
         $teacherData = TeacherResource::collection(Teachers::where('type', 'online')->get());
         return $this->successTeacherRequest($teacherData);
     }
@@ -79,7 +80,7 @@ class TeacherController extends Controller
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
-        $teacherId = IdGenerator::generate(['table'=>'teachers', 'trow' => 'teacherId', 'length' => 7, 'prefix' => 'TC']);
+        $teacherId = IdGenerator::generate(['table' => 'teachers', 'trow' => 'teacherId', 'length' => 7, 'prefix' => 'TC']);
         $params = [
             'teacherId' => $teacherId,
             'name' => $this->request['name'],
@@ -123,13 +124,13 @@ class TeacherController extends Controller
     public function show($teacherId)
     {
         $teacher = Teachers::find($teacherId);
-        $joinData = Teachers::join('campuses','teachers.campusId', '=', 'campuses.campusId')->where('teacherId', $teacherId)->get();
-        foreach($joinData as $join) {
+        $joinData = Teachers::join('campuses', 'teachers.campusId', '=', 'campuses.campusId')->where('teacherId', $teacherId)->get();
+        foreach ($joinData as $join) {
             $data = $join['name'];
         }
         $showTeacherData = [];
         $showTeacherData = $teacher;
-        $showTeacherData['campusName'] = $data; 
+        $showTeacherData['campusName'] = $data;
         return $this->successTeacherRequest($showTeacherData);
     }
 
@@ -143,6 +144,63 @@ class TeacherController extends Controller
     public function update(Request $request, $teacherId)
     {
         $teacher = Teachers::find($teacherId);
+        if (empty($this->request['name'])) {
+            $this->request['name'] = $teacher['name'];
+        }
+        if (empty($this->request['email'])) {
+            $this->request['email'] = $teacher['email'];
+        }
+        if (empty($this->request['gender'])) {
+            $this->request['gender'] = $teacher['gender'];
+        }
+        if (empty($this->request['dateOfBirth'])) {
+            $this->request['dateOfBirth'] = $teacher['dateOfBirth'];
+        }
+        if (empty($this->request['status'])) {
+            $this->request['status'] = $teacher['status'];
+        }
+        if (empty($this->request['activate'])) {
+            $this->request['activate'] = $teacher['activate'];
+        }
+        if (empty($this->request['country'])) {
+            $this->request['country'] = $teacher['country'];
+        }
+        if (empty($this->request['timeZone'])) {
+            $this->request['timeZone'] = $teacher['timeZone'];
+        }
+        if (empty($this->request['startDate'])) {
+            $this->request['startDate'] = $teacher['startDate'];
+        }
+        if (empty($this->request['resignation'])) {
+            $this->request['resignation'] = $teacher['resignation'];
+        }
+        if (empty($this->request['resume'])) {
+            $this->request['resume'] = $teacher['resume'];
+        }
+        if (empty($this->request['certificate'])) {
+            $this->request['certificate'] = $teacher['certificate'];
+        }
+        if (empty($this->request['contract'])) {
+            $this->request['contract'] = $teacher['contract'];
+        }
+        if (empty($this->request['basicPoint'])) {
+            $this->request['basicPoint'] = $teacher['basicPoint'];
+        }
+        if (empty($this->request['type'])) {
+            $this->request['type'] = $teacher['type'];
+        }
+        if (empty($this->request['talkSamId'])) {
+            $this->request['talkSamId'] = $teacher['talkSamId'];
+        }
+        if (empty($this->request['campusId'])) {
+            $this->request['campusId'] = $teacher['campusId'];
+        }
+        if (empty($this->request['role'])) {
+            $this->request['role'] = $teacher['role'];
+        }
+        if (empty($this->request['memo'])) {
+            $this->request['memo'] = $teacher['memo'];
+        }
         $validator = validator::make($request->all(), [
             'name' => 'required|string',
             // 'email' => 'required|string|unique:teachers',

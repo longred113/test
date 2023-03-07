@@ -42,11 +42,11 @@ class StudentClassController extends Controller
             'classId' => 'string|required',
             'point' => 'integer',
         ]);
-        if($validator->fails()){
+        if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
-        $studentClassId = IdGenerator::generate(['table'=>'student_classes', 'trow' => 'studentClassId', 'length' => 7, 'prefix' => 'SC']);
+        $studentClassId = IdGenerator::generate(['table' => 'student_classes', 'trow' => 'studentClassId', 'length' => 7, 'prefix' => 'SC']);
         $params = [
             'studentClassId' => $studentClassId,
             'studentId' => $this->request['studentId'],
@@ -83,13 +83,15 @@ class StudentClassController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update()
+    public function update($studentClassId)
     {
+        $studentClass = StudentClasses::find($studentClassId);
         $validator = Validator::make($this->request->all(), [
             'studentId' => 'string|required',
             'classId' => 'string|required',
+            'point' => 'integer',
         ]);
-        if($validator->fails()){
+        if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
@@ -100,8 +102,7 @@ class StudentClassController extends Controller
             'classId' => $classId,
             'point' => $this->request['point'],
         ];
-        $studentClass = StudentClasses::where('classId', $classId)
-        ->where('studentId', $studentId)->update($params);
+        $studentClass = $studentClass->update($params);
         return $this->successStudentClassRequest($studentClass);
     }
 

@@ -16,8 +16,7 @@ class AdminController extends Controller
 
     public function __construct(
         Request $request
-        )       
-    {
+    ) {
         $this->request = $request;
     }
     /**
@@ -48,7 +47,7 @@ class AdminController extends Controller
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
-        $adminId = IdGenerator::generate(['table'=>'admins', 'trow' => 'adminId', 'length' => 7, 'prefix' => 'AD']);
+        $adminId = IdGenerator::generate(['table' => 'admins', 'trow' => 'adminId', 'length' => 7, 'prefix' => 'AD']);
         $params = [
             'adminId' => $adminId,
             'name' => $this->request['name'],
@@ -82,13 +81,13 @@ class AdminController extends Controller
     public function update($adminId)
     {
         $admin = Admin::find($adminId);
-        if(empty($this->request['name'])) {
+        if (empty($this->request['name'])) {
             $this->request['name'] = $admin['name'];
         }
-        if(empty($this->request['activate'])) {
+        if (empty($this->request['activate'])) {
             $this->request['email'] = $admin['email'];
         }
-        if(empty($request['password'])) {
+        if (empty($request['password'])) {
             $this->request['password'] = $admin['password'];
         }
 
@@ -100,7 +99,7 @@ class AdminController extends Controller
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
-        
+
         $params = [
             $admin['name'] = $this->request['name'],
             $admin['email'] = $this->request['email'],

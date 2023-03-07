@@ -43,11 +43,11 @@ class StudentMatchedActivityController extends Controller
             'matchedActivityId' => 'string|required',
             'name' => 'string',
         ]);
-        if($validator->fails()){
+        if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
-        $studentMatchedActivityId = IdGenerator::generate(['table'=>'student_matched_activities', 'trow' => 'studentMatchedActivityId', 'length' => 8, 'prefix' => 'SMA']);
+        $studentMatchedActivityId = IdGenerator::generate(['table' => 'student_matched_activities', 'trow' => 'studentMatchedActivityId', 'length' => 8, 'prefix' => 'SMA']);
         $params = [
             'studentMatchedActivityId' => $studentMatchedActivityId,
             'studentId' => $this->request['studentId'],
@@ -73,7 +73,8 @@ class StudentMatchedActivityController extends Controller
         return $this->successStudentMatchedActivityRequest($studentMatchedActivityData);
     }
 
-    public function getMatchedActivityFromStudent($studentId) {
+    public function getMatchedActivityFromStudent($studentId)
+    {
         $studentMatchedActivity = StudentMatchedActivities::where('studentId', $studentId)->get();
         return $this->successStudentMatchedActivityRequest($studentMatchedActivity);
     }
@@ -88,14 +89,17 @@ class StudentMatchedActivityController extends Controller
     public function update($studentMatchedActivityId)
     {
         $studentMatchedActivity = StudentMatchedActivities::find($studentMatchedActivityId);
-        if(empty($this->request['studentId'])){
+        if (empty($this->request['studentId'])) {
             $this->request['studentId'] = $studentMatchedActivity['studentId'];
         }
-        if(empty($this->request['matchedActivity'])){
+        if (empty($this->request['matchedActivity'])) {
             $this->request['matchedActivity'] = $studentMatchedActivity['matchedActivity'];
         }
-        if(empty($this->request['name'])){
+        if (empty($this->request['name'])) {
             $this->request['name'] = $studentMatchedActivity['name'];
+        }
+        if (empty($this->request['status'])) {
+            $this->request['status'] = $studentMatchedActivity['status'];
         }
         $validator = Validator::make($this->request->all(), [
             'studentId' => 'string|required',
@@ -103,7 +107,7 @@ class StudentMatchedActivityController extends Controller
             'name' => 'string',
             'status' => [Rule::in(['to-do', 'incomplete', 'done'])],
         ]);
-        if($validator->fails()){
+        if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 

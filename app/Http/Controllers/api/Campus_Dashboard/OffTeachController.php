@@ -56,7 +56,7 @@ class OffTeachController extends Controller
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
-        $teacherId = IdGenerator::generate(['table'=>'teachers', 'trow' => 'teacherId', 'length' => 7, 'prefix' => 'TC']);
+        $teacherId = IdGenerator::generate(['table' => 'teachers', 'trow' => 'teacherId', 'length' => 7, 'prefix' => 'TC']);
         $params = [
             'teacherId' => $teacherId,
             'name' => request('name'),
@@ -105,59 +105,59 @@ class OffTeachController extends Controller
      */
     public function update(Request $request, $teacherId)
     {
-         $teachers = Teachers::find($teacherId);
-        if(empty($request->name)) {
+        $teachers = Teachers::find($teacherId);
+        if (empty($request->name)) {
             $request['name'] = $teachers['name'];
         }
-        if(empty($request->email)) {
+        if (empty($request->email)) {
             $request['email'] = $teachers['email'];
         }
-        if(empty($request->gender)) {
+        if (empty($request->gender)) {
             $request['gender'] = $teachers['gender'];
         }
-        if(empty($request->dateOfBirth)) {
+        if (empty($request->dateOfBirth)) {
             $request['dateOfBirth'] = $teachers['dateOfBirth'];
         }
-        if(empty($request->status)) {
+        if (empty($request->status)) {
             $request['status'] = $teachers['status'];
         }
         if (empty($request->activate)) {
             $request['activate'] = $teachers['activate'];
         }
-        if(empty($request->country)) {
+        if (empty($request->country)) {
             $request['country'] = $teachers['country'];
         }
-        if(empty($request->timeZone)) {
+        if (empty($request->timeZone)) {
             $request['timeZone'] = $teachers['timeZone'];
         }
         if (empty($request->startDate)) {
             $request['startDate'] = $teachers['startDate'];
         }
-        if(empty($request->resignation)) {
+        if (empty($request->resignation)) {
             $request['resignation'] = $teachers['resignation'];
         }
         if (empty($request->resume)) {
             $request['resume'] = $teachers['resume'];
         }
-        if(empty($request->certificate)) {
+        if (empty($request->certificate)) {
             $request['certificate'] = $teachers['certificate'];
         }
-        if(empty($request->contract)) {
+        if (empty($request->contract)) {
             $request['contract'] = $teachers['contract'];
         }
         if (empty($request->basicPoint)) {
             $request['basicPoint'] = $teachers['basicPoint'];
         }
-        if(empty($request->campusId)) {
+        if (empty($request->campusId)) {
             $request['campusId'] = $teachers['campusId'];
         }
-        if(empty($request->type)) {
+        if (empty($request->type)) {
             $request['type'] = $teachers['type'];
         }
         if (empty($request->talkSamId)) {
             $request['talkSamId'] = $teachers['talkSamId'];
         }
-        if(empty($request->role)) {
+        if (empty($request->role)) {
             $request['role'] = $teachers['role'];
         }
         if (empty($request->memo)) {
@@ -187,7 +187,7 @@ class OffTeachController extends Controller
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
-        
+
         $params = [
             $teachers['teacherId'] = $request['teacherId'],
             $teachers['name'] = $request['name'],

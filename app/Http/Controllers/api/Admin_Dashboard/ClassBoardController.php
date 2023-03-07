@@ -48,7 +48,7 @@ class ClassBoardController extends Controller
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
-        $classBoardId = IdGenerator::generate(['table'=>'class_boards', 'trow' => 'classBoardId', 'length' => 7, 'prefix' => 'CB']);
+        $classBoardId = IdGenerator::generate(['table' => 'class_boards', 'trow' => 'classBoardId', 'length' => 7, 'prefix' => 'CB']);
         $params = [
             'classBoardId' => $classBoardId,
             'writer' => $this->request['writer'],
@@ -85,19 +85,19 @@ class ClassBoardController extends Controller
     public function update($classBoardId)
     {
         $classBoard = ClassBoards::find($classBoardId);
-        if(empty($this->request['writer'])){
+        if (empty($this->request['writer'])) {
             $this->request['writer'] = $classBoard['writer'];
         }
-        if(empty($this->request['class'])){
+        if (empty($this->request['class'])) {
             $this->request['class'] = $classBoard['class'];
         }
-        if(empty($this->request['title'])){
+        if (empty($this->request['title'])) {
             $this->request['title'] = $classBoard['title'];
         }
-        if(empty($this->request['view'])){
+        if (empty($this->request['view'])) {
             $this->request['view'] = $classBoard['view'];
         }
-        if(empty($this->request['date'])){
+        if (empty($this->request['date'])) {
             $this->request['date'] = $classBoard['date'];
         }
         $validator = Validator::make($this->request->all(), [

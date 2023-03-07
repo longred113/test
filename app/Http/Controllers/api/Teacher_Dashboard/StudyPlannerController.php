@@ -22,8 +22,7 @@ class StudyPlannerController extends Controller
 
     public function __construct(
         Request $request
-        )       
-    {
+    ) {
         $this->request = $request;
     }
     /**
@@ -52,9 +51,9 @@ class StudyPlannerController extends Controller
 
     public function getToDoListOfStudent($classId, $studentId)
     {
-        $studentStudyPlanner = MatchedActivities::join('student_matched_activities','matched_activities.matchedActivityId', '=', 'student_matched_activities.matchedActivityId')
-        ->join('student_classes', 'student_classes.studentId', '=', 'student_matched_activities.studentId')
-        ->where('student_matched_activities.studentId', $studentId)->where('student_classes.classId', $classId)->get();
+        $studentStudyPlanner = MatchedActivities::join('student_matched_activities', 'matched_activities.matchedActivityId', '=', 'student_matched_activities.matchedActivityId')
+            ->join('student_classes', 'student_classes.studentId', '=', 'student_matched_activities.studentId')
+            ->where('student_matched_activities.studentId', $studentId)->where('student_classes.classId', $classId)->get();
         return $studentStudyPlanner;
 
         $todoList = $studentStudyPlanner->where('status', 'to-do');
@@ -69,7 +68,7 @@ class StudyPlannerController extends Controller
         $validator = Validator::make($this->request->all(), [
             'status' => [Rule::in(['to-do', 'incomplete', 'done'])],
         ]);
-        if($validator->fails()){
+        if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
         $params = [

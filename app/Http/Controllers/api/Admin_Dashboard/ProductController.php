@@ -53,8 +53,8 @@ class ProductController extends Controller
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
-        
-        $productId = IdGenerator::generate(['table'=>'products', 'trow' => 'productId', 'length' => 7, 'prefix' => 'PD']);
+
+        $productId = IdGenerator::generate(['table' => 'products', 'trow' => 'productId', 'length' => 7, 'prefix' => 'PD']);
         $params = [
             'productId' => $productId,
             'name' => $this->request['name'],
@@ -95,24 +95,24 @@ class ProductController extends Controller
         if (empty($this->request['name'])) {
             $this->request['name'] = $products['name'];
         }
-        // if(empty($this->request['startLevel'])) {
-        //     $this->request['startLevel'] = $products['startLevel'];
-        // }
-        // if(empty($this->request['level'])) {
-        //     $this->request['level'] = $products['level'];
-        // }
-        // if(empty($this->request['endLevel'])) {
-        //     $this->request['endLevel'] = $products['endLevel'];
-        // }
-        // if(empty($this->request['details'])) {
-        //     $this->request['details'] = $products['details'];
-        // }
-        // if(empty($this->request['image'])) {
-        //     $this->request['image'] = $products['image'];
-        // }
-        // if (empty($this->request['activate'])) {
-        //     $this->request['activate'] = $products['activate'];
-        // }
+        if (empty($this->request['startLevel'])) {
+            $this->request['startLevel'] = $products['startLevel'];
+        }
+        if (empty($this->request['level'])) {
+            $this->request['level'] = $products['level'];
+        }
+        if (empty($this->request['endLevel'])) {
+            $this->request['endLevel'] = $products['endLevel'];
+        }
+        if (empty($this->request['details'])) {
+            $this->request['details'] = $products['details'];
+        }
+        if (empty($this->request['image'])) {
+            $this->request['image'] = $products['image'];
+        }
+        if (empty($this->request['activate'])) {
+            $this->request['activate'] = $products['activate'];
+        }
         $validator = Validator::make($this->request->all(), [
             'name' => 'required|string',
             // 'startLevel' => 'required|string',
@@ -156,7 +156,7 @@ class ProductController extends Controller
     public function addPackages(Request $request, $productId)
     {
         $products = Products::find($productId);
-        if(empty($request->packageId)) {
+        if (empty($request->packageId)) {
             $request['packageId'] = $products['packageId'];
         }
         $validator = validator::make($request->all(), [
@@ -184,7 +184,7 @@ class ProductController extends Controller
         $inputProductId = $this->request['productId'];
         $product = Products::find($inputProductId);
         $inputPackageId = $this->request['packageId'];
-        $newPackageId = $product->update(['packageId'=>$inputPackageId]);
+        $newPackageId = $product->update(['packageId' => $inputPackageId]);
         return $this->successProductsRequest($newPackageId);
     }
 }

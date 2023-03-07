@@ -31,10 +31,10 @@ class EnrollmentController extends Controller
         $data = ProductsResource::collection(Products::where('level', $level)->get());
         return $this->successEnrollmentRequest($data);
     }
-    public function index($campusId,$productId)
+    public function index($campusId, $productId)
     {
         $products = Students::join('student_products', 'students.studentId', '=', 'student_products.studentId')
-        ->where('campusId', $campusId)->where('productId', $productId)->get();
+            ->where('campusId', $campusId)->where('productId', $productId)->get();
         return $products;
         // return $this->successEnrollmentRequest($data);
     }
@@ -69,7 +69,7 @@ class EnrollmentController extends Controller
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
-        $enrollmentId = IdGenerator::generate(['table'=>'enrollments', 'trow' => 'enrollmentId', 'length' => 7, 'prefix' => 'ER']);
+        $enrollmentId = IdGenerator::generate(['table' => 'enrollments', 'trow' => 'enrollmentId', 'length' => 7, 'prefix' => 'ER']);
         $params = [
             'enrollmentId' => $enrollmentId,
             'talkSamId' => request('talkSamId'),
@@ -116,34 +116,34 @@ class EnrollmentController extends Controller
     public function update(Request $request, $enrollmentId)
     {
         $enrollments = Enrollment::find($enrollmentId);
-        if(empty($request->talkSamId)) {
+        if (empty($request->talkSamId)) {
             $request['talkSamId'] = $enrollments['talkSamId'];
         }
-        if(empty($request->campusId)) {
+        if (empty($request->campusId)) {
             $request['campusId'] = $enrollments['campusId'];
         }
-        if(empty($request->level)) {
+        if (empty($request->level)) {
             $request['level'] = $enrollments['level'];
         }
-        if(empty($request->subject)) {
+        if (empty($request->subject)) {
             $request['subject'] = $enrollments['subject'];
         }
-        if(empty($request->status)) {
+        if (empty($request->status)) {
             $request['status'] = $enrollments['status'];
         }
-        if(empty($request->submittedDate)) {
+        if (empty($request->submittedDate)) {
             $request['submittedDate'] = $enrollments['submittedDate'];
         }
-       
-        
+
+
         $validator = validator::make($request->all(), [
             'campusId' => 'required|string',
-           
+
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
-        
+
         $params = [
             $enrollments['talkSamId'] = $request['talkSamId'],
             $enrollments['campusId'] = $request['campusId'],
@@ -151,7 +151,7 @@ class EnrollmentController extends Controller
             $enrollments['subject'] = $request['subject'],
             $enrollments['status'] = $request['status'],
             $enrollments['submittedDate'] = $request['submittedDate'],
-            
+
         ];
         $newInfoEnrollment = $enrollments->update($params);
         return $this->successEnrollmentRequest($newInfoEnrollment);

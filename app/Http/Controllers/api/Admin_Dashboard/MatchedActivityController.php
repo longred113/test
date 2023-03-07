@@ -47,7 +47,7 @@ class MatchedActivityController extends Controller
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
-        $matchedActivityId = IdGenerator::generate(['table'=>'matched_activities', 'trow' => 'matchedActivityId', 'length' => 7, 'prefix' => 'MA']);
+        $matchedActivityId = IdGenerator::generate(['table' => 'matched_activities', 'trow' => 'matchedActivityId', 'length' => 7, 'prefix' => 'MA']);
         $params = [
             'matchedActivityId' => $matchedActivityId,
             'productId' => $this->request['productId'],
@@ -88,16 +88,16 @@ class MatchedActivityController extends Controller
     public function update($matchedActivityId)
     {
         $matchedActivity = MatchedActivities::find($matchedActivityId);
-        if(empty($this->request['productId'])) {
+        if (empty($this->request['productId'])) {
             $this->request['productId'] = $matchedActivity['productId'];
         }
-        if(empty($this->request['name'])) {
+        if (empty($this->request['name'])) {
             $this->request['name'] = $matchedActivity['name'];
         }
-        if(empty($this->request['time'])) {
+        if (empty($this->request['time'])) {
             $this->request['time'] = $matchedActivity['time'];
         }
-        if(empty($this->request['unitId'])) {
+        if (empty($this->request['unitId'])) {
             $this->request['unitId'] = $matchedActivity['unitId'];
         }
         $validator = Validator::make($this->request->all(), [

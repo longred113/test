@@ -16,8 +16,7 @@ class RoleController extends Controller
 
     public function __construct(
         Request $request
-        )       
-    {
+    ) {
         $this->request = $request;
     }
     /**
@@ -46,7 +45,7 @@ class RoleController extends Controller
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
-        $roleId = IdGenerator::generate(['table'=>'roles', 'trow' => 'roleId', 'length' => 7, 'prefix' => 'RL']);
+        $roleId = IdGenerator::generate(['table' => 'roles', 'trow' => 'roleId', 'length' => 7, 'prefix' => 'RL']);
         $params = [
             'roleId' => $roleId,
             'name' => $this->request['name'],
@@ -79,10 +78,10 @@ class RoleController extends Controller
     public function update($roleId)
     {
         $role = Roles::find($roleId);
-        if(empty($this->request['name'])) {
+        if (empty($this->request['name'])) {
             $this->request['name'] = $role['name'];
         }
-        if(empty($this->request['activate'])) {
+        if (empty($this->request['activate'])) {
             $this->request['activate'] = $role['activate'];
         }
 

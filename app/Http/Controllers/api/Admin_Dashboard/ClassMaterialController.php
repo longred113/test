@@ -48,7 +48,7 @@ class ClassMaterialController extends Controller
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
-        $classMaterialId = IdGenerator::generate(['table'=>'class_materials', 'trow' => 'classMaterialId', 'length' => 7, 'prefix' => 'CM']);
+        $classMaterialId = IdGenerator::generate(['table' => 'class_materials', 'trow' => 'classMaterialId', 'length' => 7, 'prefix' => 'CM']);
         $params = [
             'classMaterialId' => $classMaterialId,
             'writer' => $this->request['writer'],
@@ -85,19 +85,19 @@ class ClassMaterialController extends Controller
     public function update($classMaterialId)
     {
         $classMaterial = ClassMaterials::find($classMaterialId);
-        if(empty($this->request['writer'])){
+        if (empty($this->request['writer'])) {
             $this->request['writer'] = $classMaterial['writer'];
         }
-        if(empty($this->request['class'])){
+        if (empty($this->request['class'])) {
             $this->request['class'] = $classMaterial['class'];
         }
-        if(empty($this->request['title'])){
+        if (empty($this->request['title'])) {
             $this->request['title'] = $classMaterial['title'];
         }
-        if(empty($this->request['view'])){
+        if (empty($this->request['view'])) {
             $this->request['view'] = $classMaterial['view'];
         }
-        if(empty($this->request['date'])){
+        if (empty($this->request['date'])) {
             $this->request['date'] = $classMaterial['date'];
         }
         $validator = Validator::make($this->request->all(), [

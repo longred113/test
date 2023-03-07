@@ -46,7 +46,7 @@ class ClassProductController extends Controller
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
-        $classProductId = IdGenerator::generate(['table'=>'class_products', 'trow' => 'classProductId', 'length' => 8, 'prefix' => 'CLP']);
+        $classProductId = IdGenerator::generate(['table' => 'class_products', 'trow' => 'classProductId', 'length' => 8, 'prefix' => 'CLP']);
         $params = [
             'classProductId' => $classProductId,
             'productId' => $this->request['productId'],
@@ -76,7 +76,7 @@ class ClassProductController extends Controller
         $classProduct = ClassProducts::where('classId', $classId)->get();
         return $this->successClassProductRequest($classProduct);
     }
-    
+
     public function displayByProduct($productId)
     {
         $classProduct = ClassProducts::where('productId', $productId)->get();
@@ -93,13 +93,13 @@ class ClassProductController extends Controller
     public function update($classProductId)
     {
         $classProduct = ClassProducts::find($classProductId);
-        if(empty($this->request['classId'])) {
+        if (empty($this->request['classId'])) {
             $this->request['classId'] = $classProduct['classId'];
         }
-        if(empty($this->request['productId'])) {
+        if (empty($this->request['productId'])) {
             $this->request['productId'] = $classProduct['productId'];
         }
-        if(empty($this->request['status'])) {
+        if (empty($this->request['status'])) {
             $this->request['status'] = $classProduct['status'];
         }
         $validator = Validator::make($this->request->all(), [
@@ -117,7 +117,7 @@ class ClassProductController extends Controller
             $classProduct['status'] = $this->request['status'],
         ];
         $newInfoClassProduct =  $classProduct->update($params);
-        return $this->successClassProductRequest($newInfoClassProduct); 
+        return $this->successClassProductRequest($newInfoClassProduct);
     }
 
     /**

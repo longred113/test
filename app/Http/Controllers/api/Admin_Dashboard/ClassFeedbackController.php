@@ -50,7 +50,7 @@ class ClassFeedbackController extends Controller
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
-        $classFeedbackId = IdGenerator::generate(['table'=>'class_feedbacks', 'trow' => 'classFeedbackId', 'length' => 8, 'prefix' => 'CFB']);
+        $classFeedbackId = IdGenerator::generate(['table' => 'class_feedbacks', 'trow' => 'classFeedbackId', 'length' => 8, 'prefix' => 'CFB']);
         $params = [
             'classFeedbackId' => $classFeedbackId,
             'teacherId' => $this->request['teacherId'],
@@ -61,7 +61,7 @@ class ClassFeedbackController extends Controller
             'satisfaction' => $this->request['satisfaction'],
             'comment' => $this->request['comment'],
         ];
-       
+
         $newClassFeedback = new ClassFeedbackResource(ClassFeedbacks::create($params));
         return $this->successClassFeedback($newClassFeedback);
     }
@@ -89,6 +89,27 @@ class ClassFeedbackController extends Controller
     public function update($classFeedbackId)
     {
         $classFeedback = ClassFeedbacks::find($classFeedbackId);
+        if (empty($this->request['teacherId'])) {
+            $this->request['teacherId'] = $classFeedback['teacherId'];
+        }
+        if (empty($this->request['classId'])) {
+            $this->request['classId'] = $classFeedback['classId'];
+        }
+        if (empty($this->request['studentId'])) {
+            $this->request['studentId'] = $classFeedback['studentId'];
+        }
+        if (empty($this->request['campusId'])) {
+            $this->request['campusId'] = $classFeedback['campusId'];
+        }
+        if (empty($this->request['date'])) {
+            $this->request['date'] = $classFeedback['date'];
+        }
+        if (empty($this->request['satisfaction'])) {
+            $this->request['satisfaction'] = $classFeedback['satisfaction'];
+        }
+        if (empty($this->request['comment'])) {
+            $this->request['comment'] = $classFeedback['comment'];
+        }
         $validator = Validator::make($this->request->all(), [
             // 'teacherId' => 'string|required',
             // 'classId' => 'string|required',
@@ -114,7 +135,6 @@ class ClassFeedbackController extends Controller
 
         $newClassFeedbacksData = $classFeedback->update($params);
         return $this->successClassFeedback($newClassFeedbacksData);
-    
     }
 
     /**

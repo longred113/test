@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Packages;
 use App\Http\Resources\Packages as PackagesResource;
+
 class PackagesController extends Controller
 {
     protected Request $request;
@@ -101,19 +102,19 @@ class PackagesController extends Controller
     public function update(Request $request, $packageId)
     {
         $packages = Packages::find($packageId);
-        if(empty($this->request['name'])) {
+        if (empty($this->request['name'])) {
             $this->request['name'] = $packages['name'];
         }
-        if(empty($this->request['startLevel'])) {
+        if (empty($this->request['startLevel'])) {
             $this->request['startLevel'] = $packages['startLevel'];
         }
-        if(empty($this->request['endLevel'])) {
+        if (empty($this->request['endLevel'])) {
             $this->request['endLevel'] = $packages['endLevel'];
         }
-        if(empty($this->request['activate'])) {
+        if (empty($this->request['activate'])) {
             $this->request['activate'] = $packages['activate'];
         }
-        if(empty($this->request['details'])) {
+        if (empty($this->request['details'])) {
             $this->request['details'] = $packages['details'];
         }
 
@@ -127,7 +128,7 @@ class PackagesController extends Controller
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
-        
+
         $params = [
             $packages['name'] = $this->request['name'],
             $packages['startLevel'] = $this->request['startLevel'],

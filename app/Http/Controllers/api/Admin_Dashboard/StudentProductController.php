@@ -42,11 +42,11 @@ class StudentProductController extends Controller
             'productId' => 'string|required',
             'studentId' => 'string|required',
         ]);
-        if($validator->fails()){
+        if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
-        $studentProductId = IdGenerator::generate(['table'=>'student_products', 'trow' => 'studentProductId', 'length' => 7, 'prefix' => 'SP']);
+        $studentProductId = IdGenerator::generate(['table' => 'student_products', 'trow' => 'studentProductId', 'length' => 7, 'prefix' => 'SP']);
         $params = [
             'studentProductId' => $studentProductId,
             'productId' => $this->request['productId'],
@@ -56,7 +56,7 @@ class StudentProductController extends Controller
         $newStudentProduct = new StudentProductResource(StudentProducts::create($params));
         return $this->successStudentProductRequest($newStudentProduct);
     }
-    
+
     /**
      * Display the specified resource.
      *
@@ -69,7 +69,7 @@ class StudentProductController extends Controller
         $studentProductData = new StudentProductResource($studentProduct);
         return $this->successStudentProductRequest($studentProductData);
     }
-    
+
     public function displayByProductId($productId)
     {
         $studentProduct = StudentProducts::where('productId', $productId)->get();
@@ -81,7 +81,7 @@ class StudentProductController extends Controller
         $studentProduct = StudentProducts::where('studentId', $studentId)->get();
         return $this->successStudentProductRequest($studentProduct);
     }
-    
+
     /**
      * Update the specified resource in storage.
      *
@@ -92,17 +92,17 @@ class StudentProductController extends Controller
     public function update($studentProductId)
     {
         $studentProduct = StudentProducts::find($studentProductId);
-        if(empty($this->request['studentId'])){
+        if (empty($this->request['studentId'])) {
             $this->request['studentId'] = $studentProduct['studentId'];
         }
-        if(empty($this->request['productId'])){
+        if (empty($this->request['productId'])) {
             $this->request['productId'] = $studentProduct['productId'];
         }
         $validator = Validator::make($this->request->all(), [
             'productId' => 'string|required',
             'studentId' => 'string|required',
         ]);
-        if($validator->fails()){
+        if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 

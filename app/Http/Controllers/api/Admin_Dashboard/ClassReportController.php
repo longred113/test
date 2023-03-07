@@ -36,7 +36,7 @@ class ClassReportController extends Controller
      */
     public function store(Request $request)
     {
-         $validator = Validator::make($this->request->all(), [
+        $validator = Validator::make($this->request->all(), [
             'teacherId' => 'string|required',
             // 'classId' => 'string|required',
             // 'studentId' => 'string|required',
@@ -52,7 +52,7 @@ class ClassReportController extends Controller
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
-        $classReportId = IdGenerator::generate(['table'=>'class_reports', 'trow' => 'classReportId', 'length' => 8, 'prefix' => 'CRB']);
+        $classReportId = IdGenerator::generate(['table' => 'class_reports', 'trow' => 'classReportId', 'length' => 8, 'prefix' => 'CRB']);
         $params = [
             'classReportId' => $classReportId,
             'teacherId' => $this->request['teacherId'],
@@ -66,7 +66,7 @@ class ClassReportController extends Controller
             'participation' => $this->request['participation'],
             'comment' => $this->request['comment'],
         ];
-       
+
         $newClassReport = new ClassReportsResource(ClassReports::create($params));
         return $this->successClassRequest($newClassReport);
     }
@@ -79,7 +79,7 @@ class ClassReportController extends Controller
      */
     public function show($ClassReport)
     {
-      
+
         $ClassReports = ClassReports::find($ClassReport);
         $ClassReportsData = new ClassReportsResource($ClassReports);
         return $this->successClassReport($ClassReportsData);
@@ -94,7 +94,37 @@ class ClassReportController extends Controller
      */
     public function update($classReportId)
     {
-        $ClassReport = ClassReports::find($classReportId);
+        $classReport = ClassReports::find($classReportId);
+        if (empty($this->request['teacherId'])) {
+            $this->request['teacherId'] = $classReport['teacherId'];
+        }
+        if (empty($this->request['classId'])) {
+            $this->request['classId'] = $classReport['classId'];
+        }
+        if (empty($this->request['studentId'])) {
+            $this->request['studentId'] = $classReport['studentId'];
+        }
+        if (empty($this->request['campusId'])) {
+            $this->request['campusId'] = $classReport['campusId'];
+        }
+        if (empty($this->request['status'])) {
+            $this->request['status'] = $classReport['status'];
+        }
+        if (empty($this->request['date'])) {
+            $this->request['date'] = $classReport['date'];
+        }
+        if (empty($this->request['preparation'])) {
+            $this->request['preparation'] = $classReport['preparation'];
+        }
+        if (empty($this->request['attitude'])) {
+            $this->request['attitude'] = $classReport['attitude'];
+        }
+        if (empty($this->request['participation'])) {
+            $this->request['participation'] = $classReport['participation'];
+        }
+        if (empty($this->request['comment'])) {
+            $this->request['comment'] = $classReport['comment'];
+        }
         $validator = Validator::make($this->request->all(), [
             // 'teacherId' => 'string|required',
             // 'classId' => 'string|required',
@@ -124,9 +154,8 @@ class ClassReportController extends Controller
             $ClassReport['comment'] = $this->request['comment'],
         ];
 
-        $newClassReportsData = $ClassReport->update($params);
+        $newClassReportsData = $classReport->update($params);
         return $this->successClassReport($newClassReportsData);
-    
     }
 
     /**

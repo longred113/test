@@ -46,7 +46,7 @@ class ProductPackageController extends Controller
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
-        $productPackageId = IdGenerator::generate(['table'=>'product_packages', 'trow' => 'productPackageId', 'length' => 8, 'prefix' => 'CPK']);
+        $productPackageId = IdGenerator::generate(['table' => 'product_packages', 'trow' => 'productPackageId', 'length' => 8, 'prefix' => 'CPK']);
         $params = [
             'productPackageId' => $productPackageId,
             'productId' => $this->request['productId'],
@@ -93,13 +93,13 @@ class ProductPackageController extends Controller
     public function update($productPackageId)
     {
         $productPackage = ProductPackages::find($productPackageId);
-        if(empty($this->request['productId'])){
+        if (empty($this->request['productId'])) {
             $this->request['productId'] = $productPackage['productId'];
         }
-        if(empty($this->request['packageId'])){
+        if (empty($this->request['packageId'])) {
             $this->request['packageId'] = $productPackage['packageId'];
         }
-        if(empty($this->request['status'])){
+        if (empty($this->request['status'])) {
             $this->request['status'] = $productPackage['status'];
         }
         $validator = Validator::make($this->request->all(), [

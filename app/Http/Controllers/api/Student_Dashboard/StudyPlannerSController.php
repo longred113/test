@@ -17,8 +17,7 @@ class StudyPlannerSController extends Controller
 
     public function __construct(
         Request $request
-        )       
-    {
+    ) {
         $this->request = $request;
     }
     /**
@@ -29,25 +28,25 @@ class StudyPlannerSController extends Controller
     public function showStuClass($studentId)
     {
         $studentClass = StudentClasses::join('classes', 'student_classes.classId', "=", 'classes.classId')
-        ->where('studentId',$studentId)->get();
-        return($studentClass);
+            ->where('studentId', $studentId)->get();
+        return ($studentClass);
     }
     public function showStudyPlanner($studentId)
     {
         $studentStudyPlanner = classes::join('student_classes', 'classes.classId', '=', 'student_classes.classId')
-        ->join('class_match_activities', 'classes.classId', '=', 'class_match_activities.classId')->where('studentId', $studentId)->get();
-        
+            ->join('class_match_activities', 'classes.classId', '=', 'class_match_activities.classId')->where('studentId', $studentId)->get();
+
         $matchedActivityIds = $studentStudyPlanner->pluck('matchedActivityId')->toArray();
         $studyPlanner = MatchedActivities::whereIn('matchedActivityId', $matchedActivityIds)->get();
-        
-        foreach($studyPlanner as $todoList) {
-            if(!empty($todoList['type'] == 'todo')) {
+
+        foreach ($studyPlanner as $todoList) {
+            if (!empty($todoList['type'] == 'todo')) {
                 $todoStudyPlanner = $todoList;
             }
-            if(!empty($todoList['type'] == 'done')) {
+            if (!empty($todoList['type'] == 'done')) {
                 $doneStudyPlanner = $todoList;
             }
-            if(!empty($todoList['type'] == 'incomplete')) {
+            if (!empty($todoList['type'] == 'incomplete')) {
                 $incompleteStudyPlanner = $todoList;
             }
         }

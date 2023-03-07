@@ -17,8 +17,7 @@ class CampusController extends Controller
 
     public function __construct(
         Request $request
-        )       
-    {
+    ) {
         $this->request = $request;
     }
     /**
@@ -51,8 +50,8 @@ class CampusController extends Controller
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
-        $campusId = IdGenerator::generate(['table'=>'campuses', 'trow' => 'campusId', 'length' => 7, 'prefix' => 'CP']);
-        $email = $this->request['name']. '@gmail.com';
+        $campusId = IdGenerator::generate(['table' => 'campuses', 'trow' => 'campusId', 'length' => 7, 'prefix' => 'CP']);
+        $email = $this->request['name'] . '@gmail.com';
         $userPassword = Str::random(8);
         $params = [
             'campusId' => $campusId,
@@ -95,19 +94,19 @@ class CampusController extends Controller
     public function update($campusId)
     {
         $campus = Campus::find($campusId);
-        if(empty($this->request['name'])) {
+        if (empty($this->request['name'])) {
             $this->request['name'] = $campus['name'];
         }
-        if(empty($this->request['indicated'])) {
+        if (empty($this->request['indicated'])) {
             $this->request['indicated'] = $campus['indicated'];
         }
-        if(empty($this->request['contact'])) {
+        if (empty($this->request['contact'])) {
             $this->request['contact'] = $campus['contact'];
         }
-        if(empty($this->request['signedDate'])) {
+        if (empty($this->request['signedDate'])) {
             $this->request['signedDate'] = $campus['signedDate'];
         }
-        if(empty($this->request['activate'])) {
+        if (empty($this->request['activate'])) {
             $this->request['activate'] = $campus['activate'];
         }
 
@@ -120,7 +119,7 @@ class CampusController extends Controller
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
-        
+
         $params = [
             $campus['name'] = $this->request['name'],
             $campus['indicated'] = $this->request['indicated'],
@@ -153,7 +152,7 @@ class CampusController extends Controller
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
-        
+
         if (!empty($this->request->get('campusId'))) {
             $ids[] = $this->request->get('campusId');
         } else {
@@ -163,8 +162,7 @@ class CampusController extends Controller
         foreach ($campuses as $campus) {
             if ($campus['activate'] == 1) {
                 Campus::where('campusId', $campus['campusId'])->update(['activate' => 0]);
-            }
-            else{
+            } else {
                 Campus::where('campusId', $campus['campusId'])->update(['activate' => 0]);
             }
         }

@@ -31,7 +31,7 @@ class StudentController extends Controller
         return $this->successStudentRequest($studentsData);
     }
 
-    public function studentWithdrawalList() 
+    public function studentWithdrawalList()
     {
         $studentWithdrawal = StudentResource::collection(Students::where('type', 'online-break')->orWhere('type', 'offline-break')->get());
         return $this->successStudentRequest($studentWithdrawal);
@@ -47,9 +47,9 @@ class StudentController extends Controller
     public function getStudentWithId($studentId)
     {
         $student = Students::find($studentId);
-        if($student != NULL){
+        if ($student != NULL) {
             $studentData = $student;
-        }else {
+        } else {
             $studentData = "";
         }
         return $this->successStudentRequest($studentData);
@@ -83,7 +83,7 @@ class StudentController extends Controller
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
-        $studentId = IdGenerator::generate(['table'=>'students', 'trow' => 'studentId', 'length' => 7, 'prefix' => 'ST']);
+        $studentId = IdGenerator::generate(['table' => 'students', 'trow' => 'studentId', 'length' => 7, 'prefix' => 'ST']);
         $studentParams = [
             'studentId' => $studentId,
             'name' => $this->request['name'],

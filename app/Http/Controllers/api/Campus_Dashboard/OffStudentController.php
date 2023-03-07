@@ -39,12 +39,12 @@ class OffStudentController extends Controller
     public function store(Request $request)
     {
         $validator = validator::make($request->all(), [
-            'name' => 'required',   
+            'name' => 'required',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
-        $studentId = IdGenerator::generate(['table'=>'students', 'trow' => 'studentId', 'length' => 7, 'prefix' => 'ST']);
+        $studentId = IdGenerator::generate(['table' => 'students', 'trow' => 'studentId', 'length' => 7, 'prefix' => 'ST']);
         $params = [
             'studentId' => $studentId,
             'name' => request('name'),
@@ -61,9 +61,9 @@ class OffStudentController extends Controller
             'basicPoint' => request('basicPoint'),
             'campusId' => request('campusId'),
             'type' => request('type'),
-            
-         
-            
+
+
+
         ];
         $newStudents = new StudentsResource(Students::create($params));
         return $newStudents;
@@ -92,31 +92,31 @@ class OffStudentController extends Controller
     public function update(Request $request, $studentId)
     {
         $students = Students::find($studentId);
-        if(empty($request->name)) {
+        if (empty($request->name)) {
             $request['name'] = $students['name'];
         }
-        if(empty($request->email)) {
+        if (empty($request->email)) {
             $request['email'] = $students['email'];
         }
-        if(empty($request->enrollmentId)) {
+        if (empty($request->enrollmentId)) {
             $request['enrollmentId'] = $students['enrollmentId'];
         }
-        if(empty($request->gender)) {
+        if (empty($request->gender)) {
             $request['gender'] = $students['gender'];
         }
-        if(empty($request->dateOfBirth)) {
+        if (empty($request->dateOfBirth)) {
             $request['dateOfBirth'] = $students['dateOfBirth'];
         }
-        if(empty($request->country)) {
+        if (empty($request->country)) {
             $request['country'] = $students['country'];
         }
-        if(empty($request->timeZone)) {
+        if (empty($request->timeZone)) {
             $request['timeZone'] = $students['timeZone'];
         }
         if (empty($request->joinedDate)) {
             $request['joinedDate'] = $students['joinedDate'];
         }
-        if(empty($request->withDrawal)) {
+        if (empty($request->withDrawal)) {
             $request['withDrawal'] = $students['withDrawal'];
         }
         if (empty($request->introduction)) {
@@ -128,20 +128,20 @@ class OffStudentController extends Controller
         if (empty($request->basicPoint)) {
             $request['basicPoint'] = $students['basicPoint'];
         }
-        if(empty($request->campusId)) {
+        if (empty($request->campusId)) {
             $request['campusId'] = $students['campusId'];
         }
-        if(empty($request->type)) {
+        if (empty($request->type)) {
             $request['type'] = $students['type'];
         }
-        
+
         $validator = validator::make($request->all(), [
             'name' => 'required|string',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
-        
+
         $params = [
             $students['studentId'] = $request['studentId'],
             $students['name'] = $request['name'],
@@ -157,7 +157,7 @@ class OffStudentController extends Controller
             $students['talkSamId'] = $request['talkSamId'],
             $students['basicPoint'] = $request['basicPoint'],
             $students['campusId'] = $request['campusId'],
-            $students['type'] = $request['type'],          
+            $students['type'] = $request['type'],
         ];
         $newInfoStudents = $students->update($params);
         return $this->successStudentRequest($newInfoStudents);

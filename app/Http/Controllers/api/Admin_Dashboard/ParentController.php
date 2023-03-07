@@ -48,7 +48,7 @@ class ParentController extends Controller
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
-        $parentId = IdGenerator::generate(['table'=>'parents', 'trow' => 'parentId', 'length' => 7, 'prefix' => 'PA']);
+        $parentId = IdGenerator::generate(['table' => 'parents', 'trow' => 'parentId', 'length' => 7, 'prefix' => 'PA']);
         if (!empty($this->request->get('studentId'))) {
             $studentIds[] = $this->request->get('studentId');
         } else {
@@ -62,7 +62,6 @@ class ParentController extends Controller
         ];
         $newParentData = new ParentResource(Parents::create($params));
         foreach ($studentIds as $studentId) {
-            
         }
         return $this->successParentRequest($newParentData);
     }
@@ -90,13 +89,13 @@ class ParentController extends Controller
     public function update($parentId)
     {
         $parent = Parents::find($parentId);
-        if(empty($this->request['name'])) {
+        if (empty($this->request['name'])) {
             $this->request['name'] = $parent['name'];
         }
-        if(empty($this->request['email'])) {
+        if (empty($this->request['email'])) {
             $this->request['email'] = $parent['email'];
         }
-        if(empty($this->request['phone'])) {
+        if (empty($this->request['phone'])) {
             $this->request['phone'] = $parent['phone'];
         }
         $validator = Validator::make($this->request->all(), [

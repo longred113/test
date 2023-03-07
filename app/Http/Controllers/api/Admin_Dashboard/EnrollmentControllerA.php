@@ -38,17 +38,17 @@ class EnrollmentControllerA extends Controller
      * @return \Illuminate\Http\Response
      */
 
-     public function Enrollmentshow($level)
-     {
+    public function Enrollmentshow($level)
+    {
         $data = ProductsResource::collection(Products::where('level', $level)->get());
         return $this->successEnrollmentRequest($data);
-     }
-       public function showErollmentByPro($level, $product)
+    }
+    public function showErollmentByPro($level, $product)
     {
         $data = ProductsResource::collection(Products::where('product', $product)->where('product', $product)->get());
         return $this->successEnrollmentRequest($data);
     }
-     public function store()
+    public function store()
     {
         $validator = validator::make($this->request->all(), [
             // 'enrollmentId' => 'required|unique:enrollments',
@@ -65,7 +65,7 @@ class EnrollmentControllerA extends Controller
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
-        $enrollmentId = IdGenerator::generate(['table'=>'enrollments', 'trow' => 'enrollmentId', 'length' => 7, 'prefix' => 'ER']);
+        $enrollmentId = IdGenerator::generate(['table' => 'enrollments', 'trow' => 'enrollmentId', 'length' => 7, 'prefix' => 'ER']);
         $params = [
             'enrollmentId' => $enrollmentId,
             'talkSamId' => $this->request['talkSamId'],
@@ -102,25 +102,25 @@ class EnrollmentControllerA extends Controller
     public function update($enrollmentId)
     {
         $enrollment = Enrollment::find($enrollmentId);
-        if(empty($this->request['talkSamId'])) {
+        if (empty($this->request['talkSamId'])) {
             $this->request['talkSamId'] = $enrollment['talkSamId'];
         }
-        if(empty($this->request['campusId'])) {
+        if (empty($this->request['campusId'])) {
             $this->request['campusId'] = $enrollment['campusId'];
         }
-        if(empty($this->request['level'])) {
+        if (empty($this->request['level'])) {
             $this->request['level'] = $enrollment['level'];
         }
-        if(empty($this->request['campusId'])) {
+        if (empty($this->request['campusId'])) {
             $this->request['campusId'] = $enrollment['campusId'];
         }
-        if(empty($this->request['subject'])) {
+        if (empty($this->request['subject'])) {
             $this->request['subject'] = $enrollment['subject'];
         }
-        if(empty($this->request['status'])) {
+        if (empty($this->request['status'])) {
             $this->request['status'] = $enrollment['status'];
         }
-        if(empty($this->request['submittedDate'])) {
+        if (empty($this->request['submittedDate'])) {
             $this->request['submittedDate'] = $enrollment['submittedDate'];
         }
         $validator = validator::make($this->request->all(), [

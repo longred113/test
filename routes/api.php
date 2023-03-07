@@ -160,11 +160,11 @@ Route::prefix('admin-class-match-activity-management')
     ->group(function () {
         Route::get('/', [ClassMatchActivityController::class, 'index'])->name('index');
         Route::post('/create', [ClassMatchActivityController::class, 'store'])->name('store');
-        Route::post('/show', [ClassMatchActivityController::class, 'show'])->name('show');
+        Route::post('/{classMatchActivityId}', [ClassMatchActivityController::class, 'show'])->name('show');
         Route::get('/display-by-class/{classId}', [ClassMatchActivityController::class, 'displayByClass'])->name('displayByClass');
         Route::get('/display-by-matched-activity/{matchedActivityId}', [ClassMatchActivityController::class, 'displayByMatchActivity'])->name('displayByMatchActivity');
-        Route::put('/update', [ClassMatchActivityController::class, 'update'])->name('update');
-        Route::delete('/{classId}/{matchedActivityId}', [ClassMatchActivityController::class, 'destroy'])->name('destroy');
+        Route::put('/update/{classMatchActivityId}', [ClassMatchActivityController::class, 'update'])->name('update');
+        Route::delete('/{classMatchActivityId}', [ClassMatchActivityController::class, 'destroy'])->name('destroy');
     });
 
 Route::prefix('admin-student-management')
