@@ -45,7 +45,7 @@ class AdminController extends Controller
             'password' => 'required|string|min:8',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $adminId = IdGenerator::generate(['table'=>'admins', 'trow' => 'adminId', 'length' => 7, 'prefix' => 'AD']);
@@ -98,7 +98,7 @@ class AdminController extends Controller
             'password' => 'required|string|min:8',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
         
         $params = [

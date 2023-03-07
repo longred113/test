@@ -228,9 +228,10 @@ Route::prefix('admin-student-class-management')
     ->group(function () {
         Route::get('/', [StudentClassController::class, 'index'])->name('index');
         Route::post('/create', [StudentClassController::class, 'store'])->name('store');
-        Route::get('/show', [StudentClassController::class, 'show'])->name('show');
-        Route::put('/update', [StudentClassController::class, 'update'])->name('update');
-        Route::delete('/', [StudentClassController::class, 'destroy'])->name('destroy');
+        Route::get('/{studentClassId}', [StudentClassController::class, 'show'])->name('show');
+        Route::get('/get-student/{classId}', [StudentClassController::class, 'getStudentFromClass'])->name('getStudentFromClass');
+        Route::put('/update/{studentClassId}', [StudentClassController::class, 'update'])->name('update');
+        Route::delete('/{studentClassId}', [StudentClassController::class, 'destroy'])->name('destroy');
     });
 
 Route::prefix('admin-class-board-management')

@@ -81,7 +81,7 @@ class StudentController extends Controller
             'type' => [Rule::in(['online', 'offline', 'online-break', 'offline-break', 'reserve', 'wait-for-approval'])],
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
         $studentId = IdGenerator::generate(['table'=>'students', 'trow' => 'studentId', 'length' => 7, 'prefix' => 'ST']);
         $studentParams = [
@@ -195,7 +195,7 @@ class StudentController extends Controller
             'type' => 'string',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $params = [

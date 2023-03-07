@@ -76,7 +76,7 @@ class TeacherController extends Controller
             // 'memo' => 'string',
         ]);
         if ($validator->failed()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $teacherId = IdGenerator::generate(['table'=>'teachers', 'trow' => 'teacherId', 'length' => 7, 'prefix' => 'TC']);
@@ -165,7 +165,7 @@ class TeacherController extends Controller
             'memo' => 'string',
         ]);
         if ($validator->failed()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $params = [
@@ -213,7 +213,7 @@ class TeacherController extends Controller
             'teacherIds' => 'array|required_without:teacherId'
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         if (!empty($this->request->get('teacherId'))) {

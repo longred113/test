@@ -8,7 +8,6 @@ use App\Models\Classes;
 use App\Models\MatchedActivities;
 use App\Models\Products;
 use App\Models\StudentClasses;
-use App\Models\StudentClassMatchedActivities;
 use App\Models\StudentMatchedActivities;
 use App\Models\Students;
 use App\Models\Teachers;
@@ -64,7 +63,7 @@ class StudyPlannerController extends Controller
 
     public function updateStatusOfStudyPlanner($studentClMaActivityId)
     {
-        $matchedActivity = StudentClassMatchedActivities::find($studentClMaActivityId);
+        $matchedActivity = StudentMatchedActivities::find($studentClMaActivityId);
         $validator = Validator::make($this->request->all, [
             'type' => [Rule::in(['to-do', 'incomplete', 'done'])],
         ]);

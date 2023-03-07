@@ -43,7 +43,7 @@ class ProductPackageController extends Controller
             'status' => 'string|required',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $productPackageId = IdGenerator::generate(['table'=>'product_packages', 'trow' => 'productPackageId', 'length' => 8, 'prefix' => 'CPK']);
@@ -108,7 +108,7 @@ class ProductPackageController extends Controller
             'status' => 'string|required',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $params = [

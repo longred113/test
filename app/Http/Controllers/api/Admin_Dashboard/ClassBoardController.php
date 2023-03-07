@@ -45,7 +45,7 @@ class ClassBoardController extends Controller
             'date' => 'date|required',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $classBoardId = IdGenerator::generate(['table'=>'class_boards', 'trow' => 'classBoardId', 'length' => 7, 'prefix' => 'CB']);
@@ -108,7 +108,7 @@ class ClassBoardController extends Controller
             'date' => 'date|required',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $params = [

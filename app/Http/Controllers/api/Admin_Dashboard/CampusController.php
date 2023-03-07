@@ -118,7 +118,7 @@ class CampusController extends Controller
             'activate' => 'required'
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
         
         $params = [
@@ -151,7 +151,7 @@ class CampusController extends Controller
             'campusIds' => 'array|required_without:campusId'
         ]);
         if ($validator->fails()) {
-            return $this->errorBadRequest($validator);
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
         
         if (!empty($this->request->get('campusId'))) {

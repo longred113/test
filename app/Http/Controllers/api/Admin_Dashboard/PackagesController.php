@@ -53,7 +53,7 @@ class PackagesController extends Controller
             // 'details' => 'required',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $params = [
@@ -125,7 +125,7 @@ class PackagesController extends Controller
             // 'details' => 'required'
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
         
         $params = [

@@ -44,7 +44,7 @@ class RoleController extends Controller
             'activate' => 'required',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
         $roleId = IdGenerator::generate(['table'=>'roles', 'trow' => 'roleId', 'length' => 7, 'prefix' => 'RL']);
         $params = [
@@ -91,7 +91,7 @@ class RoleController extends Controller
             'activate' => 'required',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $params = [

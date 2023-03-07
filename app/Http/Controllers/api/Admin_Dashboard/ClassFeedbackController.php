@@ -47,7 +47,7 @@ class ClassFeedbackController extends Controller
             // 'comment' => 'string|required',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $classFeedbackId = IdGenerator::generate(['table'=>'class_feedbacks', 'trow' => 'classFeedbackId', 'length' => 8, 'prefix' => 'CFB']);
@@ -99,7 +99,7 @@ class ClassFeedbackController extends Controller
             'comment' => 'string|required',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $params = [

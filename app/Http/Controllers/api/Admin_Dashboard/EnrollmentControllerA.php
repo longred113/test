@@ -62,7 +62,7 @@ class EnrollmentControllerA extends Controller
             // 'submittedDate' => 'date|required',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $enrollmentId = IdGenerator::generate(['table'=>'enrollments', 'trow' => 'enrollmentId', 'length' => 7, 'prefix' => 'ER']);
@@ -133,7 +133,7 @@ class EnrollmentControllerA extends Controller
             'submittedDate' => 'required',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
         $params = [
             $enrollment['talkSamId'] = $this->request['talkSamId'],

@@ -43,7 +43,7 @@ class StudentProductController extends Controller
             'studentId' => 'string|required',
         ]);
         if($validator->fails()){
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $studentProductId = IdGenerator::generate(['table'=>'student_products', 'trow' => 'studentProductId', 'length' => 7, 'prefix' => 'SP']);
@@ -103,7 +103,7 @@ class StudentProductController extends Controller
             'studentId' => 'string|required',
         ]);
         if($validator->fails()){
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $params = [

@@ -54,7 +54,7 @@ class CampusManagerController extends Controller
             // 'offlineTeacherId' => 'required'
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $campusManagerId = IdGenerator::generate(['table'=>'campus_managers', 'trow' => 'campusManagerId', 'length' => 8, 'prefix' => 'CPM']);
@@ -162,7 +162,7 @@ class CampusManagerController extends Controller
             // 'offlineTeacherId' => 'required'
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
         $params = [
             $campusManager['name'] = $this->request['name'],

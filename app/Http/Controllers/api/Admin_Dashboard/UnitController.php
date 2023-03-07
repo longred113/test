@@ -45,7 +45,7 @@ class UnitController extends Controller
             // 'endDate' => 'required',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $unitId = IdGenerator::generate(['table'=>'units', 'trow' => 'unitId', 'length' => 7, 'prefix' => 'UN']);
@@ -102,7 +102,7 @@ class UnitController extends Controller
             // 'endDate' => 'required',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
         $params = [
             $unit['productId'] = $this->request['productId'],

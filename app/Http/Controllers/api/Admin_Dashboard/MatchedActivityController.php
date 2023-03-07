@@ -44,7 +44,7 @@ class MatchedActivityController extends Controller
             // 'unitId' => 'string|required',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $matchedActivityId = IdGenerator::generate(['table'=>'matched_activities', 'trow' => 'matchedActivityId', 'length' => 7, 'prefix' => 'MA']);
@@ -107,7 +107,7 @@ class MatchedActivityController extends Controller
             'unitId' => 'string',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $params = [

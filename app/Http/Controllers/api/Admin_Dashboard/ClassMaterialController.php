@@ -45,7 +45,7 @@ class ClassMaterialController extends Controller
             'date' => 'date|required',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $classMaterialId = IdGenerator::generate(['table'=>'class_materials', 'trow' => 'classMaterialId', 'length' => 7, 'prefix' => 'CM']);
@@ -108,7 +108,7 @@ class ClassMaterialController extends Controller
             'date' => 'date|required',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $params = [

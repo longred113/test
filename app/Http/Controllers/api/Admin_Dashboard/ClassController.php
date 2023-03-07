@@ -52,7 +52,7 @@ class ClassController extends Controller
             'initialTextbook' => 'string',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $classId = IdGenerator::generate(['table'=>'classes', 'trow' => 'classId', 'length' => 7, 'prefix' => 'CL']);
@@ -145,7 +145,7 @@ class ClassController extends Controller
             'initialTextbook' => 'string',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $params = [

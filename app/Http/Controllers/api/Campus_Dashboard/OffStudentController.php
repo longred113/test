@@ -42,7 +42,7 @@ class OffStudentController extends Controller
             'name' => 'required',   
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
         $studentId = IdGenerator::generate(['table'=>'students', 'trow' => 'studentId', 'length' => 7, 'prefix' => 'ST']);
         $params = [
@@ -139,7 +139,7 @@ class OffStudentController extends Controller
             'name' => 'required|string',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
         
         $params = [

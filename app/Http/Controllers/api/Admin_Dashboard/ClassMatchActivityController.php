@@ -43,7 +43,7 @@ class ClassMatchActivityController extends Controller
             'status' => 'string|required',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $classMatchActivityId = IdGenerator::generate(['table'=>'class_match_activities', 'trow' => 'classMatchActivityId', 'length' => 8, 'prefix' => 'CMA']);
@@ -104,7 +104,7 @@ class ClassMatchActivityController extends Controller
             'matchedActivityId' => 'string|required',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
         $classId = $this->request['classId'];
         $matchedActivityId = $this->request['matchedActivityId'];

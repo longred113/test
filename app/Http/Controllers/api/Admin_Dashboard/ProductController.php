@@ -51,7 +51,7 @@ class ProductController extends Controller
             // 'activate' => 'required',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
         
         $productId = IdGenerator::generate(['table'=>'products', 'trow' => 'productId', 'length' => 7, 'prefix' => 'PD']);
@@ -123,7 +123,7 @@ class ProductController extends Controller
             // 'activate' => 'required',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $params = [
@@ -163,7 +163,7 @@ class ProductController extends Controller
             'packageId' => 'required|integer',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
         $params = [
             $products['packageId'] = $request['packageId'],
@@ -179,7 +179,7 @@ class ProductController extends Controller
             'packageId' => 'required|integer',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
         $inputProductId = $this->request['productId'];
         $product = Products::find($inputProductId);

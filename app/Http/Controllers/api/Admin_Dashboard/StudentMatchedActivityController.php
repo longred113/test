@@ -44,7 +44,7 @@ class StudentMatchedActivityController extends Controller
             'name' => 'string',
         ]);
         if($validator->fails()){
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $studentMatchedActivityId = IdGenerator::generate(['table'=>'student_matched_activities', 'trow' => 'studentMatchedActivityId', 'length' => 8, 'prefix' => 'SMA']);
@@ -104,7 +104,7 @@ class StudentMatchedActivityController extends Controller
             'status' => [Rule::in(['to-do', 'incomplete', 'done'])],
         ]);
         if($validator->fails()){
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $params = [

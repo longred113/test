@@ -6,7 +6,6 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Facades\Response;
 
 class Controller extends BaseController
 {
@@ -31,9 +30,9 @@ class Controller extends BaseController
         $response = array(
             'error_code' => 400,
             'message' => $message,
-            'data' => $data
+            'data' => $data,
         );
-        return Response($response, 400);
+        return $response;
     }
     protected function successRoleRequest($roleData = array()) {
         return response()->json([

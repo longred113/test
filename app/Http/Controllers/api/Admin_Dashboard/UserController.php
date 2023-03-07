@@ -100,7 +100,7 @@ class UserController extends Controller
             'activate' => 'integer|required',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
         $userId = IdGenerator::generate(['table' => 'users', 'trow' => 'userId', 'length' => 7, 'prefix' => 'US']);
         $params = [
@@ -195,7 +195,7 @@ class UserController extends Controller
             'roleId' => 'string|required',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $params = [

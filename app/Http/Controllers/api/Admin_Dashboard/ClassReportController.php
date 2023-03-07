@@ -49,7 +49,7 @@ class ClassReportController extends Controller
             // 'comment' => 'string|required',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $classReportId = IdGenerator::generate(['table'=>'class_reports', 'trow' => 'classReportId', 'length' => 8, 'prefix' => 'CRB']);
@@ -108,7 +108,7 @@ class ClassReportController extends Controller
             'comment' => 'string|required',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $params = [

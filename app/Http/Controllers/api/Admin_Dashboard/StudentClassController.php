@@ -43,7 +43,7 @@ class StudentClassController extends Controller
             'point' => 'integer',
         ]);
         if($validator->fails()){
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $studentClassId = IdGenerator::generate(['table'=>'student_classes', 'trow' => 'studentClassId', 'length' => 7, 'prefix' => 'SC']);
@@ -63,22 +63,17 @@ class StudentClassController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show()
+    public function show($studentClassId)
     {
-        $validator = Validator::make($this->request->all(), [
-            'studentId' => 'string|required',
-            'classId' => 'string|required',
-        ]);
-        if($validator->fails()){
-            return $validator->errors();
-        }
-
-        $studentId = $this->request['studentId'];
-        $classId = $this->request['classId'];
-        $studentClass = StudentClasses::where('classId', $classId)
-        ->where('studentId', $studentId)->get();
+        $studentClass = StudentClasses::find($studentClassId);
         $studentClassData = new StudentClassResource($studentClass);
         return $this->successStudentClassRequest($studentClassData);
+    }
+
+    public function getStudentFromClass($classId)
+    {
+        $studentClass = StudentClasses::where('classId', $classId)->get();
+        return $this->successStudentClassRequest($studentClass);
     }
 
     /**
@@ -95,7 +90,7 @@ class StudentClassController extends Controller
             'classId' => 'string|required',
         ]);
         if($validator->fails()){
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $studentId = $this->request['studentId'];
@@ -116,20 +111,9 @@ class StudentClassController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy()
+    public function destroy($studentClassId)
     {
-        $validator = Validator::make($this->request->all(), [
-            'studentId' => 'string|required',
-            'classId' => 'string|required',
-        ]);
-        if($validator->fails()){
-            return $validator->errors();
-        }
-
-        $studentId = $this->request['studentId'];
-        $classId = $this->request['classId'];
-        $studentClass = StudentClasses::where('classId', $classId)
-        ->where('studentId', $studentId)->get();
+        $studentClass = StudentClasses::find($studentClassId);
         $deleteStudentClass = $studentClass->delete();
         return $this->successStudentClassRequest($deleteStudentClass);
     }

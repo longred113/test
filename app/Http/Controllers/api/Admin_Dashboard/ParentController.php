@@ -45,7 +45,7 @@ class ParentController extends Controller
             'studentIds' => 'array|required_without:studentId',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $parentId = IdGenerator::generate(['table'=>'parents', 'trow' => 'parentId', 'length' => 7, 'prefix' => 'PA']);
@@ -107,7 +107,7 @@ class ParentController extends Controller
             'studentIds' => 'array|required_without:studentId',
         ]);
         if ($validator->fails()) {
-            return $validator->errors();
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         if (!empty($this->request->get('studentId'))) {
