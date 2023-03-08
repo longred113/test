@@ -109,7 +109,7 @@ class MatchedActivityController extends Controller
             'productId' => 'required',
             'name' => 'string',
             'time' => 'integer',
-            'unitId' => 'string',
+            // 'unitId' => 'string',
             'type'  => 'string',
         ]);
         if ($validator->fails()) {
