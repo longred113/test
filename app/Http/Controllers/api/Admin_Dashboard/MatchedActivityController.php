@@ -42,6 +42,7 @@ class MatchedActivityController extends Controller
             'name' => 'string|required',
             'time' => 'integer|required',
             // 'unitId' => 'string|required',
+            'type' => 'string',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
@@ -54,6 +55,7 @@ class MatchedActivityController extends Controller
             'name' => $this->request['name'],
             'time' => $this->request['time'],
             'unitId' => $this->request['unitId'],
+            'type' => $this->request['type'],
         ];
         $newMatchedActivityData = new MatchedActivityResource(MatchedActivities::create($params));
         return $this->successMatchedActivityRequest($newMatchedActivityData);
@@ -100,11 +102,15 @@ class MatchedActivityController extends Controller
         if (empty($this->request['unitId'])) {
             $this->request['unitId'] = $matchedActivity['unitId'];
         }
+        if (empty($this->request['type'])) {
+            $this->request['type'] = $matchedActivity['type'];
+        }
         $validator = Validator::make($this->request->all(), [
             'productId' => 'required',
             'name' => 'string',
             'time' => 'integer',
             'unitId' => 'string',
+            'type'  => 'string',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
@@ -115,6 +121,7 @@ class MatchedActivityController extends Controller
             $matchedActivity['name'] = $this->request['name'],
             $matchedActivity['time'] = $this->request['time'],
             $matchedActivity['unitId'] = $this->request['unitId'],
+            $matchedActivity['type'] = $this->request['type'],
         ];
 
         $newInfoMatchedActivity = $matchedActivity->update($params);
