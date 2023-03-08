@@ -17,5 +17,6 @@ class MatchedActivities extends Model
         'name',
         'time',
         'unitId',
+        'type',
     ];
 }

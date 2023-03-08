@@ -20,6 +20,7 @@ class MatchedActivityResource extends JsonResource
             'name' => $this->name,
             'time' => $this->time,
             'unitId' => $this->unitId,
+            'type' => $this->type,
         ];
     }
 }
