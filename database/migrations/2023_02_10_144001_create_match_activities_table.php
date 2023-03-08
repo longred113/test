@@ -19,6 +19,7 @@ class CreateMatchActivitiesTable extends Migration
             $table->string('name')->nullable();
             $table->integer('time')->nullable();
             $table->string('unitId')->nullable();
+            $table->string('type')->nullable();
             $table->timestamps();
         });
     }
