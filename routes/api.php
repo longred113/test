@@ -219,6 +219,10 @@ Route::prefix('admin-user-management')
         Route::post('/create', [UserController::class, 'store'])->name('store');
         Route::post('/create-new-user', [UserController::class, 'createUserAccount'])->name('createUserAccount');
         Route::get('/{userId}', [UserController::class, 'show'])->name('show');
+        Route::get('/get-by-teacher/{teacherId}', [UserController::class, 'getUserFromTeacher'])->name('getUserFromTeacher');
+        Route::get('/get-by-student/{studentId}', [UserController::class, 'getUserFromStudent'])->name('getUserFromStudent');
+        Route::get('/get-by-parent/{parentId}', [UserController::class, 'getUserFromParent'])->name('getUserFromParent');
+        Route::get('/get-by-campus/{campusId}', [UserController::class, 'getUserFromCampus'])->name('getUserFromCampus');
         Route::put('/update/{userId}', [UserController::class, 'update'])->name('update');
         Route::delete('/{userId}', [UserController::class, 'destroy'])->name('destroy');
     });

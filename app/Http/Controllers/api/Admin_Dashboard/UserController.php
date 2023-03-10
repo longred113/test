@@ -154,6 +154,30 @@ class UserController extends Controller
         return $this->successUserRequest($userData);
     }
 
+    public function getUserFromTeacher($teacherId)
+    {
+        $user = Users::where('teacherId', $teacherId)->get();
+        return $this->successUserRequest($user);
+    }
+
+    public function getUserFromStudent($studentId)
+    {
+        $user = Users::where('studentId', $studentId)->get();
+        return $this->successUserRequest($user);
+    }
+
+    public function getUserFromParent($parentId)
+    {
+        $user = Users::where('parentId', $parentId)->get();
+        return $this->successUserRequest($user);
+    }
+
+    public function getUserFromCampus($campusId)
+    {
+        $user = Users::where('campusId', $campusId)->get();
+        return $this->successUserRequest($user);
+    }
+
     /**
      * Update the specified resource in storage.
      *
