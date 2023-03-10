@@ -16,10 +16,10 @@ class ParentResource extends JsonResource
     {
         return [
             'parentId' => $this->parentId,
-            'name' => $this->name,
+            'firstName' => $this->firstName,
+            'lastName' => $this->lastName,
             'email' => $this->email,
             'phone' => $this->phone,
-            'studentIds' => $this->studentIds,
         ];
     }
 }

@@ -13,7 +13,8 @@ class Parents extends Model
     public $incrementing = false;
     protected $fillable = [
         'parentId',
-        'name',
+        'firstName',
+        'lastName',
         'email',
         'phone',
         'studentIds',

@@ -38,31 +38,32 @@ class ParentController extends Controller
     public function store()
     {
         $validator = Validator::make($this->request->all(), [
-            'name' => 'string|required',
+            'firstName' => 'string|required',
+            'lastName' => 'string|required',
             'email' => 'string|required|unique:parents',
+            'password' => 'string',
             'phone' => 'string|required',
-            'studentId' => 'string|required_without:studentIds',
-            'studentIds' => 'array|required_without:studentId',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $parentId = IdGenerator::generate(['table' => 'parents', 'trow' => 'parentId', 'length' => 7, 'prefix' => 'PA']);
-        if (!empty($this->request->get('studentId'))) {
-            $studentIds[] = $this->request->get('studentId');
-        } else {
-            $studentIds = $this->request->get('studentIds');
-        }
         $params = [
             'parentId' => $parentId,
-            'name' => $this->request['name'],
+            'firstName' => $this->request['firstName'],
+            'lastName' => $this->request['lastName'],
             'email' => $this->request['email'],
             'phone' => $this->request['phone'],
         ];
+        $userParams = [
+            'parentId' => $parentId,
+            'name' => $this->request['lastName'],
+            'email' => $this->request['email'],
+            'password' => $this->request['password'],
+        ];
         $newParentData = new ParentResource(Parents::create($params));
-        foreach ($studentIds as $studentId) {
-        }
+        UserController::store($userParams);
         return $this->successParentRequest($newParentData);
     }
 
@@ -89,8 +90,11 @@ class ParentController extends Controller
     public function update($parentId)
     {
         $parent = Parents::find($parentId);
-        if (empty($this->request['name'])) {
-            $this->request['name'] = $parent['name'];
+        if (empty($this->request['firstName'])) {
+            $this->request['firstName'] = $parent['firstName'];
+        }
+        if (empty($this->request['lastName'])) {
+            $this->request['lastName'] = $parent['lastName'];
         }
         if (empty($this->request['email'])) {
             $this->request['email'] = $parent['email'];
@@ -99,26 +103,19 @@ class ParentController extends Controller
             $this->request['phone'] = $parent['phone'];
         }
         $validator = Validator::make($this->request->all(), [
-            'name' => 'string|required',
+            'firstName' => 'string|required',
+            'lastName' => 'string|required',
             'email' => 'string|required|unique:parents',
             'phone' => 'string|required',
-            'studentId' => 'string|required_without:studentIds',
-            'studentIds' => 'array|required_without:studentId',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
-
-        if (!empty($this->request->get('studentId'))) {
-            $studentIds[] = $this->request->get('studentId');
-        } else {
-            $studentIds = $this->request->get('studentIds');
-        }
         $params = [
-            $parent['name'] = $this->request['name'],
+            $parent['firstName'] = $this->request['firstName'],
+            $parent['lastName'] = $this->request['lastName'],
             $parent['email'] = $this->request['email'],
             $parent['phone'] = $this->request['phone'],
-            $parent['studentIds'] = $studentIds,
         ];
 
         $newInfoParentData = $parent->update($params);

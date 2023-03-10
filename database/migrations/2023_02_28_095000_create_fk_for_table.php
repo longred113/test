@@ -13,12 +13,10 @@ class CreateFkForTable extends Migration
      */
     public function up()
     {
-        Schema::table('parents', function (Blueprint $table) {
-            $table->foreign('studentId')->references('studentId')->on('students')->onDelete('cascade');
-        });
         Schema::table('students', function (Blueprint $table) {
             $table->foreign('campusId')->references('campusId')->on('campuses')->onDelete('cascade');
             $table->foreign('enrollmentId')->references('enrollmentId')->on('enrollments')->onDelete('cascade');
+            $table->foreign('parentId')->references('parentId')->on('parents')->onDelete('cascade');
         });
         Schema::table('campus_managers', function (Blueprint $table) {
             $table->foreign('campusId')->references('campusId')->on('campuses')->onDelete('cascade');

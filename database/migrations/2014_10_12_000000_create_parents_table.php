@@ -15,10 +15,10 @@ class CreateParentsTable extends Migration
     {
         Schema::create('parents', function (Blueprint $table) {
             $table->string('parentId')->primary();
-            $table->string('name')->nullable();
+            $table->string('firstName')->nullable();
+            $table->string('lastName')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
-            $table->string('studentId')->nullable();
             $table->timestamps();
         });
     }
