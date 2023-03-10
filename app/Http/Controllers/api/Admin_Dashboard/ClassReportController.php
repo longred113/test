@@ -41,7 +41,7 @@ class ClassReportController extends Controller
             // 'classId' => 'string|required',
             // 'studentId' => 'string|required',
             // 'campusId' => 'string|required',
-            // 'status' => 'string|required',
+            // 'status' => 'integer|required',
             // 'date' => 'string|required',
             // 'preparation' => 'string|required',
             // 'attitude' => 'string|required',

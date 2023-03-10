@@ -37,55 +37,53 @@ class CampusManagerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store()
+    public static function store($teacherParams)
     {
-        $validator = validator::make($this->request->all(), [
-            'name' => 'required',
-            // 'email' => 'required',
-            // 'gender' => 'required',
-            // 'dateOfBirth' => 'required',
-            // 'country' => 'required',
-            // 'timeZone' => 'required',
-            // 'startDate' => 'required',
-            // 'resignation' => 'required',
-            'campusId' => 'required',
-            // 'memo' => 'required',
-            // 'offlineStudentId' => 'required',
-            // 'offlineTeacherId' => 'required'
-        ]);
-        if ($validator->fails()) {
-            return $this->errorBadRequest($validator->getMessageBag()->toArray());
-        }
+        // $validator = validator::make($this->request->all(), [
+        //     'name' => 'required',
+        //     // 'email' => 'required',
+        //     // 'gender' => 'required',
+        //     // 'dateOfBirth' => 'required',
+        //     // 'country' => 'required',
+        //     // 'timeZone' => 'required',
+        //     // 'startDate' => 'required',
+        //     // 'resignation' => 'required',
+        //     'campusId' => 'required',
+        //     // 'memo' => 'required',
+        //     // 'offlineStudentId' => 'required',
+        //     // 'offlineTeacherId' => 'required'
+        // ]);
+        // if ($validator->fails()) {
+        //     return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        // }
 
         $campusManagerId = IdGenerator::generate(['table' => 'campus_managers', 'trow' => 'campusManagerId', 'length' => 8, 'prefix' => 'CPM']);
-        $email = Campus::where('campusId', $this->request['campusId'])->pluck('name')->map(function ($name) {
+        $email = Campus::where('campusId', $teacherParams['campusId'])->pluck('name')->map(function ($name) {
             return $name . '@gmail.com';
         })->first();
         $userPassword = Str::random(8);
         $params = [
             'campusManagerId' => $campusManagerId,
-            'name' => $this->request['name'],
+            'name' => $teacherParams['name'],
             'email' => $email,
-            'gender' => $this->request['gender'],
-            'dateOfBirth' => $this->request['dateOfBirth'],
-            'country' => $this->request['country'],
-            'timeZone' => $this->request['timeZone'],
-            'startDate' => $this->request['startDate'],
-            'resignation' => $this->request['resignation'],
-            'campusId' => $this->request['campusId'],
-            'memo' => $this->request['memo'],
-            'offlineStudentId' => $this->request['offlineStudentId'],
-            'offlineTeacherId' => $this->request['offlineTeacherId'],
+            'gender' => $teacherParams['gender'],
+            'dateOfBirth' => $teacherParams['dateOfBirth'],
+            'country' => $teacherParams['country'],
+            'timeZone' => $teacherParams['timeZone'],
+            'startDate' => $teacherParams['startDate'],
+            'resignation' => $teacherParams['resignation'],
+            'campusId' => $teacherParams['campusId'],
+            'memo' => $teacherParams['memo'],
         ];
         $userParams = [
             'campusManagerId' => $campusManagerId,
-            'name' => $this->request['name'],
+            'name' => $params['name'],
             'email' => $email,
             'password' => $userPassword,
         ];
         $newCampusManager = new CampusManagerResource(CampusManager::create($params));
         UserController::store($userParams);
-        return $this->successCampusManagerRequest($newCampusManager);
+        return $newCampusManager;
     }
 
     /**

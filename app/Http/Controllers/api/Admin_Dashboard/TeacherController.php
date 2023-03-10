@@ -82,7 +82,6 @@ class TeacherController extends Controller
 
         $teacherId = IdGenerator::generate(['table' => 'teachers', 'trow' => 'teacherId', 'length' => 7, 'prefix' => 'TC']);
         $params = [
-            'teacherId' => $teacherId,
             'name' => $this->request['name'],
             'email' => $this->request['email'],
             'gender' => $this->request['gender'],
@@ -104,15 +103,22 @@ class TeacherController extends Controller
             'memo' => $this->request['memo'],
         ];
 
-        $userParams = [
-            'teacherId' => $teacherId,
-            'name' => $this->request['name'],
-            'email' => $this->request['email'],
-            'password' => $this->request['password'],
-        ];
-        $newTeacherData = new TeacherResource(Teachers::create($params));
-        UserController::store($userParams);
-        return $this->successTeacherRequest($newTeacherData);
+        if ($this->request['role'] == 'Campus Manager') {
+            $campusManager = CampusManagerController::store($params);
+            return $this->successCampusManagerRequest($campusManager);
+        }
+        else {
+            $params['teacherId'] = $teacherId;
+            $newTeacherData = new TeacherResource(Teachers::create($params));
+            $userParams = [
+                'teacherId' => $teacherId,
+                'name' => $this->request['name'],
+                'email' => $this->request['email'],
+                'password' => $this->request['password'],
+            ];
+            UserController::store($userParams);
+            return $this->successTeacherRequest($newTeacherData);
+        }
     }
 
     /**
