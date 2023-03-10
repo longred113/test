@@ -76,7 +76,7 @@ class CampusManagerController extends Controller
             'memo' => $teacherParams['memo'],
         ];
         $userParams = [
-            'campusManagerId' => $campusManagerId,
+            'campusId' => $teacherParams['campusId'],
             'name' => $params['name'],
             'email' => $email,
             'password' => $userPassword,
