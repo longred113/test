@@ -84,6 +84,7 @@ class TeacherController extends Controller
         $params = [
             'name' => $this->request['name'],
             'email' => $this->request['email'],
+            'password' => $this->request['password'],
             'gender' => $this->request['gender'],
             'dateOfBirth' => $this->request['dateOfBirth'],
             'status' => $this->request['status'],
