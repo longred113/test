@@ -378,3 +378,6 @@ Route::prefix('student-study-planner')
         Route::delete('/', [StudyPlannerSController::class, 'destroy'])->name('destroy');
     });
 //END STUDENT DASHBOARD
+
+Route::post('/messages', function () {
+    });

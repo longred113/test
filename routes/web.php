@@ -19,3 +19,6 @@ Route::get('/', function () {
 Route::get('gfg', function () {
     return view('checkConnection');
 });
+Route::get('/chat', function () {
+    return view('chat');
+});

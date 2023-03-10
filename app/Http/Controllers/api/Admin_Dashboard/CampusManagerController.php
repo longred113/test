@@ -58,14 +58,14 @@ class CampusManagerController extends Controller
         // }
 
         $campusManagerId = IdGenerator::generate(['table' => 'campus_managers', 'trow' => 'campusManagerId', 'length' => 8, 'prefix' => 'CPM']);
-        $email = Campus::where('campusId', $teacherParams['campusId'])->pluck('name')->map(function ($name) {
-            return $name . '@gmail.com';
-        })->first();
+        // $email = Campus::where('campusId', $teacherParams['campusId'])->pluck('name')->map(function ($name) {
+        //     return $name . '@gmail.com';
+        // })->first();
         $userPassword = Str::random(8);
         $params = [
             'campusManagerId' => $campusManagerId,
             'name' => $teacherParams['name'],
-            'email' => $email,
+            'email' => $teacherParams['email'],
             'gender' => $teacherParams['gender'],
             'dateOfBirth' => $teacherParams['dateOfBirth'],
             'country' => $teacherParams['country'],
@@ -78,7 +78,7 @@ class CampusManagerController extends Controller
         $userParams = [
             'campusId' => $teacherParams['campusId'],
             'name' => $params['name'],
-            'email' => $email,
+            'email' => $params['email'],
             'password' => $userPassword,
         ];
         $newCampusManager = new CampusManagerResource(CampusManager::create($params));
