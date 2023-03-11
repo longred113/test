@@ -18,6 +18,7 @@ class ClassReports extends Model
         'studentId',
         'campusId',
         'status',
+        'attendance',
         'date',
         'preparation',
         'attitude',

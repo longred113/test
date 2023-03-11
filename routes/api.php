@@ -29,7 +29,6 @@ use App\Http\Controllers\api\Campus_Dashboard\OffTeachController;
 use App\Http\Controllers\api\Campus_Dashboard\EnrollmentController;
 use App\Http\Controllers\api\Teacher_Dashboard\StudyPlannerController;
 use App\Http\Controllers\api\Student_Dashboard\StudyPlannerSController;
-use App\Models\Campus;
 use Illuminate\Support\Facades\Route;
 
 /*

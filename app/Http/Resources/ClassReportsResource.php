@@ -21,6 +21,7 @@ class ClassReportsResource extends JsonResource
             'studentId' => $this->studentId,
             'campusId' => $this->campusId,
             'status' => $this->status,
+            'attendance' => $this->attendance,
             'date' => $this->date,
             'preparation' => $this->preparation,
             'attitude' => $this->attitude,

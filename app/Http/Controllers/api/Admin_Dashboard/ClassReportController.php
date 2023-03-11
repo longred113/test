@@ -34,7 +34,7 @@ class ClassReportController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
         $validator = Validator::make($this->request->all(), [
             'teacherId' => 'string|required',
@@ -47,6 +47,7 @@ class ClassReportController extends Controller
             // 'attitude' => 'string|required',
             // 'participation' => 'string|required',
             // 'comment' => 'string|required',
+            'attendance' => 'string',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
@@ -65,9 +66,11 @@ class ClassReportController extends Controller
             'attitude' => $this->request['attitude'],
             'participation' => $this->request['participation'],
             'comment' => $this->request['comment'],
+            'attendance' => $this->request['attendance'],
         ];
-
-        $newClassReport = new ClassReportsResource(ClassReports::create($params));
+        $newClassReport = ClassReports::create($params);
+        // $params['attendance'] = ClassReports::where('classReportId', $params['classReportId'])
+        // ->update(['attendance' => $this->request['attendance']]);
         return $this->successClassRequest($newClassReport);
     }
 

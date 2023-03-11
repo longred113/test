@@ -20,6 +20,7 @@ class CreateClassReportsTable extends Migration
             $table->string('studentId')->nullable();
             $table->string('campusId')->nullable();
             $table->boolean('status')->nullable();
+            // $table->set('attendance',[])->nullable(),
             $table->date('date')->nullable();
             $table->integer('preparation')->nullable();
             $table->integer('attitude')->nullable();
