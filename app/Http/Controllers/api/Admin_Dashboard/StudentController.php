@@ -200,7 +200,7 @@ class StudentController extends Controller
             'campusId' => 'string|required',
             'type' => 'string',
             'enrollmentId' => 'string',
-            'parentId' => 'string',
+            // 'parentId' => 'string',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
