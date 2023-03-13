@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\ClassFeedbacks;
 use App\Http\Resources\ClassFeedbackResource;
+use Carbon\Carbon;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class ClassFeedbackController extends Controller
@@ -57,7 +58,7 @@ class ClassFeedbackController extends Controller
             'classId' => $this->request['classId'],
             'studentId' => $this->request['studentId'],
             'campusId' => $this->request['campusId'],
-            'date' => $this->request['date'],
+            'date' => Carbon::now(),
             'satisfaction' => $this->request['satisfaction'],
             'comment' => $this->request['comment'],
         ];

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\ClassReports;
 use App\Http\Resources\ClassReportsResource;
+use Carbon\Carbon;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class ClassReportController extends Controller
@@ -61,7 +62,7 @@ class ClassReportController extends Controller
             'studentId' => $this->request['studentId'],
             'campusId' => $this->request['campusId'],
             'status' => $this->request['status'],
-            'date' => $this->request['date'],
+            'date' => Carbon::now(),
             'preparation' => $this->request['preparation'],
             'attitude' => $this->request['attitude'],
             'participation' => $this->request['participation'],
@@ -69,8 +70,8 @@ class ClassReportController extends Controller
             'attendance' => $this->request['attendance'],
         ];
         $newClassReport = ClassReports::create($params);
-        // $params['attendance'] = ClassReports::where('classReportId', $params['classReportId'])
-        // ->update(['attendance' => $this->request['attendance']]);
+        // $paramssss = ClassReports::where('classReportId', $params['classReportId'])
+        // ->update(['date' => $newClassReport['create_at']]);
         return $this->successClassRequest($newClassReport);
     }
 
