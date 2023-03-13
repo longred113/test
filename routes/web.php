@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\FunctionAnnounced;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,4 +22,12 @@ Route::get('gfg', function () {
 });
 Route::get('/chat', function () {
     return view('chat');
+});
+Route::get('/announcement', function () {
+    return view('announcement');
+});
+Route::post('/announcement', function () {
+    $functionName = request()->functionName;
+    event(new FunctionAnnounced($functionName));
+    return view('announcement');
 });

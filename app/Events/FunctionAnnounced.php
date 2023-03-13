@@ -7,10 +7,11 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class FunctionAnnounced
+class FunctionAnnounced implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -34,5 +35,15 @@ class FunctionAnnounced
     public function broadcastOn()
     {
         return new Channel('announcements');
+    }
+
+    /**
+     * Broadcast event announcements
+     * 
+     * @return void
+     */
+    public function broadcastAs()
+    {
+        return 'announcements-event';
     }
 }
