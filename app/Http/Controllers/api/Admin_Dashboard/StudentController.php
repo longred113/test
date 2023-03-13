@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\Admin_Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentResource;
+use App\Models\Parents;
 use App\Models\Students;
 use App\Models\Users;
 use Illuminate\Http\Request;
@@ -53,6 +54,12 @@ class StudentController extends Controller
             $studentData = "";
         }
         return $this->successStudentRequest($studentData);
+    }
+
+    public function getParent($parentId)
+    {
+        $student = Students::where('parentId', $parentId)->get();
+        return $this->successStudentRequest($student);
     }
 
     /**

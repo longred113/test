@@ -177,6 +177,7 @@ Route::prefix('admin-student-management')
         Route::get('/{studentId}', [StudentController::class, 'show'])->name('show');
         Route::put('/update/{studentId}', [StudentController::class, 'update'])->name('update');
         Route::delete('/{studentId}', [StudentController::class, 'destroy'])->name('destroy');
+        Route::get('/get-parent/{parentId}', [StudentController::class, 'getParent'])->name('getParent');
     });
 
 Route::prefix('admin-parent-management')
