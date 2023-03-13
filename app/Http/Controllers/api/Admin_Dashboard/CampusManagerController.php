@@ -67,6 +67,7 @@ class CampusManagerController extends Controller
             'name' => $teacherParams['name'],
             'email' => $teacherParams['email'],
             'gender' => $teacherParams['gender'],
+            'talkSamId' => $teacherParams['talkSamId'],
             'dateOfBirth' => $teacherParams['dateOfBirth'],
             'country' => $teacherParams['country'],
             'timeZone' => $teacherParams['timeZone'],

@@ -16,6 +16,7 @@ class CampusManager extends Model
         'name',
         'email',
         'gender',
+        'talkSamId',
         'dateOfBirth',
         'country',
         'timeZone',

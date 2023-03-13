@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\ClassFeedbacks;
 use App\Http\Resources\ClassFeedbackResource;
 use Carbon\Carbon;
+use Exception;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class ClassFeedbackController extends Controller
@@ -44,8 +45,8 @@ class ClassFeedbackController extends Controller
             // 'studentId' => 'string|required',
             // 'campusId' => 'string|required',
             // 'date' => 'string|required',
-            // 'satisfaction' => 'string|required',
-            // 'comment' => 'string|required',
+            'satisfaction' => 'integer',
+            // 'comment' => 'string',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
@@ -62,7 +63,6 @@ class ClassFeedbackController extends Controller
             'satisfaction' => $this->request['satisfaction'],
             'comment' => $this->request['comment'],
         ];
-
         $newClassFeedback = new ClassFeedbackResource(ClassFeedbacks::create($params));
         return $this->successClassFeedback($newClassFeedback);
     }

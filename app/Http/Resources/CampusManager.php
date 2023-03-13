@@ -19,6 +19,7 @@ class CampusManager extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'gender' => $this->gender,
+            'talkSamId' => $this->talkSamId,
             'dateOfBirth' => $this->dateOfBirth,
             'country' => $this->country,
             'timeZone' => $this->timeZone,

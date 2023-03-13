@@ -6,13 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\CampusResource;
 use App\Http\Resources\TeacherResource;
 use App\Models\Campus;
+use App\Models\CampusManager;
 use App\Models\Teachers;
 use Error;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Validator;
 use TypeError;
 
+use function App\Helpers\trans;
 use function PHPUnit\Framework\returnSelf;
 
 class TeacherController extends Controller
@@ -105,6 +108,11 @@ class TeacherController extends Controller
         ];
 
         if ($this->request['role'] == 'Campus Manager') {
+            $existCampusId = CampusManager::where('campusId', $this->request['campusId'])->get();
+            if (!empty($existCampusId)) {
+                $errorMessage = Lang::get('teacher.existed_campus_manager');
+                return response()->json(['error' => $errorMessage], 400);
+            }
             $campusManager = CampusManagerController::store($params);
             return $this->successCampusManagerRequest($campusManager);
         }

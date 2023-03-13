@@ -33,6 +33,6 @@ class FunctionAnnounced
      */
     public function broadcastOn()
     {
-        return new Channel('function-announcements');
+        return new Channel('announcements');
     }
 }
