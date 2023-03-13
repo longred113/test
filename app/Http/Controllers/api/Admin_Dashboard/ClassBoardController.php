@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api\Admin_Dashboard;
 
+use App\Events\FunctionAnnounced;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ClassBoardResource;
 use App\Models\ClassBoards;
@@ -59,6 +60,7 @@ class ClassBoardController extends Controller
         ];
 
         $newClassBoard = new ClassBoardResource(ClassBoards::create($params));
+        event(new FunctionAnnounced('store'));
         return $this->successClassBoardRequest($newClassBoard);
     }
 

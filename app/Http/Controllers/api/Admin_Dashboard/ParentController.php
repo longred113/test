@@ -5,9 +5,11 @@ namespace App\Http\Controllers\api\Admin_Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ParentResource;
 use App\Models\Parents;
+use App\Models\Students;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\VarDumper\VarDumper;
 
 class ParentController extends Controller
 {
@@ -66,6 +68,27 @@ class ParentController extends Controller
         UserController::store($userParams);
         return $this->successParentRequest($newParentData);
     }
+
+    public function addParentIntoStudent($parentId)
+    {
+        $validator = Validator::make($this->request->all(), [
+            'studentId' => 'string|required_without:studentIds',
+            'studentIds' => 'array|required_without:studentId',
+        ]);
+        if ($validator->fails()) {
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        }
+        if (!empty($this->request->get('studentId'))) {
+            $ids[] = $this->request->get('studentId');
+        } else {
+            $ids = $this->request->get('studentIds');
+        }
+        $students = Students::find($ids);
+        foreach($students as $student) {
+            Students::where('studentId', $student['studentId'])->update(['parentId' => $parentId]);
+        }
+        return $this->successStudentRequest();
+    } 
 
     /**
      * Display the specified resource.

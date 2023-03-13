@@ -65,7 +65,7 @@ Route::prefix('admin-campus-management')
         Route::get('/{campusId}', [CampusController::class, 'show'])->name('show');
         Route::put('/update/{campusId}', [CampusController::class, 'update'])->name('update');
         Route::delete('/{campusId}', [CampusController::class, 'destroy'])->name('destroy');
-        Route::put('/', [CampusController::class, 'switchActivate'])->name('switchActivate');
+        Route::post('/change-active', [CampusController::class, 'switchActivate'])->name('switchActivate');
     });
 
 Route::prefix('admin-campus-manger')
@@ -187,6 +187,7 @@ Route::prefix('admin-parent-management')
         Route::get('/{parentId}', [ParentController::class, 'show'])->name('show');
         Route::put('/update/{parentId}', [ParentController::class, 'update'])->name('update');
         Route::delete('/{parentId}', [ParentController::class, 'destroy'])->name('destroy');
+        Route::post('/add-into-student/{parentId}', [ParentController::class, 'addParentIntoStudent'])->name('addParentIntoStudent');
     });
 
 Route::prefix('admin-enrollment')
