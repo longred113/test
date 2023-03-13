@@ -60,7 +60,7 @@ class ClassBoardController extends Controller
         ];
 
         $newClassBoard = new ClassBoardResource(ClassBoards::create($params));
-        event(new FunctionAnnounced('store'));
+        event(new FunctionAnnounced($newClassBoard));
         return $this->successClassBoardRequest($newClassBoard);
     }
 

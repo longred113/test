@@ -56,7 +56,7 @@ class StudentController extends Controller
         return $this->successStudentRequest($studentData);
     }
 
-    public function getParent($parentId)
+    public function getStudentByParent($parentId)
     {
         $student = Students::where('parentId', $parentId)->get();
         return $this->successStudentRequest($student);

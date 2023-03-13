@@ -28,6 +28,7 @@ Route::get('/announcement', function () {
 });
 Route::post('/announcement', function () {
     $functionName = request()->functionName;
+    dd($functionName);
     event(new FunctionAnnounced($functionName));
     return view('announcement');
 });
