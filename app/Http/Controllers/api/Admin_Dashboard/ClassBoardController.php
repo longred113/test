@@ -137,4 +137,17 @@ class ClassBoardController extends Controller
         $deleteClassBoard = $classBoard->delete($classBoard);
         return $this->successClassBoardRequest($deleteClassBoard);
     }
+
+    public function sendMessage()
+    {
+        $validator = Validator::make($this->request->all(), [
+            'classBoardId' => 'string|required',
+        ]);
+        if ($validator->fails()) {
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        }
+
+        $classBoard = ClassBoards::find($this->request['classBoardId']);
+        return $classBoard;
+    }
 }
