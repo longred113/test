@@ -93,7 +93,12 @@ class StudentClassController extends Controller
             $studentsData = Students::whereIn('students.studentId', $studentIds)->join('student_classes', 'students.studentId', '=', 'student_classes.studentId')
             ->join('classes', 'student_classes.classId', '=', 'classes.classId')
             ->join('teachers', 'classes.onlineTeacher', '=', 'teachers.teacherId')
-            ->select('students.name as studentName', 'classes.name as className', 'teachers.name as teacherName', 'teachers.teacherId')->get();
+            ->select('students.name as studentName', 'classes.name as className', 'teachers.name as teacherName', 'teachers.teacherId')
+            ->groupBy('students.name', 'classes.name','teachers.name', 'teacherId')
+            ->get();
+            foreach ($studentsData as $student) {
+                
+            }
         } catch (Exception $e) {
             return $e->getMessage();
         }

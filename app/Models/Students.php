@@ -16,6 +16,7 @@ class Students extends Model
         'enrollmentId',
         'parentId',
         'name',
+        'enrollmentCount',
         'email',
         'gender',
         'dateOfBirth',

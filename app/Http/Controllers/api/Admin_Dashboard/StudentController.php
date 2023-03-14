@@ -94,6 +94,7 @@ class StudentController extends Controller
         $studentParams = [
             'studentId' => $studentId,
             'name' => $this->request['name'],
+            'enrollmentCount' => $this->request['enrollmentCount'],
             'email' => $this->request['email'],
             'gender' => $this->request['gender'],
             'dateOfBirth' => $this->request['dateOfBirth'],
@@ -191,6 +192,9 @@ class StudentController extends Controller
         if (empty($this->request['parentId'])) {
             $this->request['parentId'] = $student['parentId'];
         }
+        if (empty($this->request['enrollmentCount'])) {
+            $this->request['enrollmentCount'] = $student['enrollmentCount'];
+        }
         $validator = Validator::make($this->request->all(), [
             'name' => 'string',
             'email' => 'string',
@@ -208,6 +212,7 @@ class StudentController extends Controller
             'type' => 'string',
             'enrollmentId' => 'string',
             // 'parentId' => 'string',
+            'enrollmentCount' => 'int',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
@@ -230,6 +235,7 @@ class StudentController extends Controller
             $student['type'] = $this->request['type'],
             $student['enrollmentId'] = $this->request['enrollmentId'],
             $student['parentId'] = $this->request['parentId'],
+            $student['enrollmentCount'] = $this->request['enrollmentCount'],
         ];
         $newStudentInfoData = $student->update($params);
         return $this->successStudentRequest($newStudentInfoData);
