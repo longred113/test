@@ -218,7 +218,7 @@ class StudentController extends Controller
             // 'basicPoint' => 'integer|required',
             'campusId' => 'string|required',
             'type' => 'string',
-            'enrollmentId' => 'string',
+            // 'enrollmentId' => 'string',
             // 'parentId' => 'string',
             'enrollmentCount' => 'int',
         ]);
