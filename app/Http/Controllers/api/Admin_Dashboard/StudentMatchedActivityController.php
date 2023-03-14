@@ -133,4 +133,22 @@ class StudentMatchedActivityController extends Controller
         $deleteStudentMatchedActivity = $studentMatchedActivity->delete();
         return $this->successStudentMatchedActivityRequest($deleteStudentMatchedActivity);
     }
+
+    public function updateActivate()
+    {
+        $validator = Validator::make($this->request->all(), [
+            'studentId' => 'string|required',
+            'matchedActivityId' => 'string|required',
+            'activate' => 'integer',
+        ]);
+        if ($validator->fails()) {
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        }
+
+        $studentMatchedActivity = StudentMatchedActivities::where('studentId', $this->request['studentId'])
+            ->where('matchedActivityId', $this->request['matchedActivityId'])
+            ->update(['activate' => $this->request['activate']]);
+        return $studentMatchedActivity;
+        return $this->successStudentMatchedActivityRequest($studentMatchedActivity);
+    }
 }
