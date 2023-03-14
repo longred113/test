@@ -92,18 +92,15 @@ class StudentClassController extends Controller
         $studentIds = $this->request['studentIds'];
         try {
             $studentsData = Students::whereIn('students.studentId', $studentIds)
-            ->join('student_classes', 'students.studentId', '=', 'student_classes.studentId')
-            ->join('classes', 'student_classes.classId', '=', 'classes.classId')
-            ->join('teachers', 'classes.onlineTeacher', '=', 'teachers.teacherId')
-            ->select('students.name as studentName', 'teachers.name as teacherName', 'teachers.teacherId', )
-            ->groupBy('students.name', 'teachers.name', 'teachers.teacherId')
-            ->get();
-            $studentsData = $studentsData->map(function($data) {
-                $data->classNames = explode(',', $data->classNames);
-                return $data;
-            });
+                ->join('student_classes', 'students.studentId', '=', 'student_classes.studentId')
+                ->join('classes', 'student_classes.classId', '=', 'classes.classId')
+                ->join('teachers', 'classes.onlineTeacher', '=', 'teachers.teacherId')
+                ->selectRaw('students.name as studentName, teachers.name as teacherName, teachers.teacherId, GROUP_CONCAT(classes.name) as classNames')
+                ->groupBy('students.name', 'teachers.name', 'teachers.teacherId')
+                ->get();
             foreach ($studentsData as $student) {
-                
+                $classNamesArray = explode(',', $student->classNames);
+                $student->classNames = $classNamesArray;
             }
         } catch (Exception $e) {
             return $e->getMessage();
