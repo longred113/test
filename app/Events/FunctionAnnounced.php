@@ -15,16 +15,16 @@ class FunctionAnnounced implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $functionName;
+    public $message;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($functionName)
+    public function __construct($name)
     {
-        $this->functionName = $functionName;
+        $this->message = $name;
     }
 
     /**

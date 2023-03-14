@@ -53,6 +53,7 @@ class StudentEnrollmentController extends Controller
             'studentEnrollmentId' => $studentEnrollmentId,
             'studentId' => $this->request['studentId'],
             'enrollmentId' => $this->request['enrollmentId'],
+            'check' => $this->request['check'],
             'date' => Carbon::now(),
         ];
         $newStudentEnrollment = new StudentEnrollmentResource(StudentEnrollments::create($params));
@@ -73,6 +74,19 @@ class StudentEnrollmentController extends Controller
         $studentEnrollment = StudentEnrollments::find($studentEnrollmentId);
         $studentEnrollmentData = new StudentEnrollmentResource($studentEnrollment);
         return $this->successStudentEnrollmentRequest($studentEnrollmentData);
+    }
+
+    public function updateCheck()
+    {
+        $validator = Validator::make($this->request->all(), [
+            'enrollmentId' => 'string|required',
+            'check' => 'integer',
+        ]);
+        if ($validator->fails()) {
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        }
+        $studentEnrollment = StudentEnrollments::where('enrollmentId', $this->request['enrollmentId'])->update(['check' => $this->request['check']]);
+        return $this->successStudentEnrollmentRequest($studentEnrollment);
     }
 
     /**

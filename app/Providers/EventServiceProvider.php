@@ -29,4 +29,9 @@ class EventServiceProvider extends ServiceProvider
     {
         //
     }
+    protected $listen1 = [
+        'App\Events\MyEvent' => [
+            'App\Listeners\MyEventListener',
+        ],
+    ];
 }

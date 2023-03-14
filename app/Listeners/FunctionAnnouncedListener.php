@@ -33,6 +33,6 @@ class FunctionAnnouncedListener implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        return new Channel('announcements');
+        // return new Channel('announcements');
     }
 }
