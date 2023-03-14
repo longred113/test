@@ -148,6 +148,6 @@ class ClassBoardController extends Controller
         }
 
         $classBoard = ClassBoards::find($this->request['classBoardId']);
-        return $classBoard;
+        event(new FunctionAnnounced($classBoard));
     }
 }
