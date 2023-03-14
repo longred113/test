@@ -62,6 +62,12 @@ class StudentController extends Controller
         return $this->successStudentRequest($student);
     }
 
+    public function getEnrollmentCount($studentId)
+    {
+        $student = Students::where('studentId', $studentId)->get('enrollmentCount');
+        return $this->successStudentRequest($student);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
