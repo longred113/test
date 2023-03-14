@@ -86,12 +86,14 @@ class StudentEnrollmentController extends Controller
     {
         $validator = Validator::make($this->request->all(), [
             'enrollmentId' => 'string|required',
+            'studentId' => 'string|required',
             'check' => 'integer',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
-        $studentEnrollment = StudentEnrollments::where('enrollmentId', $this->request['enrollmentId'])->update(['check' => $this->request['check']]);
+        $studentEnrollment = StudentEnrollments::where('enrollmentId', $this->request['enrollmentId'])
+            ->where('studentId',$this->request['studentId'])->update(['check' => $this->request['check']]);
         return $this->successStudentEnrollmentRequest($studentEnrollment);
     }
 
