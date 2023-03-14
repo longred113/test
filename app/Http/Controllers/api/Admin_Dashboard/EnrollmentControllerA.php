@@ -52,7 +52,7 @@ class EnrollmentControllerA extends Controller
 
     public function getEnrollment($campusId) 
     {
-        $enrollment = Enrollment::find($campusId);
+        $enrollment = Enrollment::where('campusId', $campusId)->get();
         return $this->successEnrollmentRequest($enrollment);
     }
     public function store()
