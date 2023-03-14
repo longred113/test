@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\api\Admin_Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Student;
 use App\Http\Resources\StudentClassResource;
+use App\Models\Classes;
 use App\Models\StudentClasses;
+use App\Models\Students;
+use Exception;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -74,6 +78,26 @@ class StudentClassController extends Controller
     {
         $studentClass = StudentClasses::where('classId', $classId)->get();
         return $this->successStudentClassRequest($studentClass);
+    }
+
+    public function getClassFromStudent()
+    {
+        $validator = Validator::make($this->request->all(), [
+            'studentIds' => 'array|required',
+        ]);
+        if ($validator->fails()) {
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        }
+        $studentIds = $this->request['studentIds'];
+        try {
+            $studentsData = Students::whereIn('students.studentId', $studentIds)->join('student_classes', 'students.studentId', '=', 'student_classes.studentId')
+            ->join('classes', 'student_classes.classId', '=', 'classes.classId')
+            ->join('teachers', 'classes.onlineTeacher', '=', 'teachers.teacherId')
+            ->select('students.name as studentName', 'classes.name as className', 'teachers.name as teacherName', 'teachers.teacherId')->get();
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+        return $this->successStudentRequest($studentsData);
     }
 
     /**
