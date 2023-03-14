@@ -232,4 +232,12 @@ class Controller extends BaseController
             'studentMatchedActivityData' => $studentMatchedActivityData,
         ],200);
     }
+    protected function successStudentEnrollmentRequest($studentEnrollmentData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'studentEnrollmentData' => $studentEnrollmentData,
+        ],200);
+    }
 }
