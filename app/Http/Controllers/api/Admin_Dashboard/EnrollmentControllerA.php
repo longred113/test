@@ -43,10 +43,17 @@ class EnrollmentControllerA extends Controller
         $data = ProductsResource::collection(Products::where('level', $level)->get());
         return $this->successEnrollmentRequest($data);
     }
+
     public function showErollmentByPro($level, $product)
     {
         $data = ProductsResource::collection(Products::where('product', $product)->where('product', $product)->get());
         return $this->successEnrollmentRequest($data);
+    }
+
+    public function getEnrollment($campusId) 
+    {
+        $enrollment = Enrollment::find($campusId);
+        return $this->successEnrollmentRequest($enrollment);
     }
     public function store()
     {

@@ -199,6 +199,7 @@ Route::prefix('admin-enrollment')
         Route::get('/', [EnrollmentControllerA::class, 'index'])->name('index');
         Route::get('/Enroll/{level}', [EnrollmentControllerA::class, 'Enrollmentshow'])->name('Enrollmentshow');
         Route::get('/Enrolls/{product}', [EnrollmentControllerA::class, 'showErollmentByPro'])->name('showErollmentByPro');
+        Route::get('/get-enrollment/{campusId}', [EnrollmentControllerA::class, 'getEnrollment'])->name('getEnrollment');
         Route::post('/create', [EnrollmentControllerA::class, 'store'])->name('store');
         Route::get('/{studentId}', [EnrollmentControllerA::class, 'show'])->name('show');
         Route::put('/update/{studentId}', [EnrollmentControllerA::class, 'update'])->name('update');

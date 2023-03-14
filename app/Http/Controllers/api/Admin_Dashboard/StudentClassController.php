@@ -11,6 +11,7 @@ use App\Models\Students;
 use Exception;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class StudentClassController extends Controller
@@ -90,12 +91,17 @@ class StudentClassController extends Controller
         }
         $studentIds = $this->request['studentIds'];
         try {
-            $studentsData = Students::whereIn('students.studentId', $studentIds)->join('student_classes', 'students.studentId', '=', 'student_classes.studentId')
+            $studentsData = Students::whereIn('students.studentId', $studentIds)
+            ->join('student_classes', 'students.studentId', '=', 'student_classes.studentId')
             ->join('classes', 'student_classes.classId', '=', 'classes.classId')
             ->join('teachers', 'classes.onlineTeacher', '=', 'teachers.teacherId')
-            ->select('students.name as studentName', 'classes.name as className', 'teachers.name as teacherName', 'teachers.teacherId')
-            ->groupBy('students.name', 'classes.name','teachers.name', 'teacherId')
+            ->select('students.name as studentName', 'teachers.name as teacherName', 'teachers.teacherId', )
+            ->groupBy('students.name', 'teachers.name', 'teachers.teacherId')
             ->get();
+            $studentsData = $studentsData->map(function($data) {
+                $data->classNames = explode(',', $data->classNames);
+                return $data;
+            });
             foreach ($studentsData as $student) {
                 
             }
