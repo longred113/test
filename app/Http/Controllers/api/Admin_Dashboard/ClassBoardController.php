@@ -9,6 +9,7 @@ use App\Models\ClassBoards;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Pusher\Pusher;
 
 class ClassBoardController extends Controller
 {
@@ -148,8 +149,17 @@ class ClassBoardController extends Controller
         }
 
         $classBoard = ClassBoards::find($this->request['classBoardId']);
-        
-        event(new FunctionAnnounced('caca'));
+
+        $newAppId = 1567865;
+        $newAppKey = "3fcd7920ae1ad4d51c58";
+        $newAppSecret = "1a1ac3cf49fe66975dde";
+
+        $newPusher = new Pusher($newAppKey, $newAppSecret, $newAppId, [
+            'cluster' => 'ap1',
+            'useTLS' => true
+        ]);
+        event(new FunctionAnnounced($classBoard));
+        $newPusher->trigger('messages-staging', 'my-event', ['message' => 'Hello World']);
         return $classBoard;
     }
 }

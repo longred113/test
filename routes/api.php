@@ -327,6 +327,7 @@ Route::prefix('admin-student-enrollment-management')
         Route::get('/', [StudentEnrollmentController::class, 'index'])->name('index');
         Route::post('/create', [StudentEnrollmentController::class, 'store'])->name('store');
         Route::get('/{studentEnrollmentId}', [StudentEnrollmentController::class, 'show'])->name('show');
+        Route::get('/get-student/{enrollmentId}', [StudentEnrollmentController::class, 'getStudent'])->name('getStudent');
         Route::post('/update-check', [StudentEnrollmentController::class, 'updateCheck'])->name('updateCheck');
         Route::put('/update/{studentEnrollmentId}', [StudentEnrollmentController::class, 'update'])->name('update');
         Route::delete('/{studentEnrollmentId}', [StudentEnrollmentController::class, 'destroy'])->name('destroy');

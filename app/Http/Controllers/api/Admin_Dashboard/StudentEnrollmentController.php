@@ -76,6 +76,12 @@ class StudentEnrollmentController extends Controller
         return $this->successStudentEnrollmentRequest($studentEnrollmentData);
     }
 
+    public function getStudent($enrollmentId)
+    {
+        $studentEnrollment = StudentEnrollments::where('enrollmentId',$enrollmentId)->get();
+        return $this->successStudentEnrollmentRequest($studentEnrollment);
+    }
+
     public function updateCheck()
     {
         $validator = Validator::make($this->request->all(), [
