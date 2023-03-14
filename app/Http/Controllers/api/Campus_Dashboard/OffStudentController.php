@@ -49,6 +49,7 @@ class OffStudentController extends Controller
             'studentId' => $studentId,
             'name' => request('name'),
             'enrollmentId' => request('enrollmentId'),
+            'enrollmentCount' => 0,
             'email' => request('email'),
             'gender' => request('gender'),
             'dateOfBirth' => request('dateOfBirth'),

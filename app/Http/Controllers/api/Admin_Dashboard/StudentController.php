@@ -92,6 +92,7 @@ class StudentController extends Controller
             // 'basicPoint' => 'integer|required',
             'campusId' => 'string|required',
             'type' => [Rule::in(['online', 'offline', 'online-break', 'offline-break', 'reserve', 'wait-for-approval'])],
+            'enrollmentCount' => 'integer',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
@@ -100,7 +101,7 @@ class StudentController extends Controller
         $studentParams = [
             'studentId' => $studentId,
             'name' => $this->request['name'],
-            'enrollmentCount' => 0,
+            'enrollmentCount' => $this->request['enrollmentCount'],
             'email' => $this->request['email'],
             'gender' => $this->request['gender'],
             'dateOfBirth' => $this->request['dateOfBirth'],
