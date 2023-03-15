@@ -18,6 +18,7 @@ class StudentEnrollmentResource extends JsonResource
             'studentEnrollmentId' => $this->studentEnrollmentId,
             'studentId' => $this->studentId,
             'enrollmentId' => $this->enrollmentId,
+            'check' => $this->check,
             'date' => $this->date,
         ];
     }

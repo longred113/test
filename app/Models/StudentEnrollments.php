@@ -15,6 +15,7 @@ class StudentEnrollments extends Model
         'studentEnrollmentId',
         'studentId',
         'enrollmentId',
+        'check',
         'date',
     ];
 }
