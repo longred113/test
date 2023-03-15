@@ -25,8 +25,13 @@ class ClassReportController extends Controller
      */
     public function index()
     {
-        $data = ClassReportsResource::collection(ClassReports::all());
-        return $this->successClassRequest($data);
+        $classReportData = ClassReports::join('teachers', 'class_reports.teacherId', '=', 'teachers.teacherId')
+        ->join('classes', 'class_reports.classId', '=', 'classes.classId')
+        ->join('students', 'class_reports.studentId', '=', 'students.studentId')
+        ->join('campuses', 'class_reports.campusId', '=', 'campuses.campusId')
+        ->select('teachers.name as teacherName', 'classes.name as className', 'students.name as studentName', 'campuses.name as campusName')
+        ->get();
+        return $this->successClassRequest($classReportData);
     }
 
     /**
