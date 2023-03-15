@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\api\Admin_Dashboard;
 
-use App\Events\FunctionAnnounced;
-use App\Events\StudentAnnounced;
+use App\Events\SendAllAnnounced;
+use App\Events\SendStudentAnnounced;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ClassBoardResource;
 use App\Models\ClassBoards;
@@ -159,8 +159,8 @@ class ClassBoardController extends Controller
             'cluster' => 'ap1',
             'useTLS' => true
         ]);
-        event(new FunctionAnnounced($classBoard));
-        event(new StudentAnnounced('lala'));
+        event(new SendAllAnnounced($classBoard));
+        event(new SendStudentAnnounced('lala'));
         $newPusher->trigger('messages-staging', 'my-event', ['message' => 'Hello World']);
         return $classBoard;
     }

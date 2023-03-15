@@ -70,16 +70,16 @@ class ProductEnrollmentController extends Controller
         return $this->successProductEnrollmentRequest($productEnrollmentData);
     }
 
-    public function getEnrollment()
+    public function getProduct()
     {
         $validator = Validator::make($this->request->all(), [
-            'productId' => 'string|required',
+            'enrollmentId' => 'string|required',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
-        $productEnrollment = ProductEnrollments::where('productId', $this->request['productId'])->get();
+        $productEnrollment = ProductEnrollments::where('enrollmentId', $this->request['enrollmentId'])->get();
         return $this->successProductEnrollmentRequest($productEnrollment);
     }
 
