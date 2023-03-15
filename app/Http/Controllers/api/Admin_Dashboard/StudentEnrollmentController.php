@@ -53,7 +53,7 @@ class StudentEnrollmentController extends Controller
             'studentEnrollmentId' => $studentEnrollmentId,
             'studentId' => $this->request['studentId'],
             'enrollmentId' => $this->request['enrollmentId'],
-            'check' => $this->request['check'],
+            'check' => 0,
             'date' => Carbon::now(),
         ];
         $newStudentEnrollment = new StudentEnrollmentResource(StudentEnrollments::create($params));

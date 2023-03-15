@@ -109,7 +109,8 @@ class TeacherController extends Controller
 
         if ($this->request['role'] == 'Campus Manager') {
             $existCampusId = CampusManager::where('campusId', $this->request['campusId'])->get();
-            if (!empty($existCampusId)) {
+            if ($existCampusId->isNotEmpty()) {
+                dd(1);
                 $errorMessage = Lang::get('teacher.existed_campus_manager', [], 'vi');
                 return response()->json(['error' => $errorMessage], 400);
             }
