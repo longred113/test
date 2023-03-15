@@ -12,8 +12,8 @@
       cluster: 'ap1'
     });
 
-    var channel = pusher.subscribe('user-registration');
-    channel.bind('user-registered-event', function(data) {
+    var channel = pusher.subscribe('student-announcement');
+    channel.bind('student-announcement-event', function(data) {
       alert(JSON.stringify(data));
     });
   </script>

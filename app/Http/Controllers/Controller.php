@@ -240,4 +240,12 @@ class Controller extends BaseController
             'studentEnrollmentData' => $studentEnrollmentData,
         ],200);
     }
+    protected function successProductEnrollmentRequest($productEnrollmentData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'productEnrollmentData' => $productEnrollmentData,
+        ],200);
+    }
 }

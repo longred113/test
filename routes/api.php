@@ -20,6 +20,7 @@ use App\Http\Controllers\api\Admin_Dashboard\ClassFeedbackController;
 use App\Http\Controllers\api\Admin_Dashboard\ClassMaterialController;
 use App\Http\Controllers\api\Admin_Dashboard\ClassProductController;
 use App\Http\Controllers\api\Admin_Dashboard\EnrollmentControllerA;
+use App\Http\Controllers\api\Admin_Dashboard\ProductEnrollmentController;
 use App\Http\Controllers\api\Admin_Dashboard\ProductPackageController;
 use App\Http\Controllers\api\Admin_Dashboard\StudentClassController;
 use App\Http\Controllers\api\Admin_Dashboard\StudentEnrollmentController;
@@ -332,6 +333,16 @@ Route::prefix('admin-student-enrollment-management')
         Route::put('/update/{studentEnrollmentId}', [StudentEnrollmentController::class, 'update'])->name('update');
         Route::delete('/{studentEnrollmentId}', [StudentEnrollmentController::class, 'destroy'])->name('destroy');
     });    
+
+Route::prefix('admin-product-enrollment-management')
+    ->name('admin-product-enrollment-management.')
+    ->group(function () {
+        Route::get('/', [ProductEnrollmentController::class, 'index'])->name('index');
+        Route::post('/create', [ProductEnrollmentController::class, 'store'])->name('store');
+        Route::get('/{productEnrollmentId}', [ProductEnrollmentController::class, 'show'])->name('show');
+        Route::put('/update/{productEnrollmentId}', [ProductEnrollmentController::class, 'update'])->name('update');
+        Route::delete('/{productEnrollmentId}', [ProductEnrollmentController::class, 'destroy'])->name('destroy');
+    }); 
 //END ADMIN DASHBOARD
 
 // START CAMPUS DASHBOARD
