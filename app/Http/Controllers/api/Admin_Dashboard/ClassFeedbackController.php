@@ -27,7 +27,7 @@ class ClassFeedbackController extends Controller
      */
     public function index()
     {
-        $classReportData = ClassFeedbacks::join('teachers', 'class_feedbacks.teacherId', '=', 'teachers.teacherId')
+        $classFeedbackData = ClassFeedbacks::join('teachers', 'class_feedbacks.teacherId', '=', 'teachers.teacherId')
         ->join('classes', 'class_feedbacks.classId', '=', 'classes.classId')
         ->join('students', 'class_feedbacks.studentId', '=', 'students.studentId')
         ->join('campuses', 'class_feedbacks.campusId', '=', 'campuses.campusId')
@@ -40,10 +40,11 @@ class ClassFeedbackController extends Controller
             'students.studentId', 
             'students.name as studentName', 
             'campuses.campusId',
-            'campuses.name as campusName', 
+            'campuses.name as campusName',
+            'class_feedbacks.satisfaction',
             'class_feedbacks.date')
         ->get();
-        return $this->successClassRequest($classReportData);
+        return $this->successClassRequest($classFeedbackData);
     }
 
     /**
