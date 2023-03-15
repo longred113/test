@@ -152,6 +152,7 @@ class TeacherController extends Controller
             return $this->successTeacherRequest($newTeacherData);
         }
     }
+    
     /**
      * Display the specified resource.
      *
