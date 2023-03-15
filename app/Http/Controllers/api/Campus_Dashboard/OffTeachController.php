@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Teachers;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use App\Http\Resources\TeacherResource;
+use Exception;
 
 class OffTeachController extends Controller
 {
@@ -18,8 +19,7 @@ class OffTeachController extends Controller
      */
     public function index()
     {
-        $data = TeacherResource::collection(Teachers::where('type', 'off')->get());
-        // $data = TeacherResource::get()->where('type', 'off');
+        $data = Teachers::select('teacherId', 'name', 'gender', 'dateOfBirth', 'status', 'campusId')->where('type', 'off')->get();
         return $this->successTeacherRequest($data);
     }
 

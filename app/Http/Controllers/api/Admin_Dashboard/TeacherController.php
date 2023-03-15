@@ -34,14 +34,37 @@ class TeacherController extends Controller
      */
     public function index()
     {
-        $teachersData = TeacherResource::collection(Teachers::all());
+        $teachersData = Teachers::join('users', 'teachers.teacherId', '=', 'users.teacherId')
+        ->join('campuses', 'teachers.campusId', '=', 'campuses.campusId')
+        ->select(
+            'teachers.teacherId',
+            'teachers.name as teacherName', 
+            'teachers.email as userName', 
+            'users.password as password',
+            'teachers.campusId',
+            'campuses.name as campusName',
+            'teachers.role',
+            'teachers.activate',
+            'teachers.type')
+        ->where('teachers.type', 'online')->get();
         return $this->successTeacherRequest($teachersData);
     }
 
     public function showOnlineTeacher()
     {
-
-        $teacherData = TeacherResource::collection(Teachers::where('type', 'online')->get());
+        $teacherData = Teachers::join('users', 'teachers.teacherId', '=', 'users.teacherId')
+        ->join('campuses', 'teachers.campusId', '=', 'campuses.campusId')
+        ->select(
+            'teachers.teacherId',
+            'teachers.name as teacherName', 
+            'teachers.email as userName', 
+            'users.password as password',
+            'teachers.campusId',
+            'campuses.name as campusName',
+            'teachers.role',
+            'teachers.activate',
+            'teachers.type')
+        ->where('teachers.type', 'online')->get();
         return $this->successTeacherRequest($teacherData);
     }
 
