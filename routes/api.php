@@ -340,6 +340,7 @@ Route::prefix('admin-product-enrollment-management')
         Route::get('/', [ProductEnrollmentController::class, 'index'])->name('index');
         Route::post('/create', [ProductEnrollmentController::class, 'store'])->name('store');
         Route::get('/{productEnrollmentId}', [ProductEnrollmentController::class, 'show'])->name('show');
+        Route::post('/get-enrollment', [ProductEnrollmentController::class, 'getEnrollment'])->name('getEnrollment');
         Route::put('/update/{productEnrollmentId}', [ProductEnrollmentController::class, 'update'])->name('update');
         Route::delete('/{productEnrollmentId}', [ProductEnrollmentController::class, 'destroy'])->name('destroy');
     }); 

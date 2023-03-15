@@ -11,7 +11,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class StudentAnnounced implements ShouldBroadcast
+class SendStudentAnnounced implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -34,11 +34,11 @@ class StudentAnnounced implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('student-announcement');
+        return new Channel('send-student-announcement');
     }
 
     public function broadcastAs()
     {
-        return 'student-announcement-event';
+        return 'send-student-announcement-event';
     }
 }

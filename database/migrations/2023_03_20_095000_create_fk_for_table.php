@@ -89,6 +89,14 @@ class CreateFkForTable extends Migration
         Schema::table('class_materials', function (Blueprint $table) {
             $table->foreign('class')->references('classId')->on('classes')->onDelete('cascade');
         });
+        Schema::table('student_enrollments', function (Blueprint $table) {
+            $table->foreign('studentId')->references('studentId')->on('students')->onDelete('cascade');
+            $table->foreign('enrollmentId')->references('enrollmentId')->on('enrollments')->onDelete('cascade');
+        });
+        Schema::table('product_enrollments', function (Blueprint $table) {
+            $table->foreign('productId')->references('productId')->on('products')->onDelete('cascade');
+            $table->foreign('enrollmentId')->references('enrollmentId')->on('enrollments')->onDelete('cascade');
+        });
     }
 
     /**

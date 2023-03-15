@@ -17,8 +17,8 @@
       cluster: 'ap1'
     });
 
-    var channel = pusher.subscribe('announcements');
-    channel.bind('announcements-event', function(data) {
+    var channel = pusher.subscribe('send-all-announcement');
+    channel.bind('send-all-announcement-event', function(data) {
       alert(JSON.stringify(data));
     });
     </script>
