@@ -27,8 +27,23 @@ class ClassFeedbackController extends Controller
      */
     public function index()
     {
-        $data = ClassFeedbackResource::collection(ClassFeedbacks::all());
-        return $this->successClassRequest($data);
+        $classReportData = ClassFeedbacks::join('teachers', 'class_feedbacks.teacherId', '=', 'teachers.teacherId')
+        ->join('classes', 'class_feedbacks.classId', '=', 'classes.classId')
+        ->join('students', 'class_feedbacks.studentId', '=', 'students.studentId')
+        ->join('campuses', 'class_feedbacks.campusId', '=', 'campuses.campusId')
+        ->select(
+            'class_feedbacks.classFeedbackId',
+            'teachers.teacherId', 
+            'teachers.name as teacherName', 
+            'classes.classId', 
+            'classes.name as className', 
+            'students.studentId', 
+            'students.name as studentName', 
+            'campuses.campusId',
+            'campuses.name as campusName', 
+            'class_feedbacks.date')
+        ->get();
+        return $this->successClassRequest($classReportData);
     }
 
     /**
