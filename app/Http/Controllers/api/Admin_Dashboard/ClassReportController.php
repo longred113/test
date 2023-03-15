@@ -29,7 +29,17 @@ class ClassReportController extends Controller
         ->join('classes', 'class_reports.classId', '=', 'classes.classId')
         ->join('students', 'class_reports.studentId', '=', 'students.studentId')
         ->join('campuses', 'class_reports.campusId', '=', 'campuses.campusId')
-        ->select('teachers.name as teacherName', 'classes.name as className', 'students.name as studentName', 'campuses.name as campusName')
+        ->select(
+            'class_reports.classReportId',
+            'teachers.teacherId', 
+            'teachers.name as teacherName', 
+            'classes.classId', 
+            'classes.name as className', 
+            'students.studentId', 
+            'students.name as studentName', 
+            'campuses.campusId',
+            'campuses.name as campusName', 
+            'class_reports.date')
         ->get();
         return $this->successClassRequest($classReportData);
     }
