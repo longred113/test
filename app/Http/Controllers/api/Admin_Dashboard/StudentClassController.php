@@ -95,12 +95,16 @@ class StudentClassController extends Controller
                 ->join('student_classes', 'students.studentId', '=', 'student_classes.studentId')
                 ->join('classes', 'student_classes.classId', '=', 'classes.classId')
                 ->join('teachers', 'classes.onlineTeacher', '=', 'teachers.teacherId')
-                ->selectRaw('teachers.name as teacherName, teachers.teacherId, GROUP_CONCAT(classes.name) as classNames')
+                ->selectRaw('teachers.name as teacherName, teachers.teacherId, GROUP_CONCAT(classes.name) as classNames, GROUP_CONCAT(students.name) as studentNames')
                 ->groupBy('teachers.name', 'teachers.teacherId')
                 ->get();
             foreach ($studentsData as $student) {
                 $classNamesArray = explode(',', $student->classNames);
                 $student->classNames = $classNamesArray;
+            }
+            foreach ($studentsData as $student) {
+                $studentNamesArray = explode(',', $student->studentNames);
+                $student->studentNames = $studentNamesArray;
             }
         } catch (Exception $e) {
             return $e->getMessage();
