@@ -34,11 +34,11 @@ class StudentAnnounced implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('user-registration');
+        return new Channel('student-announcement');
     }
 
     public function broadcastAs()
     {
-        return 'user-registered-event';
+        return 'student-announcement-event';
     }
 }
