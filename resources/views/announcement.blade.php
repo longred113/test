@@ -1,15 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Pusher Test</title>
+    <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+    <script>
+        // Enable pusher logging - don't include this in production
+        Pusher.logToConsole = true;
+
+        var pusher = new Pusher('ef7b5bab9016721f8248', {
+            cluster: 'ap1'
+        });
+
+        var channel = pusher.subscribe('send-teacher-announcement');
+        channel.bind('send-teacher-announcement-event', function(data) {
+            alert(JSON.stringify(data));
+        });
+    </script>
 </head>
+
 <body>
     <form action="" method="POST">
         <input type="text" name="name">
         <input type="submit" value="Submit">
     </form>
 </body>
+
 </html>

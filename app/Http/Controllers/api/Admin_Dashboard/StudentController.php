@@ -41,7 +41,20 @@ class StudentController extends Controller
     public function studentJoinedList()
     {
         $studentId = Users::get('studentId');
-        $joinedStudent = Students::whereIn('studentId', $studentId)->where('type', 'online')->get();
+        $joinedStudent = Students::join('users', 'students.studentId', '=', 'users.studentId')
+        ->join('campuses', 'students.campusId', '=', 'campuses.campusId')
+        ->select(
+            'students.studentId',
+            'students.campusId',
+            'campuses.name as campusName',
+            'students.name',
+            'students.email',
+            'users.email as userName',
+            'users.password',
+            'students.gender',
+            'students.dateOfBirth',
+        )
+        ->where('students.type', 'online')->get();
         return $this->successStudentRequest($joinedStudent);
     }
 

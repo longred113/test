@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\api\Admin_Dashboard;
 
+use App\Events\ChatMessageSent;
 use App\Events\SendAllAnnounced;
 use App\Events\SendStudentAnnounced;
+use App\Events\SendTeacherAnnounced;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ClassBoardResource;
 use App\Models\ClassBoards;
@@ -62,7 +64,6 @@ class ClassBoardController extends Controller
         ];
 
         $newClassBoard = new ClassBoardResource(ClassBoards::create($params));
-        event(new FunctionAnnounced($newClassBoard));
         return $this->successClassBoardRequest($newClassBoard);
     }
 
@@ -161,6 +162,8 @@ class ClassBoardController extends Controller
         ]);
         event(new SendAllAnnounced($classBoard));
         event(new SendStudentAnnounced('lala'));
+        event(new SendTeacherAnnounced('woooo'));
+        event(new ChatMessageSent('ora', 'orrrrrra'));
         $newPusher->trigger('messages-staging', 'my-event', ['message' => 'Hello World']);
         return $classBoard;
     }

@@ -26,9 +26,3 @@ Route::get('/chat', function () {
 Route::get('/announcement', function () {
     return view('announcement');
 });
-Route::post('/announcement', function () {
-    $functionName = request()->functionName;
-    dd($functionName);
-    event(new FunctionAnnounced($functionName));
-    return view('announcement');
-});

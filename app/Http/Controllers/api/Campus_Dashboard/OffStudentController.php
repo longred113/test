@@ -62,9 +62,6 @@ class OffStudentController extends Controller
             'basicPoint' => request('basicPoint'),
             'campusId' => request('campusId'),
             'type' => request('type'),
-
-
-
         ];
         $newStudents = new StudentsResource(Students::create($params));
         return $newStudents;
