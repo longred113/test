@@ -38,8 +38,8 @@ class TeacherController extends Controller
         ->join('campuses', 'teachers.campusId', '=', 'campuses.campusId')
         ->select(
             'teachers.teacherId',
-            'teachers.name as teacherName', 
-            'teachers.email as userName', 
+            'teachers.name as name', 
+            'teachers.email as email', 
             'users.password as password',
             'teachers.campusId',
             'campuses.name as campusName',
