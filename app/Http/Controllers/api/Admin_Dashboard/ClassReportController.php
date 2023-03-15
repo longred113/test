@@ -39,7 +39,8 @@ class ClassReportController extends Controller
             'students.name as studentName', 
             'campuses.campusId',
             'campuses.name as campusName', 
-            'class_reports.date')
+            'class_reports.date',
+            'class_reports.comment')
         ->get();
         return $this->successClassRequest($classReportData);
     }

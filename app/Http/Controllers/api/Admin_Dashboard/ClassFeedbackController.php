@@ -42,7 +42,8 @@ class ClassFeedbackController extends Controller
             'campuses.campusId',
             'campuses.name as campusName',
             'class_feedbacks.satisfaction',
-            'class_feedbacks.date')
+            'class_feedbacks.date',
+            'class_feedbacks.comment')
         ->get();
         return $this->successClassRequest($classFeedbackData);
     }
