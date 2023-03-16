@@ -43,11 +43,11 @@ class ClassBoardController extends Controller
     public function store()
     {
         $validator = Validator::make($this->request->all(), [
-            'writer' => 'string|required',
-            'class' => 'string|required',
-            'title' => 'string|required',
-            'view' => 'integer|required',
-            'date' => 'date|required',
+            // 'writer' => 'string|required',
+            // 'class' => 'string|required',
+            // 'title' => 'string|required',
+            // 'view' => 'integer|required',
+            // 'date' => 'date|required',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
@@ -62,9 +62,9 @@ class ClassBoardController extends Controller
             'view' => $this->request['view'],
             'date' => $this->request['date'],
         ];
-
-        $newClassBoard = new ClassBoardResource(ClassBoards::create($params));
-        return $this->successClassBoardRequest($newClassBoard);
+        ClassBoardController::sendMessage($this->request['message']);
+        // $newClassBoard = new ClassBoardResource(ClassBoards::create($params));
+        // return $this->successClassBoardRequest($newClassBoard);
     }
 
     /**
@@ -141,16 +141,16 @@ class ClassBoardController extends Controller
         return $this->successClassBoardRequest($deleteClassBoard);
     }
 
-    public function sendMessage()
+    public function sendMessage($message)
     {
-        $validator = Validator::make($this->request->all(), [
-            'classBoardId' => 'string|required',
-        ]);
-        if ($validator->fails()) {
-            return $this->errorBadRequest($validator->getMessageBag()->toArray());
-        }
+        // $validator = Validator::make($this->request->all(), [
+        //     'classBoardId' => 'string|required',
+        // ]);
+        // if ($validator->fails()) {
+        //     return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        // }
 
-        $classBoard = ClassBoards::find($this->request['classBoardId']);
+        // $classBoard = ClassBoards::find($this->request['classBoardId']);
 
         $newAppId = 1567865;
         $newAppKey = "3fcd7920ae1ad4d51c58";
@@ -162,16 +162,16 @@ class ClassBoardController extends Controller
         ]);
         // dd($this->request->all());
         if ($this->request['type'] == 'sendAll'){
-            event(new SendAllAnnounced($classBoard));
+            event(new SendAllAnnounced($message));
         }
         if ($this->request['type'] == 'sendStudent'){
-            event(new SendStudentAnnounced('lala'));
+            event(new SendStudentAnnounced($message));
         }
         if ($this->request['type'] == 'sendTeacher'){
             event(new SendTeacherAnnounced('woooo'));
         }
         // event(new ChatMessageSent('ora', 'orrrrrra'));
         $newPusher->trigger('messages-staging', 'my-event', ['message' => 'Hello World']);
-        return $classBoard;
+        // return $classBoard;
     }
 }
