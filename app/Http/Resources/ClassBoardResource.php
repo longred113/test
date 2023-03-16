@@ -16,11 +16,14 @@ class ClassBoardResource extends JsonResource
     {
         return [
             'classBoardId' => $this->classBoardId,
-            'writer' => $this->writer,
-            'class' => $this->class,
+            'message' => $this->message,
+            'teacherId' => $this->teacherId,
             'title' => $this->title,
-            'view' => $this->view,
+            'studentId' => $this->studentId,
             'date' => $this->date,
+            'studentName' => $this->studentName,
+            'teacherName' => $this->teacherName,
+            'type' => $this->type,
         ];
     }
 }

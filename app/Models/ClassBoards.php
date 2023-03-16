@@ -13,10 +13,13 @@ class ClassBoards extends Model
     public $incrementing = false;
     protected $fillable = [
         'classBoardId',
-        'writer',
-        'class',
+        'message',
+        'teacherId',
         'title',
-        'view',
+        'studentId',
         'date',
+        'type',
+        'studentName',
+        'teacherName',
     ];
 }

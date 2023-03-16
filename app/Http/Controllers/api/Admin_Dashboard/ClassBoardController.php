@@ -9,6 +9,9 @@ use App\Events\SendTeacherAnnounced;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ClassBoardResource;
 use App\Models\ClassBoards;
+use App\Models\Students;
+use App\Models\Teachers;
+use Exception;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -43,28 +46,63 @@ class ClassBoardController extends Controller
     public function store()
     {
         $validator = Validator::make($this->request->all(), [
-            // 'writer' => 'string|required',
-            // 'class' => 'string|required',
-            // 'title' => 'string|required',
-            // 'view' => 'integer|required',
-            // 'date' => 'date|required',
+            'message' => 'string',
+            'title' => 'string',
+            'teacherIds' => 'array|required_without:studentIds',
+            'studentIds' => 'array|required_without:teacherIds',
+            'date' => 'date',
+            'type' => 'string',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
-
         $classBoardId = IdGenerator::generate(['table' => 'class_boards', 'trow' => 'classBoardId', 'length' => 7, 'prefix' => 'CB']);
-        $params = [
-            'classBoardId' => $classBoardId,
-            'writer' => $this->request['writer'],
-            'class' => $this->request['class'],
-            'title' => $this->request['title'],
-            'view' => $this->request['view'],
-            'date' => $this->request['date'],
-        ];
-        ClassBoardController::sendMessage($this->request['message']);
-        // $newClassBoard = new ClassBoardResource(ClassBoards::create($params));
-        // return $this->successClassBoardRequest($newClassBoard);
+        if(!empty($this->request['teacherIds'])) {
+            $paramTeachers = [
+                'classBoardId' => $classBoardId,
+                'message' => $this->request['message'],
+                'title' => $this->request['title'],
+                'date' => $this->request['date'],
+                'type' => $this->request['type'],
+            ];
+            try{
+                foreach($this->request['teacherIds'] as $teacher) {
+                    $teachersName = Teachers::where('teacherId', $teacher)->get();
+                    dd();
+                    $teacherNameConvert = $teachersName->pluck('name')->toArray();
+                    // foreach($teacherNameConvert as $name){
+                        //     $paramTeachers['teacherName'][] = $name;
+                        // }
+                }
+                dd(1);
+            }
+            catch(Exception $e) {
+                return $e->getMessage();
+            }
+            ClassBoardController::sendMessage($this->request['title'], $this->request['message'], $this->request['type']);
+            $newClassBoard = new ClassBoardResource(ClassBoards::create($paramTeachers));
+            return $this->successClassBoardRequest($newClassBoard);
+        }
+
+        if(!empty($this->request['studentId'])) {
+            $paramStudents = [
+                'classBoardId' => $classBoardId,
+                'message' => $this->request['message'],
+                'title' => $this->request['title'],
+                'studentId' => $this->request['studentId'],
+                'date' => $this->request['date'],
+                'type' => $this->request['type'],
+            ];
+        }
+    }
+
+    public function createClassBoardByStudent($paramStudents)
+    {
+        
+    }
+    public function createClassBoardByTeacher($paramTeachers)
+    {
+
     }
 
     /**
