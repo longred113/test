@@ -162,15 +162,12 @@ class ClassBoardController extends Controller
         ]);
         // dd($this->request->all());
         if ($this->request['type'] == 'sendAll'){
-            var_dump(1);
             event(new SendAllAnnounced($classBoard));
         }
         if ($this->request['type'] == 'sendStudent'){
-            var_dump(2);
             event(new SendStudentAnnounced('lala'));
         }
         if ($this->request['type'] == 'sendTeacher'){
-            var_dump(3);
             event(new SendTeacherAnnounced('woooo'));
         }
         // event(new ChatMessageSent('ora', 'orrrrrra'));
