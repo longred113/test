@@ -160,10 +160,20 @@ class ClassBoardController extends Controller
             'cluster' => 'ap1',
             'useTLS' => true
         ]);
-        event(new SendAllAnnounced($classBoard));
-        event(new SendStudentAnnounced('lala'));
-        event(new SendTeacherAnnounced('woooo'));
-        event(new ChatMessageSent('ora', 'orrrrrra'));
+        // dd($this->request->all());
+        if ($this->request['type'] == 'sendAll'){
+            var_dump(1);
+            event(new SendAllAnnounced($classBoard));
+        }
+        if ($this->request['type'] == 'sendStudent'){
+            var_dump(2);
+            event(new SendStudentAnnounced('lala'));
+        }
+        if ($this->request['type'] == 'sendTeacher'){
+            var_dump(3);
+            event(new SendTeacherAnnounced('woooo'));
+        }
+        // event(new ChatMessageSent('ora', 'orrrrrra'));
         $newPusher->trigger('messages-staging', 'my-event', ['message' => 'Hello World']);
         return $classBoard;
     }

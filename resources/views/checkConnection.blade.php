@@ -21,6 +21,14 @@
     channel.bind('send-all-announcement-event', function(data) {
       alert(JSON.stringify(data));
     });
+    var channel = pusher.subscribe('send-teacher-announcement');
+    channel.bind('send-teacher-announcement-event', function(data) {
+      alert(JSON.stringify(data));
+    });
+    var channel = pusher.subscribe('send-student-announcement');
+    channel.bind('send-student-announcement-event', function(data) {
+      alert(JSON.stringify(data));
+    });
     </script>
 </head>
 <body>
