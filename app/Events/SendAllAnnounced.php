@@ -15,6 +15,7 @@ class SendAllAnnounced implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $title;
     public $message;
 
     /**
@@ -22,9 +23,10 @@ class SendAllAnnounced implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct($name)
+    public function __construct($title, $message)
     {
-        $this->message = $name;
+        $this->title = $title;
+        $this->message = $message;
     }
 
     /**

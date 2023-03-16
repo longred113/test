@@ -56,9 +56,9 @@ class ClassBoardController extends Controller
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
-        if(!empty($this->request['teacherIds'])) {
-            try{
-                foreach($this->request['teacherIds'] as $teacher) {
+        if (!empty($this->request['teacherIds'])) {
+            try {
+                foreach ($this->request['teacherIds'] as $teacher) {
                     $classBoardId = IdGenerator::generate(['table' => 'class_boards', 'trow' => 'classBoardId', 'length' => 7, 'prefix' => 'CB']);
                     $paramTeachers = [
                         'classBoardId' => $classBoardId,
@@ -70,35 +70,40 @@ class ClassBoardController extends Controller
                     $paramTeachers['teacherId'] = $teacher;
                     $teachersName = Teachers::where('teacherId', $teacher)->get('name');
                     $teacherNameConvert = $teachersName->pluck('name')->toArray();
-                    $paramTeachers['teacherName'] = implode(', ',$teacherNameConvert);
-                    ClassBoardController::createClassBoardByTeacher($paramTeachers);
+                    $paramTeachers['teacherName'] = implode(', ', $teacherNameConvert);
+                    $newClassBoard = new ClassBoardResource(ClassBoards::create($paramTeachers));
                 }
-                ClassBoardController::sendMessage($this->request['title'], $this->request['message'], $this->request['type']);
-            }
-            catch(Exception $e) {
+                ClassBoardController::sendMessage($this->request['title'], $this->request['message']);
+                return $this->successClassBoardRequest();
+            } catch (Exception $e) {
                 return $e->getMessage();
             }
         }
 
-        if(!empty($this->request['studentId'])) {
-            $paramStudents = [
-                'classBoardId' => $classBoardId,
-                'message' => $this->request['message'],
-                'title' => $this->request['title'],
-                'studentId' => $this->request['studentId'],
-                'date' => $this->request['date'],
-                'type' => $this->request['type'],
-            ];
+        if (!empty($this->request['studentIds'])) {
+            try {
+                foreach ($this->request['studentIds'] as $student) {
+                    $classBoardId = IdGenerator::generate(['table' => 'class_boards', 'trow' => 'classBoardId', 'length' => 7, 'prefix' => 'CB']);
+                    $paramStudents = [
+                        'classBoardId' => $classBoardId,
+                        'message' => $this->request['message'],
+                        'title' => $this->request['title'],
+                        'studentId' => $this->request['studentId'],
+                        'date' => $this->request['date'],
+                        'type' => $this->request['type'],
+                    ];
+                    $paramStudents['studentId'] = $student;
+                    $studentsName = Students::where('studentId', $student)->get('name');
+                    $studentNameConvert = $studentsName->pluck('name')->toArray();
+                    $paramStudents['studentName'] = implode(', ', $studentNameConvert);
+                    $newClassBoard = new ClassBoardResource(ClassBoards::create($paramStudents));
+                }
+                ClassBoardController::sendMessage($this->request['title'], $this->request['message']);
+                return $this->successClassBoardRequest();
+            } catch (Exception $e) {
+                return $e->getMessage();
+            }
         }
-    }
-
-    public function createClassBoardByStudent($paramStudents)
-    {
-    }
-    public function createClassBoardByTeacher($paramTeachers)
-    {
-        $newClassBoard = new ClassBoardResource(ClassBoards::create($paramTeachers));
-        return $this->successClassBoardRequest($newClassBoard);
     }
 
     /**
@@ -175,7 +180,7 @@ class ClassBoardController extends Controller
         return $this->successClassBoardRequest($deleteClassBoard);
     }
 
-    public function sendMessage($message)
+    public function sendMessage($title, $message)
     {
         // $validator = Validator::make($this->request->all(), [
         //     'classBoardId' => 'string|required',
@@ -195,13 +200,13 @@ class ClassBoardController extends Controller
             'useTLS' => true
         ]);
         // dd($this->request->all());
-        if ($this->request['type'] == 'sendAll'){
-            event(new SendAllAnnounced($message));
+        if ($this->request['type'] == 'sendAll') {
+            event(new SendAllAnnounced($title, $message));
         }
-        if ($this->request['type'] == 'sendStudent'){
+        if ($this->request['type'] == 'sendStudent') {
             event(new SendStudentAnnounced($message));
         }
-        if ($this->request['type'] == 'sendTeacher'){
+        if ($this->request['type'] == 'sendTeacher') {
             event(new SendTeacherAnnounced('woooo'));
         }
         // event(new ChatMessageSent('ora', 'orrrrrra'));
