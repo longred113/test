@@ -574,6 +574,7 @@ class ComposerStaticInitcc86beb3fc94b4bcb34d2f49c560976d
     public static $classMap = array (
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Events\\ChatMessageSent' => __DIR__ . '/../..' . '/app/Events/ChatMessageSent.php',
+        'App\\Events\\PrivateMessage' => __DIR__ . '/../..' . '/app/Events/PrivateMessage.php',
         'App\\Events\\SendAllAnnounced' => __DIR__ . '/../..' . '/app/Events/SendAllAnnounced.php',
         'App\\Events\\SendStudentAnnounced' => __DIR__ . '/../..' . '/app/Events/SendStudentAnnounced.php',
         'App\\Events\\SendTeacherAnnounced' => __DIR__ . '/../..' . '/app/Events/SendTeacherAnnounced.php',
@@ -592,6 +593,7 @@ class ComposerStaticInitcc86beb3fc94b4bcb34d2f49c560976d
         'App\\Http\\Controllers\\api\\Admin_Dashboard\\ClassReportController' => __DIR__ . '/../..' . '/app/Http/Controllers/api/Admin_Dashboard/ClassReportController.php',
         'App\\Http\\Controllers\\api\\Admin_Dashboard\\EnrollmentControllerA' => __DIR__ . '/../..' . '/app/Http/Controllers/api/Admin_Dashboard/EnrollmentControllerA.php',
         'App\\Http\\Controllers\\api\\Admin_Dashboard\\MatchedActivityController' => __DIR__ . '/../..' . '/app/Http/Controllers/api/Admin_Dashboard/MatchedActivityController.php',
+        'App\\Http\\Controllers\\api\\Admin_Dashboard\\MessageController' => __DIR__ . '/../..' . '/app/Http/Controllers/api/Admin_Dashboard/MessageController.php',
         'App\\Http\\Controllers\\api\\Admin_Dashboard\\PackagesController' => __DIR__ . '/../..' . '/app/Http/Controllers/api/Admin_Dashboard/PackagesController.php',
         'App\\Http\\Controllers\\api\\Admin_Dashboard\\ParentController' => __DIR__ . '/../..' . '/app/Http/Controllers/api/Admin_Dashboard/ParentController.php',
         'App\\Http\\Controllers\\api\\Admin_Dashboard\\ProductController' => __DIR__ . '/../..' . '/app/Http/Controllers/api/Admin_Dashboard/ProductController.php',
@@ -609,6 +611,7 @@ class ComposerStaticInitcc86beb3fc94b4bcb34d2f49c560976d
         'App\\Http\\Controllers\\api\\Campus_Dashboard\\EnrollmentController' => __DIR__ . '/../..' . '/app/Http/Controllers/api/Campus_Dashboard/EnrollmentController.php',
         'App\\Http\\Controllers\\api\\Campus_Dashboard\\OffStudentController' => __DIR__ . '/../..' . '/app/Http/Controllers/api/Campus_Dashboard/OffStudentController.php',
         'App\\Http\\Controllers\\api\\Campus_Dashboard\\OffTeachController' => __DIR__ . '/../..' . '/app/Http/Controllers/api/Campus_Dashboard/OffTeachController.php',
+        'App\\Http\\Controllers\\api\\Message_Dashboard\\PrivateMessageController' => __DIR__ . '/../..' . '/app/Http/Controllers/api/Message_Dashboard/PrivateMessageController.php',
         'App\\Http\\Controllers\\api\\Student_Dashboard\\StudyPlannerSController' => __DIR__ . '/../..' . '/app/Http/Controllers/api/Student_Dashboard/StudyPlannerSController.php',
         'App\\Http\\Controllers\\api\\Teacher_Dashboard\\StudyPlannerController' => __DIR__ . '/../..' . '/app/Http/Controllers/api/Teacher_Dashboard/StudyPlannerController.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',

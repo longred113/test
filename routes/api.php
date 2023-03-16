@@ -29,6 +29,7 @@ use App\Http\Controllers\api\Admin_Dashboard\StudentProductController;
 use App\Http\Controllers\api\Campus_Dashboard\OffStudentController;
 use App\Http\Controllers\api\Campus_Dashboard\OffTeachController;
 use App\Http\Controllers\api\Campus_Dashboard\EnrollmentController;
+use App\Http\Controllers\api\Message_Dashboard\PrivateMessageController;
 use App\Http\Controllers\api\Teacher_Dashboard\StudyPlannerController;
 use App\Http\Controllers\api\Student_Dashboard\StudyPlannerSController;
 use Illuminate\Support\Facades\Route;
@@ -412,5 +413,18 @@ Route::prefix('student-study-planner')
     });
 //END STUDENT DASHBOARD
 
-Route::post('/messages', function () {
+//START MESSAGE DASHBOARD
+Route::prefix('private-message')
+    ->name('private-message.')
+    ->group(function () {
+        Route::get('/{studentId}', [PrivateMessageController::class, 'index'])->name('index');
+        Route::post('/create', [PrivateMessageController::class, 'store'])->name('store');
+        Route::post('/send-message', [PrivateMessageController::class, 'sendMessage'])->name('sendMessage');
+        Route::get('/{classBoardId}', [PrivateMessageController::class, 'show'])->name('show');
+        Route::get('/get-student-announcement/{studentId}', [PrivateMessageController::class, 'getStudentAnnouncement'])->name('getStudentAnnouncement');
+        Route::get('/get-teacher-announcement/{teacherId}', [PrivateMessageController::class, 'getTeacherAnnouncement'])->name('getTeacherAnnouncement');
+        Route::put('/update/{classBoardId}', [PrivateMessageController::class, 'update'])->name('update');
+        Route::delete('/{classBoardId}', [PrivateMessageController::class, 'destroy'])->name('destroy');
     });
+
+//END MESSAGE DASHBOARD

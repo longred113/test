@@ -26,3 +26,6 @@ Route::get('/chat', function () {
 Route::get('/announcement', function () {
     return view('announcement');
 });
+Route::get('/private', function () {
+    return view('private-channel');
+});
