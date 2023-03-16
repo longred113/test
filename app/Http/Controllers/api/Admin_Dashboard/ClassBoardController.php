@@ -119,6 +119,18 @@ class ClassBoardController extends Controller
         return $this->successClassBoardRequest($classBoardData);
     }
 
+    public function getStudentAnnouncement($studentId)
+    {
+        $getStudentAnnouncement = ClassBoards::where('studentId', $studentId)->select('title','message')->get();
+        return $this->successClassBoardRequest($getStudentAnnouncement);
+    }
+
+    public function getTeacherAnnouncement($teacherId)
+    {
+        $getTeacherAnnouncement = ClassBoards::where('teacherId', $teacherId)->select('title','message')->get();
+        return $this->successClassBoardRequest($getTeacherAnnouncement);
+    }
+
     /**
      * Update the specified resource in storage.
      *

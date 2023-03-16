@@ -251,6 +251,8 @@ Route::prefix('admin-class-board-management')
         Route::post('/create', [ClassBoardController::class, 'store'])->name('store');
         Route::post('/send-message', [ClassBoardController::class, 'sendMessage'])->name('sendMessage');
         Route::get('/{classBoardId}', [ClassBoardController::class, 'show'])->name('show');
+        Route::get('/get-student-announcement/{studentId}', [ClassBoardController::class, 'getStudentAnnouncement'])->name('getStudentAnnouncement');
+        Route::get('/get-teacher-announcement/{teacherId}', [ClassBoardController::class, 'getTeacherAnnouncement'])->name('getTeacherAnnouncement');
         Route::put('/update/{classBoardId}', [ClassBoardController::class, 'update'])->name('update');
         Route::delete('/{classBoardId}', [ClassBoardController::class, 'destroy'])->name('destroy');
     });
