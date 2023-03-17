@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use App\Helpers\Helper;
 use App\Models\Roles;
+use Exception;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class UserController extends Controller
@@ -247,5 +248,21 @@ class UserController extends Controller
         $user = Users::find($userId);
         $deleteUser = $user->delete();
         return $this->successUserRequest($deleteUser);
+    }
+
+    public function checkLogin($userId)
+    {
+        $validator = Validator::make($this->request->all(), [
+            'checkLogin' => 'integer|required',
+        ]);
+        if ($validator->fails()) {
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        }
+        try{
+            $updateCheckLogin = Users::where('userId', $userId)->update(['checkLogin' => $this->request['checkLogin']]);
+        }catch(Exception $e) {
+            return $e->getMessage();
+        }
+        return $this->successUserRequest($updateCheckLogin);
     }
 }

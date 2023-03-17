@@ -231,6 +231,7 @@ Route::prefix('admin-user-management')
         Route::get('/get-by-campus/{campusId}', [UserController::class, 'getUserFromCampus'])->name('getUserFromCampus');
         Route::put('/update/{userId}', [UserController::class, 'update'])->name('update');
         Route::delete('/{userId}', [UserController::class, 'destroy'])->name('destroy');
+        Route::post('/update-check-login/{userId}', [UserController::class, 'checkLogin'])->name('checkLogin');
     });
 
 Route::prefix('admin-student-class-management')

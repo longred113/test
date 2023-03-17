@@ -80,6 +80,7 @@ class CampusManagerController extends Controller
         ];
         $userParams = [
             'campusId' => $teacherParams['campusId'],
+            'campusManagerId' => $campusManagerId,
             'name' => $params['name'],
             'email' => $params['email'],
             'password' => $teacherParams['password'],

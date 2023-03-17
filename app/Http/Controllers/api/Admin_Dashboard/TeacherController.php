@@ -66,7 +66,7 @@ class TeacherController extends Controller
             'teachers.activate',
             'teachers.type')
         ->where('teachers.type', 'online')->get();  
-        $campusManagerData = CampusManager::join('users', 'campus_managers.campusId', '=','users.campusId')
+        $campusManagerData = CampusManager::join('users', 'campus_managers.campusManagerId', '=','users.campusManagerId')
         ->join('campuses', 'campus_managers.campusId', '=', 'campuses.campusId')
         ->select(
             'campus_managers.campusManagerId as teacherId',
@@ -78,7 +78,8 @@ class TeacherController extends Controller
             'campus_managers.role',
             'campus_managers.activate',
             // 'campus_managers.type'
-            )->get();
+            )
+            ->get();
         $mergedData = $teacherData->concat($campusManagerData);
         return $this->successTeacherRequest($mergedData);
     }
