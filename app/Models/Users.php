@@ -23,5 +23,6 @@ class Users extends Model
         'campusManagerId',
         'campusId',
         'activate',
+        'checkLogin',
     ];
 }

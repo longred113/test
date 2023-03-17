@@ -26,6 +26,7 @@ class UserResource extends JsonResource
             'CampusManagerId' => $this->CampusManagerId,
             'campusId' => $this->campusId,
             'activate' => $this->activate,
+            'checkLogin' => $this->checkLogin,
         ];
     }
 }
