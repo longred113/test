@@ -13,10 +13,11 @@
         });
 
         var count = 0;
-        var channel = pusher.subscribe('send-private-announcement');
-        channel.bind('send-private-announcement-event', function(data) {
+        var channel = pusher.subscribe('student-message-' + 'ST00026');
+        channel.bind('student-message-event', function(data) {
             count++;
             alert(JSON.stringify(data));
+            console.log("Event received: " + JSON.stringify(data));
             console.log("Number of data sent: " + count);
         });
     </script>

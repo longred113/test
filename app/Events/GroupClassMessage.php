@@ -10,21 +10,21 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class PrivateMessage implements ShouldBroadcast
+class GroupClassMessage implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $message;
-    public $studentId;
+    public $classId;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($message,$studentId)
+    public function __construct($message, $classId)
     {
         $this->message = $message;
-        $this->studentId = $studentId;
+        $this->classId = $classId;
     }
 
     /**
@@ -34,11 +34,11 @@ class PrivateMessage implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('student-message-'. $this->studentId);
+        return new Channel('group-class-channel-' . $this->classId);
     }
 
     public function broadcastAs()
     {
-        return 'student-message-event';
+        return 'group-class-channel-event';
     }
 }

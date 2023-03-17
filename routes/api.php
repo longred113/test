@@ -418,14 +418,7 @@ Route::prefix('student-study-planner')
 Route::prefix('private-message')
     ->name('private-message.')
     ->group(function () {
-        Route::get('/{studentId}', [PrivateMessageController::class, 'index'])->name('index');
-        Route::post('/create', [PrivateMessageController::class, 'store'])->name('store');
-        Route::post('/send-message', [PrivateMessageController::class, 'sendMessage'])->name('sendMessage');
-        Route::get('/{classBoardId}', [PrivateMessageController::class, 'show'])->name('show');
-        Route::get('/get-student-announcement/{studentId}', [PrivateMessageController::class, 'getStudentAnnouncement'])->name('getStudentAnnouncement');
-        Route::get('/get-teacher-announcement/{teacherId}', [PrivateMessageController::class, 'getTeacherAnnouncement'])->name('getTeacherAnnouncement');
-        Route::put('/update/{classBoardId}', [PrivateMessageController::class, 'update'])->name('update');
-        Route::delete('/{classBoardId}', [PrivateMessageController::class, 'destroy'])->name('destroy');
+        Route::post('/private-message', [PrivateMessageController::class, 'sendMessages'])->name('sendMessages');
     });
 
 //END MESSAGE DASHBOARD

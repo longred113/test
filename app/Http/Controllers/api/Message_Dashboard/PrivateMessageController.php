@@ -2,34 +2,51 @@
 
 namespace App\Http\Controllers\api\Message_Dashboard;
 
+use App\Events\AllGroupMessage;
+use App\Events\GroupClassMessage;
 use App\Events\PrivateMessage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Pusher\Pusher;
 
 class PrivateMessageController extends Controller
 {
+    protected Request $request;
+
+    public function __construct(
+        Request $request
+    ) {
+        $this->request = $request;
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($studentId)
+    public function sendMessages()
     {
-        // $newAppId = 1567865;
-        // $newAppKey = "3fcd7920ae1ad4d51c58";
-        // $newAppSecret = "1a1ac3cf49fe66975dde";
+        $validator = Validator::make($this->request->all(), [
+            'classId' => 'string',
+            'studentId' => 'string',
+            'message' => 'string',
+        ]);
+        if ($validator->failed()) {
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        }
 
-        // $newPusher = new Pusher($newAppKey, $newAppSecret, $newAppId, [
-        //     'cluster' => 'ap1',
-        //     'useTLS' => true
-        // ]);
-
-        // $channelName = 'private-user-' . $studentId; // replace with the user's ID
-        // $newPusher->trigger($channelName, 'client-announcement', [
-        //     'message' => 'New announcement for you!'
-        // ]);
-        event(new PrivateMessage('New announcement for you!'));
+        if(!empty($this->request['classId'])) {
+            var_dump(1);
+            event(new GroupClassMessage($this->request['message'], $this->request['classId']));
+        }
+        if(!empty($this->request['studentId'])) {
+            var_dump(2);
+            event(new PrivateMessage($this->request['message'], $this->request['studentId']));
+        }
+        if(empty($this->request['classId']) && empty($this->request['studentId'])) {
+            var_dump(3);
+            event(new AllGroupMessage($this->request['message']));
+        }
     }
 
     /**

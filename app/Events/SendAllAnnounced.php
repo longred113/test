@@ -46,6 +46,6 @@ class SendAllAnnounced implements ShouldBroadcast
      */
     public function broadcastAs()
     {
-        return ['send-all-announcement-event', 'my-event'];
+        return 'send-all-announcement-event';
     }
 }
