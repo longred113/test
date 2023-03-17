@@ -24,6 +24,8 @@ class CampusManager extends Model
         'resignation',
         'campusId',
         'memo',
+        'role',
+        'activate',
         'offlineStudentId',
         'offlineTeacherId',
     ];

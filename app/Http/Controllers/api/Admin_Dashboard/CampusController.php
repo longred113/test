@@ -67,7 +67,7 @@ class CampusController extends Controller
             'password' => $userPassword,
         ];
         $newCampus = new CampusResource(Campus::create($params));
-        UserController::store($userParams);
+        // UserController::store($userParams);
         return $this->successCampusRequest($newCampus);
     }
 

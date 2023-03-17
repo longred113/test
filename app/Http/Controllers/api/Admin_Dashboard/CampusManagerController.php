@@ -75,6 +75,8 @@ class CampusManagerController extends Controller
             'resignation' => $teacherParams['resignation'],
             'campusId' => $teacherParams['campusId'],
             'memo' => $teacherParams['memo'],
+            'role' => $teacherParams['role'],
+            'activate' => $teacherParams['activate'],
         ];
         $userParams = [
             'campusId' => $teacherParams['campusId'],

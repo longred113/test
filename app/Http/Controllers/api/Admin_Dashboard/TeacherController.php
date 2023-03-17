@@ -9,6 +9,7 @@ use App\Models\Campus;
 use App\Models\CampusManager;
 use App\Models\Teachers;
 use Error;
+use Exception;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
@@ -64,8 +65,22 @@ class TeacherController extends Controller
             'teachers.role',
             'teachers.activate',
             'teachers.type')
-        ->where('teachers.type', 'online')->get();
-        return $this->successTeacherRequest($teacherData);
+        ->where('teachers.type', 'online')->get();  
+        $campusManagerData = CampusManager::join('users', 'campus_managers.campusId', '=','users.campusId')
+        ->join('campuses', 'campus_managers.campusId', '=', 'campuses.campusId')
+        ->select(
+            'campus_managers.campusManagerId as teacherId',
+            'campus_managers.name as teacherName',
+            'campus_managers.email as userName',
+            'users.password',
+            'campus_managers.campusId',
+            'campuses.name as campusName',
+            'campus_managers.role',
+            'campus_managers.activate',
+            // 'campus_managers.type'
+            )->get();
+        $mergedData = $teacherData->concat($campusManagerData);
+        return $this->successTeacherRequest($mergedData);
     }
 
     /**
@@ -129,15 +144,14 @@ class TeacherController extends Controller
             'role' => $this->request['role'],
             'memo' => $this->request['memo'],
         ];
-
         if ($this->request['role'] == 'Campus Manager') {
             $existCampusId = CampusManager::where('campusId', $this->request['campusId'])->get();
             if ($existCampusId->isNotEmpty()) {
                 $errorMessage = Lang::get('teacher.existed_campus_manager', [], 'vi');
                 return response()->json(['error' => $errorMessage], 400);
             }
-            $campusManager = CampusManagerController::store($params);
-            return $this->successCampusManagerRequest($campusManager);
+            $newCampusManager = CampusManagerController::store($params);
+            return $this->successCampusManagerRequest($newCampusManager);
         }
         else {
             $params['teacherId'] = $teacherId;

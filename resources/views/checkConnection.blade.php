@@ -17,9 +17,13 @@
       cluster: 'ap1'
     });
 
-    var channel = pusher.subscribe('send-all-announcement');
-    channel.bind('send-all-announcement-event', function(data) {
+    var count = 0;
+    var channel = pusher.subscribe('messages-staging');
+    channel.bind('my-event', function(data) {
+      count++;
       alert(JSON.stringify(data));
+      alert(JSON.stringify(count));
+      console.log("Number of data sent: " + count);
     });
     var channel = pusher.subscribe('send-teacher-announcement');
     channel.bind('send-teacher-announcement-event', function(data) {

@@ -71,7 +71,7 @@ class ClassBoardController extends Controller
                     $teachersName = Teachers::where('teacherId', $teacher)->get('name');
                     $teacherNameConvert = $teachersName->pluck('name')->toArray();
                     $paramTeachers['teacherName'] = implode(', ', $teacherNameConvert);
-                    $newClassBoard = new ClassBoardResource(ClassBoards::create($paramTeachers));
+                    // $newClassBoard = new ClassBoardResource(ClassBoards::create($paramTeachers));
                 }
                 ClassBoardController::sendMessage($this->request['title'], $this->request['message']);
                 return $this->successClassBoardRequest();
@@ -203,26 +203,27 @@ class ClassBoardController extends Controller
 
         // $classBoard = ClassBoards::find($this->request['classBoardId']);
 
-        $newAppId = 1567865;
-        $newAppKey = "3fcd7920ae1ad4d51c58";
-        $newAppSecret = "1a1ac3cf49fe66975dde";
+        $newAppId = 1567162;
+        $newAppKey = "ef7b5bab9016721f8248";
+        $newAppSecret = "d55e4fed621ad049048f";
 
         $newPusher = new Pusher($newAppKey, $newAppSecret, $newAppId, [
             'cluster' => 'ap1',
-            'useTLS' => true
+            'useTLS' => true,
+            'dedupe' => true,
         ]);
         // dd($this->request->all());
         if ($this->request['type'] == 'sendAll') {
             event(new SendAllAnnounced($title, $message));
         }
-        if ($this->request['type'] == 'sendStudent') {
-            event(new SendStudentAnnounced($message));
-        }
-        if ($this->request['type'] == 'sendTeacher') {
-            event(new SendTeacherAnnounced('woooo'));
-        }
+        // if ($this->request['type'] == 'sendStudent') {
+        //     event(new SendStudentAnnounced($message));
+        // }
+        // if ($this->request['type'] == 'sendTeacher') {
+        //     event(new SendTeacherAnnounced('woooo'));
+        // }
         // event(new ChatMessageSent('ora', 'orrrrrra'));
-        $newPusher->trigger('messages-staging', 'my-event', ['message' => 'Hello World']);
+        // $newPusher->trigger('messages-staging', ['my-event', 'next-event'], ['message' => 'Hello World']);
         // return $classBoard;
     }
 }
