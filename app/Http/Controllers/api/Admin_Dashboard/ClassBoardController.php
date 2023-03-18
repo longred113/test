@@ -33,7 +33,8 @@ class ClassBoardController extends Controller
      */
     public function index()
     {
-        $classBoardsData = ClassBoardResource::collection(ClassBoards::all());
+        $classBoardsData = ClassBoardResource::collection(ClassBoards::where('type', 'sendAll')
+        ->orderBy('classBoardId','DESC')->take(5)->get());
         return $this->successClassBoardRequest($classBoardsData);
     }
 
@@ -71,7 +72,7 @@ class ClassBoardController extends Controller
                     $teachersName = Teachers::where('teacherId', $teacher)->get('name');
                     $teacherNameConvert = $teachersName->pluck('name')->toArray();
                     $paramTeachers['teacherName'] = implode(', ', $teacherNameConvert);
-                    // $newClassBoard = new ClassBoardResource(ClassBoards::create($paramTeachers));
+                    $newClassBoard = new ClassBoardResource(ClassBoards::create($paramTeachers));
                 }
                 ClassBoardController::sendMessage($this->request['title'], $this->request['message']);
                 return $this->successClassBoardRequest();

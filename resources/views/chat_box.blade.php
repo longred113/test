@@ -27,14 +27,17 @@
 
             var channel = pusher.subscribe('chat');
             channel.bind('NewChatMessage', function(data) {
-                var message = data.username + ': ' + data.message + ' - ' + data.time;
+                var message = data.userName + ': ' + data.message + ' - ' + data.time;
                 var div = document.createElement('div');
                 div.appendChild(document.createTextNode(message));
                 document.getElementById('chat-box').appendChild(div);
             });
+            channel.bind('pusher:subscription_succeeded', function($members) {
+                channel.members.setMembers([]);
+            });
 
             var form = document.querySelector('form');
-            var username = document.getElementById('username');
+            var userName = document.getElementById('userName');
             var message = document.getElementById('message');
 
             form.addEventListener('submit', function(event) {
@@ -46,7 +49,7 @@
                 xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
                 xhr.onload = function() {
                     if (xhr.status === 200) {
-                        username.setAttribute('disabled', 'disabled');
+                        userName.setAttribute('disabled', 'disabled');
                         message.value = '';
                         message.focus();
                     } else {
@@ -54,7 +57,7 @@
                     }
                 };
                 xhr.send(JSON.stringify({
-                    username: username.value,
+                    userName: username.value,
                     message: message.value
                 }));
             });

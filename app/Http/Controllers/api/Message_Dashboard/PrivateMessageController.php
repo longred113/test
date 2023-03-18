@@ -8,6 +8,7 @@ use App\Events\NewChatMessage;
 use App\Events\PrivateMessage;
 use App\Http\Controllers\Controller;
 use App\Models\Chat;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Pusher\Pusher;
@@ -57,13 +58,24 @@ class PrivateMessageController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        $chat = Chat::create([
-            'userName' => $this->request['userName'],
-            'message' => $this->request['message'],
+        $validator = Validator::make($this->request->all(), [
+            'username' => 'string|required',
+            'message' => 'text|required',
         ]);
-
+        if ($validator->failed()) {
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        }
+        try{
+            $params = [
+                'userName' => $this->request['userName'],
+                'message' => $this->request['message'],
+            ];
+            $chat = Chat::create($params);
+        } catch(Exception $e) {
+            return $e->getMessage();
+        }
         broadcast(new NewChatMessage($chat))->toOthers();
         return response()->json(['status' => 'Message Sent!']);
     }

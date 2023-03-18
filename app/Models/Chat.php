@@ -8,7 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Chat extends Model
 {
     use HasFactory;
-
+    protected $fillable = [
+        'userName',
+        'message',
+    ];
     public static function formatMessage($userName, $message) {
         return [
             'userName' => $userName,
