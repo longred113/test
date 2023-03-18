@@ -232,6 +232,7 @@ Route::prefix('admin-user-management')
         Route::put('/update/{userId}', [UserController::class, 'update'])->name('update');
         Route::delete('/{userId}', [UserController::class, 'destroy'])->name('destroy');
         Route::post('/update-check-login/{userId}', [UserController::class, 'checkLogin'])->name('checkLogin');
+        Route::post('/check-information', [UserController::class, 'checkInfoLogin'])->name('checkInfoLogin');
     });
 
 Route::prefix('admin-student-class-management')
@@ -419,6 +420,8 @@ Route::prefix('private-message')
     ->name('private-message.')
     ->group(function () {
         Route::post('/private-message', [PrivateMessageController::class, 'sendMessages'])->name('sendMessages');
+        Route::get('/', [PrivateMessageController::class, 'index'])->name('index');
+        Route::post('/create', [PrivateMessageController::class, 'store'])->name('store');
     });
 
 //END MESSAGE DASHBOARD

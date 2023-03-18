@@ -4,8 +4,10 @@ namespace App\Http\Controllers\api\Message_Dashboard;
 
 use App\Events\AllGroupMessage;
 use App\Events\GroupClassMessage;
+use App\Events\NewChatMessage;
 use App\Events\PrivateMessage;
 use App\Http\Controllers\Controller;
+use App\Models\Chat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Pusher\Pusher;
@@ -57,7 +59,13 @@ class PrivateMessageController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $chat = Chat::create([
+            'userName' => $this->request['userName'],
+            'message' => $this->request['message'],
+        ]);
+
+        broadcast(new NewChatMessage($chat))->toOthers();
+        return response()->json(['status' => 'Message Sent!']);
     }
 
     /**
@@ -66,9 +74,8 @@ class PrivateMessageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function index()
     {
-        //
     }
 
     /**

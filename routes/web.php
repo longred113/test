@@ -29,3 +29,7 @@ Route::get('/announcement', function () {
 Route::get('/private', function () {
     return view('private-channel');
 });
+Route::get('/chat-box', function () {
+    return view('chat_box');
+});
+Route::post('/chat', [ChatController::class, 'store'])->name('chat.store');

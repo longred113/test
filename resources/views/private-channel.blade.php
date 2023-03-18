@@ -13,8 +13,8 @@
         });
 
         var count = 0;
-        var channel = pusher.subscribe('student-message-' + 'ST00026');
-        channel.bind('student-message-event', function(data) {
+        var channel = pusher.subscribe('all-channel');
+        channel.bind('all-channel-event', function(data) {
             count++;
             alert(JSON.stringify(data));
             console.log("Event received: " + JSON.stringify(data));

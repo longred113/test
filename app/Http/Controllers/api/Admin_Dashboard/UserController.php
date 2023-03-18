@@ -265,4 +265,19 @@ class UserController extends Controller
         }
         return $this->successUserRequest($updateCheckLogin);
     }
+
+    public function checkInfoLogin() {
+        $validator = Validator::make($this->request->all(), [
+            'email' => 'string|required',
+            'password' => 'string|required',
+        ]);
+        if ($validator->fails()) {
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        }
+
+        $checkInfo = Users::where('email', $this->request['email'])
+            ->where('password', $this->request['password'])->get();
+
+        return $this->successUserRequest($checkInfo);
+    }
 }
