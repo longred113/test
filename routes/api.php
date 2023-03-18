@@ -420,7 +420,10 @@ Route::prefix('private-message')
     ->name('private-message.')
     ->group(function () {
         Route::post('/private-message', [PrivateMessageController::class, 'sendMessages'])->name('sendMessages');
-        Route::get('/', [PrivateMessageController::class, 'index'])->name('index');
+        Route::get('/get-all-message', [PrivateMessageController::class, 'getAllMessage'])->name('getAllMessage');
+        Route::get('/get-student-message/{studentId}', [PrivateMessageController::class, 'getStudentMessage'])->name('getStudentMessage');
+        Route::get('/get-teacher-message/{teacherId}', [PrivateMessageController::class, 'getTeacherMessage'])->name('getTeacherMessage');
+        Route::get('/get-admin-message', [PrivateMessageController::class, 'getAdminMessage'])->name('getAdminMessage');
         Route::post('/create', [PrivateMessageController::class, 'store'])->name('store');
     });
 

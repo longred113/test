@@ -11,11 +11,15 @@ class Chat extends Model
     protected $fillable = [
         'userName',
         'message',
+        'studentId',
+        'teacherId'
     ];
-    public static function formatMessage($userName, $message) {
+    public static function formatMessage($userName, $message, $studentId, $teacherId) {
         return [
             'userName' => $userName,
             'message' => $message,
+            'studentId' => $studentId,
+            'teacherId' => $teacherId,
             'time' => now()->toDateTimeString(),
         ];
     }

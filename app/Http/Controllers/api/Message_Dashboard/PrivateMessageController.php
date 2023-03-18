@@ -8,6 +8,8 @@ use App\Events\NewChatMessage;
 use App\Events\PrivateMessage;
 use App\Http\Controllers\Controller;
 use App\Models\Chat;
+use App\Models\Students;
+use App\Models\Teachers;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -38,13 +40,13 @@ class PrivateMessageController extends Controller
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
-        if(!empty($this->request['classId'])) {
+        if (!empty($this->request['classId'])) {
             event(new GroupClassMessage($this->request['message'], $this->request['classId']));
         }
-        if(!empty($this->request['studentId'])) {
+        if (!empty($this->request['studentId'])) {
             event(new PrivateMessage($this->request['message'], $this->request['studentId']));
         }
-        if(empty($this->request['classId']) && empty($this->request['studentId'])) {
+        if (empty($this->request['classId']) && empty($this->request['studentId'])) {
             event(new AllGroupMessage($this->request['message']));
         }
     }
@@ -58,33 +60,66 @@ class PrivateMessageController extends Controller
     public function store()
     {
         $validator = Validator::make($this->request->all(), [
-            'username' => 'string|required',
             'message' => 'text|required',
+            'studentId' => 'string',
+            'teacherId' => 'string',
         ]);
         if ($validator->failed()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
-        try{
+        try {
+            if (!empty($this->request['studentId'])) {
+                $studentName = Students::where('studentId', $this->request['studentId'])->get('name');
+                $studentNameConvert = $studentName->pluck('name')->toArray();
+                $userName = implode(', ', $studentNameConvert);
+            }
+            if (!empty($this->request['teacherId'])) {
+                $teacherName = Teachers::where('teacherId', $this->request['teacherId'])->get('name');
+                $teacherNameConvert = $teacherName->pluck('name')->toArray();
+                $userName = implode(', ', $teacherNameConvert);
+            }
+            if (empty($this->request['studentId']) && empty($this->request['teacherId'])) {
+                $userName = 'Admin';
+            }
             $params = [
-                'userName' => $this->request['userName'],
+                'userName' => $userName,
                 'message' => $this->request['message'],
+                'studentId' => $this->request['studentId'],
+                'teacherId' => $this->request['teacherId'],
             ];
             $chat = Chat::create($params);
-        } catch(Exception $e) {
+
+            broadcast(new NewChatMessage($chat))->toOthers();
+            return response()->json(['status' => 'Message Sent!']);
+        } catch (Exception $e) {
             return $e->getMessage();
         }
-        broadcast(new NewChatMessage($chat))->toOthers();
-        return response()->json(['status' => 'Message Sent!']);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function getAllMessage()
     {
+        $getAllMessage = Chat::all();
+        return $getAllMessage;
+    }
+
+    public function getStudentMessage($studentId)
+    {
+        $getStudentMessage = Chat::where('studentId', $studentId)->get();
+        // $getAllMessage = Chat::orderBy('id','DESC')->get();
+        return $getStudentMessage;
+    }
+
+    public function getTeacherMessage($teacherId)
+    {
+        $getTeacherMessage = Chat::where('teacherId', $teacherId)->get();
+        // $getAllMessage = Chat::orderBy('id','DESC')->get();
+        return $getTeacherMessage;
+    }
+
+    public function getAdminMessage()
+    {
+        $getAdminMessage = Chat::where('userName', 'Admin')->get();
+        return $getAdminMessage;
     }
 
     /**
