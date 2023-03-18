@@ -33,7 +33,7 @@ class ClassBoardController extends Controller
      */
     public function index()
     {
-        $classBoardsData = ClassBoardResource::collection(ClassBoards::where('type', 'sendAll')->where('')
+        $classBoardsData = ClassBoardResource::collection(ClassBoards::where('type', 'sendAll')
         ->orderBy('classBoardId','DESC')->take(5)->get());
         return $this->successClassBoardRequest($classBoardsData);
     }
