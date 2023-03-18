@@ -123,7 +123,7 @@ class ClassBoardController extends Controller
     public function getStudentAnnouncement($studentId)
     {
         $getStudentAnnouncement = ClassBoards::where('studentId', $studentId)
-        ->where('type', 'sendAll')
+        ->orWhere('type', 'sendAll')
         ->select('title','message')
         ->orderBy('classBoardId','DESC')->take(5)->get();
         return $this->successClassBoardRequest($getStudentAnnouncement);
