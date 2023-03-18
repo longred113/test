@@ -33,7 +33,7 @@ class ClassBoardController extends Controller
      */
     public function index()
     {
-        $classBoardsData = ClassBoardResource::collection(ClassBoards::where('type', 'sendAll')
+        $classBoardsData = ClassBoardResource::collection(ClassBoards::where('type', 'sendAll')->where('')
         ->orderBy('classBoardId','DESC')->take(5)->get());
         return $this->successClassBoardRequest($classBoardsData);
     }
@@ -122,7 +122,10 @@ class ClassBoardController extends Controller
 
     public function getStudentAnnouncement($studentId)
     {
-        $getStudentAnnouncement = ClassBoards::where('studentId', $studentId)->select('title','message')->get();
+        $getStudentAnnouncement = ClassBoards::where('studentId', $studentId)
+        ->where('type', 'sendAll')
+        ->select('title','message')
+        ->orderBy('classBoardId','DESC')->take(5)->get();
         return $this->successClassBoardRequest($getStudentAnnouncement);
     }
 
