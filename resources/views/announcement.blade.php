@@ -12,8 +12,8 @@
             cluster: 'ap1'
         });
 
-        var channel = pusher.subscribe('send-private-announcement');
-        channel.bind('send-private-announcement-event', function(data) {
+        var channel = pusher.subscribe('send-all-announcement');
+        channel.bind('send-all-announcement-event', function(data) {
             alert(JSON.stringify(data));
         });
     </script>

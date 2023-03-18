@@ -49,8 +49,8 @@ class ClassBoardController extends Controller
         $validator = Validator::make($this->request->all(), [
             'message' => 'string',
             'title' => 'string',
-            'teacherIds' => 'array|required_without:studentIds',
-            'studentIds' => 'array|required_without:teacherIds',
+            'teacherIds' => 'array',
+            'studentIds' => 'array',
             'date' => 'date',
             'type' => 'string',
         ]);
@@ -104,6 +104,20 @@ class ClassBoardController extends Controller
             } catch (Exception $e) {
                 return $e->getMessage();
             }
+        }
+
+        if (empty($this->request['studentId']) && empty($this->request['teacherId'])) {
+            $classBoardId = IdGenerator::generate(['table' => 'class_boards', 'trow' => 'classBoardId', 'length' => 7, 'prefix' => 'CB']);
+            $params = [
+                'classBoardId' => $classBoardId,
+                'message' => $this->request['message'],
+                'title' => $this->request['title'],
+                'date' => $this->request['date'],
+                'type' => $this->request['type'],
+            ];
+            $newClassBoard = new ClassBoardResource(ClassBoards::create($params));
+            ClassBoardController::sendMessage($this->request['title'], $this->request['message']);
+            return $this->successClassBoardRequest($newClassBoard);
         }
     }
 
