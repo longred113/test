@@ -131,7 +131,10 @@ class ClassBoardController extends Controller
 
     public function getTeacherAnnouncement($teacherId)
     {
-        $getTeacherAnnouncement = ClassBoards::where('teacherId', $teacherId)->select('title','message')->get();
+        $getTeacherAnnouncement = ClassBoards::where('teacherId', $teacherId)
+        ->orWhere('type', 'sendAll')
+        ->select('title','message')
+        ->orderBy('classBoardId','DESC')->take(5)->get();
         return $this->successClassBoardRequest($getTeacherAnnouncement);
     }
 

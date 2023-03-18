@@ -39,15 +39,12 @@ class PrivateMessageController extends Controller
         }
 
         if(!empty($this->request['classId'])) {
-            var_dump(1);
             event(new GroupClassMessage($this->request['message'], $this->request['classId']));
         }
         if(!empty($this->request['studentId'])) {
-            var_dump(2);
             event(new PrivateMessage($this->request['message'], $this->request['studentId']));
         }
         if(empty($this->request['classId']) && empty($this->request['studentId'])) {
-            var_dump(3);
             event(new AllGroupMessage($this->request['message']));
         }
     }
