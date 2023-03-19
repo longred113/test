@@ -24,6 +24,7 @@ class ClassBoardResource extends JsonResource
             'studentName' => $this->studentName,
             'teacherName' => $this->teacherName,
             'type' => $this->type,
+            'created_at' => $this->created_at,
         ];
     }
 }
