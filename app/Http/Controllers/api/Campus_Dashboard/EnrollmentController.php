@@ -89,10 +89,10 @@ class EnrollmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($Enrollment)
+    public function show($campusId)
     {
-        $Enrollments = Enrollment::find($Enrollment);
-        return $this->successEnrollmentRequest($Enrollments);
+        $enrollments = Enrollment::where('campusId',$campusId)->get();
+        return $this->successEnrollmentRequest($enrollments);
     }
 
     /**
