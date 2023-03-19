@@ -7,6 +7,7 @@ use App\Events\GroupClassMessage;
 use App\Events\NewChatMessage;
 use App\Events\PrivateMessage;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PrivateMessageResource;
 use App\Models\Chat;
 use App\Models\Students;
 use App\Models\Teachers;
@@ -99,7 +100,7 @@ class PrivateMessageController extends Controller
     public function getAllMessage()
     {
         $getAllMessage = Chat::all();
-        return $getAllMessage;
+        return new PrivateMessageResource($getAllMessage);
     }
 
     public function getStudentMessage($studentId)
