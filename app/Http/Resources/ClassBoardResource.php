@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ClassBoardResource extends JsonResource
@@ -24,7 +25,7 @@ class ClassBoardResource extends JsonResource
             'studentName' => $this->studentName,
             'teacherName' => $this->teacherName,
             'type' => $this->type,
-            'created_at' => $this->created_at,
+            'created_at' => Carbon::parse($this->created_at)->format('Y-m-d'),
         ];
     }
 }

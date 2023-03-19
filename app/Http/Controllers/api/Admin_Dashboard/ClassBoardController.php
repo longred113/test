@@ -51,7 +51,6 @@ class ClassBoardController extends Controller
             'title' => 'string',
             'teacherIds' => 'array',
             'studentIds' => 'array',
-            'date' => 'date',
             'type' => 'string',
         ]);
         if ($validator->fails()) {
