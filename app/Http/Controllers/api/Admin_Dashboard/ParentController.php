@@ -72,12 +72,15 @@ class ParentController extends Controller
     public function addParentIntoStudent($parentId)
     {
         $validator = Validator::make($this->request->all(), [
-            'studentId' => 'string|required',
+            'studentIds' => 'array|required',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
-        $students = Students::where('studentId', $this->request['studentId'])->update(['parentId' => $parentId]);
+        $students = Students::find($this->request['studentIds']);
+        foreach($students as $student) {
+            Students::where('studentId', $student['studentId'])->update(['parentId' => $parentId]);
+        }
         return $this->successStudentRequest();
     } 
 
