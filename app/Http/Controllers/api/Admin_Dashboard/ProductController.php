@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Products;
 use App\Http\Resources\Products as ProductsResource;
 use App\Models\Packages;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Facade\Ignition\Support\Packagist\Package;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 
@@ -47,7 +48,7 @@ class ProductController extends Controller
             // 'level' => 'required',
             // 'endLevel' => 'required',
             // 'details' => 'required',
-            // 'image' => 'required',
+            'image' => 'image|mimes:jpg,png,jpeg,gif,svg|max:5048',
             // 'activate' => 'required',
         ]);
         if ($validator->fails()) {
@@ -55,6 +56,8 @@ class ProductController extends Controller
         }
 
         $productId = IdGenerator::generate(['table' => 'products', 'trow' => 'productId', 'length' => 7, 'prefix' => 'PD']);
+        // $name = $this->request->file('image')->getClientOriginalName();
+        $image_path = Cloudinary::upload($this->request->file('image')->getRealPath())->getSecurePath();
         $params = [
             'productId' => $productId,
             'name' => $this->request['name'],
@@ -62,7 +65,7 @@ class ProductController extends Controller
             'startLevel' => $this->request['startLevel'],
             'endLevel' => $this->request['endLevel'],
             'details' => $this->request['details'],
-            'image' => $this->request['image'],
+            'image' => $image_path,
             'activate' => $this->request['activate'],
         ];
         $newProducts = new ProductsResource(Products::create($params));
