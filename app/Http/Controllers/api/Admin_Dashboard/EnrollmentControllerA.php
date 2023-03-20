@@ -10,6 +10,7 @@ use App\Http\Resources\Enrollment as EnrollmentResource;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use App\Models\Products;
 use App\Http\Resources\Products as ProductsResource;
+use Exception;
 
 class EnrollmentControllerA extends Controller
 {
@@ -27,8 +28,20 @@ class EnrollmentControllerA extends Controller
      */
     public function index()
     {
-        $data = EnrollmentResource::collection(Enrollment::all());
-        return $this->successEnrollmentRequest($data);
+        $datas = Enrollment::join('student_enrollments', 'enrollments.enrollmentId', '=', 'student_enrollments.enrollmentId')
+        ->join('campuses', 'enrollments.campusId', '=', 'campuses.campusId')
+        ->join('product_enrollments', 'enrollments.enrollmentId', '=', 'product_enrollments.enrollmentId')
+        ->join('products', 'products.productId', '=', 'product_enrollments.productId')
+        ->select(
+            'student_enrollments.studentId',
+            'campuses.campusId',
+            'campuses.name as campusName',
+            'product_enrollments.productId',
+            'products.name as subject',
+            'products.level',
+            'enrollments.submittedDate',
+            )->get();
+        return $this->successEnrollmentRequest($datas);
     }
 
     /**
