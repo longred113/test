@@ -248,4 +248,12 @@ class Controller extends BaseController
             'productEnrollmentData' => $productEnrollmentData,
         ],200);
     }
+    protected function successImageRequest($imageData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'imageData' => $imageData,
+        ],200);
+    }
 }
