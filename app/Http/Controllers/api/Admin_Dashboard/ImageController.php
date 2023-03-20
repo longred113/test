@@ -84,10 +84,10 @@ class ImageController extends Controller
     public function update($id)
     {
         $image = Images::find($id);
-        if(empty($this->request['studentId'])){
+        if (empty($this->request['studentId'])) {
             $image['studentId'] = $this->request['studentId'];
         }
-        if(empty($this->request['teacherId'])){
+        if (empty($this->request['teacherId'])) {
             $image['teacherId'] = $this->request['teacherId'];
         }
         $validator = Validator::make($this->request->all(), [
@@ -99,17 +99,29 @@ class ImageController extends Controller
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
-        $name = $this->request->file('image')->getClientOriginalName();
-        $image_path = Cloudinary::upload($this->request->file('image')->getRealPath())->getSecurePath();
-        $params = [
-            $image['name'] = $name,
-            $image['image_path'] = $image_path,
-            $image['studentId'] = $this->request['studentId'],
-            $image['teacherId'] = $this->request['teacherId'],
-        ];
+        if (!empty($this->request['studentId'])) {
+            $name = $this->request->file('image')->getClientOriginalName();
+            $image_path = Cloudinary::upload($this->request->file('image')->getRealPath())->getSecurePath();
+            $params = [
+                $image['name'] = $name,
+                $image['image_path'] = $image_path,
+                $image['studentId'] = $this->request['studentId'],
+            ];
 
-        $updateImage = $image->update($params);
-        return $this->successImageRequest($updateImage); 
+            $updateImage = $image->update($params);
+        }
+        if (!empty($this->request['teacherId'])) {
+            $name = $this->request->file('image')->getClientOriginalName();
+            $image_path = Cloudinary::upload($this->request->file('image')->getRealPath())->getSecurePath();
+            $params = [
+                $image['name'] = $name,
+                $image['image_path'] = $image_path,
+                $image['teacherId'] = $this->request['teacherId'],
+            ];
+
+            $updateImage = $image->update($params);
+        }
+        return $this->successImageRequest($updateImage);
     }
 
     /**
