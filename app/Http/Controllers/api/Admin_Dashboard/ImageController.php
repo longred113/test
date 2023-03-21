@@ -39,16 +39,18 @@ class ImageController extends Controller
      */
     public function store()
     {
-        $validator = Validator::make($this->request->all(), [
-            'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:5048',
-            'studentId' => 'string',
-            'teacherId' => 'string',
+        var_dump($this->request);
+        $validator = Validator::make($this->request, [
+            // 'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:5048',
+            // 'studentId' => 'string',
+            // 'teacherId' => 'string',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
+        var_dump($this->request->all());
         try {
-            dd($this->request->all());
+            var_dump(1);
             $name = $this->request->file('image')->getClientOriginalName();
             $image_path = Cloudinary::upload($this->request->file('image')->getRealPath())->getSecurePath();
             $params = [
@@ -59,6 +61,7 @@ class ImageController extends Controller
             ];
             $image = new ImageResource(Images::create($params));
         } catch (Exception $e) {
+            var_dump(2);
             return $e->getMessage();
         }
         return $this->successImageRequest($image);
