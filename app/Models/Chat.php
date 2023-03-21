@@ -14,15 +14,15 @@ class Chat extends Model
         'message',
         'studentId',
         'teacherId',
-        'campusManagerId',
+        'campusId',
     ];
-    public static function formatMessage($userName, $message, $studentId, $teacherId, $campusManagerId) {
+    public static function formatMessage($userName, $message, $studentId, $teacherId, $campusId) {
         return [
             'userName' => $userName,
             'message' => $message,
             'studentId' => $studentId,
             'teacherId' => $teacherId,
-            'campusManagerId' => $campusManagerId,
+            'campusId' => $campusId,
             'time' => now()->toDateTimeString(),
         ];
     }

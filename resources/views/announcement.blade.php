@@ -20,8 +20,8 @@
 </head>
 
 <body>
-    <form action="" method="POST">
-        <input type="text" name="name">
+    <form action="http://localhost:8000/api/admin-image-management/create-image" method="POST">
+        <input type="file" name="image">
         <input type="submit" value="Submit">
     </form>
 </body>
