@@ -12,17 +12,13 @@ class Chat extends Model
     protected $fillable = [
         'userName',
         'message',
-        'studentId',
-        'teacherId',
-        'campusId',
+        'userId',
     ];
-    public static function formatMessage($userName, $message, $studentId, $teacherId, $campusId) {
+    public static function formatMessage($userName, $message, $userId) {
         return [
             'userName' => $userName,
             'message' => $message,
-            'studentId' => $studentId,
-            'teacherId' => $teacherId,
-            'campusId' => $campusId,
+            'userId' => $userId,
             'time' => now()->toDateTimeString(),
         ];
     }

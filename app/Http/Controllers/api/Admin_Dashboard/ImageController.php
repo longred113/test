@@ -50,7 +50,7 @@ class ImageController extends Controller
         // }
         try {
             var_dump($this->request->all());
-            // dd('1');
+            json_encode($this->request->all());
             $name = $this->request->file('file')->getClientOriginalName();
             $image_path = Cloudinary::upload($this->request->file('file')->getRealPath())->getSecurePath();
             $params = [

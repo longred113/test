@@ -62,32 +62,18 @@ class PrivateMessageController extends Controller
     public function store()
     {
         $validator = Validator::make($this->request->all(), [
+            'userName' => 'string',
             'message' => 'text|required',
-            'campusId' => 'string',
-            'teacherId' => 'string',
+            'userId' => 'string',
         ]);
         if ($validator->failed()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
         try {
-            if (!empty($this->request['campusId'])) {
-                $campusManagerName = CampusManager::where('campusId', $this->request['campusId'])->get('name');
-                $campusManagerNameConvert = $campusManagerName->pluck('name')->toArray();
-                $userName = implode(', ', $campusManagerNameConvert);
-            }
-            if (!empty($this->request['teacherId'])) {
-                $teacherName = Teachers::where('teacherId', $this->request['teacherId'])->get('name');
-                $teacherNameConvert = $teacherName->pluck('name')->toArray();
-                $userName = implode(', ', $teacherNameConvert);
-            }
-            if (empty($this->request['campusId']) && empty($this->request['teacherId'])) {
-                $userName = 'Admin';
-            }
             $params = [
-                'userName' => $userName,
+                'userName' => $this->request['userName'],
                 'message' => $this->request['message'],
-                'campusId' => $this->request['campusId'],
-                'teacherId' => $this->request['teacherId'],
+                'userId' => $this->request['userId'],
             ];
             $chat = Chat::create($params);
 
@@ -100,7 +86,7 @@ class PrivateMessageController extends Controller
 
     public function getAllMessage()
     {
-        $getAllMessage = Chat::whereNull('studentId')->get();
+        $getAllMessage = Chat::all();
         return $getAllMessage;
     }
 
