@@ -48,6 +48,7 @@ class ImageController extends Controller
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
         try {
+            dd($this->request->all());
             $name = $this->request->file('image')->getClientOriginalName();
             $image_path = Cloudinary::upload($this->request->file('image')->getRealPath())->getSecurePath();
             $params = [
@@ -69,9 +70,16 @@ class ImageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function getStudentImage($studentId)
     {
-        //
+        $studentImage = Images::where('studentId', $studentId)->get();
+        return $this->successImageRequest($studentImage);
+    }
+
+    public function getTeacherImage($teacherId)
+    {
+        $teacherImage = Images::where('teacherId', $teacherId)->get();
+        return $this->successImageRequest($teacherImage);
     }
 
     /**

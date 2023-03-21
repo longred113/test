@@ -359,6 +359,8 @@ Route::prefix('admin-image-management')
         Route::post('/create-image', [ImageController::class, 'store'])->name('store');
         Route::post('/update-image/{id}', [ImageController::class, 'update'])->name('update');
         Route::delete('/delete-image', [ImageController::class, 'destroy'])->name('destroy');
+        Route::get('/get-student-image', [ImageController::class, 'getStudentImage'])->name('getStudentImage');
+        Route::get('/get-teacher-image', [ImageController::class, 'getTeacherImage'])->name('getTeacherImage');
     }); 
 //END ADMIN DASHBOARD
 
