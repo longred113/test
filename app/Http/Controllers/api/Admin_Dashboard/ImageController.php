@@ -39,20 +39,17 @@ class ImageController extends Controller
      */
     public function store()
     {
-        // dd($this->request->all());
-        // $validator = Validator::make($this->request, [
-        //     'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:5048',
-        //     'studentId' => 'string',
-        //     'teacherId' => 'string',
-        // ]);
-        // if ($validator->fails()) {
-        //     return $this->errorBadRequest($validator->getMessageBag()->toArray());
-        // }
+        $validator = Validator::make($this->request, [
+            'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:5048',
+            'studentId' => 'string',
+            'teacherId' => 'string',
+        ]);
+        if ($validator->fails()) {
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        }
         try {
-            var_dump($this->request->all());
-            json_encode($this->request->all());
-            $name = $this->request->file('file')->getClientOriginalName();
-            $image_path = Cloudinary::upload($this->request->file('file')->getRealPath())->getSecurePath();
+            $name = $this->request->file('image')->getClientOriginalName();
+            $image_path = Cloudinary::upload($this->request->file('image')->getRealPath())->getSecurePath();
             $params = [
                 'name' => $name,
                 'image_path' => $image_path,
