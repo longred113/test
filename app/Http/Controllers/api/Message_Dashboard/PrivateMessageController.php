@@ -8,6 +8,7 @@ use App\Events\NewChatMessage;
 use App\Events\PrivateMessage;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PrivateMessageResource;
+use App\Models\CampusManager;
 use App\Models\Chat;
 use App\Models\Students;
 use App\Models\Teachers;
@@ -62,30 +63,30 @@ class PrivateMessageController extends Controller
     {
         $validator = Validator::make($this->request->all(), [
             'message' => 'text|required',
-            'studentId' => 'string',
+            'campusManagerId' => 'string',
             'teacherId' => 'string',
         ]);
         if ($validator->failed()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
         try {
-            if (!empty($this->request['studentId'])) {
-                $studentName = Students::where('studentId', $this->request['studentId'])->get('name');
-                $studentNameConvert = $studentName->pluck('name')->toArray();
-                $userName = implode(', ', $studentNameConvert);
+            if (!empty($this->request['campusManagerId'])) {
+                $campusManagerName = CampusManager::where('campusManagerId', $this->request['campusManagerId'])->get('name');
+                $campusManagerNameConvert = $campusManagerName->pluck('name')->toArray();
+                $userName = implode(', ', $campusManagerNameConvert);
             }
             if (!empty($this->request['teacherId'])) {
                 $teacherName = Teachers::where('teacherId', $this->request['teacherId'])->get('name');
                 $teacherNameConvert = $teacherName->pluck('name')->toArray();
                 $userName = implode(', ', $teacherNameConvert);
             }
-            if (empty($this->request['studentId']) && empty($this->request['teacherId'])) {
+            if (empty($this->request['campusManagerId']) && empty($this->request['teacherId'])) {
                 $userName = 'Admin';
             }
             $params = [
                 'userName' => $userName,
                 'message' => $this->request['message'],
-                'studentId' => $this->request['studentId'],
+                'campusManagerId' => $this->request['campusManagerId'],
                 'teacherId' => $this->request['teacherId'],
             ];
             $chat = Chat::create($params);

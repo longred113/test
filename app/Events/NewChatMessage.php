@@ -42,6 +42,6 @@ class NewChatMessage implements ShouldBroadcast
     }
     public function broadcastWith()
     {
-        return Chat::formatMessage($this->chat->userName, $this->chat->message, $this->chat->studentId, $this->chat->teacherId);
+        return Chat::formatMessage($this->chat->userName, $this->chat->message, $this->chat->studentId, $this->chat->teacherId, $this->chat->campusManagerId);
     }
 }
