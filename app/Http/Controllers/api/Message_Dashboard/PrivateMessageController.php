@@ -99,7 +99,7 @@ class PrivateMessageController extends Controller
 
     public function getAllMessage()
     {
-        $getAllMessage = Chat::select('id','userName','teacherId','campusManagerId','message',)->get();
+        $getAllMessage = Chat::whereNull('studentId')->get();
         return $getAllMessage;
     }
 
