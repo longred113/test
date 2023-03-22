@@ -28,7 +28,13 @@ class EnrollmentControllerA extends Controller
      */
     public function index()
     {
-        $datas = Enrollment::join('student_enrollments', 'enrollments.enrollmentId', '=', 'student_enrollments.enrollmentId')
+        $datas = EnrollmentResource::collection(Enrollment::all());
+        return $this->successEnrollmentRequest($datas);
+    }
+
+    public function enrollmentHistory()
+    {
+        $data = Enrollment::join('student_enrollments', 'enrollments.enrollmentId', '=', 'student_enrollments.enrollmentId')
         ->join('campuses', 'enrollments.campusId', '=', 'campuses.campusId')
         ->join('product_enrollments', 'enrollments.enrollmentId', '=', 'product_enrollments.enrollmentId')
         ->join('products', 'products.productId', '=', 'product_enrollments.productId')
@@ -42,7 +48,7 @@ class EnrollmentControllerA extends Controller
             'products.level',
             'enrollments.submittedDate',
             )->get();
-        return $this->successEnrollmentRequest($datas);
+        return $this->successEnrollmentRequest($data);
     }
 
     /**
