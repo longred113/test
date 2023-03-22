@@ -78,6 +78,7 @@ Route::prefix('admin-campus-manger')
         Route::get('/', [CampusManagerController::class, 'index'])->name('index');
         Route::post('/create', [CampusManagerController::class, 'store'])->name('store');
         Route::get('/{campusManagerId}', [CampusManagerController::class, 'show'])->name('show');
+        Route::get('/get-campus-manager/{campusId}', [CampusManagerController::class, 'getCampusManagerByCampus'])->name('getCampusManagerByCampus');
         Route::put('/update/{campusManagerId}', [CampusManagerController::class, 'update'])->name('update');
         Route::delete('/{campusManagerId}', [CampusManagerController::class, 'destroy'])->name('destroy');
     });

@@ -39,7 +39,7 @@ class ImageController extends Controller
      */
     public function store()
     {
-        $validator = Validator::make($this->request, [
+        $validator = Validator::make($this->request->all(), [
             'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:5048',
             'studentId' => 'string',
             'teacherId' => 'string',

@@ -103,6 +103,12 @@ class CampusManagerController extends Controller
         return $this->successCampusManagerRequest($CampusManagerData);
     }
 
+    public function getCampusManagerByCampus($campusId)
+    {
+        $campusManager = CampusManager::where('campusId', $campusId)->get();
+        return $this->successCampusManagerRequest($campusManager);
+    }
+
     /**
      * Update the specified resource in storage.
      *
