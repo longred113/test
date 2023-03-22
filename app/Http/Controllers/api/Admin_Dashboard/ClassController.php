@@ -60,7 +60,7 @@ class ClassController extends Controller
             'classId' => $classId,
             'name' => $this->request['name'],
             'numberOfStudent' => $this->request['numberOfStudent'],
-            'subject' => $this->request['subject'],
+            // 'subject' => $this->request['subject'],
             'onlineTeacher' => $this->request['onlineTeacher'],
             'classday' => $this->request['classday'],
             'classTimeSlot' => $this->request['classTimeSlot'],

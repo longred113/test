@@ -84,6 +84,12 @@ class TeacherController extends Controller
         return $this->successTeacherRequest($mergedData);
     }
 
+    public function getAllOnlineTeacher()
+    {
+        $teachersData = Teachers::where('type', 'online')->select('teacherId', 'name as teacherName')->get();
+        return $this->successTeacherRequest($teachersData);
+    }
+
     /**
      * Store a newly created resource in storage.
      *

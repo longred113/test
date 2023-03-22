@@ -24,6 +24,7 @@
         <input type="file" name="image">
         <input type="submit" value="Submit">
     </form>
+    <img src="https://res.cloudinary.com/ds5zj2tfe/image/upload/v1679475644/lqyn2pfg5fezvzitd02c.png">
 </body>
 
 </html>

@@ -97,6 +97,7 @@ Route::prefix('admin-teacher-management')
     ->name('admin-teacher-management')
     ->group(function () {
         Route::get('/', [TeacherController::class, 'index'])->name('index');
+        Route::get('/all-online-teacher', [TeacherController::class, 'getAllOnlineTeacher'])->name('getAllOnlineTeacher');
         Route::post('/create', [TeacherController::class, 'store'])->name('store');
         Route::get('/online-teacher', [TeacherController::class, 'showOnlineTeacher'])->name('showOnlineTeacher');
         Route::get('/{teacherId}', [TeacherController::class, 'show'])->name('show');
