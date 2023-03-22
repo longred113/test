@@ -33,6 +33,7 @@ class EnrollmentControllerA extends Controller
         ->join('product_enrollments', 'enrollments.enrollmentId', '=', 'product_enrollments.enrollmentId')
         ->join('products', 'products.productId', '=', 'product_enrollments.productId')
         ->select(
+            'enrollments.enrollmentId',
             'student_enrollments.studentId',
             'campuses.campusId',
             'campuses.name as campusName',
