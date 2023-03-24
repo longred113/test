@@ -40,7 +40,7 @@ class ProductController extends Controller
             ->leftjoin('packages', 'product_packages.packageId', '=', 'packages.packageId')
             ->select(
                 'products.productId',
-                'products.name as productName',
+                'products.name',
                 'packages.packageId',
                 'packages.name as packageName',
                 'products.level',
