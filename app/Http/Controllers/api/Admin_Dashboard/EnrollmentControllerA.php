@@ -138,9 +138,6 @@ class EnrollmentControllerA extends Controller
         if (empty($this->request['level'])) {
             $this->request['level'] = $enrollment['level'];
         }
-        if (empty($this->request['campusId'])) {
-            $this->request['campusId'] = $enrollment['campusId'];
-        }
         if (empty($this->request['subject'])) {
             $this->request['subject'] = $enrollment['subject'];
         }
@@ -151,7 +148,6 @@ class EnrollmentControllerA extends Controller
             $this->request['submittedDate'] = $enrollment['submittedDate'];
         }
         $validator = validator::make($this->request->all(), [
-            'studentId' => 'required',
             'talkSamId' => 'required',
             'campusId' => 'required',
             'level' => 'required',

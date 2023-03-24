@@ -120,6 +120,7 @@ Route::prefix('admin-product-management')
     ->name('admin-product-management.')
     ->group(function () {
         Route::get('/', [ProductController::class, 'index'])->name('index');
+        Route::get('/all-product-and-package', [ProductController::class, 'getAllProductHavePackage'])->name('getAllProductHavePackage');
         Route::post('/create', [ProductController::class, 'store'])->name('store');
         Route::get('/{productId}', [ProductController::class, 'show'])->name('show');
         Route::put('/update/{productId}', [ProductController::class, 'update'])->name('update');

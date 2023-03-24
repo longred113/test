@@ -108,9 +108,9 @@ class ClassController extends Controller
         if (empty($this->request['numberOfStudent'])) {
             $this->request['numberOfStudent'] = $class['numberOfStudent'];
         }
-        if (empty($this->request['subject'])) {
-            $this->request['subject'] = $class['subject'];
-        }
+        // if (empty($this->request['subject'])) {
+        //     $this->request['subject'] = $class['subject'];
+        // }
         if (empty($this->request['onlineTeacher'])) {
             $this->request['onlineTeacher'] = $class['onlineTeacher'];
         }
@@ -151,7 +151,7 @@ class ClassController extends Controller
         $params = [
             $class['name'] = $this->request['name'],
             $class['numberOfStudent'] = $this->request['numberOfStudent'],
-            $class['subject'] = $this->request['subject'],
+            // $class['subject'] = $this->request['subject'],
             $class['onlineTeacher'] = $this->request['onlineTeacher'],
             $class['classday'] = $this->request['classday'],
             $class['classTimeSlot'] = $this->request['classTimeSlot'],

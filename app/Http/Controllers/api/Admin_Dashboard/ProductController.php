@@ -9,6 +9,7 @@ use App\Models\Products;
 use App\Http\Resources\Products as ProductsResource;
 use App\Models\Packages;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use Exception;
 use Facade\Ignition\Support\Packagist\Package;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 
@@ -30,8 +31,27 @@ class ProductController extends Controller
     {
         $data = ProductsResource::collection(Products::all());
         return $this->successProductsRequest($data);
-        // $joinData = Products::join('packages','products.packageId', '=', 'packages.packageId')->get();
-        // return $joinData;
+    }
+
+    public function getAllProductHavePackage()
+    {
+        try {
+            $products = Products::leftjoin('product_packages', 'products.productId', '=', 'product_packages.productId')
+            ->leftjoin('packages', 'product_packages.packageId', '=', 'packages.packageId')
+            ->select(
+                'products.productId',
+                'products.name as productName',
+                'packages.packageId',
+                'packages.name as packageName',
+                'products.level',
+                'products.startLevel',
+                'products.endLevel',
+                'products.activate',
+            )->get();
+        }catch(Exception $e){
+            return $e->getMessage();
+        }
+        return $this->successProductsRequest($products);
     }
 
     /**
@@ -131,7 +151,6 @@ class ProductController extends Controller
 
         $params = [
             $products['productId'] = $this->request['productId'],
-            $products['packageId'] = $this->request['packageId'],
             $products['name'] = $this->request['name'],
             $products['startLevel'] = $this->request['startLevel'],
             $products['level'] = $this->request['level'],

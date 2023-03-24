@@ -96,6 +96,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($this->request->all(), [
             'name' => 'string|required',
+            'userName' => 'string|required',
             'email' => 'string|required|unique:users',
             'password' => 'string|required|min:8',
             'activate' => 'integer|required',
@@ -107,6 +108,7 @@ class UserController extends Controller
         $params = [
             'userId' => $userId,
             'name' => $this->request['name'],
+            'userName' => $this->request['userName'],
             'email' => $this->request['email'],
             'password' => $this->request['password'],
             'activate' => $this->request['activate'],
@@ -186,55 +188,31 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update($userId)
+    public static function update($userParams)
     {
-        $user = Users::find($userId);
-        if (empty($this->request->name)) {
-            $this->request['name'] = $user['name'];
-        }
-        if (empty($this->request->email)) {
-            $this->request['email'] = $user['email'];
-        }
-        if (empty($this->request->password)) {
-            $this->request['password'] = $user['password'];
-        }
-        if (empty($this->request->roleId)) {
-            $this->request['roleId'] = $user['roleId'];
-        }
-        if (empty($this->request->teacherId)) {
-            $this->request['teacherId'] = $user['teacherId'];
-        }
-        if (empty($this->request->studentId)) {
-            $this->request['studentId'] = $user['studentId'];
-        }
-        if (empty($this->request->parentId)) {
-            $this->request['parentId'] = $user['parentId'];
-        }
-        if (empty($this->request->campusManagerId)) {
-            $this->request['campusManagerId'] = $user['campusManagerId'];
-        }
-        $validator = Validator::make($this->request->all(), [
-            'name' => 'string|required',
-            'email' => 'string|required',
-            'password' => 'string|required|min:8',
-            'roleId' => 'string|required',
-        ]);
-        if ($validator->fails()) {
-            return $this->errorBadRequest($validator->getMessageBag()->toArray());
-        }
-
         $params = [
-            $user['name'] = $this->request['name'],
-            $user['email'] = $this->request['email'],
-            $user['password'] = $this->request['password'],
-            $user['roleId'] = $this->request['roleId'],
-            $user['teacherId'] = $this->request['teacherId'],
-            $user['studentId'] = $this->request['studentId'],
-            $user['parentId'] = $this->request['parentId'],
-            $user['campusManagerId'] = $this->request['campusManagerId'],
+            'name' => $userParams['name'],
+            'userName' => $userParams['userName'],
+            'email' => $userParams['email'],
+            'password' => $userParams['password'],
         ];
-        $newInfoUser = $user->update($params);
-        return $this->successUserRequest($newInfoUser);
+        if(!empty($userParams['teacherId'])){
+            $params['teacherId'] = $userParams['teacherId'];
+            $newInfoUser = Users::where('teacherId',$userParams['teacherId'])->update($params);
+        }
+        if(!empty($userParams['studentId'])){
+            $params['studentId'] = $userParams['studentId'];
+            $newInfoUser = Users::where('studentId',$userParams['studentId'])->update($params);
+        }
+        if(!empty($userParams['parentId'])){
+            $params['parentId'] = $userParams['parentId'];
+            $newInfoUser = Users::where('parentId',$userParams['parentId'])->update($params);
+        }
+        if(!empty($userParams['campusManagerId'])){
+            $params['campusManagerId'] = $userParams['campusManagerId'];
+            $newInfoUser = Users::where('campusManagerId',$userParams['campusManagerId'])->update($params);
+        }
+        return $newInfoUser;
     }
 
     /**
