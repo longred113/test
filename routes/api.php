@@ -112,7 +112,7 @@ Route::prefix('admin-package-management')
         Route::get('/', [PackagesController::class, 'index'])->name('index');
         Route::post('/create', [PackagesController::class, 'store'])->name('store');
         Route::get('/{packageId}', [PackagesController::class, 'show'])->name('show');
-        Route::put('/update/{packageId}', [PackagesController::class, 'update'])->name('update');
+        Route::post('/update/{packageId}', [PackagesController::class, 'update'])->name('update');
         Route::delete('/{packageId}', [PackagesController::class, 'destroy'])->name('destroy');
     });
 

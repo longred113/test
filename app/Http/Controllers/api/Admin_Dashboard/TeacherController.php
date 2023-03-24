@@ -200,9 +200,19 @@ class TeacherController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $teacherId)
+    public function update($teacherId)
     {
-        $teacher = Teachers::find($teacherId);
+        $teacher = Teachers::where('teacherId',$teacherId)->first();
+        $campusManager = CampusManager::where('campusManagerId', $teacherId)->first();
+        if(!empty($teacher)){
+            var_dump(1);
+            return $teacher;
+        }
+        if(!empty($campusManager)){
+            var_dump(2);
+            return $campusManager;
+        }
+        dd(1);
         if (empty($this->request['name'])) {
             $this->request['name'] = $teacher['name'];
         }
@@ -260,7 +270,7 @@ class TeacherController extends Controller
         if (empty($this->request['memo'])) {
             $this->request['memo'] = $teacher['memo'];
         }
-        $validator = validator::make($request->all(), [
+        $validator = validator::make($this->request->all(), [
             'name' => 'required|string',
             // 'email' => 'required|string|unique:teachers',
             // 'gender' => 'required|string',
