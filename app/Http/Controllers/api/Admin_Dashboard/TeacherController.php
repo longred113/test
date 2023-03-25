@@ -53,6 +53,32 @@ class TeacherController extends Controller
         return $this->successTeacherRequest($teachersData);
     }
 
+    public function getTeacherDataBeforeUpdate()
+    {
+        $teachersData = Teachers::join('users', 'teachers.teacherId', '=', 'users.teacherId')
+            ->join('campuses', 'teachers.campusId', '=', 'campuses.campusId')
+            ->select(
+                'teachers.teacherId',
+                'teachers.campusId',
+                'campuses.name as campusName',
+                'teachers.name as teacherName',
+                'teachers.email as email',
+                'users.password as password',
+                'teachers.role',
+                'teachers.activate',
+                'teachers.type',
+                'teachers.gender',
+                'teachers.dateOfBirth',
+                'teachers.status',
+                'teachers.country',
+                'teachers.timeZone',
+                'teachers.talkSamId',
+                'teachers.memo',
+            )
+            ->where('teachers.type', 'online')->get();
+        return $this->successTeacherRequest($teachersData);
+    }
+
     public function showOnlineTeacher()
     {
         $teacherData = Teachers::join('users', 'teachers.teacherId', '=', 'users.teacherId')
