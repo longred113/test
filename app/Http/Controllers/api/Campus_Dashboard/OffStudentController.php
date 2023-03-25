@@ -19,7 +19,16 @@ class OffStudentController extends Controller
      */
     public function index()
     {
-        $data = Students::select('studentId', 'name', 'joinedDate', 'withDrawal', 'campusId', 'type')->where('type', 'off')->get();
+        $data = Students::join('campuses', 'students.campusId', '=', 'campuses.campusId')
+            ->select(
+                'students.studentId',
+                'students.campusId',
+                'campuses.name as campusName',
+                'students.name',
+                'students.email',
+                'students.gender',
+                'students.dateOfBirth',
+            )->where('type', 'off')->get();
         return $this->successStudentRequest($data);
     }
 
