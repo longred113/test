@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\Admin_Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ClassMaterialResource;
 use App\Models\ClassMaterials;
+use Exception;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -25,8 +26,22 @@ class ClassMaterialController extends Controller
      */
     public function index()
     {
-        $classMaterialsData = ClassMaterialResource::collection(ClassMaterials::all());
-        return $this->successClassMaterialRequest($classMaterialsData);
+        try{
+            $classMaterialsData = ClassMaterials::join('classes','class_materials.class', '=', 'classes.classId')
+            ->select(
+                'class_materials.classMaterialId',
+                'class_materials.writer',
+                'class_materials.title',
+                'class_materials.view',
+                'class_materials.date',
+                'classes.classId',
+                'classes.name as className',
+            )
+            ->get();
+            return $this->successClassMaterialRequest($classMaterialsData);
+        }catch(Exception $e){
+            return $e->getMessage();
+        }
     }
 
     /**
