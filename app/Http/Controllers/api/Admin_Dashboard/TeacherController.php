@@ -8,6 +8,7 @@ use App\Http\Resources\TeacherResource;
 use App\Models\Campus;
 use App\Models\CampusManager;
 use App\Models\Teachers;
+use App\Models\Users;
 use Error;
 use Exception;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
@@ -36,48 +37,50 @@ class TeacherController extends Controller
     public function index()
     {
         $teachersData = Teachers::join('users', 'teachers.teacherId', '=', 'users.teacherId')
-        ->join('campuses', 'teachers.campusId', '=', 'campuses.campusId')
-        ->select(
-            'teachers.teacherId',
-            'teachers.name as name', 
-            'teachers.email as email', 
-            'users.password as password',
-            'teachers.campusId',
-            'campuses.name as campusName',
-            'teachers.role',
-            'teachers.activate',
-            'teachers.type')
-        ->where('teachers.type', 'online')->get();
+            ->join('campuses', 'teachers.campusId', '=', 'campuses.campusId')
+            ->select(
+                'teachers.teacherId',
+                'teachers.name as name',
+                'teachers.email as email',
+                'users.password as password',
+                'teachers.campusId',
+                'campuses.name as campusName',
+                'teachers.role',
+                'teachers.activate',
+                'teachers.type'
+            )
+            ->where('teachers.type', 'online')->get();
         return $this->successTeacherRequest($teachersData);
     }
 
     public function showOnlineTeacher()
     {
         $teacherData = Teachers::join('users', 'teachers.teacherId', '=', 'users.teacherId')
-        ->join('campuses', 'teachers.campusId', '=', 'campuses.campusId')
-        ->select(
-            'teachers.teacherId',
-            'teachers.name as teacherName', 
-            'teachers.email as userName', 
-            'users.password as password',
-            'teachers.campusId',
-            'campuses.name as campusName',
-            'teachers.role',
-            'teachers.activate',
-            'teachers.type')
-        ->where('teachers.type', 'online')->get();  
-        $campusManagerData = CampusManager::join('users', 'campus_managers.campusManagerId', '=','users.campusManagerId')
-        ->join('campuses', 'campus_managers.campusId', '=', 'campuses.campusId')
-        ->select(
-            'campus_managers.campusManagerId as teacherId',
-            'campus_managers.name as teacherName',
-            'campus_managers.email as userName',
-            'users.password',
-            'campus_managers.campusId',
-            'campuses.name as campusName',
-            'campus_managers.role',
-            'campus_managers.activate',
-            // 'campus_managers.type'
+            ->join('campuses', 'teachers.campusId', '=', 'campuses.campusId')
+            ->select(
+                'teachers.teacherId',
+                'teachers.name as teacherName',
+                'teachers.email as userName',
+                'users.password as password',
+                'teachers.campusId',
+                'campuses.name as campusName',
+                'teachers.role',
+                'teachers.activate',
+                'teachers.type'
+            )
+            ->where('teachers.type', 'online')->get();
+        $campusManagerData = CampusManager::join('users', 'campus_managers.campusManagerId', '=', 'users.campusManagerId')
+            ->join('campuses', 'campus_managers.campusId', '=', 'campuses.campusId')
+            ->select(
+                'campus_managers.campusManagerId as teacherId',
+                'campus_managers.name as teacherName',
+                'campus_managers.email as userName',
+                'users.password',
+                'campus_managers.campusId',
+                'campuses.name as campusName',
+                'campus_managers.role',
+                'campus_managers.activate',
+                // 'campus_managers.type'
             )
             ->get();
         $mergedData = $teacherData->concat($campusManagerData);
@@ -159,8 +162,7 @@ class TeacherController extends Controller
             }
             $newCampusManager = CampusManagerController::store($params);
             return $this->successCampusManagerRequest($newCampusManager);
-        }
-        else {
+        } else {
             $params['teacherId'] = $teacherId;
             $newTeacherData = new TeacherResource(Teachers::create($params));
             $userParams = [
@@ -173,7 +175,7 @@ class TeacherController extends Controller
             return $this->successTeacherRequest($newTeacherData);
         }
     }
-    
+
     /**
      * Display the specified resource.
      *
@@ -202,122 +204,219 @@ class TeacherController extends Controller
      */
     public function update($teacherId)
     {
-        $teacher = Teachers::where('teacherId',$teacherId)->first();
+        $teacher = Teachers::where('teacherId', $teacherId)->first();
+        if (!empty($teacher)) {
+            if (empty($this->request['name'])) {
+                $this->request['name'] = $teacher['name'];
+            }
+            if (empty($this->request['email'])) {
+                $this->request['email'] = $teacher['email'];
+            }
+            if (empty($this->request['gender'])) {
+                $this->request['gender'] = $teacher['gender'];
+            }
+            if (empty($this->request['dateOfBirth'])) {
+                $this->request['dateOfBirth'] = $teacher['dateOfBirth'];
+            }
+            if (empty($this->request['status'])) {
+                $this->request['status'] = $teacher['status'];
+            }
+            if (empty($this->request['activate'])) {
+                $this->request['activate'] = $teacher['activate'];
+            }
+            if (empty($this->request['country'])) {
+                $this->request['country'] = $teacher['country'];
+            }
+            if (empty($this->request['timeZone'])) {
+                $this->request['timeZone'] = $teacher['timeZone'];
+            }
+            if (empty($this->request['startDate'])) {
+                $this->request['startDate'] = $teacher['startDate'];
+            }
+            if (empty($this->request['resignation'])) {
+                $this->request['resignation'] = $teacher['resignation'];
+            }
+            if (empty($this->request['resume'])) {
+                $this->request['resume'] = $teacher['resume'];
+            }
+            if (empty($this->request['certificate'])) {
+                $this->request['certificate'] = $teacher['certificate'];
+            }
+            if (empty($this->request['contract'])) {
+                $this->request['contract'] = $teacher['contract'];
+            }
+            if (empty($this->request['basicPoint'])) {
+                $this->request['basicPoint'] = $teacher['basicPoint'];
+            }
+            if (empty($this->request['type'])) {
+                $this->request['type'] = $teacher['type'];
+            }
+            if (empty($this->request['talkSamId'])) {
+                $this->request['talkSamId'] = $teacher['talkSamId'];
+            }
+            if (empty($this->request['campusId'])) {
+                $this->request['campusId'] = $teacher['campusId'];
+            }
+            if (empty($this->request['role'])) {
+                $this->request['role'] = $teacher['role'];
+            }
+            if (empty($this->request['memo'])) {
+                $this->request['memo'] = $teacher['memo'];
+            }
+            $validator = validator::make($this->request->all(), [
+                'name' => 'required|string',
+                // 'email' => 'required|string|unique:teachers',
+                // 'gender' => 'required|string',
+                // 'dateOfBirth' => 'required|date',
+                // 'status' => 'required|string',
+                // 'activate' => 'required',
+                // 'country' => 'required|string',
+                // 'timeZone' => 'required|string',
+                // 'startDate' => 'required|string',
+                // 'resignation' => 'required',
+                // 'resume' => 'required|string',
+                // 'certificate' => 'required|string',
+                // 'contract' => 'required|string',
+                // 'basicPoint' => 'required|integer',
+                // 'type' => 'required|string',
+                // 'talkSamId' => 'require|string',
+                'campusId' => 'required|string',
+                'role' => 'string',
+                'memo' => 'string',
+            ]);
+            if ($validator->failed()) {
+                return $this->errorBadRequest($validator->getMessageBag()->toArray());
+            }
+
+            $params = [
+                $teacher['name'] = $this->request['name'],
+                $teacher['email'] = $this->request['email'],
+                $teacher['gender'] = $this->request['gender'],
+                $teacher['dateOfBirth'] = $this->request['dateOfBirth'],
+                $teacher['status'] = $this->request['status'],
+                $teacher['activate'] = $this->request['activate'],
+                $teacher['country'] = $this->request['country'],
+                $teacher['timeZone'] = $this->request['timeZone'],
+                $teacher['startDate'] = $this->request['startDate'],
+                $teacher['resignation'] = $this->request['resignation'],
+                $teacher['resume'] = $this->request['resume'],
+                $teacher['certificate'] = $this->request['certificate'],
+                $teacher['contract'] = $this->request['contract'],
+                $teacher['basicPoint'] = $this->request['basicPoint'],
+                $teacher['type'] = $this->request['type'],
+                $teacher['talkSamId'] = $this->request['talkSamId'],
+                $teacher['campusId'] = $this->request['campusId'],
+                $teacher['role'] = $this->request['role'],
+                $teacher['memo'] = $this->request['memo'],
+            ];
+            $userParams = [
+                'teacherId' => $teacherId,
+                'name' => $this->request['name'],
+                'email' => $this->request['email'],
+                'password' => $this->request['password'],
+            ];
+            $newInfoTeacher = $teacher->update($params);
+            $user = Users::where('teacherId', $teacherId)->first();
+            try {
+
+                if (!empty($user)) {
+                    UserController::update($userParams);
+                }
+            } catch (Exception $e) {
+                return $e->getMessage();
+            }
+            return $this->successTeacherRequest($newInfoTeacher);
+        }
         $campusManager = CampusManager::where('campusManagerId', $teacherId)->first();
-        if(!empty($teacher)){
-            var_dump(1);
-            return $teacher;
+        if (!empty($campusManager)) {
+            if (empty($this->request['name'])) {
+                $this->request['name'] = $campusManager['name'];
+            }
+            if (empty($this->request['email'])) {
+                $this->request['email'] = $campusManager['email'];
+            }
+            if (empty($this->request['gender'])) {
+                $this->request['gender'] = $campusManager['gender'];
+            }
+            if (empty($this->request['dateOfBirth'])) {
+                $this->request['dateOfBirth'] = $campusManager['dateOfBirth'];
+            }
+            if (empty($this->request['country'])) {
+                $this->request['country'] = $campusManager['country'];
+            }
+            if (empty($this->request['timeZone'])) {
+                $this->request['timeZone'] = $campusManager['timeZone'];
+            }
+            if (empty($this->request['startDate'])) {
+                $this->request['startDate'] = $campusManager['startDate'];
+            }
+            if (empty($this->request['resignation'])) {
+                $this->request['resignation'] = $campusManager['resignation'];
+            }
+            if (empty($this->request['campusId'])) {
+                $this->request['campusId'] = $campusManager['campusId'];
+            }
+            if (empty($this->request['memo'])) {
+                $this->request['memo'] = $campusManager['memo'];
+            }
+            if (empty($this->request['offlineStudentId'])) {
+                $this->request['offlineStudentId'] = $campusManager['offlineStudentId'];
+            }
+            if (empty($this->request['offlineTeacherId'])) {
+                $this->request['offlineTeacherId'] = $campusManager['offlineTeacherId'];
+            }
+            $validator = validator::make($this->request->all(), [
+                'name' => 'required',
+                // 'email' => 'required',
+                // 'gender' => 'required',
+                // 'dateOfBirth' => 'required',
+                // 'country' => 'required',
+                // 'timeZone' => 'required',
+                // 'startDate' => 'required',
+                // 'resignation' => 'required',
+                // 'campusId' => 'required',
+                // 'memo' => 'required',
+                // 'offlineStudentId' => 'required',
+                // 'offlineTeacherId' => 'required'
+                'activate' => 'integer',
+            ]);
+            if ($validator->fails()) {
+                return $this->errorBadRequest($validator->getMessageBag()->toArray());
+            }
+            $campusManagerParams = [
+                $campusManager['name'] = $this->request['name'],
+                $campusManager['email'] = $this->request['email'],
+                $campusManager['gender'] = $this->request['gender'],
+                $campusManager['dateOfBirth'] = $this->request['dateOfBirth'],
+                $campusManager['talkSamId'] = $this->request['talkSamId'],
+                $campusManager['country'] = $this->request['country'],
+                $campusManager['timeZone'] = $this->request['timeZone'],
+                $campusManager['startDate'] = $this->request['startDate'],
+                $campusManager['resignation'] = $this->request['resignation'],
+                $campusManager['campusId'] = $this->request['campusId'],
+                $campusManager['memo'] = $this->request['memo'],
+                $campusManager['offlineStudentId'] = $this->request['offlineStudentId'],
+                $campusManager['offlineTeacherId'] = $this->request['offlineTeacherId'],
+                $campusManager['role'] = 'campusManger',
+                $campusManager['activate'] = $this->request['activate'],
+            ];
+            $userParams = [
+                'campusManagerId' => $teacherId,
+                'name' => $this->request['name'],
+                'email' => $this->request['email'],
+                'password' => $this->request['password'],
+            ];
+            try{
+                $newInfoCampusManager = $campusManager->update($campusManagerParams);
+                $user = Users::where('campusManagerId', $teacherId)->first();
+                if(!empty($user)){
+                    UserController::update($userParams);
+                }
+            }catch(Exception $e){
+                return $e->getMessage();
+            }
+            return $this->successCampusManagerRequest($newInfoCampusManager);
         }
-        if(!empty($campusManager)){
-            var_dump(2);
-            return $campusManager;
-        }
-        dd(1);
-        if (empty($this->request['name'])) {
-            $this->request['name'] = $teacher['name'];
-        }
-        if (empty($this->request['email'])) {
-            $this->request['email'] = $teacher['email'];
-        }
-        if (empty($this->request['gender'])) {
-            $this->request['gender'] = $teacher['gender'];
-        }
-        if (empty($this->request['dateOfBirth'])) {
-            $this->request['dateOfBirth'] = $teacher['dateOfBirth'];
-        }
-        if (empty($this->request['status'])) {
-            $this->request['status'] = $teacher['status'];
-        }
-        if (empty($this->request['activate'])) {
-            $this->request['activate'] = $teacher['activate'];
-        }
-        if (empty($this->request['country'])) {
-            $this->request['country'] = $teacher['country'];
-        }
-        if (empty($this->request['timeZone'])) {
-            $this->request['timeZone'] = $teacher['timeZone'];
-        }
-        if (empty($this->request['startDate'])) {
-            $this->request['startDate'] = $teacher['startDate'];
-        }
-        if (empty($this->request['resignation'])) {
-            $this->request['resignation'] = $teacher['resignation'];
-        }
-        if (empty($this->request['resume'])) {
-            $this->request['resume'] = $teacher['resume'];
-        }
-        if (empty($this->request['certificate'])) {
-            $this->request['certificate'] = $teacher['certificate'];
-        }
-        if (empty($this->request['contract'])) {
-            $this->request['contract'] = $teacher['contract'];
-        }
-        if (empty($this->request['basicPoint'])) {
-            $this->request['basicPoint'] = $teacher['basicPoint'];
-        }
-        if (empty($this->request['type'])) {
-            $this->request['type'] = $teacher['type'];
-        }
-        if (empty($this->request['talkSamId'])) {
-            $this->request['talkSamId'] = $teacher['talkSamId'];
-        }
-        if (empty($this->request['campusId'])) {
-            $this->request['campusId'] = $teacher['campusId'];
-        }
-        if (empty($this->request['role'])) {
-            $this->request['role'] = $teacher['role'];
-        }
-        if (empty($this->request['memo'])) {
-            $this->request['memo'] = $teacher['memo'];
-        }
-        $validator = validator::make($this->request->all(), [
-            'name' => 'required|string',
-            // 'email' => 'required|string|unique:teachers',
-            // 'gender' => 'required|string',
-            // 'dateOfBirth' => 'required|date',
-            // 'status' => 'required|string',
-            // 'activate' => 'required',
-            // 'country' => 'required|string',
-            // 'timeZone' => 'required|string',
-            // 'startDate' => 'required|string',
-            // 'resignation' => 'required',
-            // 'resume' => 'required|string',
-            // 'certificate' => 'required|string',
-            // 'contract' => 'required|string',
-            // 'basicPoint' => 'required|integer',
-            // 'type' => 'required|string',
-            // 'talkSamId' => 'require|string',
-            'campusId' => 'required|string',
-            'role' => 'string',
-            'memo' => 'string',
-        ]);
-        if ($validator->failed()) {
-            return $this->errorBadRequest($validator->getMessageBag()->toArray());
-        }
-
-        $params = [
-            $teacher['name'] = $this->request['name'],
-            $teacher['email'] = $this->request['email'],
-            $teacher['dateOfBirth'] = $this->request['dateOfBirth'],
-            $teacher['status'] = $this->request['status'],
-            $teacher['activate'] = $this->request['activate'],
-            $teacher['country'] = $this->request['country'],
-            $teacher['timeZone'] = $this->request['timeZone'],
-            $teacher['startDate'] = $this->request['startDate'],
-            $teacher['resignation'] = $this->request['resignation'],
-            $teacher['resume'] = $this->request['resume'],
-            $teacher['certificate'] = $this->request['certificate'],
-            $teacher['contract'] = $this->request['contract'],
-            $teacher['basicPoint'] = $this->request['basicPoint'],
-            $teacher['type'] = $this->request['type'],
-            $teacher['talkSamId'] = $this->request['talkSamId'],
-            $teacher['campusId'] = $this->request['campusId'],
-            $teacher['role'] = $this->request['role'],
-            $teacher['memo'] = $this->request['memo'],
-        ];
-
-        $newInfoTeacher = $teacher->update($params);
-        return $this->successTeacherRequest($newInfoTeacher);
     }
 
     /**

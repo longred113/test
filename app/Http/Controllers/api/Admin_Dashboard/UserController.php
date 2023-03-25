@@ -192,10 +192,12 @@ class UserController extends Controller
     {
         $params = [
             'name' => $userParams['name'],
-            'userName' => $userParams['userName'],
             'email' => $userParams['email'],
             'password' => $userParams['password'],
         ];
+        if(!empty($userParams['userName'])){
+            $params['userName'] = $userParams['userName'];
+        }
         if(!empty($userParams['teacherId'])){
             $params['teacherId'] = $userParams['teacherId'];
             $newInfoUser = Users::where('teacherId',$userParams['teacherId'])->update($params);

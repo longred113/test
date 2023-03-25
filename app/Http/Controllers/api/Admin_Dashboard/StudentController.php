@@ -7,6 +7,7 @@ use App\Http\Resources\StudentResource;
 use App\Models\Parents;
 use App\Models\Students;
 use App\Models\Users;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -43,19 +44,19 @@ class StudentController extends Controller
     {
         $studentId = Users::get('studentId');
         $joinedStudent = Students::join('users', 'students.studentId', '=', 'users.studentId')
-        ->join('campuses', 'students.campusId', '=', 'campuses.campusId')
-        ->select(
-            'students.studentId',
-            'students.campusId',
-            'campuses.name as campusName',
-            'students.name',
-            'students.email',
-            'users.email as userName',
-            'users.password',
-            'students.gender',
-            'students.dateOfBirth',
-        )
-        ->where('students.type', 'online')->get();
+            ->join('campuses', 'students.campusId', '=', 'campuses.campusId')
+            ->select(
+                'students.studentId',
+                'students.campusId',
+                'campuses.name as campusName',
+                'students.name',
+                'students.email',
+                'users.email as userName',
+                'users.password',
+                'students.gender',
+                'students.dateOfBirth',
+            )
+            ->where('students.type', 'online')->get();
         return $this->successStudentRequest($joinedStudent);
     }
 
@@ -171,7 +172,7 @@ class StudentController extends Controller
      */
     public function update($studentId)
     {
-        try{
+        try {
             $student = Students::find($studentId);
             if (empty($this->request['name'])) {
                 $this->request['name'] = $student['name'];
@@ -246,7 +247,7 @@ class StudentController extends Controller
             if ($validator->fails()) {
                 return $this->errorBadRequest($validator->getMessageBag()->toArray());
             }
-            
+
             $params = [
                 $student['name'] = $this->request['name'],
                 $student['email'] = $this->request['email'],
@@ -266,6 +267,14 @@ class StudentController extends Controller
                 $student['parentId'] = $this->request['parentId'],
                 $student['enrollmentCount'] = $this->request['enrollmentCount'],
             ];
+
+            $user = Users::where('studentId', $studentId)->first();
+            if(empty($this->request['userName'])){
+                $this->request['userName'] = $user['userName'];
+            }
+            if(empty($this->request['password'])){
+                $this->request['password'] = $user['password'];
+            }
             $userParams = [
                 'name' => $this->request['name'],
                 'userName' => $this->request['userName'],
@@ -274,13 +283,104 @@ class StudentController extends Controller
                 'studentId' => $studentId,
             ];
             $newStudentInfoData = $student->update($params);
-            $user = Users::where('studentId', $studentId)->get();
-            if(!empty($user)){
+            if (!empty($user)) {
                 UserController::update($userParams);
             }
-        } catch(Exception $e){
+        } catch (Exception $e) {
             return $e->getMessage();
         }
+        return $this->successStudentRequest($newStudentInfoData);
+    }
+
+    public function updateWithdrawalStudent($studentId)
+    {
+        $student = Students::find($studentId);
+        if (empty($this->request['name'])) {
+            $this->request['name'] = $student['name'];
+        }
+        if (empty($this->request['email'])) {
+            $this->request['email'] = $student['email'];
+        }
+        if (empty($this->request['gender'])) {
+            $this->request['gender'] = $student['gender'];
+        }
+        if (empty($this->request['dateOfBirth'])) {
+            $this->request['dateOfBirth'] = $student['dateOfBirth'];
+        }
+        if (empty($this->request['country'])) {
+            $this->request['country'] = $student['country'];
+        }
+        if (empty($this->request['timeZone'])) {
+            $this->request['timeZone'] = $student['timeZone'];
+        }
+        if (empty($this->request['introduction'])) {
+            $this->request['introduction'] = $student['introduction'];
+        }
+        if (empty($this->request['talkSamId'])) {
+            $this->request['talkSamId'] = $student['talkSamId'];
+        }
+        if (empty($this->request['basicPoint'])) {
+            $this->request['basicPoint'] = $student['basicPoint'];
+        }
+        if (empty($this->request['campusId'])) {
+            $this->request['campusId'] = $student['campusId'];
+        }
+        if (empty($this->request['status'])) {
+            $this->request['status'] = $student['status'];
+        }
+        if (empty($this->request['enrollmentId'])) {
+            $this->request['enrollmentId'] = $student['enrollmentId'];
+        }
+        if (empty($this->request['parentId'])) {
+            $this->request['parentId'] = $student['parentId'];
+        }
+        if (empty($this->request['enrollmentCount'])) {
+            $this->request['enrollmentCount'] = $student['enrollmentCount'];
+        }
+        $validator = Validator::make($this->request->all(), [
+            'name' => 'string',
+            'email' => 'string',
+            // 'gender' => 'string|required',
+            // 'dateOfBirth' => 'date|required',
+            // 'country' => 'string|required',
+            // 'timeZone' => 'string|required',
+            // 'status' => 'string|required',
+            // 'joinedDate' => 'date|required',
+            // 'withDrawal' => 'date|required',
+            // 'introduction' => 'string|required',
+            // 'talkSamId' => 'string|required',
+            // 'basicPoint' => 'integer|required',
+            'campusId' => 'string',
+            'type' => 'string',
+            // 'enrollmentId' => 'string',
+            // 'parentId' => 'string',
+            'enrollmentCount' => 'int',
+        ]);
+        if ($validator->fails()) {
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        }
+
+        $params = [
+            $student['name'] = $this->request['name'],
+            $student['email'] = $this->request['email'],
+            $student['gender'] = $this->request['gender'],
+            $student['dateOfBirth'] = $this->request['dateOfBirth'],
+            $student['country'] = $this->request['country'],
+            $student['timeZone'] = $this->request['timeZone'],
+            $student['status'] = $this->request['status'],
+            $student['joinedDate'] = Carbon::now(),
+            $student['withDrawal'] = "",
+            $student['introduction'] = $this->request['introduction'],
+            $student['talkSamId'] = $this->request['talkSamId'],
+            $student['basicPoint'] = $this->request['basicPoint'],
+            $student['campusId'] = $this->request['campusId'],
+            $student['type'] = 'online',
+            $student['enrollmentId'] = $this->request['enrollmentId'],
+            $student['parentId'] = $this->request['parentId'],
+            $student['enrollmentCount'] = $this->request['enrollmentCount'],
+        ];
+        $newStudentInfoData = $student->update($params);
+        $user = Users::where('studentId', $studentId)->update(['activate' => 1]);
         return $this->successStudentRequest($newStudentInfoData);
     }
 

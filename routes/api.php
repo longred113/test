@@ -183,6 +183,7 @@ Route::prefix('admin-student-management')
         Route::post('/create', [StudentController::class, 'store'])->name('store');
         Route::get('/{studentId}', [StudentController::class, 'show'])->name('show');
         Route::put('/update/{studentId}', [StudentController::class, 'update'])->name('update');
+        Route::put('/update-withdrawal/{studentId}', [StudentController::class, 'updateWithdrawalStudent'])->name('updateWithdrawalStudent');
         Route::delete('/{studentId}', [StudentController::class, 'destroy'])->name('destroy');
         Route::get('/get-student/{parentId}', [StudentController::class, 'getStudentByParent'])->name('getStudentByParent');
         Route::get('/get-enrollment-count/{studentId}', [StudentController::class, 'getEnrollmentCount'])->name('getEnrollmentCount');
@@ -210,7 +211,7 @@ Route::prefix('admin-enrollment')
         Route::get('/get-history', [EnrollmentControllerA::class, 'enrollmentHistory'])->name('enrollmentHistory');
         Route::post('/create', [EnrollmentControllerA::class, 'store'])->name('store');
         Route::get('/{studentId}', [EnrollmentControllerA::class, 'show'])->name('show');
-        Route::put('/update/{studentId}', [EnrollmentControllerA::class, 'update'])->name('update');
+        Route::put('/update/{enrollmentId}', [EnrollmentControllerA::class, 'update'])->name('update');
         Route::delete('/{studentId}', [EnrollmentControllerA::class, 'destroy'])->name('destroy');
     });
 
