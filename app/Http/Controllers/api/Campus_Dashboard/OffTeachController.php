@@ -19,7 +19,25 @@ class OffTeachController extends Controller
      */
     public function index()
     {
-        $data = Teachers::select('teacherId', 'name', 'gender', 'dateOfBirth', 'status', 'campusId')->where('type', 'off')->get();
+        $data = Teachers::join('campuses', 'teachers.campusId', '=', 'campuses.campusId')
+            ->select(
+                'teachers.teacherId',
+                'teachers.campusId',
+                'campuses.name as campusName',
+                'teachers.name as teacherName',
+                'teachers.email as email',
+                'teachers.role',
+                'teachers.activate',
+                'teachers.type',
+                'teachers.gender',
+                'teachers.dateOfBirth',
+                'teachers.status',
+                'teachers.country',
+                'teachers.timeZone',
+                'teachers.talkSamId',
+                'teachers.memo',
+            )
+            ->where('type', 'off')->get();
         return $this->successTeacherRequest($data);
     }
 

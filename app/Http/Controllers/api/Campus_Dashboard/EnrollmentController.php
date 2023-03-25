@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api\Campus_Dashboard;
 
+use App\Events\EnrollmnetMessage;
 use App\Http\Controllers\Controller;
 use App\Models\Products;
 use App\Models\Students;
@@ -80,6 +81,7 @@ class EnrollmentController extends Controller
             'submittedDate' => request('submittedDate'),
         ];
         $newEnrollment = new EnrollmentResource(Enrollment::create($params));
+        event(new EnrollmnetMessage('New enrollment has been created'));
         return $newEnrollment;
     }
 
