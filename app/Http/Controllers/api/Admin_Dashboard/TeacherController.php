@@ -309,16 +309,21 @@ class TeacherController extends Controller
                 $teacher['role'] = $this->request['role'],
                 $teacher['memo'] = $this->request['memo'],
             ];
+            $newInfoTeacher = $teacher->update($params);
+            $user = Users::where('teacherId', $teacherId)->first();
+            if(empty($this->request['userName'])){
+                $this->request['userName'] = $user['userName'];
+            }
+            if(empty($this->request['password'])){
+                $this->request['password'] = $user['password'];
+            }
             $userParams = [
                 'teacherId' => $teacherId,
                 'name' => $this->request['name'],
                 'email' => $this->request['email'],
                 'password' => $this->request['password'],
             ];
-            $newInfoTeacher = $teacher->update($params);
-            $user = Users::where('teacherId', $teacherId)->first();
             try {
-
                 if (!empty($user)) {
                     UserController::update($userParams);
                 }
@@ -400,15 +405,21 @@ class TeacherController extends Controller
                 $campusManager['role'] = 'campusManger',
                 $campusManager['activate'] = $this->request['activate'],
             ];
-            $userParams = [
-                'campusManagerId' => $teacherId,
-                'name' => $this->request['name'],
-                'email' => $this->request['email'],
-                'password' => $this->request['password'],
-            ];
             try{
                 $newInfoCampusManager = $campusManager->update($campusManagerParams);
                 $user = Users::where('campusManagerId', $teacherId)->first();
+                if(empty($this->request['userName'])){
+                    $this->request['userName'] = $user['userName'];
+                }
+                if(empty($this->request['password'])){
+                    $this->request['password'] = $user['password'];
+                }
+                $userParams = [
+                    'campusManagerId' => $teacherId,
+                    'name' => $this->request['name'],
+                    'email' => $this->request['email'],
+                    'password' => $this->request['password'],
+                ];
                 if(!empty($user)){
                     UserController::update($userParams);
                 }
