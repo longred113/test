@@ -161,41 +161,51 @@ class ClassBoardController extends Controller
     public function update($classBoardId)
     {
         $classBoard = ClassBoards::find($classBoardId);
-        if (empty($this->request['writer'])) {
-            $this->request['writer'] = $classBoard['writer'];
-        }
-        if (empty($this->request['class'])) {
-            $this->request['class'] = $classBoard['class'];
+        if (empty($this->request['message'])) {
+            $this->request['message'] = $classBoard['message'];
         }
         if (empty($this->request['title'])) {
             $this->request['title'] = $classBoard['title'];
         }
-        if (empty($this->request['view'])) {
-            $this->request['view'] = $classBoard['view'];
+        if (empty($this->request['teacherId'])) {
+            $this->request['teacherId'] = $classBoard['teacherId'];
+        }
+        if (empty($this->request['teacherName'])) {
+            $this->request['teacherName'] = $classBoard['teacherName'];
+        }
+        if (empty($this->request['studentId'])) {
+            $this->request['studentId'] = $classBoard['studentId'];
+        }
+        if (empty($this->request['studentName'])) {
+            $this->request['studentName'] = $classBoard['studentName'];
         }
         if (empty($this->request['date'])) {
             $this->request['date'] = $classBoard['date'];
         }
+        if (empty($this->request['type'])) {
+            $this->request['type'] = $classBoard['type'];
+        }
         $validator = Validator::make($this->request->all(), [
-            'writer' => 'string|required',
-            'class' => 'string|required',
-            'title' => 'string|required',
-            'view' => 'integer|required',
-            'date' => 'date|required',
+            'message' => 'string',
+            'title' => 'string',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $params = [
-            $classBoard['writer'] = $this->request['writer'],
-            $classBoard['class'] = $this->request['class'],
+            $classBoard['message'] = $this->request['message'],
             $classBoard['title'] = $this->request['title'],
-            $classBoard['view'] = $this->request['view'],
+            $classBoard['teacherId'] = $this->request['teacherId'],
+            $classBoard['teacherName'] = $this->request['teacherName'],
+            $classBoard['studentId'] = $this->request['studentId'],
+            $classBoard['studentName'] = $this->request['studentName'],
             $classBoard['date'] = $this->request['date'],
+            $classBoard['type'] = $this->request['type'],
         ];
 
         $newInfoClassBoard = $classBoard->update($params);
+        ClassBoardController::sendMessage($this->request['title'], $this->request['message']);
         return $this->successClassBoardRequest($newInfoClassBoard);
     }
 

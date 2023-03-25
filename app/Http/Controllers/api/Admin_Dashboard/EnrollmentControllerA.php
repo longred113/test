@@ -148,12 +148,9 @@ class EnrollmentControllerA extends Controller
             $this->request['submittedDate'] = $enrollment['submittedDate'];
         }
         $validator = validator::make($this->request->all(), [
-            'talkSamId' => 'required',
-            'campusId' => 'required',
-            'level' => 'required',
-            'subject' => 'required',
-            'status' => 'required',
-            'submittedDate' => 'required',
+            'campusId' => 'string',
+            'status' => 'string',
+            'submittedDate' => 'date',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
