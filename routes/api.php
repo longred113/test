@@ -183,6 +183,7 @@ Route::prefix('admin-student-management')
         Route::get('/student-with-id/{studentId}', [StudentController::class, 'getStudentWithId'])->name('getStudentWithId');
         Route::post('/create', [StudentController::class, 'store'])->name('store');
         Route::get('/{studentId}', [StudentController::class, 'show'])->name('show');
+        Route::put('/update-enrollment-count/{studentId}', [StudentController::class, 'updateEnrollmentCount'])->name('updateEnrollmentCount');
         Route::put('/update/{studentId}', [StudentController::class, 'update'])->name('update');
         Route::put('/update-withdrawal/{studentId}', [StudentController::class, 'updateWithdrawalStudent'])->name('updateWithdrawalStudent');
         Route::delete('/{studentId}', [StudentController::class, 'destroy'])->name('destroy');

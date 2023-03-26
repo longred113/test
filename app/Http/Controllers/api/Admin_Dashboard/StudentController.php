@@ -163,6 +163,18 @@ class StudentController extends Controller
         return $this->successStudentRequest($studentData);
     }
 
+    public function updateEnrollmentCount($studentId)
+    {
+        $validator = Validator::make($this->request->all(), [
+            'enrollmentCount' => 'int',
+        ]);
+        if ($validator->fails()) {
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        }
+        $student = Students::where('studentId',$studentId)->update(['enrollmentCount' => $this->request['enrollmentCount']]);
+        return $this->successStudentRequest($student);
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -268,6 +280,7 @@ class StudentController extends Controller
                 $student['enrollmentCount'] = $this->request['enrollmentCount'],
             ];
 
+            $newStudentInfoData = $student->update($params);
             $user = Users::where('studentId', $studentId)->first();
             if(empty($this->request['userName'])){
                 $this->request['userName'] = $user['userName'];
@@ -282,7 +295,6 @@ class StudentController extends Controller
                 'password' => $this->request['password'],
                 'studentId' => $studentId,
             ];
-            $newStudentInfoData = $student->update($params);
             if (!empty($user)) {
                 UserController::update($userParams);
             }
