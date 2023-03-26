@@ -96,7 +96,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($this->request->all(), [
             'name' => 'string|required',
-            'userName' => 'string',
+            // 'userName' => 'string',
             'email' => 'string|required|unique:users',
             'password' => 'string|required|min:8',
             'activate' => 'integer|required',
@@ -104,44 +104,49 @@ class UserController extends Controller
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
-        $userId = IdGenerator::generate(['table' => 'users', 'trow' => 'userId', 'length' => 7, 'prefix' => 'US']);
-        $params = [
-            'userId' => $userId,
-            'name' => $this->request['name'],
-            'userName' => $this->request['userName'],
-            'email' => $this->request['email'],
-            'password' => $this->request['password'],
-            'activate' => $this->request['activate'],
-        ];
-        if (!empty($this->request['teacherId'])) {
-            $params['teacherId'] = $this->request['teacherId'];
-        }
-        if (!empty($this->request['studentId'])) {
-            $params['studentId'] = $this->request['studentId'];
-        }
-        if (!empty($this->request['parentId'])) {
-            $params['parentId'] = $this->request['parentId'];
-        }
-        if (!empty($this->request['campusManagerId'])) {
-            $params['campusManagerId'] = $this->request['campusManagerId'];
-        }
-        $roles = Roles::all();
-        foreach ($roles as $role) {
-            if (!empty($this->request['teacherId']) && $role['name'] == 'teacher') {
-                $params['roleId'] = $role['roleId'];
+        try{
+
+            $userId = IdGenerator::generate(['table' => 'users', 'trow' => 'userId', 'length' => 7, 'prefix' => 'US']);
+            $params = [
+                'userId' => $userId,
+                'name' => $this->request['name'],
+                // 'userName' => $this->request['userName'],
+                'email' => $this->request['email'],
+                'password' => $this->request['password'],
+                'activate' => $this->request['activate'],
+            ];
+            if (!empty($this->request['teacherId'])) {
+                $params['teacherId'] = $this->request['teacherId'];
             }
-            if (!empty($this->request['studentId']) && $role['name'] == 'student') {
-                $params['roleId'] = $role['roleId'];
+            if (!empty($this->request['studentId'])) {
+                $params['studentId'] = $this->request['studentId'];
             }
-            if (!empty($this->request['parentId']) && $role['name'] == 'parent') {
-                $params['roleId'] = $role['roleId'];
+            if (!empty($this->request['parentId'])) {
+                $params['parentId'] = $this->request['parentId'];
             }
-            if (!empty($this->request['campusManagerId']) && $role['name'] == 'campus manager') {
-                $params['roleId'] = $role['roleId'];
+            if (!empty($this->request['campusManagerId'])) {
+                $params['campusManagerId'] = $this->request['campusManagerId'];
             }
+            $roles = Roles::all();
+            foreach ($roles as $role) {
+                if (!empty($this->request['teacherId']) && $role['name'] == 'teacher') {
+                    $params['roleId'] = $role['roleId'];
+                }
+                if (!empty($this->request['studentId']) && $role['name'] == 'student') {
+                    $params['roleId'] = $role['roleId'];
+                }
+                if (!empty($this->request['parentId']) && $role['name'] == 'parent') {
+                    $params['roleId'] = $role['roleId'];
+                }
+                if (!empty($this->request['campusManagerId']) && $role['name'] == 'campus manager') {
+                    $params['roleId'] = $role['roleId'];
+                }
+            }
+            $newUserData = new UserResource(Users::create($params));
+            return $this->successUserRequest($newUserData);
+        }catch(Exception $e) {
+            return $e->getMessage();
         }
-        $newUserData = new UserResource(Users::create($params));
-        return $this->successUserRequest($newUserData);
     }
 
     /**
