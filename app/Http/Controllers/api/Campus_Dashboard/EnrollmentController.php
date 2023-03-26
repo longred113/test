@@ -23,10 +23,10 @@ class EnrollmentController extends Controller
      */
     public function getAllEnrollment()
     {
-        $data = Enrollment::join('campuses', 'enrollments.campusId', '=', 'campuses.campusId')
-        ->join('product_enrollments', 'enrollments.enrollmentId', '=', 'product_enrollments.enrollmentId')
-        ->join('products', 'product_enrollments.productId', '=', 'products.productId')
-        ->join('student_enrollments', 'enrollments.enrollmentId', '=', 'student_enrollments.enrollmentId')
+        $data = Enrollment::leftjoin('campuses', 'enrollments.campusId', '=', 'campuses.campusId')
+        ->leftjoin('product_enrollments', 'enrollments.enrollmentId', '=', 'product_enrollments.enrollmentId')
+        ->leftjoin('products', 'product_enrollments.productId', '=', 'products.productId')
+        ->leftjoin('student_enrollments', 'enrollments.enrollmentId', '=', 'student_enrollments.enrollmentId')
         ->select(
             'enrollments.campusId',
             'campuses.name as campusName',
@@ -105,7 +105,19 @@ class EnrollmentController extends Controller
      */
     public function show($campusId)
     {
-        $enrollments = Enrollment::where('campusId',$campusId)->get();
+        $enrollments = Enrollment::leftjoin('campuses', 'enrollments.campusId', '=', 'campuses.campusId')
+        ->leftjoin('product_enrollments', 'enrollments.enrollmentId', '=', 'product_enrollments.enrollmentId')
+        ->leftjoin('products', 'product_enrollments.productId', '=', 'products.productId')
+        ->leftjoin('student_enrollments', 'enrollments.enrollmentId', '=', 'student_enrollments.enrollmentId')
+        ->select(
+            'enrollments.campusId',
+            'campuses.name as campusName',
+            'products.name as productName',
+            'products.level',
+            'enrollments.submittedDate',
+            'enrollments.status',
+            'student_enrollments.studentId'
+        )->where('enrollments.campusId', $campusId)->get();
         return $this->successEnrollmentRequest($enrollments);
     }
 
