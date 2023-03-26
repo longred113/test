@@ -282,21 +282,23 @@ class StudentController extends Controller
 
             $newStudentInfoData = $student->update($params);
             $user = Users::where('studentId', $studentId)->first();
-            if(empty($this->request['userName'])){
-                $this->request['userName'] = $user['userName'];
-            }
-            if(empty($this->request['password'])){
-                $this->request['password'] = $user['password'];
-            }
-            $userParams = [
-                'name' => $this->request['name'],
-                'userName' => $this->request['userName'],
-                'email' => $this->request['email'],
-                'password' => $this->request['password'],
-                'studentId' => $studentId,
-            ];
-            if (!empty($user)) {
-                UserController::update($userParams);
+            if(!empty($user)){
+                if(empty($this->request['userName'])){
+                    $this->request['userName'] = $user['userName'];
+                }
+                if(empty($this->request['password'])){
+                    $this->request['password'] = $user['password'];
+                }
+                $userParams = [
+                    'name' => $this->request['name'],
+                    'userName' => $this->request['userName'],
+                    'email' => $this->request['email'],
+                    'password' => $this->request['password'],
+                    'studentId' => $studentId,
+                ];
+                if (!empty($user)) {
+                    UserController::update($userParams);
+                }
             }
         } catch (Exception $e) {
             return $e->getMessage();
