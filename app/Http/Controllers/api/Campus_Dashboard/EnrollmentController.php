@@ -28,6 +28,7 @@ class EnrollmentController extends Controller
         ->leftjoin('products', 'product_enrollments.productId', '=', 'products.productId')
         ->leftjoin('student_enrollments', 'enrollments.enrollmentId', '=', 'student_enrollments.enrollmentId')
         ->select(
+            'enrollments.enrollmentId',
             'enrollments.campusId',
             'campuses.name as campusName',
             'products.name as productName',
@@ -110,6 +111,7 @@ class EnrollmentController extends Controller
         ->leftjoin('products', 'product_enrollments.productId', '=', 'products.productId')
         ->leftjoin('student_enrollments', 'enrollments.enrollmentId', '=', 'student_enrollments.enrollmentId')
         ->select(
+            'enrollments.enrollmentId',
             'enrollments.campusId',
             'campuses.name as campusName',
             'products.name as productName',
