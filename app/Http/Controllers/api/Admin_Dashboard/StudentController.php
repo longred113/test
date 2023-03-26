@@ -234,9 +234,10 @@ class StudentController extends Controller
             if (empty($this->request['parentId'])) {
                 $this->request['parentId'] = $student['parentId'];
             }
-            if (empty($this->request['enrollmentCount'])) {
+            if (is_null($this->request['enrollmentCount'])) {
                 $this->request['enrollmentCount'] = $student['enrollmentCount'];
             }
+
             $validator = Validator::make($this->request->all(), [
                 'name' => 'string',
                 'email' => 'string',
@@ -279,6 +280,7 @@ class StudentController extends Controller
                 $student['parentId'] = $this->request['parentId'],
                 $student['enrollmentCount'] = $this->request['enrollmentCount'],
             ];
+
 
             $newStudentInfoData = $student->update($params);
             $user = Users::where('studentId', $studentId)->first();
