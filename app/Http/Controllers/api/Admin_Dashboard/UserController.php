@@ -96,7 +96,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($this->request->all(), [
             'name' => 'string|required',
-            'userName' => 'string|required',
+            'userName' => 'string',
             'email' => 'string|required|unique:users',
             'password' => 'string|required|min:8',
             'activate' => 'integer|required',
