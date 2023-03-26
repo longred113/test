@@ -44,7 +44,7 @@ class EnrollmentControllerA extends Controller
             'campuses.campusId',
             'campuses.name as campusName',
             'product_enrollments.productId',
-            'products.name as productName',
+            'products.name as subject',
             'products.level',
             'enrollments.submittedDate',
             'enrollments.status',
