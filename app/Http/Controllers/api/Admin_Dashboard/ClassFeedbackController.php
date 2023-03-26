@@ -45,7 +45,7 @@ class ClassFeedbackController extends Controller
             'class_feedbacks.date',
             'class_feedbacks.comment')
         ->get();
-        return $this->successClassRequest($classFeedbackData);
+        return $this->successClassFeedback($classFeedbackData);
     }
 
     /**

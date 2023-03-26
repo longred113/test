@@ -168,6 +168,47 @@ class EnrollmentControllerA extends Controller
         return $this->successEnrollmentRequest($newInfoEnrollment);
     }
 
+    public function updateEnrollmentHistory($enrollmentId)
+    {
+        $enrollment = Enrollment::find($enrollmentId);
+        if (empty($this->request['talkSamId'])) {
+            $this->request['talkSamId'] = $enrollment['talkSamId'];
+        }
+        if (empty($this->request['campusId'])) {
+            $this->request['campusId'] = $enrollment['campusId'];
+        }
+        if (empty($this->request['level'])) {
+            $this->request['level'] = $enrollment['level'];
+        }
+        if (empty($this->request['subject'])) {
+            $this->request['subject'] = $enrollment['subject'];
+        }
+        if (empty($this->request['status'])) {
+            $this->request['status'] = $enrollment['status'];
+        }
+        if (empty($this->request['submittedDate'])) {
+            $this->request['submittedDate'] = $enrollment['submittedDate'];
+        }
+        $validator = validator::make($this->request->all(), [
+            'campusId' => 'string',
+            'status' => 'string',
+            'submittedDate' => 'date',
+        ]);
+        if ($validator->fails()) {
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        }
+        $params = [
+            $enrollment['talkSamId'] = $this->request['talkSamId'],
+            $enrollment['campusId'] = $this->request['campusId'],
+            $enrollment['level'] = $this->request['level'],
+            $enrollment['subject'] = $this->request['subject'],
+            $enrollment['status'] = $this->request['status'],
+            $enrollment['submittedDate'] = $this->request['submittedDate'],
+        ];
+        $newInfoEnrollment = $enrollment->update($params);
+        return $this->successEnrollmentRequest($newInfoEnrollment);
+    }
+
     /**
      * Remove the specified resource from storage.
      *

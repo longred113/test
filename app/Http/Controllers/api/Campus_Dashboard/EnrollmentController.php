@@ -23,7 +23,19 @@ class EnrollmentController extends Controller
      */
     public function getAllEnrollment()
     {
-        $data = EnrollmentResource::collection(Enrollment::all());
+        $data = Enrollment::join('campuses', 'enrollments.campusId', '=', 'campuses.campusId')
+        ->join('product_enrollments', 'enrollments.enrollmentId', '=', 'product_enrollments.enrollmentId')
+        ->join('products', 'product_enrollments.productId', '=', 'products.productId')
+        ->join('student_enrollments', 'enrollments.enrollmentId', '=', 'student_enrollments.enrollmentId')
+        ->select(
+            'enrollments.campusId',
+            'campuses.name as campusName',
+            'products.name as productName',
+            'products.level',
+            'enrollments.submittedDate',
+            'enrollments.status',
+            'student_enrollments.studentId'
+        )->get();
         return $this->successEnrollmentRequest($data);
     }
 
