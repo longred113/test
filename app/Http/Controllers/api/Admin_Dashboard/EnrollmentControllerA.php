@@ -47,6 +47,7 @@ class EnrollmentControllerA extends Controller
             'products.name as subject',
             'products.level',
             'enrollments.submittedDate',
+            'enrollments.status',
             )->get();
         return $this->successEnrollmentRequest($data);
     }
