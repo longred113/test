@@ -90,11 +90,32 @@ class ClassFeedbackController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($ClassFeedback)
+    public function show($classFeedbackId)
     {
-        $ClassFeedbacks = ClassFeedbacks::find($ClassFeedback);
-        $ClassFeedbacksData = new ClassFeedbackResource($ClassFeedbacks);
-        return $this->successClassFeedback($ClassFeedbacksData);
+        $classFeedbackData = ClassFeedbacks::join('teachers', 'class_feedbacks.teacherId', '=', 'teachers.teacherId')
+        ->join('classes', 'class_feedbacks.classId', '=', 'classes.classId')
+        ->join('students', 'class_feedbacks.studentId', '=', 'students.studentId')
+        ->join('campuses', 'class_feedbacks.campusId', '=', 'campuses.campusId')
+        ->join('student_products','class_feedbacks.studentId', '=', 'student_products.studentId')
+        ->join('products', 'student_products.productId', '=', 'products.productId')
+        ->select(
+            'class_feedbacks.classFeedbackId',
+            'teachers.teacherId', 
+            'teachers.name as teacherName', 
+            'classes.classId', 
+            'classes.name as className', 
+            'students.studentId', 
+            'students.name as studentName', 
+            'campuses.campusId',
+            'campuses.name as campusName',
+            'class_feedbacks.satisfaction',
+            'class_feedbacks.date',
+            'class_feedbacks.comment',
+            'products.productId',
+            'products.name as productName',
+            )
+        ->where('classFeedbackId', $classFeedbackId)->get();
+        return $this->successClassFeedback($classFeedbackData);
     }
 
     /**

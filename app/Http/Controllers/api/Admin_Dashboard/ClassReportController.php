@@ -29,8 +29,6 @@ class ClassReportController extends Controller
         ->join('classes', 'class_reports.classId', '=', 'classes.classId')
         ->join('students', 'class_reports.studentId', '=', 'students.studentId')
         ->join('campuses', 'class_reports.campusId', '=', 'campuses.campusId')
-        ->join('student_products','class_reports.studentId', '=', 'student_products.studentId')
-        ->join('products', 'student_products.productId', '=', 'products.productId')
         ->select(
             'class_reports.classReportId',
             'teachers.teacherId', 
@@ -46,8 +44,6 @@ class ClassReportController extends Controller
             'class_reports.preparation',
             'class_reports.attitude',
             'class_reports.participation',
-            'products.productId',
-            'products.name as productName',
             )
         ->get();
         return $this->successClassReport($classReportData);
@@ -105,12 +101,35 @@ class ClassReportController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($ClassReport)
+    public function show($classReportId)
     {
 
-        $ClassReports = ClassReports::find($ClassReport);
-        $ClassReportsData = new ClassReportsResource($ClassReports);
-        return $this->successClassReport($ClassReportsData);
+        $classReport = ClassReports::join('teachers', 'class_reports.teacherId', '=', 'teachers.teacherId')
+        ->join('classes', 'class_reports.classId', '=', 'classes.classId')
+        ->join('students', 'class_reports.studentId', '=', 'students.studentId')
+        ->join('campuses', 'class_reports.campusId', '=', 'campuses.campusId')
+        ->join('student_products','class_reports.studentId', '=', 'student_products.studentId')
+        ->join('products', 'student_products.productId', '=', 'products.productId')
+        ->select(
+            'class_reports.classReportId',
+            'teachers.teacherId', 
+            'teachers.name as teacherName', 
+            'classes.classId', 
+            'classes.name as className', 
+            'students.studentId', 
+            'students.name as studentName', 
+            'campuses.campusId',
+            'campuses.name as campusName', 
+            'class_reports.date',
+            'class_reports.comment',
+            'class_reports.preparation',
+            'class_reports.attitude',
+            'class_reports.participation',
+            'products.productId',
+            'products.name as productName',
+            )
+        ->where('classReportId', $classReportId)->get();
+        return $this->successClassReport($classReport);
     }
 
     /**
