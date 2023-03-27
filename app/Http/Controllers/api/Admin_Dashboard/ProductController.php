@@ -48,8 +48,19 @@ class ProductController extends Controller
                 products.startLevel,
                 products.endLevel,
                 products.activate,
-                GROUP_CONCAT(matched_activities.name) as study planer',
-            )->groupBy('products.productId')->get();
+                GROUP_CONCAT(CONCAT_WS(":", matched_activities.matchedActivityId,matched_activities.name)) as studyPlaners',
+            )->groupBy('products.productId', 'packages.packageId')->get();
+            foreach ($products as $product) {
+                $studyPlannerArray = [];
+                $studyPlannerString = $product->studyPlaners;
+                if (!empty($studyPlannerString)) {
+                    $studyPlannerArray = array_map(function ($studyPlanner) {
+                        [$matchedActivityId, $name] = explode(':', $studyPlanner);
+                        return ['matchedActivityId' => $matchedActivityId, 'name' => $name];
+                    }, explode(',', $studyPlannerString));
+                }
+                $product->studyPlaners = $studyPlannerArray;
+            }
         }catch(Exception $e){
             return $e->getMessage();
         }
