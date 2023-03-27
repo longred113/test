@@ -54,23 +54,24 @@ class EnrollmentControllerA extends Controller
 
     public function getEnrollmentHaveProductAndStudent()
     {
-        $enrollment = Enrollment::join('student_enrollments', 'enrollments.enrollmentId', '=', 'student_enrollments.enrollmentId')
-        ->join('campuses', 'enrollments.campusId', '=', 'campuses.campusId')
-        ->join('product_enrollments', 'enrollments.enrollmentId', '=', 'product_enrollments.enrollmentId')
-        ->join('products', 'products.productId', '=', 'product_enrollments.productId')
-        ->join('students', 'student_enrollments.studentId', '=', 'students.studentId')
-        ->select(
-            'enrollments.enrollmentId',
-            'student_enrollments.studentId',
-            'campuses.campusId',
-            'campuses.name as campusName',
-            'product_enrollments.productId',
-            'products.name as subject',
-            'products.level',
-            'enrollments.submittedDate',
-            'enrollments.status',
-            
+        $enrollment = Enrollment::leftJoin('student_enrollments', 'enrollments.enrollmentId', '=', 'student_enrollments.enrollmentId')
+        ->leftJoin('campuses', 'enrollments.campusId', '=', 'campuses.campusId')
+        ->leftJoin('product_enrollments', 'enrollments.enrollmentId', '=', 'product_enrollments.enrollmentId')
+        ->leftJoin('products', 'products.productId', '=', 'product_enrollments.productId')
+        ->leftJoin('students', 'student_enrollments.studentId', '=', 'students.studentId')
+        ->selectRaw(
+            'enrollments.enrollmentId,
+            GROUP_CONCAT(student_enrollments.studentId) as studentIds,
+            GROUP_CONCAT(campuses.campusId) as campusIds,
+            campuses.name as campusName,
+            GROUP_CONCAT(product_enrollments.productId) as ProductIds,
+            GROUP_CONCAT(products.name) as productNames,
+            products.level,
+            enrollments.submittedDate,
+            enrollments.status,
+            students.name as studentName',
         )
+        ->groupBy('enrollments.enrollmentId', 'student_enrollments.studentId', 'product_enrollments.productId')
         ->get();
         
         return $this->successEnrollmentRequest($enrollment);

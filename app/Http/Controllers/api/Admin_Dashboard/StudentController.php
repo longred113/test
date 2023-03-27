@@ -63,11 +63,11 @@ class StudentController extends Controller
     public function viewStudentProductAndStudyPlanner()
     {
         try {
-            $students = Students::join('users', 'students.studentId', '=', 'users.studentId')
-                ->join('campuses', 'students.campusId', '=', 'campuses.campusId')
-                ->join('student_matched_activities', 'students.studentId', '=', 'student_matched_activities.studentId')
-                ->join('student_products', 'students.studentId', '=', 'student_products.studentId')
-                ->join('products', 'student_products.productId', '=', 'products.productId')
+            $students = Students::leftJoin('users', 'students.studentId', '=', 'users.studentId')
+                ->leftJoin('campuses', 'students.campusId', '=', 'campuses.campusId')
+                ->leftJoin('student_matched_activities', 'students.studentId', '=', 'student_matched_activities.studentId')
+                ->leftJoin('student_products', 'students.studentId', '=', 'student_products.studentId')
+                ->leftJoin('products', 'student_products.productId', '=', 'products.productId')
                 ->selectRaw(
                     'students.studentId,
                     students.campusId,
