@@ -41,6 +41,7 @@ class ClassReportController extends Controller
             'campuses.name as campusName', 
             'class_reports.date',
             'class_reports.comment',
+            'class_reports.attendance',
             'class_reports.preparation',
             'class_reports.attitude',
             'class_reports.participation',

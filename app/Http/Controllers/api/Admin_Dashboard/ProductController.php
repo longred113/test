@@ -38,16 +38,18 @@ class ProductController extends Controller
         try {
             $products = Products::leftjoin('product_packages', 'products.productId', '=', 'product_packages.productId')
             ->leftjoin('packages', 'product_packages.packageId', '=', 'packages.packageId')
-            ->select(
-                'products.productId',
-                'products.name',
-                'packages.packageId',
-                'packages.name as packageName',
-                'products.level',
-                'products.startLevel',
-                'products.endLevel',
-                'products.activate',
-            )->get();
+            ->leftjoin('matched_activities', 'products.productId', '=', 'matched_activities.productId')
+            ->selectRaw(
+                'products.productId,
+                products.name,
+                packages.packageId,
+                packages.name as packageName,
+                products.level,
+                products.startLevel,
+                products.endLevel,
+                products.activate,
+                GROUP_CONCAT(matched_activities.name) as study planer',
+            )->groupBy('products.productId')->get();
         }catch(Exception $e){
             return $e->getMessage();
         }
