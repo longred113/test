@@ -27,24 +27,28 @@ class ClassFeedbackController extends Controller
      */
     public function index()
     {
-        $classFeedbackData = ClassFeedbacks::join('teachers', 'class_feedbacks.teacherId', '=', 'teachers.teacherId')
-        ->join('classes', 'class_feedbacks.classId', '=', 'classes.classId')
-        ->join('students', 'class_feedbacks.studentId', '=', 'students.studentId')
-        ->join('campuses', 'class_feedbacks.campusId', '=', 'campuses.campusId')
-        ->select(
-            'class_feedbacks.classFeedbackId',
-            'teachers.teacherId', 
-            'teachers.name as teacherName', 
-            'classes.classId', 
-            'classes.name as className', 
-            'students.studentId', 
-            'students.name as studentName', 
-            'campuses.campusId',
-            'campuses.name as campusName',
-            'class_feedbacks.satisfaction',
-            'class_feedbacks.date',
-            'class_feedbacks.comment')
-        ->get();
+        try{
+            $classFeedbackData = ClassFeedbacks::join('teachers', 'class_feedbacks.teacherId', '=', 'teachers.teacherId')
+            ->join('classes', 'class_feedbacks.classId', '=', 'classes.classId')
+            ->join('students', 'class_feedbacks.studentId', '=', 'students.studentId')
+            ->join('campuses', 'class_feedbacks.campusId', '=', 'campuses.campusId')
+            ->select(
+                'class_feedbacks.classFeedbackId',
+                'teachers.teacherId', 
+                'teachers.name as teacherName', 
+                'classes.classId', 
+                'classes.name as className', 
+                'students.studentId', 
+                'students.name as studentName', 
+                'campuses.campusId',
+                'campuses.name as campusName',
+                'class_feedbacks.satisfaction',
+                'class_feedbacks.date',
+                'class_feedbacks.comment')
+            ->get();
+        } catch(Exception $e){
+            return $e->getMessage();
+        }
         return $this->successClassFeedback($classFeedbackData);
     }
 

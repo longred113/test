@@ -37,19 +37,37 @@ class ProductController extends Controller
     {
         try {
             $products = Products::leftjoin('product_packages', 'products.productId', '=', 'product_packages.productId')
-            ->leftjoin('packages', 'product_packages.packageId', '=', 'packages.packageId')
-            ->leftjoin('matched_activities', 'products.productId', '=', 'matched_activities.productId')
-            ->selectRaw(
+                ->leftjoin('packages', 'product_packages.packageId', '=', 'packages.packageId')
+                ->select(
+                    'products.productId',
+                    'products.name',
+                    'packages.packageId',
+                    'packages.name as packageName',
+                    'products.level',
+                    'products.startLevel',
+                    'products.endLevel',
+                    'products.activate',
+                )->get();
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+        return $this->successProductsRequest($products);
+    }
+
+    public function getProductAndMatchActivity()
+    {
+        try {
+            $products = Products::join('matched_activities', 'products.productId', '=', 'matched_activities.productId')
+                ->selectRaw(
                 'products.productId,
                 products.name,
-                packages.packageId,
-                packages.name as packageName,
                 products.level,
                 products.startLevel,
                 products.endLevel,
                 products.activate,
-                GROUP_CONCAT(CONCAT_WS(":", matched_activities.matchedActivityId,matched_activities.name)) as studyPlaners',
-            )->groupBy('products.productId', 'packages.packageId')->get();
+                GROUP_CONCAT(CONCAT_WS(":", matched_activities.matchedActivityId, matched_activities.name)) as studyPlaners',
+                )->groupBy('products.productId')->get();
+
             foreach ($products as $product) {
                 $studyPlannerArray = [];
                 $studyPlannerString = $product->studyPlaners;
@@ -61,7 +79,7 @@ class ProductController extends Controller
                 }
                 $product->studyPlaners = $studyPlannerArray;
             }
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return $e->getMessage();
         }
         return $this->successProductsRequest($products);
