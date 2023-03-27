@@ -57,27 +57,40 @@ class ProductController extends Controller
     public function getProductAndMatchActivity()
     {
         try {
-            $products = Products::join('matched_activities', 'products.productId', '=', 'matched_activities.productId')
-                ->selectRaw(
+            $products = Products::leftJoin('product_packages', function ($join) {
+                $join->on('products.productId', '=', 'product_packages.productId');
+            })
+            ->leftJoin('packages', 'product_packages.packageId', '=', 'packages.packageId')
+            ->leftJoin('matched_activities', 'products.productId', '=', 'matched_activities.productId')
+            ->selectRaw(
                 'products.productId,
                 products.name,
+                packages.packageId,
+                packages.name as packageName,
                 products.level,
                 products.startLevel,
                 products.endLevel,
                 products.activate,
-                GROUP_CONCAT(CONCAT_WS(":", matched_activities.matchedActivityId, matched_activities.name)) as studyPlaners',
-                )->groupBy('products.productId')->get();
-
+                GROUP_CONCAT(DISTINCT matched_activities.matchedActivityId) as matchedActivityIds,
+                GROUP_CONCAT(DISTINCT matched_activities.name SEPARATOR ",") as studyPlaners'
+            )
+            ->groupBy('products.productId', 'packages.packageId')
+            ->get();
             foreach ($products as $product) {
                 $studyPlannerArray = [];
                 $studyPlannerString = $product->studyPlaners;
                 if (!empty($studyPlannerString)) {
-                    $studyPlannerArray = array_map(function ($studyPlanner) {
-                        [$matchedActivityId, $name] = explode(':', $studyPlanner);
-                        return ['matchedActivityId' => $matchedActivityId, 'name' => $name];
-                    }, explode(',', $studyPlannerString));
+                    $studyPlannerArray = explode(',', $studyPlannerString);
                 }
                 $product->studyPlaners = $studyPlannerArray;
+            }
+            foreach ($products as $product) {
+                $matchedActivityArray = [];
+                $matchedActivityString = $product->matchedActivityIds;
+                if (!empty($matchedActivityString)) {
+                    $matchedActivityArray = explode(',', $matchedActivityString);
+                }
+                $product->matchedActivityIds = $matchedActivityArray;
             }
         } catch (Exception $e) {
             return $e->getMessage();

@@ -52,6 +52,30 @@ class EnrollmentControllerA extends Controller
         return $this->successEnrollmentRequest($data);
     }
 
+    public function getEnrollmentHaveProductAndStudent()
+    {
+        $enrollment = Enrollment::join('student_enrollments', 'enrollments.enrollmentId', '=', 'student_enrollments.enrollmentId')
+        ->join('campuses', 'enrollments.campusId', '=', 'campuses.campusId')
+        ->join('product_enrollments', 'enrollments.enrollmentId', '=', 'product_enrollments.enrollmentId')
+        ->join('products', 'products.productId', '=', 'product_enrollments.productId')
+        ->join('students', 'student_enrollments.studentId', '=', 'students.studentId')
+        ->select(
+            'enrollments.enrollmentId',
+            'student_enrollments.studentId',
+            'campuses.campusId',
+            'campuses.name as campusName',
+            'product_enrollments.productId',
+            'products.name as subject',
+            'products.level',
+            'enrollments.submittedDate',
+            'enrollments.status',
+            
+        )
+        ->get();
+        
+        return $this->successEnrollmentRequest($enrollment);
+    }
+
     /**
      * Store a newly created resource in storage.
      *

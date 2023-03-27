@@ -60,6 +60,69 @@ class StudentController extends Controller
         return $this->successStudentRequest($joinedStudent);
     }
 
+    public function viewStudentProductAndStudyPlanner()
+    {
+        try {
+            $students = Students::join('users', 'students.studentId', '=', 'users.studentId')
+                ->join('campuses', 'students.campusId', '=', 'campuses.campusId')
+                ->join('student_matched_activities', 'students.studentId', '=', 'student_matched_activities.studentId')
+                ->join('student_products', 'students.studentId', '=', 'student_products.studentId')
+                ->join('products', 'student_products.productId', '=', 'products.productId')
+                ->selectRaw(
+                    'students.studentId,
+                    students.campusId,
+                    campuses.name as campusName,
+                    students.name,
+                    students.email,
+                    MAX(users.userName) as userName,
+                    MAX(users.password) as password,
+                    students.gender,
+                    students.dateOfBirth,
+                    GROUP_CONCAT(student_products.productId) as productIds,
+                    GROUP_CONCAT(products.name) as productNames,
+                    GROUP_CONCAT(student_matched_activities.matchedActivityId) as matchedActivityIds,
+                    GROUP_CONCAT(student_matched_activities.name) as matchedActivityNames',
+                )
+                ->groupBy('students.studentId', 'students.campusId', 'products.productId')
+                ->get();
+                foreach ($students as $student) {
+                    $productArray = [];
+                    $productString = $student->productIds;
+                    if (!empty($productString)) {
+                        $productArray = explode(',', $productString);
+                    }
+                    $student->productIds = $productArray;
+                }
+                foreach ($students as $student) {
+                    $productNameArray = [];
+                    $productNameString = $student->productNames;
+                    if (!empty($productNameString)) {
+                        $productNameArray = explode(',', $productNameString);
+                    }
+                    $student->productNames = $productNameArray;
+                }
+                foreach ($students as $student) {
+                    $matchActivityArray = [];
+                    $matchActivityString = $student->matchedActivityIds;
+                    if (!empty($matchActivityString)) {
+                        $matchActivityArray = explode(',', $matchActivityString);
+                    }
+                    $student->matchedActivityIds = $matchActivityArray;
+                }
+                foreach ($students as $student) {
+                    $matchActivityNameArray = [];
+                    $matchActivityNameString = $student->matchedActivityNames;
+                    if (!empty($matchActivityNameString)) {
+                        $matchActivityNameArray = explode(',', $matchActivityNameString);
+                    }
+                    $student->matchedActivityNames = $matchActivityNameArray;
+                }
+            return $this->successStudentRequest($students);
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
     public function getStudentWithId($studentId)
     {
         $student = Students::find($studentId);
@@ -171,7 +234,7 @@ class StudentController extends Controller
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
-        $student = Students::where('studentId',$studentId)->update(['enrollmentCount' => $this->request['enrollmentCount']]);
+        $student = Students::where('studentId', $studentId)->update(['enrollmentCount' => $this->request['enrollmentCount']]);
         return $this->successStudentRequest($student);
     }
 
@@ -284,11 +347,11 @@ class StudentController extends Controller
 
             $newStudentInfoData = $student->update($params);
             $user = Users::where('studentId', $studentId)->first();
-            if(!empty($user)){
-                if(empty($this->request['userName'])){
+            if (!empty($user)) {
+                if (empty($this->request['userName'])) {
                     $this->request['userName'] = $user['userName'];
                 }
-                if(empty($this->request['password'])){
+                if (empty($this->request['password'])) {
                     $this->request['password'] = $user['password'];
                 }
                 $userParams = [

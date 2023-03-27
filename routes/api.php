@@ -181,6 +181,7 @@ Route::prefix('admin-student-management')
         Route::get('/', [StudentController::class, 'index'])->name('index');
         Route::get('/joined', [StudentController::class, 'studentJoinedList'])->name('studentJoinedList');
         Route::get('/withdrawal', [StudentController::class, 'studentWithdrawalList'])->name('studentWithdrawalList');
+        Route::get('/get-product-and-match-activity', [StudentController::class, 'viewStudentProductAndStudyPlanner'])->name('viewStudentProductAndStudyPlanner');
         Route::get('/student-with-id/{studentId}', [StudentController::class, 'getStudentWithId'])->name('getStudentWithId');
         Route::post('/create', [StudentController::class, 'store'])->name('store');
         Route::get('/{studentId}', [StudentController::class, 'show'])->name('show');
@@ -212,6 +213,7 @@ Route::prefix('admin-enrollment')
         Route::get('/Enrolls/{product}', [EnrollmentControllerA::class, 'showErollmentByPro'])->name('showErollmentByPro');
         Route::get('/get-enrollment/{campusId}', [EnrollmentControllerA::class, 'getEnrollment'])->name('getEnrollment');
         Route::get('/get-history', [EnrollmentControllerA::class, 'enrollmentHistory'])->name('enrollmentHistory');
+        Route::get('/get-product-and-student', [EnrollmentControllerA::class, 'getEnrollmentHaveProductAndStudent'])->name('getEnrollmentHaveProductAndStudent');
         Route::post('/create', [EnrollmentControllerA::class, 'store'])->name('store');
         Route::get('/{studentId}', [EnrollmentControllerA::class, 'show'])->name('show');
         Route::put('/update/{enrollmentId}', [EnrollmentControllerA::class, 'update'])->name('update');
