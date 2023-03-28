@@ -75,6 +75,7 @@ class StudentController extends Controller
                     campuses.name as campusName,
                     students.name,
                     students.email,
+                    MAX(users.userName) as userName,
                     MAX(users.password) as password,
                     students.gender,
                     students.dateOfBirth,

@@ -34,19 +34,19 @@ class EnrollmentControllerA extends Controller
 
     public function enrollmentHistory()
     {
-        try{
+        try {
             $data = Enrollment::leftJoin('student_enrollments', 'enrollments.enrollmentId', '=', 'student_enrollments.enrollmentId')
-            ->leftJoin('campuses', 'enrollments.campusId', '=', 'campuses.campusId')
-            ->leftJoin('product_enrollments', 'enrollments.enrollmentId', '=', 'product_enrollments.enrollmentId')
-            ->leftJoin('products', 'products.productId', '=', 'product_enrollments.productId')
-            ->leftJoin('students', 'student_enrollments.studentId', '=', 'students.studentId')
-            ->selectRaw(
+                ->leftJoin('campuses', 'enrollments.campusId', '=', 'campuses.campusId')
+                ->leftJoin('product_enrollments', 'enrollments.enrollmentId', '=', 'product_enrollments.enrollmentId')
+                ->leftJoin('products', 'products.productId', '=', 'product_enrollments.productId')
+                ->leftJoin('students', 'student_enrollments.studentId', '=', 'students.studentId')
+                ->selectRaw(
                 'enrollments.enrollmentId,
-                GROUP_CONCAT(student_enrollments.studentId) as studentIds,
-                GROUP_CONCAT(campuses.campusId) as campusIds,
+                GROUP_CONCAT(DISTINCT student_enrollments.studentId) as studentIds,
+                GROUP_CONCAT(DISTINCT campuses.campusId) as campusIds,
                 campuses.name as campusName,
-                GROUP_CONCAT(products.productId) as ProductIds,
-                GROUP_CONCAT(products.name) as productNames,
+                GROUP_CONCAT(DISTINCT products.productId) as ProductIds,
+                GROUP_CONCAT(DISTINCT products.name) as productNames,
                 products.name as subject,
                 products.level,
                 enrollments.submittedDate,
@@ -55,7 +55,7 @@ class EnrollmentControllerA extends Controller
                 )
                 ->groupBy('enrollments.enrollmentId', 'students.studentId', 'products.productId')
                 ->get();
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return $e->getMessage();
         }
         return $this->successEnrollmentRequest($data);
@@ -64,12 +64,12 @@ class EnrollmentControllerA extends Controller
     public function getEnrollmentHaveProductAndStudent()
     {
         $enrollment = Enrollment::leftJoin('student_enrollments', 'enrollments.enrollmentId', '=', 'student_enrollments.enrollmentId')
-        ->leftJoin('campuses', 'enrollments.campusId', '=', 'campuses.campusId')
-        ->leftJoin('product_enrollments', 'enrollments.enrollmentId', '=', 'product_enrollments.enrollmentId')
-        ->leftJoin('products', 'products.productId', '=', 'product_enrollments.productId')
-        ->leftJoin('students', 'student_enrollments.studentId', '=', 'students.studentId')
-        ->selectRaw(
-            'enrollments.enrollmentId,
+            ->leftJoin('campuses', 'enrollments.campusId', '=', 'campuses.campusId')
+            ->leftJoin('product_enrollments', 'enrollments.enrollmentId', '=', 'product_enrollments.enrollmentId')
+            ->leftJoin('products', 'products.productId', '=', 'product_enrollments.productId')
+            ->leftJoin('students', 'student_enrollments.studentId', '=', 'students.studentId')
+            ->selectRaw(
+                'enrollments.enrollmentId,
             GROUP_CONCAT(student_enrollments.studentId) as studentIds,
             GROUP_CONCAT(campuses.campusId) as campusIds,
             campuses.name as campusName,
@@ -79,10 +79,10 @@ class EnrollmentControllerA extends Controller
             enrollments.submittedDate,
             enrollments.status,
             students.name as studentName',
-        )
-        ->groupBy('enrollments.enrollmentId', 'student_enrollments.studentId', 'product_enrollments.productId')
-        ->get();
-        
+            )
+            ->groupBy('enrollments.enrollmentId', 'student_enrollments.studentId', 'product_enrollments.productId')
+            ->get();
+
         return $this->successEnrollmentRequest($enrollment);
     }
 
@@ -105,7 +105,7 @@ class EnrollmentControllerA extends Controller
         return $this->successEnrollmentRequest($data);
     }
 
-    public function getEnrollment($campusId) 
+    public function getEnrollment($campusId)
     {
         $enrollment = Enrollment::where('campusId', $campusId)->get();
         return $this->successEnrollmentRequest($enrollment);
