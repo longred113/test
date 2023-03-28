@@ -38,16 +38,19 @@ class ProductController extends Controller
         try {
             $products = Products::leftjoin('product_packages', 'products.productId', '=', 'product_packages.productId')
                 ->leftjoin('packages', 'product_packages.packageId', '=', 'packages.packageId')
-                ->select(
-                    'products.productId',
-                    'products.name',
-                    'packages.packageId',
-                    'packages.name as packageName',
-                    'products.level',
-                    'products.startLevel',
-                    'products.endLevel',
-                    'products.activate',
-                )->get();
+                ->leftJoin('matched_activities', 'products.productId', '=', 'matched_activities.productId')
+                ->selectRaw(
+                    'products.productId,
+                    products.name,
+                    GROUP_CONCAT(DISTINCT CONCAT_WS(":",packages.packageId,packages.name )) as packages,
+                    MAX(products.level) as level,
+                    products.startLevel,
+                    products.endLevel,
+                    products.activate,
+                    GROUP_CONCAT(DISTINCT CONCAT_WS(":",matched_activities.matchedActivityId, matched_activities.name)) as matchedActivities'
+                )
+                ->groupBy('products.productId')
+                ->get();
         } catch (Exception $e) {
             return $e->getMessage();
         }
@@ -57,41 +60,21 @@ class ProductController extends Controller
     public function getProductAndMatchActivity()
     {
         try {
-            $products = Products::leftJoin('product_packages', function ($join) {
-                $join->on('products.productId', '=', 'product_packages.productId');
-            })
-            ->leftJoin('packages', 'product_packages.packageId', '=', 'packages.packageId')
-            ->leftJoin('matched_activities', 'products.productId', '=', 'matched_activities.productId')
-            ->selectRaw(
-                'products.productId,
-                products.name,
-                packages.packageId,
-                packages.name as packageName,
-                products.level,
-                products.startLevel,
-                products.endLevel,
-                products.activate,
-                GROUP_CONCAT(DISTINCT CONCAT_WS(":",matched_activities.matchedActivityId, matched_activities.name)) as matchedActivities,
-                GROUP_CONCAT(DISTINCT matched_activities.name SEPARATOR ",") as studyPlaners'
-            )
-            ->groupBy('products.productId', 'packages.packageId')
-            ->get();
-            foreach ($products as $product) {
-                $studyPlannerArray = [];
-                $studyPlannerString = $product->studyPlaners;
-                if (!empty($studyPlannerString)) {
-                    $studyPlannerArray = explode(',', $studyPlannerString);
-                }
-                $product->studyPlaners = $studyPlannerArray;
-            }
-            foreach ($products as $product) {
-                $matchedActivityArray = [];
-                $matchedActivityString = $product->matchedActivityIds;
-                if (!empty($matchedActivityString)) {
-                    $matchedActivityArray = explode(',', $matchedActivityString);
-                }
-                $product->matchedActivityIds = $matchedActivityArray;
-            }
+            $products = Products::leftJoin('product_packages', 'products.productId', '=', 'product_packages.productId')
+                ->leftJoin('packages', 'product_packages.packageId', '=', 'packages.packageId')
+                ->leftJoin('matched_activities', 'products.productId', '=', 'matched_activities.productId')
+                ->selectRaw(
+                    'products.productId,
+                    products.name,
+                    GROUP_CONCAT(DISTINCT CONCAT_WS(":",packages.packageId,packages.name )) as packages,
+                    MAX(products.level) as level,
+                    products.startLevel,
+                    products.endLevel,
+                    products.activate,
+                    GROUP_CONCAT(DISTINCT CONCAT_WS(":",matched_activities.matchedActivityId, matched_activities.name)) as matchedActivities'
+                )
+                ->groupBy('products.productId')
+                ->get();
         } catch (Exception $e) {
             return $e->getMessage();
         }
