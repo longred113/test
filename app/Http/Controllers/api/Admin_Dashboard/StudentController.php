@@ -78,12 +78,10 @@ class StudentController extends Controller
                     MAX(users.password) as password,
                     students.gender,
                     students.dateOfBirth,
-                    GROUP_CONCAT(student_products.productId) as productIds,
-                    GROUP_CONCAT(products.name) as productNames,
-                    GROUP_CONCAT(student_matched_activities.matchedActivityId) as matchedActivityIds,
-                    GROUP_CONCAT(student_matched_activities.name) as matchedActivityNames',
+                    GROUP_CONCAT(DISTINCT CONCAT_WS(":",student_products.productId, products.name)) as products,
+                    GROUP_CONCAT(DISTINCT CONCAT_WS(":", student_matched_activities.matchedActivityId, student_matched_activities.name)) as studyPlaners',
                 )
-                ->groupBy('students.studentId', 'students.campusId', 'products.productId')
+                ->groupBy('students.studentId', 'students.campusId')
                 ->get();
                 foreach ($students as $student) {
                     $productArray = [];
@@ -101,22 +99,22 @@ class StudentController extends Controller
                     }
                     $student->productNames = $productNameArray;
                 }
-                foreach ($students as $student) {
-                    $matchActivityArray = [];
-                    $matchActivityString = $student->matchedActivityIds;
-                    if (!empty($matchActivityString)) {
-                        $matchActivityArray = explode(',', $matchActivityString);
-                    }
-                    $student->matchedActivityIds = $matchActivityArray;
-                }
-                foreach ($students as $student) {
-                    $matchActivityNameArray = [];
-                    $matchActivityNameString = $student->matchedActivityNames;
-                    if (!empty($matchActivityNameString)) {
-                        $matchActivityNameArray = explode(',', $matchActivityNameString);
-                    }
-                    $student->matchedActivityNames = $matchActivityNameArray;
-                }
+                // foreach ($students as $student) {
+                //     $matchActivityArray = [];
+                //     $matchActivityString = $student->matchedActivityIds;
+                //     if (!empty($matchActivityString)) {
+                //         $matchActivityArray = explode(',', $matchActivityString);
+                //     }
+                //     $student->matchedActivityIds = $matchActivityArray;
+                // }
+                // foreach ($students as $student) {
+                //     $matchActivityNameArray = [];
+                //     $matchActivityNameString = $student->matchedActivityNames;
+                //     if (!empty($matchActivityNameString)) {
+                //         $matchActivityNameArray = explode(',', $matchActivityNameString);
+                //     }
+                //     $student->matchedActivityNames = $matchActivityNameArray;
+                // }
             return $this->successStudentRequest($students);
         } catch (Exception $e) {
             return $e->getMessage();

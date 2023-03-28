@@ -76,7 +76,26 @@ class TeacherController extends Controller
                 'teachers.memo',
             )
             ->where('teachers.type', 'online')->get();
-        return $this->successTeacherRequest($teachersData);
+            $campusManagerData = CampusManager::leftJoin('users', 'campus_managers.campusManagerId', '=', 'users.campusManagerId')
+            ->leftJoin('campuses', 'campus_managers.campusId', '=', 'campuses.campusId')
+            ->select(
+                'campus_managers.campusManagerId as teacherId',
+                'campus_managers.name as teacherName',
+                'campus_managers.email',
+                'users.password',
+                'campus_managers.campusId',
+                'campuses.name as campusName',
+                'campus_managers.role',
+                'campus_managers.activate',
+                'campus_managers.gender',
+                'campus_managers.dateOfBirth',
+                'campus_managers.country',
+                'campus_managers.timeZone',
+                'campus_managers.talkSamId',
+            )
+            ->get();
+        $mergedData = $teachersData->concat($campusManagerData);
+        return $this->successTeacherRequest($mergedData);
     }
 
     public function showOnlineTeacher()
