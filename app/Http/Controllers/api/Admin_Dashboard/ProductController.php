@@ -71,7 +71,7 @@ class ProductController extends Controller
                 products.startLevel,
                 products.endLevel,
                 products.activate,
-                GROUP_CONCAT(DISTINCT matched_activities.matchedActivityId) as matchedActivityIds,
+                GROUP_CONCAT(DISTINCT CONCAT_WS(":",matched_activities.matchedActivityId, matched_activities.name)) as matchedActivities,
                 GROUP_CONCAT(DISTINCT matched_activities.name SEPARATOR ",") as studyPlaners'
             )
             ->groupBy('products.productId', 'packages.packageId')

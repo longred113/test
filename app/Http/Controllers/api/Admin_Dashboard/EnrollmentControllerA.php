@@ -35,28 +35,28 @@ class EnrollmentControllerA extends Controller
     public function enrollmentHistory()
     {
         try{
-            $data = Enrollment::leftJoin('student_enrollments', 'enrollments.enrollmentId', '=', 'student_enrollments.enrollmentId')
+            $enrollment = Enrollment::leftJoin('student_enrollments', 'enrollments.enrollmentId', '=', 'student_enrollments.enrollmentId')
             ->leftJoin('campuses', 'enrollments.campusId', '=', 'campuses.campusId')
             ->leftJoin('product_enrollments', 'enrollments.enrollmentId', '=', 'product_enrollments.enrollmentId')
             ->leftJoin('products', 'products.productId', '=', 'product_enrollments.productId')
             ->leftJoin('students', 'student_enrollments.studentId', '=', 'students.studentId')
-            ->select(
-                'enrollments.enrollmentId',
-                'student_enrollments.studentId',
-                'campuses.campusId',
-                'campuses.name as campusName',
-                'product_enrollments.productId',
-                'products.name as subject',
-                'products.level',
-                'enrollments.submittedDate',
-                'enrollments.status',
-                'students.name as studentName',
-                )
-                ->get();
+            ->selectRaw(
+                'enrollments.enrollmentId,
+                GROUP_CONCAT(DISTINCT CONCAT_WS(":",student_enrollments.studentId, students.name)) as students,
+                campuses.campusId,
+                campuses.name as campusName,
+                GROUP_CONCAT(DISTINCT CONCAT_WS(":",product_enrollments.productId, products.name)) as Products,
+                MAX(products.level) as level,
+                enrollments.submittedDate,
+                enrollments.status',
+            )
+            ->where('student_enrollments.check', 1)
+            ->groupBy('enrollments.enrollmentId')
+            ->get();
         }catch(Exception $e){
             return $e->getMessage();
         }
-        return $this->successEnrollmentRequest($data);
+        return $this->successEnrollmentRequest($enrollment);
     }
 
     public function getEnrollmentHaveProductAndStudent()
