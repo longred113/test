@@ -75,13 +75,14 @@ class StudentController extends Controller
                     campuses.name as campusName,
                     students.name,
                     students.email,
-                    MAX(users.userName) as userName,
                     MAX(users.password) as password,
                     students.gender,
                     students.dateOfBirth,
                     GROUP_CONCAT(DISTINCT CONCAT_WS(":",student_products.productId, products.name)) as products,
                     GROUP_CONCAT(DISTINCT CONCAT_WS(":", student_matched_activities.matchedActivityId, matched_activities.name)) as studyPlaners',
                 )
+                ->where('students.type', 'online')
+                ->whereNotNull('users.studentId')
                 ->groupBy('students.studentId', 'students.campusId')
                 ->get();
                 // foreach ($students as $student) {

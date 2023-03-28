@@ -45,7 +45,7 @@ class EnrollmentControllerA extends Controller
                 GROUP_CONCAT(student_enrollments.studentId) as studentIds,
                 GROUP_CONCAT(campuses.campusId) as campusIds,
                 campuses.name as campusName,
-                GROUP_CONCAT(product_enrollments.productId) as ProductIds,
+                GROUP_CONCAT(products.productId) as ProductIds,
                 GROUP_CONCAT(products.name) as productNames,
                 products.name as subject,
                 products.level,
@@ -53,7 +53,7 @@ class EnrollmentControllerA extends Controller
                 enrollments.status,
                 students.name as studentName',
                 )
-                ->groupBy('enrollments.enrollmentId', 'student_enrollments.studentId', 'product_enrollments.productId')
+                ->groupBy('enrollments.enrollmentId', 'students.studentId', 'products.productId')
                 ->get();
         }catch(Exception $e){
             return $e->getMessage();
