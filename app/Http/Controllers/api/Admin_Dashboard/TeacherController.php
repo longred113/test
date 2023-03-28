@@ -447,10 +447,14 @@ class TeacherController extends Controller
                 $campusManager['memo'] = $this->request['memo'],
                 $campusManager['offlineStudentId'] = $this->request['offlineStudentId'],
                 $campusManager['offlineTeacherId'] = $this->request['offlineTeacherId'],
-                $campusManager['role'] = 'campusManger',
+                $campusManager['role'] = 'Campus Manger',
                 $campusManager['activate'] = $this->request['activate'],
             ];
             try{
+                $existCampusManager = CampusManager::where('campusId', $this->request['campusId'])->first();
+                if(!empty($existCampusManager)){
+                    return response()->json(['error' => 'This campus already has a campus manager'], 400);
+                }
                 $newInfoCampusManager = $campusManager->update($campusManagerParams);
                 $user = Users::where('campusManagerId', $teacherId)->first();
                 if(empty($this->request['userName'])){

@@ -65,9 +65,10 @@ class StudentController extends Controller
         try {
             $students = Students::leftJoin('users', 'students.studentId', '=', 'users.studentId')
                 ->leftJoin('campuses', 'students.campusId', '=', 'campuses.campusId')
-                ->leftJoin('student_matched_activities', 'students.studentId', '=', 'student_matched_activities.studentId')
                 ->leftJoin('student_products', 'students.studentId', '=', 'student_products.studentId')
+                ->leftJoin('student_matched_activities', 'students.studentId', '=', 'student_matched_activities.studentId')
                 ->leftJoin('products', 'student_products.productId', '=', 'products.productId')
+                ->leftJoin('matched_activities', 'student_matched_activities.matchedActivityId', '=', 'matched_activities.matchedActivityId')
                 ->selectRaw(
                     'students.studentId,
                     students.campusId,
@@ -79,26 +80,26 @@ class StudentController extends Controller
                     students.gender,
                     students.dateOfBirth,
                     GROUP_CONCAT(DISTINCT CONCAT_WS(":",student_products.productId, products.name)) as products,
-                    GROUP_CONCAT(DISTINCT CONCAT_WS(":", student_matched_activities.matchedActivityId, student_matched_activities.name)) as studyPlaners',
+                    GROUP_CONCAT(DISTINCT CONCAT_WS(":", student_matched_activities.matchedActivityId, matched_activities.name)) as studyPlaners',
                 )
                 ->groupBy('students.studentId', 'students.campusId')
                 ->get();
-                foreach ($students as $student) {
-                    $productArray = [];
-                    $productString = $student->productIds;
-                    if (!empty($productString)) {
-                        $productArray = explode(',', $productString);
-                    }
-                    $student->productIds = $productArray;
-                }
-                foreach ($students as $student) {
-                    $productNameArray = [];
-                    $productNameString = $student->productNames;
-                    if (!empty($productNameString)) {
-                        $productNameArray = explode(',', $productNameString);
-                    }
-                    $student->productNames = $productNameArray;
-                }
+                // foreach ($students as $student) {
+                //     $productArray = [];
+                //     $productString = $student->productIds;
+                //     if (!empty($productString)) {
+                //         $productArray = explode(',', $productString);
+                //     }
+                //     $student->productIds = $productArray;
+                // }
+                // foreach ($students as $student) {
+                //     $productNameArray = [];
+                //     $productNameString = $student->productNames;
+                //     if (!empty($productNameString)) {
+                //         $productNameArray = explode(',', $productNameString);
+                //     }
+                //     $student->productNames = $productNameArray;
+                // }
                 // foreach ($students as $student) {
                 //     $matchActivityArray = [];
                 //     $matchActivityString = $student->matchedActivityIds;
