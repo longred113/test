@@ -119,7 +119,7 @@ class ProductEnrollmentController extends Controller
     public function updateProduct()
     {
         $validator = Validator::make($this->request->all(), [
-            
+            'enrollmentId' => ''
         ]);
     }
 

@@ -40,7 +40,7 @@ class ProductMatchedActivityController extends Controller
     public function store()
     {
         $validator = Validator::make($this->request->all(), [
-            'productId' => 'string',
+            'productId' => 'string|required',
             'matchedActivityIds' => 'array|required',
         ]);
         if ($validator->fails()) {
