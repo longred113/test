@@ -22,6 +22,7 @@ use App\Http\Controllers\api\Admin_Dashboard\ClassProductController;
 use App\Http\Controllers\api\Admin_Dashboard\EnrollmentControllerA;
 use App\Http\Controllers\api\Admin_Dashboard\ImageController;
 use App\Http\Controllers\api\Admin_Dashboard\ProductEnrollmentController;
+use App\Http\Controllers\api\Admin_Dashboard\ProductMatchedActivityController;
 use App\Http\Controllers\api\Admin_Dashboard\ProductPackageController;
 use App\Http\Controllers\api\Admin_Dashboard\StudentClassController;
 use App\Http\Controllers\api\Admin_Dashboard\StudentEnrollmentController;
@@ -360,6 +361,7 @@ Route::prefix('admin-product-enrollment-management')
         Route::get('/{productEnrollmentId}', [ProductEnrollmentController::class, 'show'])->name('show');
         Route::post('/get-product', [ProductEnrollmentController::class, 'getProduct'])->name('getProduct');
         Route::put('/update/{productEnrollmentId}', [ProductEnrollmentController::class, 'update'])->name('update');
+        Route::post('/update-product',[ProductEnrollmentController::class, 'updateProduct'])->name('updateProduct');
         Route::delete('/{productEnrollmentId}', [ProductEnrollmentController::class, 'destroy'])->name('destroy');
     }); 
 
@@ -372,7 +374,16 @@ Route::prefix('admin-image-management')
         Route::delete('/delete-image', [ImageController::class, 'destroy'])->name('destroy');
         Route::get('/get-student-image', [ImageController::class, 'getStudentImage'])->name('getStudentImage');
         Route::get('/get-teacher-image', [ImageController::class, 'getTeacherImage'])->name('getTeacherImage');
-    }); 
+    });
+
+Route::prefix('admin-product-match-activity-management')
+    ->name('admin-product-match-activity-management.')
+    ->group(function () {
+        Route::get('/', [ProductMatchedActivityController::class, 'index'])->name('index');
+        Route::post('/create', [ProductMatchedActivityController::class, 'store'])->name('store');
+        Route::post('/update-matched-activity', [ProductMatchedActivityController::class, 'updateMatchedActivity'])->name('updateMatchedActivity');
+        Route::delete('/delete-image', [ProductMatchedActivityController::class, 'destroy'])->name('destroy');
+    });  
 //END ADMIN DASHBOARD
 
 // START CAMPUS DASHBOARD

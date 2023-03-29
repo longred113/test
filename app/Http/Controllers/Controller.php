@@ -256,4 +256,12 @@ class Controller extends BaseController
             'imageData' => $imageData,
         ],200);
     }
+    protected function successProductMatchActivityRequest($productMatchActivityData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'productMatchActivityData' => $productMatchActivityData,
+        ],200);
+    }
 }

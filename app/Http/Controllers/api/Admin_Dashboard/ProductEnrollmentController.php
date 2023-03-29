@@ -116,6 +116,13 @@ class ProductEnrollmentController extends Controller
         return $this->successProductEnrollmentRequest($newInfo);
     }
 
+    public function updateProduct()
+    {
+        $validator = Validator::make($this->request->all(), [
+            
+        ]);
+    }
+
     /**
      * Remove the specified resource from storage.
      *
