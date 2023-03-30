@@ -126,4 +126,29 @@ class StudentProductController extends Controller
         $deleteStudentProduct = $studentProduct->delete();
         return $this->successStudentProductRequest($deleteStudentProduct);
     }
+
+    public function updateProductOfStudent()
+    {
+        $validator = Validator::make($this->request->all(), [
+            'studentId' => 'string|required',
+            'productIds' => 'array|required',
+        ]);
+        if ($validator->fails()) {
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        }
+
+        $studentId = $this->request['studentId'];
+        $productIds = $this->request['productIds'];
+        $students = StudentProducts::where('studentId', $studentId)->delete();
+        foreach($productIds as $productId){
+            $studentProductId = IdGenerator::generate(['table' => 'student_products', 'trow' => 'studentProductId', 'length' => 7, 'prefix' => 'SP']);
+            $params = [
+                'studentProductId' => $studentProductId,
+                'studentId' => $studentId,
+                'productId' => $productId,
+            ];
+            StudentProducts::create($params);
+        }
+        return $this->successStudentProductRequest();
+    }
 }

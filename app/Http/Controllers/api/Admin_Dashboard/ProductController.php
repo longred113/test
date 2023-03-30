@@ -62,7 +62,7 @@ class ProductController extends Controller
         try {
             $products = Products::leftJoin('product_packages', 'products.productId', '=', 'product_packages.productId')
                 ->leftJoin('packages', 'product_packages.packageId', '=', 'packages.packageId')
-                ->leftJoin('matched_activities', 'products.productId', '=', 'matched_activities.productId')
+                ->leftJoin('product_matched_activities', 'products.productId', '=', 'product_matched_activities.productId')
                 ->selectRaw(
                     'products.productId,
                     products.name,
@@ -71,7 +71,7 @@ class ProductController extends Controller
                     products.startLevel,
                     products.endLevel,
                     products.activate,
-                    GROUP_CONCAT(DISTINCT CONCAT_WS(":",matched_activities.matchedActivityId, matched_activities.name)) as matchedActivities'
+                    GROUP_CONCAT(DISTINCT CONCAT_WS(":", product_matched_activities.matchedActivityId, product_matched_activities.matchedActivityname)) as matchedActivities'
                 )
                 ->groupBy('products.productId')
                 ->get();

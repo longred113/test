@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\Admin_Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductEnrollmentResource;
 use App\Models\ProductEnrollments;
+use App\Models\StudentProducts;
 use Carbon\Carbon;
 use Exception;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
@@ -119,8 +120,41 @@ class ProductEnrollmentController extends Controller
     public function updateProduct()
     {
         $validator = Validator::make($this->request->all(), [
-            'enrollmentId' => ''
+            'enrollmentId' => 'string|required',
+            'productIds' => 'array|required',
+            'check' => 'integer',
         ]);
+        if ($validator->fails()) {
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        }
+        try{
+            $enrollmentId = $this->request['enrollmentId'];
+            $productIds = $this->request['productIds'];
+            $productEnrollment = ProductEnrollments::where('enrollmentId', $enrollmentId)->delete();
+            foreach($productIds as $productId){
+                $productEnrollmentId = IdGenerator::generate(['table' => 'product_enrollments', 'trow' => 'productEnrollmentId', 'length' => 7, 'prefix' => 'PE']);
+                $productEnrollmentParams = [
+                    'productEnrollmentId' => $productEnrollmentId,
+                    'enrollmentId' => $enrollmentId,
+                    'productId' => $productId,
+                    'date' => Carbon::now(),
+                ];
+                ProductEnrollments::create($productEnrollmentParams);
+            }
+            $studentProducts = StudentProducts::whereIn('productId', $productIds)->get();
+            $studentIds = $studentProducts->pluck('studentId')->toArray();
+            $studentEnrollmentParams = [
+                'enrollmentId' => $enrollmentId,
+                'studentIds' => $studentIds,
+            ];
+            if(isset($this->request['check'])){
+                $studentEnrollmentParams['check'] = $this->request['check'];
+            }
+            StudentEnrollmentController::updateEnrollment($studentEnrollmentParams);
+        }catch(Exception $e){
+            return $e->getMessage();
+        }
+        return $this->successProductEnrollmentRequest();
     }
 
     /**

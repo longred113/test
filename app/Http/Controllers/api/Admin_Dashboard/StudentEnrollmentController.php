@@ -104,9 +104,25 @@ class StudentEnrollmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public static function updateEnrollment($studentEnrollmentParams)
     {
-        //
+        $enrollmentId = $studentEnrollmentParams['enrollmentId'];
+        $studentIds = $studentEnrollmentParams['studentIds'];
+        StudentEnrollments::where('enrollmentId', $enrollmentId)->delete();
+        foreach($studentIds as $studentId){
+            $studentEnrollmentId = IdGenerator::generate(['table' => 'student_enrollments', 'trow' => 'studentEnrollmentId', 'length' => 7, 'prefix' => 'SE']);
+            $params =  [
+                'studentEnrollmentId' => $studentEnrollmentId,
+                'enrollmentId' => $enrollmentId,
+                'studentId' => $studentId,
+                'date' => Carbon::now(),
+            ];
+            if(isset($studentEnrollmentParams['check'])){
+                $params['check'] = $studentEnrollmentParams['check'];
+            }
+            $studentEnrollment = StudentEnrollments::create($params);
+        }
+        return $studentEnrollment;
     }
 
     /**

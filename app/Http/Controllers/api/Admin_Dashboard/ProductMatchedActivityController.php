@@ -111,12 +111,12 @@ class ProductMatchedActivityController extends Controller
                 $matchedActivityName = MatchedActivities::where('matchedActivityId', $matchedActivityId)->pluck('name')->toArray();
                 $params['matchedActivityName'] = implode(', ', $matchedActivityName);
 
-                $newProductMatchActivity = ProductMatchedActivities::create($params);
+                ProductMatchedActivities::create($params);
             }
         } catch (Exception $e) {
             return $e->getMessage();
         }
-        return $productMatchActivities;
+        return $this->successProductMatchActivityRequest();
     }
 
     /**

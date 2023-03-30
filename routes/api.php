@@ -327,6 +327,7 @@ Route::prefix('admin-student-product-management')
         Route::get('/display-by-student/{studentId}', [StudentProductController::class, 'displayByStudentId'])->name('getWithStudentId');
         Route::put('/update/{studentProductId}', [StudentProductController::class, 'update'])->name('update');
         Route::delete('/{studentProductId}', [StudentProductController::class, 'destroy'])->name('destroy');
+        Route::post('/update-product-of-student', [StudentProductController::class, 'updateProductOfStudent'])->name('updateProductOfStudent');
     });
 
 Route::prefix('admin-student-matched-activity-management')
@@ -339,6 +340,7 @@ Route::prefix('admin-student-matched-activity-management')
         Route::post('/update-activate', [StudentMatchedActivityController::class, 'updateActivate'])->name('updateActivate');
         Route::put('/update/{studentMatchedActivityId}', [StudentMatchedActivityController::class, 'update'])->name('update');
         Route::delete('/{studentMatchedActivityId}', [StudentMatchedActivityController::class, 'destroy'])->name('destroy');
+        Route::post('/update-match-activity-of-student', [StudentMatchedActivityController::class, 'updateMatchActivityOfStudent'])->name('updateMatchActivityOfStudent');
     });
 
 Route::prefix('admin-student-enrollment-management')
@@ -349,7 +351,7 @@ Route::prefix('admin-student-enrollment-management')
         Route::get('/{studentEnrollmentId}', [StudentEnrollmentController::class, 'show'])->name('show');
         Route::get('/get-student/{enrollmentId}', [StudentEnrollmentController::class, 'getStudent'])->name('getStudent');
         Route::post('/update-check', [StudentEnrollmentController::class, 'updateCheck'])->name('updateCheck');
-        Route::put('/update/{studentEnrollmentId}', [StudentEnrollmentController::class, 'update'])->name('update');
+        Route::put('/update-enrollment', [StudentEnrollmentController::class, 'updateEnrollment'])->name('updateEnrollment');
         Route::delete('/{studentEnrollmentId}', [StudentEnrollmentController::class, 'destroy'])->name('destroy');
     });    
 
@@ -382,7 +384,6 @@ Route::prefix('admin-product-match-activity-management')
         Route::get('/', [ProductMatchedActivityController::class, 'index'])->name('index');
         Route::post('/create', [ProductMatchedActivityController::class, 'store'])->name('store');
         Route::post('/update-matched-activity', [ProductMatchedActivityController::class, 'updateMatchedActivity'])->name('updateMatchedActivity');
-        Route::delete('/delete-image', [ProductMatchedActivityController::class, 'destroy'])->name('destroy');
     });  
 //END ADMIN DASHBOARD
 

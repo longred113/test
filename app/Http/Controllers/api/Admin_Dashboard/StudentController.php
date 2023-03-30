@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\Admin_Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentResource;
 use App\Models\Parents;
+use App\Models\StudentProducts;
 use App\Models\Students;
 use App\Models\Users;
 use Carbon\Carbon;
@@ -434,7 +435,7 @@ class StudentController extends Controller
             'type' => 'string',
             // 'enrollmentId' => 'string',
             // 'parentId' => 'string',
-            'enrollmentCount' => 'int',
+            'enrollmentCount' => 'integer',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());

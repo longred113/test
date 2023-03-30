@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\Admin_Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentMatchedActivityResource;
+use App\Models\MatchedActivities;
 use App\Models\StudentMatchedActivities;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
@@ -150,5 +151,34 @@ class StudentMatchedActivityController extends Controller
             ->update(['activate' => $this->request['activate']]);
         return $studentMatchedActivity;
         return $this->successStudentMatchedActivityRequest($studentMatchedActivity);
+    }
+
+    public function updateMatchActivityOfStudent()
+    {
+        $validator = Validator::make($this->request->all(), [
+            'studentId' => 'string|required',
+            'matchedActivityIds' => 'array|required',
+            'status' => [Rule::in(['to-do', 'incomplete', 'done'])],
+            'activate' => 'integer',
+        ]);
+        if ($validator->fails()) {
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        }
+        
+        $studentId = $this->request['studentId'];
+        $matchedActivityIds = $this->request['matchedActivityIds'];
+        $students = StudentMatchedActivities::where('studentId', $studentId)->delete();
+        foreach($matchedActivityIds as $matchedActivityId){
+            $studentMatchedActivityId = IdGenerator::generate(['table' => 'student_matched_activities', 'trow' => 'studentMatchedActivityId', 'length' => 8, 'prefix' => 'SMA']);
+            $params = [
+                'studentMatchedActivityId' => $studentMatchedActivityId,
+                'studentId' => $studentId,
+                'matchedActivityId' => $matchedActivityId,
+                'status' => 'to-do',
+            ];
+            $matchedActivityName = MatchedActivities::where('matchedActivityId', $matchedActivityId)->pluck('name')->toArray();
+            $params['name'] = implode(', ', $matchedActivityName);
+            StudentMatchedActivities::create($params);
+        }
     }
 }
