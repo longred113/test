@@ -47,17 +47,17 @@ class StudentEnrollmentController extends Controller
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
-        try { 
-        $studentEnrollmentId = IdGenerator::generate(['table' => 'student_enrollments', 'trow' => 'studentEnrollmentId', 'length' => 7, 'prefix' => 'SE']);
-        $params = [
-            'studentEnrollmentId' => $studentEnrollmentId,
-            'studentId' => $this->request['studentId'],
-            'enrollmentId' => $this->request['enrollmentId'],
-            'check' => 0,
-            'date' => Carbon::now(),
-        ];
-        $newStudentEnrollment = new StudentEnrollmentResource(StudentEnrollments::create($params));
-        } catch(Exception $e) {
+        try {
+            $studentEnrollmentId = IdGenerator::generate(['table' => 'student_enrollments', 'trow' => 'studentEnrollmentId', 'length' => 7, 'prefix' => 'SE']);
+            $params = [
+                'studentEnrollmentId' => $studentEnrollmentId,
+                'studentId' => $this->request['studentId'],
+                'enrollmentId' => $this->request['enrollmentId'],
+                'check' => 0,
+                'date' => Carbon::now(),
+            ];
+            $newStudentEnrollment = new StudentEnrollmentResource(StudentEnrollments::create($params));
+        } catch (Exception $e) {
             return $e->getMessage();
         }
         return $this->successStudentEnrollmentRequest($newStudentEnrollment);
@@ -78,7 +78,7 @@ class StudentEnrollmentController extends Controller
 
     public function getStudent($enrollmentId)
     {
-        $studentEnrollment = StudentEnrollments::where('enrollmentId',$enrollmentId)->get();
+        $studentEnrollment = StudentEnrollments::where('enrollmentId', $enrollmentId)->get();
         return $this->successStudentEnrollmentRequest($studentEnrollment);
     }
 
@@ -93,7 +93,7 @@ class StudentEnrollmentController extends Controller
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
         $studentEnrollment = StudentEnrollments::where('enrollmentId', $this->request['enrollmentId'])
-            ->where('studentId',$this->request['studentId'])->update(['check' => $this->request['check']]);
+            ->where('studentId', $this->request['studentId'])->update(['check' => $this->request['check']]);
         return $this->successStudentEnrollmentRequest($studentEnrollment);
     }
 
@@ -117,7 +117,7 @@ class StudentEnrollmentController extends Controller
         $enrollmentId = $this->request['enrollmentId'];
         $studentIds = $this->request['studentIds'];
         StudentEnrollments::where('enrollmentId', $enrollmentId)->delete();
-        foreach($studentIds as $studentId){
+        foreach ($studentIds as $studentId) {
             $studentEnrollmentId = IdGenerator::generate(['table' => 'student_enrollments', 'trow' => 'studentEnrollmentId', 'length' => 7, 'prefix' => 'SE']);
             $params =  [
                 'studentEnrollmentId' => $studentEnrollmentId,
@@ -125,7 +125,7 @@ class StudentEnrollmentController extends Controller
                 'studentId' => $studentId,
                 'date' => Carbon::now(),
             ];
-            if(isset($this->request['check'])){
+            if (isset($this->request['check'])) {
                 $params['check'] = $this->request['check'];
             }
             $studentEnrollment = StudentEnrollments::create($params);

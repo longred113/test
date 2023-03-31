@@ -106,7 +106,7 @@ class MatchedActivityController extends Controller
             $this->request['type'] = $matchedActivity['type'];
         }
         $validator = Validator::make($this->request->all(), [
-            'productId' => 'required',
+            'productId' => 'string',
             'name' => 'string',
             'time' => 'integer',
             // 'unitId' => 'string',
