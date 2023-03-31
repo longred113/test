@@ -184,6 +184,7 @@ Route::prefix('admin-student-management')
         Route::get('/withdrawal', [StudentController::class, 'studentWithdrawalList'])->name('studentWithdrawalList');
         Route::get('/get-product-and-match-activity', [StudentController::class, 'viewStudentProductAndStudyPlanner'])->name('viewStudentProductAndStudyPlanner');
         Route::get('/student-with-id/{studentId}', [StudentController::class, 'getStudentWithId'])->name('getStudentWithId');
+        Route::get('/get-student-online', [StudentController::class, 'getStudentOnline'])->name('getStudentOnline');
         Route::post('/create', [StudentController::class, 'store'])->name('store');
         Route::get('/{studentId}', [StudentController::class, 'show'])->name('show');
         Route::put('/update-enrollment-count/{studentId}', [StudentController::class, 'updateEnrollmentCount'])->name('updateEnrollmentCount');
@@ -352,6 +353,7 @@ Route::prefix('admin-student-enrollment-management')
         Route::get('/get-student/{enrollmentId}', [StudentEnrollmentController::class, 'getStudent'])->name('getStudent');
         Route::post('/update-check', [StudentEnrollmentController::class, 'updateCheck'])->name('updateCheck');
         Route::put('/update-enrollment', [StudentEnrollmentController::class, 'updateEnrollment'])->name('updateEnrollment');
+        Route::post('/update-student', [StudentEnrollmentController::class, 'updateStudentOfEnrollment'])->name('updateStudentOfEnrollment');
         Route::delete('/{studentEnrollmentId}', [StudentEnrollmentController::class, 'destroy'])->name('destroy');
     });    
 
@@ -363,7 +365,7 @@ Route::prefix('admin-product-enrollment-management')
         Route::get('/{productEnrollmentId}', [ProductEnrollmentController::class, 'show'])->name('show');
         Route::post('/get-product', [ProductEnrollmentController::class, 'getProduct'])->name('getProduct');
         Route::put('/update/{productEnrollmentId}', [ProductEnrollmentController::class, 'update'])->name('update');
-        Route::post('/update-product',[ProductEnrollmentController::class, 'updateProduct'])->name('updateProduct');
+        Route::post('/update-product',[ProductEnrollmentController::class, 'updateProductOfEnrollment'])->name('updateProductOfEnrollment');
         Route::delete('/{productEnrollmentId}', [ProductEnrollmentController::class, 'destroy'])->name('destroy');
     }); 
 

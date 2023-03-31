@@ -104,10 +104,18 @@ class StudentEnrollmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public static function updateEnrollment($studentEnrollmentParams)
+    public function updateStudentOfEnrollment()
     {
-        $enrollmentId = $studentEnrollmentParams['enrollmentId'];
-        $studentIds = $studentEnrollmentParams['studentIds'];
+        $validator = Validator::make($this->request->all(), [
+            'enrollmentId' => 'string|required',
+            'studentIds' => 'array|required',
+            'check' => 'integer',
+        ]);
+        if ($validator->fails()) {
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        }
+        $enrollmentId = $this->request['enrollmentId'];
+        $studentIds = $this->request['studentIds'];
         StudentEnrollments::where('enrollmentId', $enrollmentId)->delete();
         foreach($studentIds as $studentId){
             $studentEnrollmentId = IdGenerator::generate(['table' => 'student_enrollments', 'trow' => 'studentEnrollmentId', 'length' => 7, 'prefix' => 'SE']);
@@ -117,12 +125,12 @@ class StudentEnrollmentController extends Controller
                 'studentId' => $studentId,
                 'date' => Carbon::now(),
             ];
-            if(isset($studentEnrollmentParams['check'])){
-                $params['check'] = $studentEnrollmentParams['check'];
+            if(isset($this->request['check'])){
+                $params['check'] = $this->request['check'];
             }
             $studentEnrollment = StudentEnrollments::create($params);
         }
-        return $studentEnrollment;
+        return $this->successStudentEnrollmentRequest();
     }
 
     /**

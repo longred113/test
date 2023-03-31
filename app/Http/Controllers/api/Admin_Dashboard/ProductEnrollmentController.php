@@ -117,12 +117,11 @@ class ProductEnrollmentController extends Controller
         return $this->successProductEnrollmentRequest($newInfo);
     }
 
-    public function updateProduct()
+    public function updateProductOfEnrollment()
     {
         $validator = Validator::make($this->request->all(), [
             'enrollmentId' => 'string|required',
             'productIds' => 'array|required',
-            'check' => 'integer',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
@@ -141,16 +140,6 @@ class ProductEnrollmentController extends Controller
                 ];
                 ProductEnrollments::create($productEnrollmentParams);
             }
-            $studentProducts = StudentProducts::whereIn('productId', $productIds)->get();
-            $studentIds = $studentProducts->pluck('studentId')->toArray();
-            $studentEnrollmentParams = [
-                'enrollmentId' => $enrollmentId,
-                'studentIds' => $studentIds,
-            ];
-            if(isset($this->request['check'])){
-                $studentEnrollmentParams['check'] = $this->request['check'];
-            }
-            StudentEnrollmentController::updateEnrollment($studentEnrollmentParams);
         }catch(Exception $e){
             return $e->getMessage();
         }

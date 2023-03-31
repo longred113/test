@@ -87,42 +87,10 @@ class StudentController extends Controller
                 ->whereNotNull('users.studentId')
                 ->groupBy('students.studentId', 'students.campusId')
                 ->get();
-                // foreach ($students as $student) {
-                //     $productArray = [];
-                //     $productString = $student->productIds;
-                //     if (!empty($productString)) {
-                //         $productArray = explode(',', $productString);
-                //     }
-                //     $student->productIds = $productArray;
-                // }
-                // foreach ($students as $student) {
-                //     $productNameArray = [];
-                //     $productNameString = $student->productNames;
-                //     if (!empty($productNameString)) {
-                //         $productNameArray = explode(',', $productNameString);
-                //     }
-                //     $student->productNames = $productNameArray;
-                // }
-                // foreach ($students as $student) {
-                //     $matchActivityArray = [];
-                //     $matchActivityString = $student->matchedActivityIds;
-                //     if (!empty($matchActivityString)) {
-                //         $matchActivityArray = explode(',', $matchActivityString);
-                //     }
-                //     $student->matchedActivityIds = $matchActivityArray;
-                // }
-                // foreach ($students as $student) {
-                //     $matchActivityNameArray = [];
-                //     $matchActivityNameString = $student->matchedActivityNames;
-                //     if (!empty($matchActivityNameString)) {
-                //         $matchActivityNameArray = explode(',', $matchActivityNameString);
-                //     }
-                //     $student->matchedActivityNames = $matchActivityNameArray;
-                // }
-            return $this->successStudentRequest($students);
         } catch (Exception $e) {
             return $e->getMessage();
         }
+        return $this->successStudentRequest($students);
     }
 
     public function getStudentWithId($studentId)
@@ -151,6 +119,12 @@ class StudentController extends Controller
     public function getStudentByCampus($campusId)
     {
         $students = Students::where('campusId', $campusId)->get();
+        return $this->successStudentRequest($students);
+    }
+
+    public function getStudentOnline()
+    {
+        $students = Students::where('type', 'online')->get();
         return $this->successStudentRequest($students);
     }
 
