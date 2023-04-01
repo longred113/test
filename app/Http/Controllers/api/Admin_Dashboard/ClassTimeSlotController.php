@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\Admin_Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\ClassTimeslot;
+use Carbon\Carbon;
 use Exception;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
@@ -43,21 +44,21 @@ class ClassTimeSlotController extends Controller
     {
         $validator = Validator::make($this->request->all(), [
             'name' => 'string',
-            'classStart' => 'time',
-            'classEnd' => 'time',
+            'classStart' => 'string',
+            'classEnd' => 'string',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
-        dd(1);
 
         try{
+            $classTimeSlotId = IdGenerator::generate(['table' => 'class_time_slots', 'trow' => 'classTimeSlotId', 'length' => 8, 'prefix' => 'CTS']);
             $params = [
+                'classTimeSlotId' => $classTimeSlotId, // 'CTS00001
                 'name' => $this->request->name,
-                'classStart' => $this->request->classStart,
-                'classEnd' => $this->request->classEnd,
+                'classStart' => Carbon::parse($this->request->classStart)->format('H:i:s'),
+                'classEnd' => Carbon::parse($this->request->classEnd)->format('H:i:s'),
             ];
-            dd($params);
             $newClassTimeSlot = ClassTimeSlot::create($params);
             return $this->successClassTimeSlotRequest($newClassTimeSlot);
         }catch(Exception $e){
@@ -88,19 +89,21 @@ class ClassTimeSlotController extends Controller
     {
         $validator = Validator::make($this->request->all(), [
             'name' => 'string',
-            'classStart' => 'time',
-            'classEnd' => 'time',
+            'classStart' => 'string',
+            'classEnd' => 'string',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
-        $classTimeSlotId = IdGenerator::generate(['table' => 'class_time_slots', 'trow' => 'classTimeSlotId', 'length' => 8, 'prefix' => 'CTS']);
-        $params = [
-            'classTimeSlotId' => $classTimeSlotId, // 'CST00001
-            'name' => $this->request->name,
-            'classStart' => $this->request->classStart,
-            'classEnd' => $this->request->classEnd,
-        ];
+        if(!empty($this->request->name)){
+            $params['name'] = $this->request->name;
+        }
+        if(!empty($this->request->classStart)){
+            $params['classStart'] = Carbon::parse($this->request->classStart)->format('H:i:s');
+        }
+        if(!empty($this->request->classEnd)){
+            $params['classEnd'] = Carbon::parse($this->request->classEnd)->format('H:i:s');
+        }
         $classTimeSlotData = ClassTimeSlot::where('classTimeSlotId', $classTimeSlotId)->first();
         $classTimeSlotData->update($params);
         return $this->successClassTimeSlotRequest($classTimeSlotData);

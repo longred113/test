@@ -386,6 +386,7 @@ Route::prefix('admin-product-match-activity-management')
     ->name('admin-product-match-activity-management.')
     ->group(function () {
         Route::get('/', [ProductMatchedActivityController::class, 'index'])->name('index');
+        Route::get('/get-match-activity/{productId}', [ProductMatchedActivityController::class, 'getMatchedActivitiesByProductId'])->name('getMatchedActivitiesByProductId');
         Route::post('/create', [ProductMatchedActivityController::class, 'store'])->name('store');
         Route::post('/update-matched-activity', [ProductMatchedActivityController::class, 'updateMatchedActivity'])->name('updateMatchedActivity');
     });  
