@@ -82,6 +82,18 @@ class StudentEnrollmentController extends Controller
         return $this->successStudentEnrollmentRequest($studentEnrollment);
     }
 
+    public function getStudentByEnrollment($enrollmentId)
+    {
+        try{
+            $studentEnrollment = StudentEnrollments::leftJoin('students', 'student_enrollments.studentId', '=', 'students.studentId')
+                ->leftJoin('users', 'students.studentId', '=', 'users.studentId')
+                ->where('student_enrollments.enrollmentId', $enrollmentId)
+                ->get();
+            return $this->successStudentEnrollmentRequest($studentEnrollment);
+        }catch(Exception $e){
+            return $e->getMessage();
+        }
+    }
     public function updateCheck()
     {
         $validator = Validator::make($this->request->all(), [

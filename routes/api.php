@@ -353,6 +353,7 @@ Route::prefix('admin-student-enrollment-management')
         Route::post('/create', [StudentEnrollmentController::class, 'store'])->name('store');
         Route::get('/{studentEnrollmentId}', [StudentEnrollmentController::class, 'show'])->name('show');
         Route::get('/get-student/{enrollmentId}', [StudentEnrollmentController::class, 'getStudent'])->name('getStudent');
+        Route::get('/get-student-by-enrollment/{enrollmentId}', [StudentEnrollmentController::class, 'getStudentByEnrollment'])->name('getStudentByEnrollment');
         Route::post('/update-check', [StudentEnrollmentController::class, 'updateCheck'])->name('updateCheck');
         Route::put('/update-enrollment', [StudentEnrollmentController::class, 'updateEnrollment'])->name('updateEnrollment');
         Route::post('/update-student', [StudentEnrollmentController::class, 'updateStudentOfEnrollment'])->name('updateStudentOfEnrollment');
