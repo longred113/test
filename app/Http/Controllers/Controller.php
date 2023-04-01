@@ -264,4 +264,12 @@ class Controller extends BaseController
             'productMatchActivityData' => $productMatchActivityData,
         ],200);
     }
+    protected function successClassTimeSlotRequest($classTimeSlotData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'classTimeSlotData' => $classTimeSlotData,
+        ],200);
+    }
 }

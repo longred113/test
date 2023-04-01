@@ -192,4 +192,44 @@ class ClassFeedbackController extends Controller
         $deleteClassFeedback = $ClassFeedback->delete();
         return $this->successClassFeedback($deleteClassFeedback);
     }
+
+    //create function for show class feedback of one teacher and avage satisfaction and group by class, student, campus
+
+    public function showClassFeedbackOfOneTeacher($teacherId)
+    {
+        try{
+            $classFeedbackData = ClassFeedbacks::join('teachers', 'class_feedbacks.teacherId', '=', 'teachers.teacherId')
+            ->join('classes', 'class_feedbacks.classId', '=', 'classes.classId')
+            ->join('students', 'class_feedbacks.studentId', '=', 'students.studentId')
+            ->join('campuses', 'class_feedbacks.campusId', '=', 'campuses.campusId')
+            ->join('student_products','class_feedbacks.studentId', '=', 'student_products.studentId')
+            ->join('products', 'student_products.productId', '=', 'products.productId')
+            ->select(
+                'class_feedbacks.classFeedbackId',
+                'teachers.teacherId', 
+                'teachers.name as teacherName', 
+                'classes.classId', 
+                'classes.name as className', 
+                'students.studentId', 
+                'students.name as studentName', 
+                'campuses.campusId',
+                'campuses.name as campusName',
+                'class_feedbacks.satisfaction',
+                'class_feedbacks.date',
+                'class_feedbacks.comment',
+                'products.productId',
+                'products.name as productName',
+                )
+            ->where('teachers.teacherId', $teacherId)
+            ->get();
+            $averageSatisfaction = ClassFeedbacks::where('teacherId', $teacherId)->avg('satisfaction');
+            $data = [
+                'classFeedbackData' => $classFeedbackData,
+                'averageSatisfaction' => $averageSatisfaction,
+            ];
+            return $this->successClassFeedback($data);
+        }catch(\Exception $e){
+            return $this->errorBadRequest($e->getMessage());
+        }
+    }
 }

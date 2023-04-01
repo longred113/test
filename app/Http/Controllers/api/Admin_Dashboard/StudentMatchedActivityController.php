@@ -180,5 +180,6 @@ class StudentMatchedActivityController extends Controller
             $params['name'] = implode(', ', $matchedActivityName);
             StudentMatchedActivities::create($params);
         }
+        return $this->successStudentMatchedActivityRequest();
     }
 }

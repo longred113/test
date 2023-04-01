@@ -19,6 +19,7 @@ use App\Http\Controllers\api\Admin_Dashboard\ClassReportController;
 use App\Http\Controllers\api\Admin_Dashboard\ClassFeedbackController;
 use App\Http\Controllers\api\Admin_Dashboard\ClassMaterialController;
 use App\Http\Controllers\api\Admin_Dashboard\ClassProductController;
+use App\Http\Controllers\api\Admin_Dashboard\ClassTimeSlotController;
 use App\Http\Controllers\api\Admin_Dashboard\EnrollmentControllerA;
 use App\Http\Controllers\api\Admin_Dashboard\ImageController;
 use App\Http\Controllers\api\Admin_Dashboard\ProductEnrollmentController;
@@ -231,6 +232,7 @@ Route::prefix('admin-class-feedback')
         Route::get('/{classFeedbackId}', [ClassFeedbackController::class, 'show'])->name('show');
         Route::put('/update/{classFeedbackId}', [ClassFeedbackController::class, 'update'])->name('update');
         Route::delete('/{classFeedbackId}', [ClassFeedbackController::class, 'destroy'])->name('destroy');
+        Route::get('/show-feedback-of-one-teach/{teacherId}', [ClassFeedbackController::class, 'showClassFeedbackOfOneTeacher'])->name('showClassFeedbackOfOneTeacher');
     });
 
 Route::prefix('admin-user-management')
@@ -387,6 +389,16 @@ Route::prefix('admin-product-match-activity-management')
         Route::post('/create', [ProductMatchedActivityController::class, 'store'])->name('store');
         Route::post('/update-matched-activity', [ProductMatchedActivityController::class, 'updateMatchedActivity'])->name('updateMatchedActivity');
     });  
+
+Route::prefix('admin-class-time-slot-management')
+    ->name('admin-class-time-slot-management.')
+    ->group(function () {
+        Route::get('/', [ClassTimeSlotController::class, 'index'])->name('index');
+        Route::post('/create', [ClassTimeSlotController::class, 'store'])->name('store');
+        Route::get('/{classTimeSlotId}', [ClassTimeSlotController::class, 'show'])->name('show');
+        Route::put('/update/{classTimeSlotId}', [ClassTimeSlotController::class, 'update'])->name('update');
+        Route::delete('/{classTimeSlotId}', [ClassTimeSlotController::class, 'destroy'])->name('destroy');
+    });
 //END ADMIN DASHBOARD
 
 // START CAMPUS DASHBOARD
