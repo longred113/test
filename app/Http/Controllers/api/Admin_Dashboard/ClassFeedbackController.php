@@ -267,9 +267,8 @@ class ClassFeedbackController extends Controller
             'classFeedbackData' => $classFeedbackData,
             'averageSatisfaction' => $averageSatisfaction,
         ];
-        $data = collect($data);
+        $data = collect($classFeedbackData);
         $export = new ClassFeedbackExport($data);
-        dd(1);
         return Excel::download($export, 'classFeedback.xlsx');
     }
 }

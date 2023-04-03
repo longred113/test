@@ -49,7 +49,7 @@ class ProductMatchedActivityController extends Controller
         }catch(Exception $e){
             return($e->getMessage());
         }
-        return $this->successProductMatchActivityRequest($matchedActivities);
+        return $matchedActivities;
     } 
 
     /**
