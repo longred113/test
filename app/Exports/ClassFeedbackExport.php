@@ -6,7 +6,7 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class ClassFeedbackExport implements FromCollection, ShouldAutoSize, WithHeadings
+class ClassFeedbackExport implements FromCollection, ShouldAutoSize
 {
     protected $data;
 
@@ -20,16 +20,5 @@ class ClassFeedbackExport implements FromCollection, ShouldAutoSize, WithHeading
     public function collection()
     {
         return $this->data;
-    }
-
-    public function headings(): array
-    {
-        return [
-            'Class Name',
-            'Teacher Name',
-            'Student Name',
-            'Feedback',
-            'Date',
-        ];
     }
 }

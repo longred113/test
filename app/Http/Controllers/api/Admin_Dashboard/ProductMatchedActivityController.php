@@ -38,9 +38,8 @@ class ProductMatchedActivityController extends Controller
                 ->select(
                     'product_matched_activities.productMatchedActivityId',
                     'product_matched_activities.productId',
-                    'product_matched_activities.productName',
                     'product_matched_activities.matchedActivityId',
-                    'product_matched_activities.matchedActivityName',                    
+                    'matched_activities.name',                    
                     'matched_activities.time',
                     'matched_activities.type',
                     )

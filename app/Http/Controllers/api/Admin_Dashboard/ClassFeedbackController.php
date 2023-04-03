@@ -269,11 +269,7 @@ class ClassFeedbackController extends Controller
         ];
         $data = collect($data);
         $export = new ClassFeedbackExport($data);
-        try {
-            return Excel::download($export, 'data.xlsx');
-        } catch (\Exception $e) {
-            return back()->withError($e->getMessage());
-        }
+        dd(1);
         return Excel::download($export, 'classFeedback.xlsx');
     }
 }
