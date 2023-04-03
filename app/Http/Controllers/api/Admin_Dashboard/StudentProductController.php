@@ -83,7 +83,7 @@ class StudentProductController extends Controller
         return $this->successStudentProductRequest($studentProduct);
     }
 
-    public function getInfoStudentFromProductId($productId)
+    public function getInfoStudentFromProductId($studentId)
     {
         try{
             $studentProduct = StudentProducts::join('products', 'student_products.productId', '=', 'products.productId')
@@ -98,7 +98,7 @@ class StudentProductController extends Controller
                 'products.details',
                 'products.activate',
             )
-            ->where('student_products.productId', $productId)->get();
+            ->where('student_products.studentId', $studentId)->get();
         }catch(Exception $e){
             return $e->getMessage();
         }
