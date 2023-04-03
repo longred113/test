@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentProductResource;
 use App\Models\StudentProducts;
 use App\Models\Students;
+use Exception;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -79,6 +80,28 @@ class StudentProductController extends Controller
     public function displayByStudentId($studentId)
     {
         $studentProduct = StudentProducts::where('studentId', $studentId)->get();
+        return $this->successStudentProductRequest($studentProduct);
+    }
+
+    public function getInfoStudentFromProductId($productId)
+    {
+        try{
+            $studentProduct = StudentProducts::join('products', 'student_products.productId', '=', 'products.productId')
+            ->select(
+                'student_products.studentProductId',
+                'student_products.productId',
+                'student_products.studentId',
+                'products.name as productName',
+                'products.level',
+                'products.startLevel',
+                'products.endLevel',
+                'products.details',
+                'products.activate',
+            )
+            ->where('student_products.productId', $productId)->get();
+        }catch(Exception $e){
+            return $e->getMessage();
+        }
         return $this->successStudentProductRequest($studentProduct);
     }
 

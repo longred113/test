@@ -250,6 +250,7 @@ Route::prefix('admin-user-management')
         Route::delete('/{userId}', [UserController::class, 'destroy'])->name('destroy');
         Route::post('/update-check-login/{userId}', [UserController::class, 'checkLogin'])->name('checkLogin');
         Route::post('/check-information', [UserController::class, 'checkInfoLogin'])->name('checkInfoLogin');
+        Route::post('/export-user', [UserController::class, 'exportUser'])->name('exportUser');
     });
 
 Route::prefix('admin-student-class-management')
@@ -328,6 +329,7 @@ Route::prefix('admin-student-product-management')
         Route::get('/{studentProductId}', [StudentProductController::class, 'show'])->name('show');
         Route::get('/display-by-product/{productId}', [StudentProductController::class, 'displayByProductId'])->name('getWithProductId');
         Route::get('/display-by-student/{studentId}', [StudentProductController::class, 'displayByStudentId'])->name('getWithStudentId');
+        Route::get('/get-info-product/{productId}', [StudentProductController::class, 'getInfoStudentFromProductId'])->name('getInfoStudentFromProductId');
         Route::put('/update/{studentProductId}', [StudentProductController::class, 'update'])->name('update');
         Route::delete('/{studentProductId}', [StudentProductController::class, 'destroy'])->name('destroy');
         Route::post('/update-product-of-student', [StudentProductController::class, 'updateProductOfStudent'])->name('updateProductOfStudent');

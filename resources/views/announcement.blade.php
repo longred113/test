@@ -20,7 +20,7 @@
 </head>
 
 <body>
-    <form action="http://localhost:8000/api/admin-image-management/create-image" method="POST">
+    <form action="http://localhost:8000/api/admin-user-management/export-user" method="POST">
         <input type="file" name="image">
         <input type="submit" value="Submit">
     </form>

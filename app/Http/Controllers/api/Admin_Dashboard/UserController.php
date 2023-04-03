@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api\Admin_Dashboard;
 
+use App\Exports\UsersExport;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\Users;
@@ -13,6 +14,8 @@ use App\Helpers\Helper;
 use App\Models\Roles;
 use Exception;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
 {
@@ -264,5 +267,10 @@ class UserController extends Controller
             ->where('password', $this->request['password'])->get();
 
         return $this->successUserRequest($checkInfo);
+    }
+
+    public function exportUser()
+    {
+        return Excel::download(new UsersExport, 'users.xlsx');
     }
 }
