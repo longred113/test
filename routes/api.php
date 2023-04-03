@@ -329,7 +329,7 @@ Route::prefix('admin-student-product-management')
         Route::get('/{studentProductId}', [StudentProductController::class, 'show'])->name('show');
         Route::get('/display-by-product/{productId}', [StudentProductController::class, 'displayByProductId'])->name('getWithProductId');
         Route::get('/display-by-student/{studentId}', [StudentProductController::class, 'displayByStudentId'])->name('getWithStudentId');
-        Route::get('/get-info-product/{productId}', [StudentProductController::class, 'getInfoStudentFromProductId'])->name('getInfoStudentFromProductId');
+        Route::get('/get-info-product/{studentId}', [StudentProductController::class, 'getInfoStudentFromProductId'])->name('getInfoStudentFromProductId');
         Route::put('/update/{studentProductId}', [StudentProductController::class, 'update'])->name('update');
         Route::delete('/{studentProductId}', [StudentProductController::class, 'destroy'])->name('destroy');
         Route::post('/update-product-of-student', [StudentProductController::class, 'updateProductOfStudent'])->name('updateProductOfStudent');
