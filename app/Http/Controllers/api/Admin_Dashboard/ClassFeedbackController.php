@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api\Admin_Dashboard;
 
+use App\Exports\ClassFeedbackExport;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -10,6 +11,7 @@ use App\Http\Resources\ClassFeedbackResource;
 use Carbon\Carbon;
 use Exception;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ClassFeedbackController extends Controller
 {
@@ -27,26 +29,27 @@ class ClassFeedbackController extends Controller
      */
     public function index()
     {
-        try{
+        try {
             $classFeedbackData = ClassFeedbacks::join('teachers', 'class_feedbacks.teacherId', '=', 'teachers.teacherId')
-            ->join('classes', 'class_feedbacks.classId', '=', 'classes.classId')
-            ->join('students', 'class_feedbacks.studentId', '=', 'students.studentId')
-            ->join('campuses', 'class_feedbacks.campusId', '=', 'campuses.campusId')
-            ->select(
-                'class_feedbacks.classFeedbackId',
-                'teachers.teacherId', 
-                'teachers.name as teacherName', 
-                'classes.classId', 
-                'classes.name as className', 
-                'students.studentId', 
-                'students.name as studentName', 
-                'campuses.campusId',
-                'campuses.name as campusName',
-                'class_feedbacks.satisfaction',
-                'class_feedbacks.date',
-                'class_feedbacks.comment')
-            ->get();
-        } catch(Exception $e){
+                ->join('classes', 'class_feedbacks.classId', '=', 'classes.classId')
+                ->join('students', 'class_feedbacks.studentId', '=', 'students.studentId')
+                ->join('campuses', 'class_feedbacks.campusId', '=', 'campuses.campusId')
+                ->select(
+                    'class_feedbacks.classFeedbackId',
+                    'teachers.teacherId',
+                    'teachers.name as teacherName',
+                    'classes.classId',
+                    'classes.name as className',
+                    'students.studentId',
+                    'students.name as studentName',
+                    'campuses.campusId',
+                    'campuses.name as campusName',
+                    'class_feedbacks.satisfaction',
+                    'class_feedbacks.date',
+                    'class_feedbacks.comment'
+                )
+                ->get();
+        } catch (Exception $e) {
             return $e->getMessage();
         }
         return $this->successClassFeedback($classFeedbackData);
@@ -97,28 +100,28 @@ class ClassFeedbackController extends Controller
     public function show($classFeedbackId)
     {
         $classFeedbackData = ClassFeedbacks::join('teachers', 'class_feedbacks.teacherId', '=', 'teachers.teacherId')
-        ->join('classes', 'class_feedbacks.classId', '=', 'classes.classId')
-        ->join('students', 'class_feedbacks.studentId', '=', 'students.studentId')
-        ->join('campuses', 'class_feedbacks.campusId', '=', 'campuses.campusId')
-        ->join('student_products','class_feedbacks.studentId', '=', 'student_products.studentId')
-        ->join('products', 'student_products.productId', '=', 'products.productId')
-        ->select(
-            'class_feedbacks.classFeedbackId',
-            'teachers.teacherId', 
-            'teachers.name as teacherName', 
-            'classes.classId', 
-            'classes.name as className', 
-            'students.studentId', 
-            'students.name as studentName', 
-            'campuses.campusId',
-            'campuses.name as campusName',
-            'class_feedbacks.satisfaction',
-            'class_feedbacks.date',
-            'class_feedbacks.comment',
-            'products.productId',
-            'products.name as productName',
+            ->join('classes', 'class_feedbacks.classId', '=', 'classes.classId')
+            ->join('students', 'class_feedbacks.studentId', '=', 'students.studentId')
+            ->join('campuses', 'class_feedbacks.campusId', '=', 'campuses.campusId')
+            ->join('student_products', 'class_feedbacks.studentId', '=', 'student_products.studentId')
+            ->join('products', 'student_products.productId', '=', 'products.productId')
+            ->select(
+                'class_feedbacks.classFeedbackId',
+                'teachers.teacherId',
+                'teachers.name as teacherName',
+                'classes.classId',
+                'classes.name as className',
+                'students.studentId',
+                'students.name as studentName',
+                'campuses.campusId',
+                'campuses.name as campusName',
+                'class_feedbacks.satisfaction',
+                'class_feedbacks.date',
+                'class_feedbacks.comment',
+                'products.productId',
+                'products.name as productName',
             )
-        ->where('classFeedbackId', $classFeedbackId)->get();
+            ->where('classFeedbackId', $classFeedbackId)->get();
         return $this->successClassFeedback($classFeedbackData);
     }
 
@@ -197,21 +200,58 @@ class ClassFeedbackController extends Controller
 
     public function showClassFeedbackOfOneTeacher($teacherId)
     {
-        try{
+        try {
             $classFeedbackData = ClassFeedbacks::join('teachers', 'class_feedbacks.teacherId', '=', 'teachers.teacherId')
+                ->join('classes', 'class_feedbacks.classId', '=', 'classes.classId')
+                ->join('students', 'class_feedbacks.studentId', '=', 'students.studentId')
+                ->join('campuses', 'class_feedbacks.campusId', '=', 'campuses.campusId')
+                ->join('student_products', 'class_feedbacks.studentId', '=', 'student_products.studentId')
+                ->join('products', 'student_products.productId', '=', 'products.productId')
+                ->select(
+                    'class_feedbacks.classFeedbackId',
+                    'teachers.teacherId',
+                    'teachers.name as teacherName',
+                    'classes.classId',
+                    'classes.name as className',
+                    'students.studentId',
+                    'students.name as studentName',
+                    'campuses.campusId',
+                    'campuses.name as campusName',
+                    'class_feedbacks.satisfaction',
+                    'class_feedbacks.date',
+                    'class_feedbacks.comment',
+                    'products.productId',
+                    'products.name as productName',
+                )
+                ->where('teachers.teacherId', $teacherId)
+                ->get();
+            $averageSatisfaction = ClassFeedbacks::where('teacherId', $teacherId)->avg('satisfaction');
+            $data = [
+                'classFeedbackData' => $classFeedbackData,
+                'averageSatisfaction' => $averageSatisfaction,
+            ];
+            return $this->successClassFeedback($data);
+        } catch (\Exception $e) {
+            return $this->errorBadRequest($e->getMessage());
+        }
+    }
+
+    public function exportToExcelFile($teacherId)
+    {
+        $classFeedbackData = ClassFeedbacks::join('teachers', 'class_feedbacks.teacherId', '=', 'teachers.teacherId')
             ->join('classes', 'class_feedbacks.classId', '=', 'classes.classId')
             ->join('students', 'class_feedbacks.studentId', '=', 'students.studentId')
             ->join('campuses', 'class_feedbacks.campusId', '=', 'campuses.campusId')
-            ->join('student_products','class_feedbacks.studentId', '=', 'student_products.studentId')
+            ->join('student_products', 'class_feedbacks.studentId', '=', 'student_products.studentId')
             ->join('products', 'student_products.productId', '=', 'products.productId')
             ->select(
                 'class_feedbacks.classFeedbackId',
-                'teachers.teacherId', 
-                'teachers.name as teacherName', 
-                'classes.classId', 
-                'classes.name as className', 
-                'students.studentId', 
-                'students.name as studentName', 
+                'teachers.teacherId',
+                'teachers.name as teacherName',
+                'classes.classId',
+                'classes.name as className',
+                'students.studentId',
+                'students.name as studentName',
                 'campuses.campusId',
                 'campuses.name as campusName',
                 'class_feedbacks.satisfaction',
@@ -219,17 +259,21 @@ class ClassFeedbackController extends Controller
                 'class_feedbacks.comment',
                 'products.productId',
                 'products.name as productName',
-                )
+            )
             ->where('teachers.teacherId', $teacherId)
             ->get();
-            $averageSatisfaction = ClassFeedbacks::where('teacherId', $teacherId)->avg('satisfaction');
-            $data = [
-                'classFeedbackData' => $classFeedbackData,
-                'averageSatisfaction' => $averageSatisfaction,
-            ];
-            return $this->successClassFeedback($data);
-        }catch(\Exception $e){
-            return $this->errorBadRequest($e->getMessage());
+        $averageSatisfaction = ClassFeedbacks::where('teacherId', $teacherId)->avg('satisfaction');
+        $data = [
+            'classFeedbackData' => $classFeedbackData,
+            'averageSatisfaction' => $averageSatisfaction,
+        ];
+        $data = collect($data);
+        $export = new ClassFeedbackExport($data);
+        try {
+            return Excel::download($export, 'data.xlsx');
+        } catch (\Exception $e) {
+            return back()->withError($e->getMessage());
         }
+        return Excel::download($export, 'classFeedback.xlsx');
     }
 }

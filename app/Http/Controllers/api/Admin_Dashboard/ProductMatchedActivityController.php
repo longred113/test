@@ -33,7 +33,21 @@ class ProductMatchedActivityController extends Controller
 
     public function getMatchedActivitiesByProductId($productId)
     {
-        $matchedActivities = ProductMatchedActivities::where('productId', $productId)->get();
+        try{
+            $matchedActivities = ProductMatchedActivities::join('matched_activities', 'product_matched_activities.matchedActivityId', '=', 'matched_activities.matchedActivityId')
+                ->select(
+                    'product_matched_activities.productMatchedActivityId',
+                    'product_matched_activities.productId',
+                    'product_matched_activities.productName',
+                    'product_matched_activities.matchedActivityId',
+                    'product_matched_activities.matchedActivityName',                    
+                    'matched_activities.time',
+                    'matched_activities.type',
+                    )
+                ->where('product_matched_activities.productId', $productId)->get();
+        }catch(Exception $e){
+            return($e->getMessage());
+        }
         return $this->successProductMatchActivityRequest($matchedActivities);
     } 
 

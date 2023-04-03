@@ -11,7 +11,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 
-class UsersExport implements FromCollection, ShouldAutoSize, WithHeadings
+class UsersExport implements FromCollection, ShouldAutoSize, WithHeadings, WithColumnFormatting
 {
     /**
      * @return \Illuminate\Support\Collection
@@ -47,21 +47,17 @@ class UsersExport implements FromCollection, ShouldAutoSize, WithHeadings
                 'users.created_at',
                 'users.updated_at'
             )->get();
-        // foreach ($user as $key => $value) {
-        //     // $user[$key]['activate'] = $value['activate'] == 1 ? 'Active' : 'Inactive';
-        //     // $user[$key]['checkLogin'] = $value['checkLogin'] == 1 ? 'Yes' : 'No';
-        //     try{
-        //         if ($value->checkLogin == 0) {
-        //             $user[$key]->checkLogin = 0;
-        //             $user[$key]->formatCells(function($cells) {
-        //                 $cells->setFontColor('#FFFFFF')
-        //                       ->setBackground('#FF0000');
-        //             });
-        //         }
-        //     }catch(Exception $e){
-        //         dd($e->getMessage());
-        //     }
-        // }
+        foreach ($user as $key => $value) {
+            // $user[$key]['activate'] = $value['activate'] == 1 ? 'Active' : 'Inactive';
+            // $user[$key]['checkLogin'] = $value['checkLogin'] == 1 ? 'Yes' : 'No';
+            try{
+                if ($value->checkLogin == 0) {
+                    $user[$key]->checkLogin = "0";
+                }
+            }catch(Exception $e){
+                dd($e->getMessage());
+            }
+        }
         return $user;
     }
 
@@ -95,7 +91,9 @@ class UsersExport implements FromCollection, ShouldAutoSize, WithHeadings
     public function columnFormats(): array
     {
         return [
-            'T' => NumberFormat::FORMAT_TEXT, // Định dạng cột checkLogin thành dạng text
+            'S' => NumberFormat::FORMAT_TEXT, // Định dạng cột checkLogin thành dạng text
+            'T' => NumberFormat::FORMAT_DATE_DDMMYYYY, // Định dạng cột created_at thành dạng date
+            'U' => NumberFormat::FORMAT_DATE_DDMMYYYY, // Định dạng cột updated_at thành dạng date
         ];
     }
 }

@@ -233,6 +233,7 @@ Route::prefix('admin-class-feedback')
         Route::put('/update/{classFeedbackId}', [ClassFeedbackController::class, 'update'])->name('update');
         Route::delete('/{classFeedbackId}', [ClassFeedbackController::class, 'destroy'])->name('destroy');
         Route::get('/show-feedback-of-one-teach/{teacherId}', [ClassFeedbackController::class, 'showClassFeedbackOfOneTeacher'])->name('showClassFeedbackOfOneTeacher');
+        Route::post('/export-to-excel/{teacherId}', [ClassFeedbackController::class, 'exportToExcelFile'])->name('exportToExcelFile');
     });
 
 Route::prefix('admin-user-management')
