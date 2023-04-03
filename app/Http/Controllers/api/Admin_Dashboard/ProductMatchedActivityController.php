@@ -42,6 +42,8 @@ class ProductMatchedActivityController extends Controller
                     'matched_activities.name',                    
                     'matched_activities.time',
                     'matched_activities.type',
+                    'matched_activities.created_at',
+                    'matched_activities.updated_at',
                     )
                 ->where('product_matched_activities.productId', $productId)->get();
         }catch(Exception $e){
