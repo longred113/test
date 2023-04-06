@@ -262,13 +262,8 @@ class ClassFeedbackController extends Controller
             )
             ->where('teachers.teacherId', $teacherId)
             ->get();
-        $averageSatisfaction = ClassFeedbacks::where('teacherId', $teacherId)->avg('satisfaction');
-        $data = [
-            'classFeedbackData' => $classFeedbackData,
-            'averageSatisfaction' => $averageSatisfaction,
-        ];
-        $data = collect($classFeedbackData);
-        $export = new ClassFeedbackExport($data);
+        $averageSatisfaction[] = ClassFeedbacks::where('teacherId', $teacherId)->avg('satisfaction');
+        $export = new ClassFeedbackExport($classFeedbackData, $averageSatisfaction);
         return Excel::download($export, 'classFeedback.xlsx');
     }
 }

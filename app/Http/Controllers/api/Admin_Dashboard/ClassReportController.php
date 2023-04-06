@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api\Admin_Dashboard;
 
+use App\Exports\ClassReportExport;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -9,6 +10,7 @@ use App\Models\ClassReports;
 use App\Http\Resources\ClassReportsResource;
 use Carbon\Carbon;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ClassReportController extends Controller
 {
@@ -217,5 +219,33 @@ class ClassReportController extends Controller
         $ClassReport = ClassReports::find($classReportId);
         $deleteClassReport = $ClassReport->delete();
         return $this->successClassReport($deleteClassReport);
+    }
+
+    public function exportClassReportToExcel($classReportId)
+    {
+        $classReportData = ClassReports::join('teachers', 'class_reports.teacherId', '=', 'teachers.teacherId')
+        ->join('classes', 'class_reports.classId', '=', 'classes.classId')
+        ->join('students', 'class_reports.studentId', '=', 'students.studentId')
+        ->join('campuses', 'class_reports.campusId', '=', 'campuses.campusId')
+        ->select(
+            'class_reports.classReportId',
+            'teachers.teacherId', 
+            'teachers.name as teacherName', 
+            'classes.classId', 
+            'classes.name as className', 
+            'students.studentId', 
+            'students.name as studentName', 
+            'campuses.campusId',
+            'campuses.name as campusName',
+            'class_reports.attendance',
+            'class_reports.date',
+            'class_reports.comment',
+            'class_reports.preparation',
+            'class_reports.attitude',
+            'class_reports.participation',
+            )->where('classReportId', $classReportId)->get();
+
+        $exportClassReport = new ClassReportExport($classReportData);
+        return Excel::download($exportClassReport, 'classReport.xlsx');
     }
 }

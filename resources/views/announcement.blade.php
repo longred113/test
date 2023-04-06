@@ -20,7 +20,7 @@
 </head>
 
 <body>
-    <form action="http://localhost:8000/api/admin-class-feedback/export-to-excel/TC00014" method="POST">
+    <form action="http://localhost:8000/api/admin-class-report/export-to-excel/CRB00004" method="POST">
         <input type="file" name="image">
         <input type="submit" value="Submit">
     </form>

@@ -296,6 +296,7 @@ Route::prefix('admin-class-report')
         Route::get('/{classReportId}', [ClassReportController::class, 'show'])->name('show');
         Route::put('/update/{classReportId}', [ClassReportController::class, 'update'])->name('update');
         Route::delete('/{classReportId}', [ClassReportController::class, 'destroy'])->name('destroy');
+        Route::post('/export-to-excel/{classReportId}', [ClassReportController::class, 'exportClassReportToExcel'])->name('exportClassReportToExcel');
     });
 
 Route::prefix('admin-class-product-management')

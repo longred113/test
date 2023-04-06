@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use App\Helpers\Helper;
+use App\Imports\UsersImport;
 use App\Models\Roles;
 use Exception;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
@@ -272,5 +273,18 @@ class UserController extends Controller
     public function exportUser()
     {
         return Excel::download(new UsersExport, 'users.xlsx');
+    }
+    
+    public function importUser(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'file' => 'required|mimes:xlsx,xls,csv',
+        ]);
+        if ($validator->fails()) {
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        }
+        $file = $request->file('file');
+        Excel::import(new UsersImport, $file);
+        return $this->successUserRequest('Import successfully');
     }
 }
