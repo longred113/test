@@ -270,6 +270,7 @@ Route::prefix('admin-class-board-management')
     ->name('admin-class-board-management.')
     ->group(function () {
         Route::get('/', [ClassBoardController::class, 'index'])->name('index');
+        Route::get('/get-all', [ClassBoardController::class, 'getAllClassBoard'])->name('getAllClassBoard');
         Route::post('/create', [ClassBoardController::class, 'store'])->name('store');
         Route::post('/send-message', [ClassBoardController::class, 'sendMessage'])->name('sendMessage');
         Route::get('/{classBoardId}', [ClassBoardController::class, 'show'])->name('show');

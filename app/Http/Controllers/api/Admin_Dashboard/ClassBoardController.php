@@ -34,7 +34,13 @@ class ClassBoardController extends Controller
     public function index()
     {
         $classBoardsData = ClassBoardResource::collection(ClassBoards::where('type', 'sendAll')
-        ->orderBy('classBoardId','DESC')->take(5)->get());
+            ->orderBy('classBoardId', 'DESC')->take(5)->get());
+        return $this->successClassBoardRequest($classBoardsData);
+    }
+
+    public function getAllClassBoard()
+    {
+        $classBoardsData = ClassBoardResource::collection(ClassBoards::orderBy('classBoardId', 'DESC')->get());
         return $this->successClassBoardRequest($classBoardsData);
     }
 
@@ -136,18 +142,18 @@ class ClassBoardController extends Controller
     public function getStudentAnnouncement($studentId)
     {
         $getStudentAnnouncement = ClassBoards::where('studentId', $studentId)
-        ->orWhere('type', 'sendAll')
-        ->select('title','message')
-        ->orderBy('classBoardId','DESC')->take(5)->get();
+            ->orWhere('type', 'sendAll')
+            ->select('title', 'message')
+            ->orderBy('classBoardId', 'DESC')->take(5)->get();
         return $this->successClassBoardRequest($getStudentAnnouncement);
     }
 
     public function getTeacherAnnouncement($teacherId)
     {
         $getTeacherAnnouncement = ClassBoards::where('teacherId', $teacherId)
-        ->orWhere('type', 'sendAll')
-        ->select('title','message')
-        ->orderBy('classBoardId','DESC')->take(5)->get();
+            ->orWhere('type', 'sendAll')
+            ->select('title', 'message')
+            ->orderBy('classBoardId', 'DESC')->take(5)->get();
         return $this->successClassBoardRequest($getTeacherAnnouncement);
     }
 
