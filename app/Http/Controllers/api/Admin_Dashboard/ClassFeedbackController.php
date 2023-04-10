@@ -230,7 +230,7 @@ class ClassFeedbackController extends Controller
             $averageSatisfaction = ClassFeedbacks::where('teacherId', $teacherId)->avg('satisfaction');
             $data = [
                 'classFeedbackData' => $classFeedbackData,
-                'averageSatisfaction' => $averageSatisfaction,
+                'averageSatisfaction' => round($averageSatisfaction),
             ];
         } catch (\Exception $e) {
             return $this->errorBadRequest($e->getMessage());

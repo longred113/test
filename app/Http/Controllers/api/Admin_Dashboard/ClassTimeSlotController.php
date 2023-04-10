@@ -43,9 +43,9 @@ class ClassTimeSlotController extends Controller
     public function store()
     {
         $validator = Validator::make($this->request->all(), [
-            'name' => 'string',
-            'classStart' => 'string',
-            'classEnd' => 'string',
+            'name' => 'string|required',
+            'classStart' => 'string|required',
+            'classEnd' => 'string|required',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
