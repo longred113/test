@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\ClassFeedbacks;
 use App\Http\Resources\ClassFeedbackResource;
+use App\Models\Students;
 use Carbon\Carbon;
 use Exception;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
@@ -201,12 +202,12 @@ class ClassFeedbackController extends Controller
     public function showClassFeedbackOfOneTeacher($teacherId)
     {
         try {
-            $classFeedbackData = ClassFeedbacks::join('teachers', 'class_feedbacks.teacherId', '=', 'teachers.teacherId')
-                ->join('classes', 'class_feedbacks.classId', '=', 'classes.classId')
-                ->join('students', 'class_feedbacks.studentId', '=', 'students.studentId')
-                ->join('campuses', 'class_feedbacks.campusId', '=', 'campuses.campusId')
-                ->join('student_products', 'class_feedbacks.studentId', '=', 'student_products.studentId')
-                ->join('products', 'student_products.productId', '=', 'products.productId')
+            $classFeedback = ClassFeedbacks::leftJoin('teachers', 'class_feedbacks.teacherId', '=', 'teachers.teacherId')
+                ->leftJoin('classes', 'class_feedbacks.classId', '=', 'classes.classId')
+                ->leftJoin('students', 'class_feedbacks.studentId', '=', 'students.studentId')
+                ->leftJoin('campuses', 'class_feedbacks.campusId', '=', 'campuses.campusId')
+                ->leftJoin('student_products', 'class_feedbacks.studentId', '=', 'student_products.studentId')
+                ->leftJoin('products', 'student_products.productId', '=', 'products.productId')
                 ->select(
                     'class_feedbacks.classFeedbackId',
                     'teachers.teacherId',
@@ -225,15 +226,16 @@ class ClassFeedbackController extends Controller
                 )
                 ->where('teachers.teacherId', $teacherId)
                 ->get();
+            $classFeedbackData = $classFeedback->groupBy('studentId');   
             $averageSatisfaction = ClassFeedbacks::where('teacherId', $teacherId)->avg('satisfaction');
             $data = [
                 'classFeedbackData' => $classFeedbackData,
                 'averageSatisfaction' => $averageSatisfaction,
             ];
-            return $this->successClassFeedback($data);
         } catch (\Exception $e) {
             return $this->errorBadRequest($e->getMessage());
         }
+        return $this->successClassFeedback($data);
     }
 
     public function exportToExcelFile($teacherId)

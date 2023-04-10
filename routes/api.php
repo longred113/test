@@ -212,6 +212,7 @@ Route::prefix('admin-enrollment')
     ->name('admin-enrollment.')
     ->group(function () {
         Route::get('/', [EnrollmentControllerA::class, 'index'])->name('index');
+        Route::get('/get-where-check-is-0', [EnrollmentControllerA::class, 'getEnrollmentWhereCheckIs0'])->name('getEnrollmentWhereCheckIs0');
         Route::get('/Enroll/{level}', [EnrollmentControllerA::class, 'Enrollmentshow'])->name('Enrollmentshow');
         Route::get('/Enrolls/{product}', [EnrollmentControllerA::class, 'showErollmentByPro'])->name('showErollmentByPro');
         Route::get('/get-enrollment/{campusId}', [EnrollmentControllerA::class, 'getEnrollment'])->name('getEnrollment');

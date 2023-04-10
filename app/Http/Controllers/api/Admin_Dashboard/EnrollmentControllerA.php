@@ -32,7 +32,7 @@ class EnrollmentControllerA extends Controller
         return $this->successEnrollmentRequest($datas);
     }
 
-    public function enrollmentHistory()
+    public function getEnrollmentWhereCheckIs0()
     {
         try{
             $enrollment = Enrollment::leftJoin('student_enrollments', 'enrollments.enrollmentId', '=', 'student_enrollments.enrollmentId')
@@ -40,6 +40,34 @@ class EnrollmentControllerA extends Controller
             ->leftJoin('product_enrollments', 'enrollments.enrollmentId', '=', 'product_enrollments.enrollmentId')
             ->leftJoin('products', 'products.productId', '=', 'product_enrollments.productId')
             ->leftJoin('students', 'student_enrollments.studentId', '=', 'students.studentId')
+            ->selectRaw(
+                'enrollments.enrollmentId,
+                GROUP_CONCAT(DISTINCT CONCAT_WS(":",student_enrollments.studentId, students.name)) as students,
+                campuses.campusId,
+                campuses.name as campusName,
+                GROUP_CONCAT(DISTINCT CONCAT_WS(":",product_enrollments.productId, products.name)) as Products,
+                MAX(products.level) as level,
+                enrollments.submittedDate,
+                enrollments.status',
+            )
+            ->where('student_enrollments.check', 0)
+            ->groupBy('enrollments.enrollmentId')
+            ->get();
+        }catch(Exception $e){
+            return $e->getMessage();
+        }
+
+        return $this->successEnrollmentRequest($enrollment);
+    }
+
+    public function enrollmentHistory()
+    {
+        try{
+            $enrollment = Enrollment::join('student_enrollments', 'enrollments.enrollmentId', '=', 'student_enrollments.enrollmentId')
+            ->join('campuses', 'enrollments.campusId', '=', 'campuses.campusId')
+            ->join('product_enrollments', 'enrollments.enrollmentId', '=', 'product_enrollments.enrollmentId')
+            ->join('products', 'products.productId', '=', 'product_enrollments.productId')
+            ->join('students', 'student_enrollments.studentId', '=', 'students.studentId')
             ->selectRaw(
                 'enrollments.enrollmentId,
                 GROUP_CONCAT(DISTINCT CONCAT_WS(":",student_enrollments.studentId, students.name)) as students,
