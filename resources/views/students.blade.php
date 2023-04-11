@@ -1,15 +1,20 @@
-@extends('layouts.my')
-@section('content')
-<center>
-<h1>Student Information List </h1>
-<table class="table" >
-<tr><th>Id</th><th>Name</th><th>Email</th><th>Course</th></tr>
-@foreach($students as $student)
-<tr><td>{{ $student->id }}</td>
-<td>{{ $student->name }}</td>
-<td>{{ $student->email }}</td>
-<td>{{ $student->course }}</td>
-</tr>
-@endforeach
-</center>
-@endsection
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <title>Pusher Test</title>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/jquery-2.2.4.min.js"></script>
+    <script type="text/javascript" src="js/jquery.printPage.js"></script>
+</head>
+
+<body>
+    <form action="http://localhost:8000/api/admin-class-report/admin-class-report" method="GET">
+        <input type="file" name="image">
+        <input type="submit" value="Submit">
+    </form>
+    <img src="https://res.cloudinary.com/ds5zj2tfe/image/upload/v1679475644/lqyn2pfg5fezvzitd02c.png">
+</body>
+
+</html>

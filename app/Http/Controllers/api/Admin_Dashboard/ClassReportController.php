@@ -248,4 +248,24 @@ class ClassReportController extends Controller
         $exportClassReport = new ClassReportExport($classReportData);
         return Excel::download($exportClassReport, 'classReport.xlsx');
     }
+
+    public function printClassReport()
+    {
+        $validator = Validator::make($this->request->all(), [
+            'classReportId' => 'string|required',
+        ]);
+        if ($validator->fails()) {
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        }
+        $documentContent = ClassReports::where('classReportId', $this->request['classReportId'])->first();
+        $response = response($documentContent);
+
+        $response->header('Content-Type', 'application/octet-stream');
+        $response->header('Content-Disposition', 'attachment; filename="printjob.prn"');
+        $response->header('Pragma', 'no-cache');
+        $response->header('Cache-Control', 'no-cache');
+        $response->header('Expires', '0');
+
+        return $response;
+    }
 }

@@ -209,23 +209,23 @@ class ClassFeedbackController extends Controller
                 ->leftJoin('campuses', 'class_feedbacks.campusId', '=', 'campuses.campusId')
                 ->leftJoin('student_products', 'class_feedbacks.studentId', '=', 'student_products.studentId')
                 ->leftJoin('products', 'student_products.productId', '=', 'products.productId')
-                ->select(
-                    'class_feedbacks.classFeedbackId',
-                    'teachers.teacherId',
-                    'teachers.name as teacherName',
-                    'classes.classId',
-                    'classes.name as className',
-                    'students.studentId',
-                    'students.name as studentName',
-                    'campuses.campusId',
-                    'campuses.name as campusName',
-                    'class_feedbacks.satisfaction',
-                    'class_feedbacks.date',
-                    'class_feedbacks.comment',
-                    'products.productId',
-                    'products.name as productName',
+                ->selectRaw(
+                    'class_feedbacks.classFeedbackId,
+                    teachers.teacherId,
+                    teachers.name as teacherName,
+                    classes.classId,
+                    classes.name as className,
+                    students.studentId,
+                    students.name as studentName,
+                    campuses.campusId,
+                    campuses.name as campusName,
+                    class_feedbacks.satisfaction,
+                    class_feedbacks.date,
+                    class_feedbacks.comment,
+                    GROUP_CONCAT(DISTINCT CONCAT_WS(":", products.productId, products.name)) as productData'
                 )
                 ->where('teachers.teacherId', $teacherId)
+                ->groupBy('class_feedbacks.classFeedbackId','students.studentId')
                 ->get();
             $classFeedbackData = $classFeedback->groupBy('studentId');   
             $teacher = Teachers::where('teacherId', $teacherId)->select('teacherId', 'name')->first();
