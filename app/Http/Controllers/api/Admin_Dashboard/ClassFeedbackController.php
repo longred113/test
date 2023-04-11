@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\ClassFeedbacks;
 use App\Http\Resources\ClassFeedbackResource;
 use App\Models\Students;
+use App\Models\Teachers;
 use Carbon\Carbon;
 use Exception;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
@@ -227,9 +228,14 @@ class ClassFeedbackController extends Controller
                 ->where('teachers.teacherId', $teacherId)
                 ->get();
             $classFeedbackData = $classFeedback->groupBy('studentId');   
+            $teacher = Teachers::where('teacherId', $teacherId)->select('teacherId', 'name')->first();
+            $groupClassFeedback = [
+                $teacher,
+                $classFeedbackData,
+            ];
             $averageSatisfaction = ClassFeedbacks::where('teacherId', $teacherId)->avg('satisfaction');
             $data = [
-                'classFeedbackData' => $classFeedbackData,
+                'classFeedbackData' => $groupClassFeedback,
                 'averageSatisfaction' => round($averageSatisfaction),
             ];
         } catch (\Exception $e) {
