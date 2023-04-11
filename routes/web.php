@@ -1,6 +1,7 @@
 <?php
 
 use App\Events\FunctionAnnounced;
+use App\Http\Controllers\api\Admin_Dashboard\ClassReportController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -33,3 +34,6 @@ Route::get('/chat-box', function () {
     return view('chat_box');
 });
 Route::post('/chat', [ChatController::class, 'store'])->name('chat.store');
+
+Route::get('/students',[ClassReportController::class,'index'])->name('students.index');
+Route::get('/prnpriview',[ClassReportController::class,'print'])->name('students.print');

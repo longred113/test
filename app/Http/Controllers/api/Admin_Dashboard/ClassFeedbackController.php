@@ -230,8 +230,8 @@ class ClassFeedbackController extends Controller
             $classFeedbackData = $classFeedback->groupBy('studentId');   
             $teacher = Teachers::where('teacherId', $teacherId)->select('teacherId', 'name')->first();
             $groupClassFeedback = [
-                $teacher,
-                $classFeedbackData,
+                'teacherData' => $teacher,
+                'studentData' => $classFeedbackData,
             ];
             $averageSatisfaction = ClassFeedbacks::where('teacherId', $teacherId)->avg('satisfaction');
             $data = [
