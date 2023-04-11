@@ -182,4 +182,24 @@ class StudentMatchedActivityController extends Controller
         }
         return $this->successStudentMatchedActivityRequest();
     }
+
+    public static function updateMultipleMatchedActivity($studentMatchActivityParams)
+    {
+        $studentId = $studentMatchActivityParams['studentId'];
+        $matchedActivityIds = $studentMatchActivityParams['matchedActivityIds'];
+
+        $students = StudentMatchedActivities::where('studentId', $studentId)->delete();
+        foreach($matchedActivityIds as $matchedActivityId){
+            $studentMatchedActivityId = IdGenerator::generate(['table' => 'student_matched_activities', 'trow' => 'studentMatchedActivityId', 'length' => 8, 'prefix' => 'SMA']);
+            $params = [
+                'studentMatchedActivityId' => $studentMatchedActivityId,
+                'studentId' => $studentId,
+                'matchedActivityId' => $matchedActivityId,
+                'status' => 'to-do',
+            ];
+            $matchedActivityName = MatchedActivities::where('matchedActivityId', $matchedActivityId)->pluck('name')->toArray();
+            $params['name'] = implode(', ', $matchedActivityName);
+            StudentMatchedActivities::create($params);
+        }
+    }
 }

@@ -35,5 +35,7 @@ Route::get('/chat-box', function () {
 });
 Route::post('/chat', [ChatController::class, 'store'])->name('chat.store');
 
-Route::get('/students',[ClassReportController::class,'index'])->name('students.index');
+Route::get('/students', function(){
+    return view('students');
+});
 Route::get('/prnpriview',[ClassReportController::class,'print'])->name('students.print');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\Admin_Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentProductResource;
+use App\Models\ProductMatchedActivities;
 use App\Models\StudentProducts;
 use App\Models\Students;
 use Exception;
@@ -171,6 +172,17 @@ class StudentProductController extends Controller
                 'productId' => $productId,
             ];
             StudentProducts::create($params);
+        }
+        try{
+            $newStudentProduct = StudentProducts::where('studentId', $studentId)->pluck('productId')->toArray();
+            $matchActivity = ProductMatchedActivities::whereIn('productId', $newStudentProduct)->pluck('matchedActivityId')->toArray();
+            $studentMatchActivityParams = [
+                'studentId' => $studentId,
+                'matchedActivityIds' => $matchActivity,
+            ];
+            StudentMatchedActivityController::updateMultipleMatchedActivity($studentMatchActivityParams);
+        }catch (Exception $e){
+            return $e->getMessage();
         }
         return $this->successStudentProductRequest();
     }
