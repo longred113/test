@@ -27,6 +27,8 @@ class ClassTimeSlotController extends Controller
     public function index()
     {
         try{
+            echo("hello");
+            dd(1);
             $classTimeSlotData = ClassTimeSlot::all();
         }catch(Exception $e){
             return $e->getMessage();
