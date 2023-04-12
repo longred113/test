@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\MatchedActivities;
 use App\Models\ProductMatchedActivities;
 use App\Models\Products;
+use App\Models\StudentProducts;
 use Exception;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
@@ -134,6 +135,11 @@ class ProductMatchedActivityController extends Controller
 
                 ProductMatchedActivities::create($params);
             }
+            // $students = StudentProducts::where('productId', $productId)->pluck('studentId')->toArray();
+            // $studentMatchActivityParams = [
+            //     'studentIds' => $students,
+            //     'matchedActivityIds' => $matchedActivityIds,
+            // ];
         } catch (Exception $e) {
             return $e->getMessage();
         }
