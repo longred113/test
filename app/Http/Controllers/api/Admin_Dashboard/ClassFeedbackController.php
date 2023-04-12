@@ -85,10 +85,11 @@ class ClassFeedbackController extends Controller
             'classId' => $this->request['classId'],
             'studentId' => $this->request['studentId'],
             'campusId' => $this->request['campusId'],
-            'date' => Carbon::now(),
+            'date' => Carbon::now()->format('Y-m-d'),
             'satisfaction' => $this->request['satisfaction'],
             'comment' => $this->request['comment'],
         ];
+        return $params;
         $newClassFeedback = new ClassFeedbackResource(ClassFeedbacks::create($params));
         return $this->successClassFeedback($newClassFeedback);
     }
@@ -220,7 +221,7 @@ class ClassFeedbackController extends Controller
                     campuses.campusId,
                     campuses.name as campusName,
                     class_feedbacks.satisfaction,
-                    class_feedbacks.date,
+                    DATE_FORMAT(class_feedbacks.date, "%Y-%m-%d") as date,
                     class_feedbacks.comment,
                     GROUP_CONCAT(DISTINCT CONCAT_WS(":", products.productId, products.name)) as productData'
                 )
