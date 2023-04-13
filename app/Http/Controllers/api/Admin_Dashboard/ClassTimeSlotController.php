@@ -28,8 +28,6 @@ class ClassTimeSlotController extends Controller
     {
         try{
             $classTimeSlotData = ClassTimeSlots::all();
-            var_dump($classTimeSlotData);
-            dd(1);
         }catch(Exception $e){
             return $e->getMessage();
         }
