@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\api\Admin_Dashboard;
 
 use App\Http\Controllers\Controller;
-use App\Models\ClassTimeslot;
+use App\Models\ClassTimeSlots;
 use Carbon\Carbon;
 use Exception;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
@@ -27,7 +27,7 @@ class ClassTimeSlotController extends Controller
     public function index()
     {
         try{
-            $classTimeSlotData = ClassTimeSlot::all();
+            $classTimeSlotData = ClassTimeSlots::all();
             var_dump($classTimeSlotData);
             dd(1);
         }catch(Exception $e){
@@ -61,7 +61,7 @@ class ClassTimeSlotController extends Controller
                 'classStart' => Carbon::parse($this->request->classStart)->format('H:i:s'),
                 'classEnd' => Carbon::parse($this->request->classEnd)->format('H:i:s'),
             ];
-            $newClassTimeSlot = ClassTimeSlot::create($params);
+            $newClassTimeSlot = ClassTimeSlots::create($params);
             return $this->successClassTimeSlotRequest($newClassTimeSlot);
         }catch(Exception $e){
             return $e->getMessage();
@@ -76,7 +76,7 @@ class ClassTimeSlotController extends Controller
      */
     public function show($classTimeSlotId)
     {
-        $classTimeSlotData = ClassTimeSlot::where('classTimeSlotId', $classTimeSlotId)->first();
+        $classTimeSlotData = ClassTimeSlots::where('classTimeSlotId', $classTimeSlotId)->first();
         return $this->successClassTimeSlotRequest($classTimeSlotData);
     }
 
@@ -106,7 +106,7 @@ class ClassTimeSlotController extends Controller
         if(!empty($this->request->classEnd)){
             $params['classEnd'] = Carbon::parse($this->request->classEnd)->format('H:i:s');
         }
-        $classTimeSlotData = ClassTimeSlot::where('classTimeSlotId', $classTimeSlotId)->first();
+        $classTimeSlotData = ClassTimeSlots::where('classTimeSlotId', $classTimeSlotId)->first();
         $classTimeSlotData->update($params);
         return $this->successClassTimeSlotRequest($classTimeSlotData);
     }
@@ -119,7 +119,7 @@ class ClassTimeSlotController extends Controller
      */
     public function destroy($classTimeSlotId)
     {
-        $deleteClassTimeSlot = ClassTimeSlot::where('classTimeSlotId', $classTimeSlotId)->first();
+        $deleteClassTimeSlot = ClassTimeSlots::where('classTimeSlotId', $classTimeSlotId)->first();
         if (!empty($deleteClassTimeSlot)) {
             $deleteClassTimeSlot->delete();
             return $this->successClassTimeSlotRequest($deleteClassTimeSlot);

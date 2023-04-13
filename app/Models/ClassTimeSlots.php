@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ClassTimeSlot extends Model
+class ClassTimeSlots extends Model
 {
     use HasFactory;
     protected $primaryKey = 'classTimeSlotId';
