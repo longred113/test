@@ -135,11 +135,14 @@ class ProductMatchedActivityController extends Controller
 
                 ProductMatchedActivities::create($params);
             }
-            // $students = StudentProducts::where('productId', $productId)->pluck('studentId')->toArray();
-            // $studentMatchActivityParams = [
-            //     'studentIds' => $students,
-            //     'matchedActivityIds' => $matchedActivityIds,
-            // ];
+            $students = StudentProducts::where('productId', $productId)->pluck('studentId')->toArray();
+            if(!empty($students)){
+                $studentMatchActivityParams = [
+                    'studentIds' => $students,
+                    'matchedActivityIds' => $matchedActivityIds,
+                ];
+                StudentMatchedActivityController::updateMultipleStudentWithMultipleMatchedActivity($studentMatchActivityParams);
+            }
         } catch (Exception $e) {
             return $e->getMessage();
         }
