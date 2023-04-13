@@ -27,12 +27,13 @@ class ClassTimeSlotController extends Controller
     public function index()
     {
         try{
-            var_dump(ClassTimeslot::all());
             $classTimeSlotData = ClassTimeSlot::all();
-            return $this->successClassTimeSlotRequest($classTimeSlotData);
+            var_dump($classTimeSlotData);
+            dd(1);
         }catch(Exception $e){
             return $e->getMessage();
         }
+        return $this->successClassTimeSlotRequest($classTimeSlotData);
     }
 
     /**
