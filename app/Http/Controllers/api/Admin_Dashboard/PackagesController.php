@@ -48,9 +48,9 @@ class PackagesController extends Controller
     {
         $validator = validator::make($this->request->all(), [
             'name' => 'required|string',
-            // 'startLevel' => 'required|string',
-            // 'endLevel' => 'required|string',
-            // 'activate' => 'required',
+            'startLevel' => 'required',
+            'endLevel' => 'required',
+            'activate' => 'required',
             // 'details' => 'required',
         ]);
         if ($validator->fails()) {

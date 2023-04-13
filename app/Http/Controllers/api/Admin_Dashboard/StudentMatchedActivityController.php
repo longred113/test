@@ -196,6 +196,7 @@ class StudentMatchedActivityController extends Controller
                 'studentId' => $studentId,
                 'matchedActivityId' => $matchedActivityId,
                 'status' => 'to-do',
+                'activate' => 1,
             ];
             $matchedActivityName = MatchedActivities::where('matchedActivityId', $matchedActivityId)->pluck('name')->toArray();
             $params['name'] = implode(', ', $matchedActivityName);
@@ -217,6 +218,7 @@ class StudentMatchedActivityController extends Controller
                     'studentId' => $studentId,
                     'matchedActivityId' => $matchedActivityId,
                     'status' => 'to-do',
+                    'activate' => 1,
                 ];
                 $matchedActivityName = MatchedActivities::where('matchedActivityId', $matchedActivityId)->pluck('name')->toArray();
                 $params['name'] = implode(', ', $matchedActivityName);

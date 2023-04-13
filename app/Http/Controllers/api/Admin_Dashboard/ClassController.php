@@ -41,14 +41,14 @@ class ClassController extends Controller
         $onlineTeacher = Teachers::where('type', 'online')->get();
         $validator = Validator::make($this->request->all(), [
             'name' => 'string|required',
-            // 'numberOfStudent' => 'integer|required',
+            'numberOfStudent' => 'integer|required',
             // 'subject' => 'string|required',
-            // 'onlineTeacher' => 'string|required',
-            // 'classday' => 'string|required',
-            // 'classTimeSlot' => 'string|required',
-            // 'classStartDate' => 'date|required',
-            // 'status' => 'string|required',
-            'typeOfClass' => 'string',
+            'onlineTeacher' => 'string|required',
+            'classday' => 'string',
+            'classTimeSlot' => 'string|required',
+            'classStartDate' => 'date|required',
+            'status' => 'string',
+            'typeOfClass' => 'string|required',
             'initialTextbook' => 'string',
         ]);
         if ($validator->fails()) {

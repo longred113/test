@@ -91,12 +91,12 @@ class ProductController extends Controller
     {
         $validator = validator::make($this->request->all(), [
             'name' => 'required',
-            // 'startLevel' => 'required',
-            // 'level' => 'required',
-            // 'endLevel' => 'required',
+            'startLevel' => 'required',
+            'level' => 'required',
+            'endLevel' => 'required',
             // 'details' => 'required',
             // 'image' => 'image|mimes:jpg,png,jpeg,gif,svg|max:5048',
-            // 'activate' => 'required',
+            'activate' => 'required',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
@@ -165,12 +165,12 @@ class ProductController extends Controller
         }
         $validator = Validator::make($this->request->all(), [
             'name' => 'required|string',
-            // 'startLevel' => 'required|string',
-            // 'level' => 'required',
-            // 'endLevel' => 'required',
+            'startLevel' => 'required',
+            'level' => 'required',
+            'endLevel' => 'required',
             // 'details' => 'required',
             // 'image' => 'required',
-            // 'activate' => 'required',
+            'activate' => 'required',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());

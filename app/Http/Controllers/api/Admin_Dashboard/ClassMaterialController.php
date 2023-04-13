@@ -56,8 +56,8 @@ class ClassMaterialController extends Controller
             'writer' => 'string|required',
             'class' => 'string|required',
             'title' => 'string|required',
-            'view' => 'integer|required',
-            'date' => 'date|required',
+            'view' => 'integer',
+            'date' => 'date',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
@@ -119,8 +119,8 @@ class ClassMaterialController extends Controller
             'writer' => 'string|required',
             'class' => 'string|required',
             'title' => 'string|required',
-            'view' => 'integer|required',
-            'date' => 'date|required',
+            'view' => 'integer',
+            'date' => 'date',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());

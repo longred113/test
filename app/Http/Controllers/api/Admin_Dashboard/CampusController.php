@@ -42,7 +42,7 @@ class CampusController extends Controller
         $validator = validator::make($this->request->all(), [
             'name' => 'required|string',
             'indicated' => 'required|string',
-            'contact' => 'required|string',
+            'contact' => 'string',
             'signedDate' => 'date',
             'activate' => 'required',
         ]);
@@ -113,7 +113,7 @@ class CampusController extends Controller
         $validator = validator::make($this->request->all(), [
             'name' => 'required|string',
             'indicated' => 'required|string',
-            'contact' => 'required|string',
+            'contact' => 'string',
             'activate' => 'required'
         ]);
         if ($validator->fails()) {

@@ -42,7 +42,7 @@ class MatchedActivityController extends Controller
             'name' => 'string|required',
             'time' => 'integer|required',
             // 'unitId' => 'string|required',
-            'type' => 'string',
+            'type' => 'string|required',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
@@ -106,11 +106,11 @@ class MatchedActivityController extends Controller
             $this->request['type'] = $matchedActivity['type'];
         }
         $validator = Validator::make($this->request->all(), [
-            'productId' => 'string',
-            'name' => 'string',
-            'time' => 'integer',
+            // 'productId' => 'string',
+            'name' => 'string|required',
+            'time' => 'integer|required',
             // 'unitId' => 'string',
-            'type'  => 'string',
+            'type'  => 'string|required',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());

@@ -157,19 +157,19 @@ class TeacherController extends Controller
             // 'gender' => 'required|string',
             // 'dateOfBirth' => 'required|date',
             // 'status' => 'required|string',
-            // 'activate' => 'required',
+            'activate' => 'required',
             // 'country' => 'required|string',
             // 'timeZone' => 'required|string',
             // 'startDate' => 'required|string',
-            // 'resignation' => 'required',
+            'resignation' => 'required',
             // 'resume' => 'required|string',
             // 'certificate' => 'required|string',
             // 'contract' => 'required|string',
             // 'basicPoint' => 'required|integer',
             // 'type' => 'required|string',
-            // 'talkSamId' => 'require|string',
+            'talkSamId' => 'require|string',
             'campusId' => 'required|string',
-            // 'role' => 'string',
+            'role' => 'string|required',
             // 'memo' => 'string',
         ]);
         if ($validator->failed()) {
@@ -310,7 +310,8 @@ class TeacherController extends Controller
             }
             $validator = validator::make($this->request->all(), [
                 'name' => 'required|string',
-                // 'email' => 'required|string|unique:teachers',
+                'email' => 'required|string|unique:teachers',
+                'password' => 'required|string',
                 // 'gender' => 'required|string',
                 // 'dateOfBirth' => 'required|date',
                 // 'status' => 'required|string',
@@ -324,10 +325,10 @@ class TeacherController extends Controller
                 // 'contract' => 'required|string',
                 // 'basicPoint' => 'required|integer',
                 // 'type' => 'required|string',
-                // 'talkSamId' => 'require|string',
+                'talkSamId' => 'require|string',
                 'campusId' => 'required|string',
-                'role' => 'string',
-                'memo' => 'string',
+                'role' => 'string|required',
+                // 'memo' => 'string',
             ]);
             if ($validator->failed()) {
                 return $this->errorBadRequest($validator->getMessageBag()->toArray());

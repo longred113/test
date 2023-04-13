@@ -53,8 +53,8 @@ class ClassBoardController extends Controller
     public function store()
     {
         $validator = Validator::make($this->request->all(), [
-            'message' => 'string',
-            'title' => 'string',
+            'message' => 'string|required',
+            'title' => 'string|required',
             'teacherIds' => 'array',
             'studentIds' => 'array',
             'type' => 'string',
@@ -192,8 +192,8 @@ class ClassBoardController extends Controller
             $this->request['type'] = $classBoard['type'];
         }
         $validator = Validator::make($this->request->all(), [
-            'message' => 'string',
-            'title' => 'string',
+            'message' => 'string|required',
+            'title' => 'string|required',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());

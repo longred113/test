@@ -148,7 +148,7 @@ class StudentController extends Controller
             // 'joinedDate' => 'date|required',
             // 'withDrawal' => 'date|required',
             // 'introduction' => 'string|required',
-            // 'talkSamId' => 'string|required',
+            'talkSamId' => 'string|required',
             // 'basicPoint' => 'integer|required',
             'campusId' => 'string|required',
             'type' => [Rule::in(['online', 'offline', 'online-break', 'offline-break', 'reserve', 'wait-for-approval'])],
@@ -278,8 +278,10 @@ class StudentController extends Controller
             }
 
             $validator = Validator::make($this->request->all(), [
-                'name' => 'string',
-                'email' => 'string',
+                'name' => 'string|required',
+                'email' => 'string|required',
+                'userName' => 'string|required',
+                'password' => 'string|required',
                 // 'gender' => 'string|required',
                 // 'dateOfBirth' => 'date|required',
                 // 'country' => 'string|required',
@@ -290,7 +292,7 @@ class StudentController extends Controller
                 // 'introduction' => 'string|required',
                 // 'talkSamId' => 'string|required',
                 // 'basicPoint' => 'integer|required',
-                'campusId' => 'string',
+                'campusId' => 'string|',
                 'type' => 'string',
                 // 'enrollmentId' => 'string',
                 // 'parentId' => 'string',

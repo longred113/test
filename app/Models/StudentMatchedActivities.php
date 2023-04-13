@@ -17,5 +17,6 @@ class StudentMatchedActivities extends Model
         'matchedActivityId',
         'name',
         'status',
+        'activate',
     ];
 }

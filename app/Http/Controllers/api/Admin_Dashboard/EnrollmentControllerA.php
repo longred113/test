@@ -253,7 +253,7 @@ class EnrollmentControllerA extends Controller
             $this->request['submittedDate'] = $enrollment['submittedDate'];
         }
         $validator = validator::make($this->request->all(), [
-            'campusId' => 'string',
+            'campusId' => 'string|required',
             'status' => 'string',
             'submittedDate' => 'date',
         ]);

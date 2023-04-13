@@ -50,17 +50,16 @@ class OffTeachController extends Controller
     public function store(Request $request)
     {
         $validator = validator::make($request->all(), [
-            // 'teacherId' => 'required|unique:teachers',
             'name' => 'required',
-            // 'email' => 'required',
+            'email' => 'required|unique:teachers',
             // 'gender' => 'required',
             // 'dateOfBirth' => 'required',
             // 'status' => 'required',
-            // 'activate' => 'required',
+            'activate' => 'required',
             // 'country' => 'required',
             // 'timeZone' => 'required',
             // 'startDate' => 'required',
-            // 'resignation' => 'required',
+            'resignation' => 'required',
             // 'resume' => 'required',
             // 'certificate' => 'required',
             // 'contract' => 'required',
@@ -68,7 +67,7 @@ class OffTeachController extends Controller
             // 'campusId' => 'required',
             // 'type' => 'required',
             // 'talkSamId' => 'required',
-            // 'role' => 'required',
+            'role' => 'required',
             // 'memo' => 'required',
         ]);
         if ($validator->fails()) {
@@ -183,11 +182,11 @@ class OffTeachController extends Controller
         }
         $validator = validator::make($request->all(), [
             'name' => 'required|string',
-            // 'email' => 'required|string',
+            'email' => 'required|string|unique:teachers',
             // 'gender' => 'required',
             // 'dateOfBirth' => 'required',
             // 'status' => 'required',
-            // 'activate' => 'required',
+            'activate' => 'required',
             // 'country' => 'required',
             // 'timeZone' => 'required',
             // 'startDate' => 'required',
@@ -196,10 +195,10 @@ class OffTeachController extends Controller
             // 'certificate' => 'required',
             // 'contract' => 'required',
             // 'basicPoint' => 'required',
-            // 'campusId' => 'required',
+            'campusId' => 'required',
             // 'type' => 'required',
-            // 'talkSamId' => 'required',
-            // 'role' => 'required',
+            'talkSamId' => 'required',
+            'role' => 'required',
             // 'memo' => 'required',
         ]);
         if ($validator->fails()) {

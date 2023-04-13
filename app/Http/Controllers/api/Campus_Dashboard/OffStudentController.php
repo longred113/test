@@ -49,6 +49,8 @@ class OffStudentController extends Controller
     {
         $validator = validator::make($request->all(), [
             'name' => 'required',
+            'talkSamId' => 'required',
+            'email' => 'required|unique:students',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
@@ -144,6 +146,7 @@ class OffStudentController extends Controller
 
         $validator = validator::make($request->all(), [
             'name' => 'required|string',
+            'email' => 'required|string|unique:students',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
