@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\Admin_Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentProductResource;
+use App\Models\ProductEnrollments;
 use App\Models\ProductMatchedActivities;
 use App\Models\StudentEnrollments;
 use App\Models\StudentProducts;
@@ -178,9 +179,11 @@ class StudentProductController extends Controller
             $studentEnrollments = StudentEnrollments::where('studentId', $studentId)->pluck('enrollmentId')->toArray();
             if(!empty($studentEnrollments)){
                 foreach($studentEnrollments as $studentEnrollment){
+                    $productEnrollments = ProductEnrollments::where('enrollmentId', $studentEnrollment)->pluck('productId')->toArray();
+                    $newProductIds = array_merge($productIds, $productEnrollments);
                     $productEnrollmentParams = [
                         'enrollmentId' => $studentEnrollment,
-                        'productIds' => $productIds,
+                        'productIds' => $newProductIds,
                     ];
                     ProductEnrollmentController::updateMultipleEnrollmentProduct($productEnrollmentParams);
                 }

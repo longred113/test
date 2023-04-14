@@ -154,8 +154,8 @@ class ClassProductController extends Controller
                 'classId' => $classId,
                 'status' => $this->request['status'],
             ];
-            $newClassProduct = new ClassProductResource(ClassProducts::create($params));
+            ClassProducts::create($params);
         }
-
+        return $this->successClassProductRequest('Update multiple product success');
     }
 }

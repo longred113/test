@@ -41,7 +41,9 @@ class StudentClassController extends Controller
                 'classes.classId',
                 'classes.name',
             )
-            ->where('studentId', $studentId)->get();
+            ->where('studentId', $studentId)
+            ->distinct()
+            ->get();
         return $this->successStudentClassRequest($studentClassesData);
     }
 
