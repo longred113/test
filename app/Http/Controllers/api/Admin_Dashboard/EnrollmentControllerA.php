@@ -75,7 +75,7 @@ class EnrollmentControllerA extends Controller
                 campuses.name as campusName,
                 GROUP_CONCAT(DISTINCT CONCAT_WS(":",product_enrollments.productId, products.name)) as Products,
                 MAX(products.level) as level,
-                enrollments.submittedDate,
+                DATE_FORMAT(enrollments.submittedDate,"%Y-%m-%d") as submittedDate,
                 enrollments.status',
             )
             ->where('student_enrollments.check', 1)

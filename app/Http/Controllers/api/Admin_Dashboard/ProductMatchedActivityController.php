@@ -119,7 +119,9 @@ class ProductMatchedActivityController extends Controller
 
         try {
             $productId = $this->request['productId'];
-            $matchedActivityIds = $this->request['matchedActivityIds'];
+            $newMatchedActivityIds = $this->request['matchedActivityIds'];
+            $oldMatchedActivityIds = ProductMatchedActivities::where('productId', $productId)->pluck('matchedActivityId')->toArray();
+            $matchedActivityIds = array_merge($oldMatchedActivityIds, $newMatchedActivityIds);
             $productMatchActivities = ProductMatchedActivities::where('productId', $productId)->delete();
             foreach ($matchedActivityIds as $matchedActivityId) {
                 $productMatchedActivityId = IdGenerator::generate(['table' => 'product_matched_activities', 'trow' => 'productMatchedActivityId', 'length' => 8, 'prefix' => 'PMA']);

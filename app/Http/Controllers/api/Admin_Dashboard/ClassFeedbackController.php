@@ -13,6 +13,7 @@ use App\Models\Teachers;
 use Carbon\Carbon;
 use Exception;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ClassFeedbackController extends Controller
@@ -47,7 +48,7 @@ class ClassFeedbackController extends Controller
                     'campuses.campusId',
                     'campuses.name as campusName',
                     'class_feedbacks.satisfaction',
-                    'class_feedbacks.date',
+                    DB::raw("DATE_FORMAT(class_reports.date, '%Y-%m-%d') as date"),
                     'class_feedbacks.comment'
                 )
                 ->get();

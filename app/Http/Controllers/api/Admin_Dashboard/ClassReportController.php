@@ -10,6 +10,7 @@ use App\Models\ClassReports;
 use App\Http\Resources\ClassReportsResource;
 use Carbon\Carbon;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ClassReportController extends Controller
@@ -41,7 +42,7 @@ class ClassReportController extends Controller
             'students.name as studentName', 
             'campuses.campusId',
             'campuses.name as campusName', 
-            'class_reports.date',
+            DB::raw("DATE_FORMAT(class_reports.date, '%Y-%m-%d') as date"),
             'class_reports.comment',
             'class_reports.attendance',
             'class_reports.preparation',
