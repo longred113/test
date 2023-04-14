@@ -8,6 +8,7 @@ use App\Models\ClassMaterials;
 use Exception;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class ClassMaterialController extends Controller
@@ -33,7 +34,7 @@ class ClassMaterialController extends Controller
                 'class_materials.writer',
                 'class_materials.title',
                 'class_materials.view',
-                'class_materials.date',
+                DB::raw("DATE_FORMAT(class_materials.date, '%Y-%m-%d') as date"),
                 'classes.classId',
                 'classes.name as className',
             )

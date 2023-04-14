@@ -5,6 +5,8 @@ namespace App\Http\Controllers\api\Admin_Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductEnrollmentResource;
 use App\Models\ProductEnrollments;
+use App\Models\ProductMatchedActivities;
+use App\Models\StudentEnrollments;
 use App\Models\StudentProducts;
 use Carbon\Carbon;
 use Exception;
@@ -129,7 +131,7 @@ class ProductEnrollmentController extends Controller
         try{
             $enrollmentId = $this->request['enrollmentId'];
             $productIds = $this->request['productIds'];
-            $productEnrollment = ProductEnrollments::where('enrollmentId', $enrollmentId)->delete();
+            ProductEnrollments::where('enrollmentId', $enrollmentId)->delete();
             foreach($productIds as $productId){
                 $productEnrollmentId = IdGenerator::generate(['table' => 'product_enrollments', 'trow' => 'productEnrollmentId', 'length' => 7, 'prefix' => 'PE']);
                 $productEnrollmentParams = [
@@ -139,6 +141,17 @@ class ProductEnrollmentController extends Controller
                     'date' => Carbon::now(),
                 ];
                 ProductEnrollments::create($productEnrollmentParams);
+            }
+            $productMatchActivities = ProductMatchedActivities::whereIn('productId', $productIds)->pluck('matchedActivityId')->toArray();
+            $students = StudentEnrollments::where('enrollmentId', $enrollmentId)->pluck('studentId')->toArray();
+            if(!empty($students)){
+                foreach($students as $student){
+                    $studentMatchActivityParams = [
+                        'studentId' => $student,
+                        'matchedActivityIds' => $productMatchActivities,
+                    ];
+                    StudentMatchedActivityController::updateMultipleMatchedActivity($studentMatchActivityParams);
+                }
             }
         }catch(Exception $e){
             return $e->getMessage();

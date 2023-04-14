@@ -119,9 +119,7 @@ class ProductMatchedActivityController extends Controller
 
         try {
             $productId = $this->request['productId'];
-            $newMatchedActivityIds = $this->request['matchedActivityIds'];
-            $oldMatchedActivityIds = ProductMatchedActivities::where('productId', $productId)->pluck('matchedActivityId')->toArray();
-            $matchedActivityIds = array_merge($oldMatchedActivityIds, $newMatchedActivityIds);
+            $matchedActivityIds = $this->request['matchedActivityIds'];
             $productMatchActivities = ProductMatchedActivities::where('productId', $productId)->delete();
             foreach ($matchedActivityIds as $matchedActivityId) {
                 $productMatchedActivityId = IdGenerator::generate(['table' => 'product_matched_activities', 'trow' => 'productMatchedActivityId', 'length' => 8, 'prefix' => 'PMA']);
@@ -139,11 +137,15 @@ class ProductMatchedActivityController extends Controller
             }
             $students = StudentProducts::where('productId', $productId)->pluck('studentId')->toArray();
             if(!empty($students)){
-                $studentMatchActivityParams = [
-                    'studentIds' => $students,
-                    'matchedActivityIds' => $matchedActivityIds,
-                ];
-                StudentMatchedActivityController::updateMultipleStudentWithMultipleMatchedActivity($studentMatchActivityParams);
+                foreach($students as $student){
+                    $studentProduct = StudentProducts::where('studentId', $student)->pluck('productId')->toArray();
+                    $ProductMatchedActivities = ProductMatchedActivities::whereIn('productId', $studentProduct)->pluck('matchedActivityId')->toArray();
+                    $studentMatchActivityParams = [
+                        'studentId' => $student,
+                        'matchedActivityIds' => $ProductMatchedActivities,
+                    ];
+                    StudentMatchedActivityController::updateMultipleMatchedActivity($studentMatchActivityParams);
+                }
             }
         } catch (Exception $e) {
             return $e->getMessage();
