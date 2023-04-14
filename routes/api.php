@@ -259,6 +259,7 @@ Route::prefix('admin-student-class-management')
     ->name('admin-student-class-management.')
     ->group(function () {
         Route::get('/', [StudentClassController::class, 'index'])->name('index');
+        Route::get('/get-class-by-student/{studentId}', [StudentClassController::class, 'getClassByStudent'])->name('getClassByStudent');
         Route::post('/create', [StudentClassController::class, 'store'])->name('store');
         Route::get('/{studentClassId}', [StudentClassController::class, 'show'])->name('show');
         Route::get('/get-student/{classId}', [StudentClassController::class, 'getStudentFromClass'])->name('getStudentFromClass');

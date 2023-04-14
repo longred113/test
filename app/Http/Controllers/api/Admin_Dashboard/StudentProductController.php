@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\Admin_Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentProductResource;
 use App\Models\ProductMatchedActivities;
+use App\Models\StudentEnrollments;
 use App\Models\StudentProducts;
 use App\Models\Students;
 use Exception;
@@ -163,7 +164,7 @@ class StudentProductController extends Controller
 
         $studentId = $this->request['studentId'];
         $productIds = $this->request['productIds'];
-        $students = StudentProducts::where('studentId', $studentId)->delete();
+        StudentProducts::where('studentId', $studentId)->delete();
         foreach($productIds as $productId){
             $studentProductId = IdGenerator::generate(['table' => 'student_products', 'trow' => 'studentProductId', 'length' => 7, 'prefix' => 'SP']);
             $params = [
@@ -174,6 +175,16 @@ class StudentProductController extends Controller
             StudentProducts::create($params);
         }
         try{
+            $studentEnrollments = StudentEnrollments::where('studentId', $studentId)->pluck('enrollmentId')->toArray();
+            if(!empty($studentEnrollments)){
+                foreach($studentEnrollments as $studentEnrollment){
+                    $productEnrollmentParams = [
+                        'enrollmentId' => $studentEnrollment,
+                        'productIds' => $productIds,
+                    ];
+                    ProductEnrollmentController::updateMultipleEnrollmentProduct($productEnrollmentParams);
+                }
+            }
             $newStudentProduct = StudentProducts::where('studentId', $studentId)->pluck('productId')->toArray();
             $matchActivity = ProductMatchedActivities::whereIn('productId', $newStudentProduct)->pluck('matchedActivityId')->toArray();
             $studentMatchActivityParams = [

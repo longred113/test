@@ -34,6 +34,17 @@ class StudentClassController extends Controller
         return $this->successStudentClassRequest($studentClassesData);
     }
 
+    public function getClassByStudent($studentId)
+    {
+        $studentClassesData = StudentClasses::join('classes', 'student_classes.classId', '=', 'classes.classId')
+            ->select(
+                'classes.classId',
+                'classes.name',
+            )
+            ->where('studentId', $studentId)->get();
+        return $this->successStudentClassRequest($studentClassesData);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -95,7 +106,12 @@ class StudentClassController extends Controller
                 ->join('student_classes', 'students.studentId', '=', 'student_classes.studentId')
                 ->join('classes', 'student_classes.classId', '=', 'classes.classId')
                 ->join('teachers', 'classes.onlineTeacher', '=', 'teachers.teacherId')
-                ->selectRaw('teachers.name as teacherName, teachers.teacherId, GROUP_CONCAT(classes.name) as classNames, GROUP_CONCAT(students.name) as studentNames')
+                ->selectRaw(
+                    'teachers.name as teacherName, 
+                    teachers.teacherId, 
+                    GROUP_CONCAT(DISTINCT(classes.name)) as classNames, 
+                    GROUP_CONCAT(DISTINCT(students.name)) as studentNames'
+                )
                 ->groupBy('teachers.name', 'teachers.teacherId')
                 ->get();
             foreach ($studentsData as $student) {

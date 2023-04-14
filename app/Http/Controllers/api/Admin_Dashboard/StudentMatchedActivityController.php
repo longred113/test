@@ -188,7 +188,7 @@ class StudentMatchedActivityController extends Controller
         $studentId = $studentMatchActivityParams['studentId'];
         $matchedActivityIds = $studentMatchActivityParams['matchedActivityIds'];
 
-        $students = StudentMatchedActivities::where('studentId', $studentId)->delete();
+        StudentMatchedActivities::where('studentId', $studentId)->delete();
         foreach($matchedActivityIds as $matchedActivityId){
             $studentMatchedActivityId = IdGenerator::generate(['table' => 'student_matched_activities', 'trow' => 'studentMatchedActivityId', 'length' => 8, 'prefix' => 'SMA']);
             $params = [

@@ -171,4 +171,22 @@ class ProductEnrollmentController extends Controller
         $deleteProductEnrollment = $productEnrollment->delete();
         return $this->successProductEnrollmentRequest($deleteProductEnrollment);
     }
+
+    public static function updateMultipleEnrollmentProduct($productEnrollmentParams)
+    {
+        $enrollmentId = $productEnrollmentParams['enrollmentId'];
+        $productIds = $productEnrollmentParams['productIds'];
+
+        ProductEnrollments::where('enrollmentId', $enrollmentId)->delete();
+        foreach($productIds as $productId){
+            $productEnrollmentId = IdGenerator::generate(['table' => 'product_enrollments', 'trow' => 'productEnrollmentId', 'length' => 7, 'prefix' => 'PE']);
+            $productEnrollmentParams = [
+                'productEnrollmentId' => $productEnrollmentId,
+                'enrollmentId' => $enrollmentId,
+                'productId' => $productId,
+                'date' => Carbon::now(),
+            ];
+            ProductEnrollments::create($productEnrollmentParams);
+        }
+    }
 }
