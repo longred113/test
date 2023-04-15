@@ -176,13 +176,21 @@ class StudentProductController extends Controller
             StudentProducts::create($params);
         }
         try{
-            $studentEnrollments = StudentEnrollments::where('studentId', $studentId)->pluck('enrollmentId')->toArray();
-            if(!empty($studentEnrollments)){
-                foreach($studentEnrollments as $studentEnrollment){
-                    $productEnrollments = ProductEnrollments::where('enrollmentId', $studentEnrollment)->pluck('productId')->toArray();
-                    $newProductIds = array_merge($productIds, $productEnrollments);
+            $enrollments = StudentEnrollments::where('studentId', $studentId)->pluck('enrollmentId')->toArray();
+            if(!empty($enrollments)){
+                foreach($enrollments as $enrollment){
+                    $students = StudentEnrollments::where('enrollmentId', $enrollment)->pluck('studentId')->toArray();
+                    $students = array_diff($students, [$studentId]);
+                    if(!empty($students)){
+                        $studentProducts = StudentProducts::whereIn('studentId', $students)->pluck('productId')->toArray();
+                    }
+                    if(!empty($studentProducts)){
+                        $newProductIds = array_merge($productIds, $studentProducts);
+                    }else{
+                        $newProductIds = $productIds;
+                    }
                     $productEnrollmentParams = [
-                        'enrollmentId' => $studentEnrollment,
+                        'enrollmentId' => $enrollment,
                         'productIds' => $newProductIds,
                     ];
                     ProductEnrollmentController::updateMultipleEnrollmentProduct($productEnrollmentParams);
