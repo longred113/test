@@ -48,7 +48,8 @@ class ClassFeedbackController extends Controller
                     'campuses.campusId',
                     'campuses.name as campusName',
                     'class_feedbacks.satisfaction',
-                    DB::raw("DATE_FORMAT(class_reports.date, '%Y-%m-%d') as date"),
+                    // DB::raw("DATE_FORMAT(class_reports.date, '%Y-%m-%d') as date"),
+                    'class_feedbacks.date',
                     'class_feedbacks.comment'
                 )
                 ->get();
