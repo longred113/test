@@ -136,13 +136,13 @@ class ClassController extends Controller
             'name' => 'string|required',
             'numberOfStudent' => 'integer|required',
             // 'subject' => 'string|required',
-            // 'onlineTeacher' => 'string|required',
+            'onlineTeacher' => 'string|required',
             // 'classday' => 'string|required',
             // 'classTimeSlot' => 'string|required',
             // 'classStartDate' => 'date|required',
-            // 'status' => 'string|required',
-            'typeOfClass' => 'string',
-            'initialTextbook' => 'string',
+            'status' => 'string|required',
+            'typeOfClass' => 'string|required',
+            'initialTextbook' => 'string|required',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
