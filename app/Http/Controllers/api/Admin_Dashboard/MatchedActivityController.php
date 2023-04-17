@@ -5,6 +5,9 @@ namespace App\Http\Controllers\api\Admin_Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\MatchedActivityResource;
 use App\Models\MatchedActivities;
+use App\Models\ProductMatchedActivities;
+use App\Models\StudentMatchedActivities;
+use Exception;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -117,15 +120,20 @@ class MatchedActivityController extends Controller
         }
 
         $params = [
-            $matchedActivity['productId'] = $this->request['productId'],
             $matchedActivity['name'] = $this->request['name'],
             $matchedActivity['time'] = $this->request['time'],
             $matchedActivity['unitId'] = $this->request['unitId'],
             $matchedActivity['type'] = $this->request['type'],
         ];
 
-        $newInfoMatchedActivity = $matchedActivity->update($params);
-        return $this->successMatchedActivityRequest($newInfoMatchedActivity);
+        try{
+            $newInfoMatchedActivity = $matchedActivity->update($params);
+            ProductMatchedActivities::where('matchedActivityId', $matchedActivityId)->update(['matchedActivityName' => $this->request['name']]);
+            StudentMatchedActivities::where('matchedActivityId', $matchedActivityId)->update(['name' => $this->request['name']]);
+        } catch(Exception $e){
+            $e->getMessage();
+        }
+        return $this->successMatchedActivityRequest();
     }
 
     /**
