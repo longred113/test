@@ -133,7 +133,7 @@ class MatchedActivityController extends Controller
         } catch(Exception $e){
             $e->getMessage();
         }
-        return $this->successMatchedActivityRequest();
+        return $this->successMatchedActivityRequest($newInfoMatchedActivity);
     }
 
     /**
