@@ -330,6 +330,10 @@ class StudentController extends Controller
                 if (empty($this->request['password'])) {
                     $this->request['password'] = $user['password'];
                 }
+                $validator = Validator::make($this->request->all(), [
+                    'userName' => 'string|required',
+                    'password' => 'string|required',
+                ]);
                 $userParams = [
                     'name' => $this->request['name'],
                     'userName' => $this->request['userName'],
