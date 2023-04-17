@@ -280,8 +280,6 @@ class StudentController extends Controller
             $validator = Validator::make($this->request->all(), [
                 'name' => 'string|required',
                 'email' => 'string|required',
-                'userName' => 'string|required',
-                'password' => 'string|required',
                 // 'gender' => 'string|required',
                 // 'dateOfBirth' => 'date|required',
                 // 'country' => 'string|required',
