@@ -87,6 +87,16 @@ class ClassTimeSlotController extends Controller
      */
     public function update($classTimeSlotId)
     {
+        $classTimeSlotData = ClassTimeSlots::where('classTimeSlotId', $classTimeSlotId)->first();
+        if(empty($this->request->name)){
+            $this->request['name'] = $classTimeSlotData->name;
+        }
+        if(empty($this->request->classStart)){
+            $this->request['classStart'] = $classTimeSlotData->classStart;
+        }
+        if(empty($this->request->classEnd)){
+            $this->request['classEnd'] = $classTimeSlotData->classEnd;
+        }
         $validator = Validator::make($this->request->all(), [
             'name' => 'string|required',
             'classStart' => 'string|required',
@@ -104,7 +114,6 @@ class ClassTimeSlotController extends Controller
         if(!empty($this->request->classEnd)){
             $params['classEnd'] = Carbon::parse($this->request->classEnd)->format('H:i:s');
         }
-        $classTimeSlotData = ClassTimeSlots::where('classTimeSlotId', $classTimeSlotId)->first();
         $classTimeSlotData->update($params);
         return $this->successClassTimeSlotRequest($classTimeSlotData);
     }
