@@ -300,6 +300,12 @@ class StudentController extends Controller
                 return $this->errorBadRequest($validator->getMessageBag()->toArray());
             }
 
+            if ($this->request['email'] != $student['email']) {
+                $email = Students::where('email', $this->request['email'])->first();
+                if(!empty($email)){
+                    return $this->errorBadRequest('Email already exists');
+                }
+            }
             $params = [
                 $student['name'] = $this->request['name'],
                 $student['email'] = $this->request['email'],

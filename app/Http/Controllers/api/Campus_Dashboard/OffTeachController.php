@@ -182,7 +182,7 @@ class OffTeachController extends Controller
         }
         $validator = validator::make($request->all(), [
             'name' => 'required|string',
-            'email' => 'required|string|unique:teachers',
+            'email' => 'required|string',
             // 'gender' => 'required',
             // 'dateOfBirth' => 'required',
             // 'status' => 'required',
@@ -205,6 +205,12 @@ class OffTeachController extends Controller
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
+        if($request['email'] != $teachers['email']){
+            $email = Teachers::where('email', $request['email'])->first();
+            if(!empty($email)){
+                return $this->errorBadRequest('Email already exists');
+            }
+        }
         $params = [
             $teachers['teacherId'] = $request['teacherId'],
             $teachers['name'] = $request['name'],

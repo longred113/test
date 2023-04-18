@@ -146,12 +146,18 @@ class OffStudentController extends Controller
 
         $validator = validator::make($request->all(), [
             'name' => 'required|string',
-            'email' => 'required|string|unique:students',
+            'email' => 'required|string',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
+        if ($request['email'] != $students['email']) {
+            $email = Students::where('email', $request['email'])->first();
+            if(!empty($email)){
+                return $this->errorBadRequest('Email already exists');
+            }
+        }
         $params = [
             $students['studentId'] = $request['studentId'],
             $students['name'] = $request['name'],

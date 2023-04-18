@@ -76,7 +76,7 @@ class TeacherController extends Controller
                 'teachers.memo',
             )
             ->where('teachers.type', 'online')->get();
-            $campusManagerData = CampusManager::leftJoin('users', 'campus_managers.campusManagerId', '=', 'users.campusManagerId')
+        $campusManagerData = CampusManager::leftJoin('users', 'campus_managers.campusManagerId', '=', 'users.campusManagerId')
             ->leftJoin('campuses', 'campus_managers.campusId', '=', 'campuses.campusId')
             ->select(
                 'campus_managers.campusManagerId as teacherId',
@@ -310,7 +310,7 @@ class TeacherController extends Controller
             }
             $validator = validator::make($this->request->all(), [
                 'name' => 'required|string',
-                'email' => 'required|string|unique:teachers',
+                'email' => 'required|string',
                 'password' => 'required|string',
                 // 'gender' => 'required|string',
                 // 'dateOfBirth' => 'required|date',
@@ -334,6 +334,12 @@ class TeacherController extends Controller
                 return $this->errorBadRequest($validator->getMessageBag()->toArray());
             }
 
+            if($this->request['email'] != $teacher['email']){
+                $email = Teachers::where('email', $this->request['email'])->first();
+                if(!empty($email)){
+                    return $this->errorBadRequest('Email already exists');
+                }
+            }
             $params = [
                 $teacher['name'] = $this->request['name'],
                 $teacher['email'] = $this->request['email'],
@@ -357,24 +363,20 @@ class TeacherController extends Controller
             ];
             $newInfoTeacher = $teacher->update($params);
             $user = Users::where('teacherId', $teacherId)->first();
-            if(empty($this->request['userName'])){
-                $this->request['userName'] = $user['userName'];
-            }
-            if(empty($this->request['password'])){
-                $this->request['password'] = $user['password'];
-            }
-            $userParams = [
-                'teacherId' => $teacherId,
-                'name' => $this->request['name'],
-                'email' => $this->request['email'],
-                'password' => $this->request['password'],
-            ];
-            try {
-                if (!empty($user)) {
-                    UserController::update($userParams);
+            if (!empty($user)) {
+                if (empty($this->request['userName'])) {
+                    $this->request['userName'] = $user['userName'];
                 }
-            } catch (Exception $e) {
-                return $e->getMessage();
+                if (empty($this->request['password'])) {
+                    $this->request['password'] = $user['password'];
+                }
+                $userParams = [
+                    'teacherId' => $teacherId,
+                    'name' => $this->request['name'],
+                    'email' => $this->request['email'],
+                    'password' => $this->request['password'],
+                ];
+                UserController::update($userParams);
             }
             return $this->successTeacherRequest($newInfoTeacher);
         }
@@ -451,17 +453,17 @@ class TeacherController extends Controller
                 $campusManager['role'] = 'Campus Manger',
                 $campusManager['activate'] = $this->request['activate'],
             ];
-            try{
+            try {
                 $existCampusManager = CampusManager::where('campusId', $this->request['campusId'])->first();
-                if(!empty($existCampusManager)){
+                if (!empty($existCampusManager)) {
                     return response()->json(['error' => 'This campus already has a campus manager'], 400);
                 }
                 $newInfoCampusManager = $campusManager->update($campusManagerParams);
                 $user = Users::where('campusManagerId', $teacherId)->first();
-                if(empty($this->request['userName'])){
+                if (empty($this->request['userName'])) {
                     $this->request['userName'] = $user['userName'];
                 }
-                if(empty($this->request['password'])){
+                if (empty($this->request['password'])) {
                     $this->request['password'] = $user['password'];
                 }
                 $userParams = [
@@ -470,10 +472,10 @@ class TeacherController extends Controller
                     'email' => $this->request['email'],
                     'password' => $this->request['password'],
                 ];
-                if(!empty($user)){
+                if (!empty($user)) {
                     UserController::update($userParams);
                 }
-            }catch(Exception $e){
+            } catch (Exception $e) {
                 return $e->getMessage();
             }
             return $this->successCampusManagerRequest($newInfoCampusManager);
