@@ -86,7 +86,6 @@ class StudentEnrollmentController extends Controller
     {
         try{
             $studentEnrollment = StudentEnrollments::leftJoin('students', 'student_enrollments.studentId', '=', 'students.studentId')
-                ->leftJoin('users', 'students.studentId', '=', 'users.studentId')
                 ->where('student_enrollments.enrollmentId', $enrollmentId)
                 ->get();
             return $this->successStudentEnrollmentRequest($studentEnrollment);
