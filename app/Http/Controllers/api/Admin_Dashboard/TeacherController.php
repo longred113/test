@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\api\Admin_Dashboard;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\CampusResource;
 use App\Http\Resources\TeacherResource;
 use App\Models\Campus;
 use App\Models\CampusManager;
@@ -146,33 +145,17 @@ class TeacherController extends Controller
      */
     public function store()
     {
-        $campusIds = Campus::select('campusId')->get();
-        foreach ($campusIds as $campusId) {
-            $campusName = Campus::whereIn('campusId', $campusId)->get('name');
-        }
         $validator = validator::make($this->request->all(), [
             'name' => 'required|string',
             'email' => 'required|string|unique:teachers',
             'password' => 'required|string',
-            // 'gender' => 'required|string',
-            // 'dateOfBirth' => 'required|date',
-            // 'status' => 'required|string',
             'activate' => 'required',
-            // 'country' => 'required|string',
-            // 'timeZone' => 'required|string',
-            // 'startDate' => 'required|string',
             'resignation' => 'required',
-            // 'resume' => 'required|string',
-            // 'certificate' => 'required|string',
-            // 'contract' => 'required|string',
-            // 'basicPoint' => 'required|integer',
-            // 'type' => 'required|string',
-            'talkSamId' => 'require|string',
+            'talkSamId' => 'required|string',
             'campusId' => 'required|string',
             'role' => 'string|required',
-            // 'memo' => 'string',
         ]);
-        if ($validator->failed()) {
+        if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
