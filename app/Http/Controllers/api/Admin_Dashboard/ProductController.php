@@ -165,9 +165,9 @@ class ProductController extends Controller
         }
         $validator = Validator::make($this->request->all(), [
             'name' => 'required|string',
-            'startLevel' => 'required',
             'level' => 'required',
-            'endLevel' => 'required',
+            // 'startLevel' => 'required',
+            // 'endLevel' => 'required',
             // 'details' => 'required',
             // 'image' => 'required',
             'activate' => 'required',
