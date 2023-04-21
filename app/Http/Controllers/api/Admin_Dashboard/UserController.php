@@ -100,7 +100,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($this->request->all(), [
             'name' => 'string|required',
-            // 'userName' => 'string',
+            'userName' => 'string',
             'email' => 'string|required|unique:users',
             'password' => 'string|required|min:8',
             'activate' => 'integer|required',
@@ -114,7 +114,7 @@ class UserController extends Controller
             $params = [
                 'userId' => $userId,
                 'name' => $this->request['name'],
-                // 'userName' => $this->request['userName'],
+                'userName' => $this->request['userName'],
                 'email' => $this->request['email'],
                 'password' => $this->request['password'],
                 'activate' => $this->request['activate'],

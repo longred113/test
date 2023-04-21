@@ -93,6 +93,38 @@ class StudentController extends Controller
         return $this->successStudentRequest($students);
     }
 
+    public function test()
+    {
+        try {
+            $students = Students::leftJoin('users', 'students.studentId', '=', 'users.studentId')
+                ->leftJoin('campuses', 'students.campusId', '=', 'campuses.campusId')
+                ->leftJoin('student_products', 'students.studentId', '=', 'student_products.studentId')
+                ->leftJoin('student_matched_activities', 'students.studentId', '=', 'student_matched_activities.studentId')
+                ->leftJoin('products', 'student_products.productId', '=', 'products.productId')
+                ->leftJoin('matched_activities', 'student_matched_activities.matchedActivityId', '=', 'matched_activities.matchedActivityId')
+                ->selectRaw(
+                    'students.studentId,
+                    students.campusId,
+                    campuses.name as campusName,
+                    students.name,
+                    students.email,
+                    MAX(users.userName) as userName,
+                    MAX(users.password) as password,
+                    students.gender,
+                    students.dateOfBirth,
+                    GROUP_CONCAT(DISTINCT CONCAT_WS(":",student_products.productId, products.name)) as products,
+                    GROUP_CONCAT(DISTINCT CONCAT_WS(":", student_matched_activities.matchedActivityId, matched_activities.name)) as studyPlaners',
+                )
+                ->where('students.type', 'online')
+                ->whereNotNull('users.studentId')
+                ->groupBy('students.studentId', 'students.campusId')
+                ->get();
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+        return $this->successStudentRequest($students);
+    } 
+
     public function getStudentWithId($studentId)
     {
         $student = Students::find($studentId);
@@ -280,6 +312,7 @@ class StudentController extends Controller
             $validator = Validator::make($this->request->all(), [
                 'name' => 'string|required',
                 'email' => 'string|required',
+                'userName' => 'string',
                 // 'gender' => 'string|required',
                 // 'dateOfBirth' => 'date|required',
                 // 'country' => 'string|required',
@@ -336,10 +369,6 @@ class StudentController extends Controller
                 if (empty($this->request['password'])) {
                     $this->request['password'] = $user['password'];
                 }
-                $validator = Validator::make($this->request->all(), [
-                    'userName' => 'string|required',
-                    'password' => 'string|required',
-                ]);
                 $userParams = [
                     'name' => $this->request['name'],
                     'userName' => $this->request['userName'],

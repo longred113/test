@@ -184,6 +184,7 @@ Route::prefix('admin-student-management')
         Route::get('/joined', [StudentController::class, 'studentJoinedList'])->name('studentJoinedList');
         Route::get('/withdrawal', [StudentController::class, 'studentWithdrawalList'])->name('studentWithdrawalList');
         Route::get('/get-product-and-match-activity', [StudentController::class, 'viewStudentProductAndStudyPlanner'])->name('viewStudentProductAndStudyPlanner');
+        Route::get('/test', [StudentController::class, 'test'])->name('test');
         Route::get('/student-with-id/{studentId}', [StudentController::class, 'getStudentWithId'])->name('getStudentWithId');
         Route::get('/get-student-online', [StudentController::class, 'getStudentOnline'])->name('getStudentOnline');
         Route::post('/create', [StudentController::class, 'store'])->name('store');
