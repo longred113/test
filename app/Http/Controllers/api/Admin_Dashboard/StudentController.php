@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\Admin_Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentResource;
 use App\Models\Parents;
+use App\Models\ProductMatchedActivities;
 use App\Models\StudentProducts;
 use App\Models\Students;
 use App\Models\Users;
@@ -102,10 +103,14 @@ class StudentController extends Controller
                 ->leftJoin('student_matched_activities', 'students.studentId', '=', 'student_matched_activities.studentId')
                 ->leftJoin('products', 'student_products.productId', '=', 'products.productId')
                 ->leftJoin('matched_activities', 'student_matched_activities.matchedActivityId', '=', 'matched_activities.matchedActivityId')
+                ->leftJoin('student_classes', 'students.studentId', '=', 'student_classes.studentId')
+                ->leftJoin('classes', 'student_classes.classId', '=', 'classes.classId')
                 ->selectRaw(
                     'students.studentId,
                     students.campusId,
                     campuses.name as campusName,
+                    classes.classId,
+                    classes.name as className,
                     students.name,
                     students.email,
                     MAX(users.userName) as userName,
@@ -117,13 +122,33 @@ class StudentController extends Controller
                 )
                 ->where('students.type', 'online')
                 ->whereNotNull('users.studentId')
-                ->groupBy('students.studentId', 'students.campusId')
+                ->groupBy('students.studentId', 'students.campusId', 'classes.classId')
                 ->get();
+            foreach ($students as $student) {
+                $products = explode(',', $student->products);
+                foreach ($products as $product) {
+                    $parts = explode(':', $product);
+                    $productId = $parts[0];
+                    $productName = isset($parts[1]) ? $parts[1] : '';
+                    $matchActivities = ProductMatchedActivities::where('productId', $productId)
+                        ->select('matchedActivityId', 'matchedActivityName')->get();
+                    foreach ($matchActivities as $activity) {
+                        $productActivities[$productId][] = [
+                            'id' => $activity->matchedActivityId,
+                            'name' => $activity->matchedActivityName,
+                        ];
+                    }
+                }
+                // $product = [$productIds, $matchActivity];
+                $studyPlaner = explode(',', $student->studyPlaners);
+                $student->products = $productActivities;
+                $student->studyPlaners = $studyPlaner;
+            }
         } catch (Exception $e) {
             return $e->getMessage();
         }
         return $this->successStudentRequest($students);
-    } 
+    }
 
     public function getStudentWithId($studentId)
     {
@@ -335,7 +360,7 @@ class StudentController extends Controller
 
             if ($this->request['email'] != $student['email']) {
                 $email = Students::where('email', $this->request['email'])->first();
-                if(!empty($email)){
+                if (!empty($email)) {
                     return $this->errorBadRequest('Email already exists');
                 }
             }
