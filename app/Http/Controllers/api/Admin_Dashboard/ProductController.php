@@ -71,13 +71,19 @@ class ProductController extends Controller
                     products.startLevel,
                     products.endLevel,
                     products.activate,
-                    GROUP_CONCAT(DISTINCT CONCAT_WS(":", product_matched_activities.matchedActivityId, product_matched_activities.matchedActivityname)) as matchedActivities'
+                    GROUP_CONCAT(DISTINCT CONCAT_WS(":", product_matched_activities.matchedActivityId, product_matched_activities.matchedActivityName)) as matchedActivities'
                 )
                 ->groupBy('products.productId')
                 ->get();
         } catch (Exception $e) {
             return $e->getMessage();
         }
+        return $this->successProductsRequest($products);
+    }
+
+    public function getProductByLevel($level)
+    {
+        $products = Products::where('level', $level)->get();
         return $this->successProductsRequest($products);
     }
 

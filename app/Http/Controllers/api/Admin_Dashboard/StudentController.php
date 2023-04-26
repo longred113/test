@@ -4,8 +4,13 @@ namespace App\Http\Controllers\api\Admin_Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentResource;
+use App\Models\Campus;
+use App\Models\ClassFeedbacks;
 use App\Models\Parents;
 use App\Models\ProductMatchedActivities;
+use App\Models\Products;
+use App\Models\StudentClasses;
+use App\Models\StudentMatchedActivities;
 use App\Models\StudentProducts;
 use App\Models\Students;
 use App\Models\Users;
@@ -14,6 +19,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class StudentController extends Controller
@@ -148,6 +154,80 @@ class StudentController extends Controller
             return $e->getMessage();
         }
         return $this->successStudentRequest($students);
+    }
+
+    public function studentDetail($studentId)
+    {
+        try {
+            $student = Students::where('studentId', $studentId)->first();
+            $student->campusName = Campus::where('campusId', $student->campusId)->first()->name;
+            $student->products = StudentProducts::join('product_matched_activities', 'student_products.productId', '=', 'product_matched_activities.productId')
+                ->selectRaw(
+                    'GROUP_CONCAT(DISTINCT CONCAT_WS(":",product_matched_activities.productId, product_matched_activities.productName))as products',
+                )
+                ->where('studentId', $studentId)
+                ->pluck('products')
+                ->first();
+            $products = explode(',', $student->products);
+            foreach ($products as $product) {
+                $parts = explode(':', $product);
+                $productId = $parts[0];
+                $matchActivities = ProductMatchedActivities::where('productId', $productId)
+                    ->select('matchedActivityId', 'matchedActivityName')->get();
+                foreach ($matchActivities as $activity) {
+                    $productActivities[$product][] = [
+                        'matchActivityId' => $activity->matchedActivityId,
+                        'matchActivityName' => $activity->matchedActivityName,
+                    ];
+                }
+            }
+            $student->products = $productActivities;
+            $student->class = StudentClasses::join('classes', 'student_classes.classId', '=', 'classes.classId')
+                ->join('class_products', 'classes.classId', '=', 'class_products.classId')
+                ->join('product_matched_activities', 'class_products.productId', '=', 'product_matched_activities.productId')
+                ->join('student_matched_activities', 'student_classes.studentId', '=', 'student_matched_activities.studentId')
+                ->select(
+                    'classes.classId',
+                    'classes.name as className',
+                    'classes.classStartDate',
+                    'classes.classTimeSlot',
+                    'classes.typeOfClass',
+                    'classes.numberOfStudent',
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",product_matched_activities.productId, product_matched_activities.productName)) as productOfClasses'),
+                )
+                ->where('student_classes.studentId', $studentId)
+                ->groupBy('classes.classId')
+                ->get();
+            foreach ($student->class as $class) {
+                $productOfClasses = explode(',', $class->productOfClasses);
+                $classId = $class->classId;
+                foreach ($productOfClasses as $productOfClass) {
+                    $productPart = explode(':', $productOfClass);
+                    $productIdOfClass = $productPart[0];
+                    $matchedActivities = ProductMatchedActivities::where('productId', $productIdOfClass)->select('matchedActivityId', 'matchedActivityName')->get();
+                    $matchedActivityId = $matchedActivities->pluck('matchedActivityId');
+                    $status = StudentMatchedActivities::join('matched_activities', 'student_matched_activities.matchedActivityId', '=', 'matched_activities.matchedActivityId')
+                        ->where('studentId', $studentId)
+                        ->whereIn('student_matched_activities.matchedActivityId', $matchedActivityId)
+                        ->select(
+                            'matched_activities.matchedActivityId',
+                            'student_matched_activities.name as matchedActivityName',
+                            'student_matched_activities.status'
+                        )
+                        ->get();
+                    $productOfClasses[$productOfClass]= $status;
+                }
+                $class->productOfClasses = $productOfClasses;
+                $classFeedback = ClassFeedbacks::where('classId', $classId)->get();
+                $class->classFeedback = $classFeedback;
+            }
+
+            // return $student->class;
+            // $student->studyPlaners = StudentMatchedActivities::where('studentId', $studentId)->get();
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+        return $this->successStudentRequest($student);
     }
 
     public function getStudentWithId($studentId)
