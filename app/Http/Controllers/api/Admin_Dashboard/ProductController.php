@@ -44,8 +44,6 @@ class ProductController extends Controller
                     products.name,
                     GROUP_CONCAT(DISTINCT CONCAT_WS(":",packages.packageId,packages.name )) as packages,
                     MAX(products.level) as level,
-                    products.startLevel,
-                    products.endLevel,
                     products.activate,
                     GROUP_CONCAT(DISTINCT CONCAT_WS(":",matched_activities.matchedActivityId, matched_activities.name)) as matchedActivities'
                 )
@@ -68,8 +66,6 @@ class ProductController extends Controller
                     products.name,
                     GROUP_CONCAT(DISTINCT CONCAT_WS(":",packages.packageId,packages.name )) as packages,
                     MAX(products.level) as level,
-                    products.startLevel,
-                    products.endLevel,
                     products.activate,
                     GROUP_CONCAT(DISTINCT CONCAT_WS(":", product_matched_activities.matchedActivityId, product_matched_activities.matchedActivityName)) as matchedActivities'
                 )
@@ -98,8 +94,6 @@ class ProductController extends Controller
         $validator = validator::make($this->request->all(), [
             'name' => 'required',
             'level' => 'required',
-            // 'startLevel' => 'required',
-            // 'endLevel' => 'required',
             // 'details' => 'required',
             // 'image' => 'image|mimes:jpg,png,jpeg,gif,svg|max:5048',
             'activate' => 'required',
@@ -115,8 +109,6 @@ class ProductController extends Controller
             'productId' => $productId,
             'name' => $this->request['name'],
             'level' => $this->request['level'],
-            'startLevel' => $this->request['startLevel'],
-            'endLevel' => $this->request['endLevel'],
             'details' => $this->request['details'],
             // 'image' => $image_path,
             'activate' => $this->request['activate'],
@@ -151,14 +143,8 @@ class ProductController extends Controller
         if (empty($this->request['name'])) {
             $this->request['name'] = $products['name'];
         }
-        if (empty($this->request['startLevel'])) {
-            $this->request['startLevel'] = $products['startLevel'];
-        }
         if (empty($this->request['level'])) {
             $this->request['level'] = $products['level'];
-        }
-        if (empty($this->request['endLevel'])) {
-            $this->request['endLevel'] = $products['endLevel'];
         }
         if (empty($this->request['details'])) {
             $this->request['details'] = $products['details'];
@@ -172,8 +158,6 @@ class ProductController extends Controller
         $validator = Validator::make($this->request->all(), [
             'name' => 'required|string',
             'level' => 'required',
-            // 'startLevel' => 'required',
-            // 'endLevel' => 'required',
             // 'details' => 'required',
             // 'image' => 'required',
             'activate' => 'required',
@@ -185,9 +169,7 @@ class ProductController extends Controller
         $params = [
             $products['productId'] = $this->request['productId'],
             $products['name'] = $this->request['name'],
-            $products['startLevel'] = $this->request['startLevel'],
             $products['level'] = $this->request['level'],
-            $products['endLevel'] = $this->request['endLevel'],
             $products['details'] = $this->request['details'],
             $products['image'] = $this->request['image'],
             $products['activate'] = $this->request['activate'],

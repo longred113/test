@@ -18,10 +18,9 @@ class Products extends JsonResource
             'productId' => $this->productId,
             'name' => $this->name,
             'level' => $this->level,
-            'startLevel' => $this->startLevel,
-            'endLevel' => $this->endLevel,
             'details' => $this->details,
             'image' => $this->image,
+            'duration' => $this->duration,
             'activate' => $this->activate,
         ];
     }
