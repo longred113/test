@@ -164,15 +164,15 @@ class ProductController extends Controller
         if (empty($this->request['activate'])) {
             $this->request['activate'] = $products['activate'];
         }
-        if (empty($this->request['duration'])) {
-            $this->request['duration'] = $products['duration'];
-        }
-        if (empty($this->request['type'])) {
-            $this->request['type'] = $products['type'];
-        }
-        if (empty($this->request['startDate'])) {
-            $this->request['startDate'] = $products['startDate'];
-        }
+        // if (empty($this->request['duration'])) {
+        //     $this->request['duration'] = $products['duration'];
+        // }
+        // if (empty($this->request['type'])) {
+        //     $this->request['type'] = $products['type'];
+        // }
+        // if (empty($this->request['startDate'])) {
+        //     $this->request['startDate'] = $products['startDate'];
+        // }
         $validator = Validator::make($this->request->all(), [
             'name' => 'required|string',
             'level' => 'required',
@@ -190,9 +190,9 @@ class ProductController extends Controller
             $products['level'] = $this->request['level'],
             $products['details'] = $this->request['details'],
             $products['image'] = $this->request['image'],
-            $products['duration'] = $this->request['duration'],
-            $products['startDate'] = $this->request['startDate'],
-            $products['type'] = $this->request['type'],
+            // $products['duration'] = $this->request['duration'],
+            // $products['startDate'] = $this->request['startDate'],
+            // $products['type'] = $this->request['type'],
             $products['activate'] = $this->request['activate'],
         ];
         $newInfoProducts = $products->update($params);

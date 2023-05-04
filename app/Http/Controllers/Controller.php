@@ -296,4 +296,12 @@ class Controller extends BaseController
             'productGroupData' => $productGroupData,
         ],200);
     }
+    protected function successCourseRequest($courseData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'courseData' => $courseData,
+        ],200);
+    }
 }

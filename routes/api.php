@@ -20,6 +20,7 @@ use App\Http\Controllers\api\Admin_Dashboard\ClassFeedbackController;
 use App\Http\Controllers\api\Admin_Dashboard\ClassMaterialController;
 use App\Http\Controllers\api\Admin_Dashboard\ClassProductController;
 use App\Http\Controllers\api\Admin_Dashboard\ClassTimeSlotController;
+use App\Http\Controllers\api\Admin_Dashboard\CourseController;
 use App\Http\Controllers\api\Admin_Dashboard\EnrollmentControllerA;
 use App\Http\Controllers\api\Admin_Dashboard\GroupActivityController;
 use App\Http\Controllers\api\Admin_Dashboard\GroupController;
@@ -444,6 +445,16 @@ Route::prefix('admin-product-group-management')
         Route::get('/{productGroupId}', [ProductGroupController::class, 'show'])->name('show');
         Route::post('/update', [ProductGroupController::class, 'update'])->name('update');
         Route::delete('/{productGroupId}', [ProductGroupController::class, 'destroy'])->name('destroy');
+    });
+
+Route::prefix('admin-course-management')
+    ->name('admin-course-management.')
+    ->group(function () {
+        Route::get('/', [CourseController::class, 'index'])->name('index');
+        Route::post('/create', [CourseController::class, 'store'])->name('store');
+        Route::get('/{courseId}', [CourseController::class, 'show'])->name('show');
+        Route::put('/update/{courseId}', [CourseController::class, 'update'])->name('update');
+        Route::delete('/{courseId}', [CourseController::class, 'destroy'])->name('destroy');
     });
 //END ADMIN DASHBOARD
 
