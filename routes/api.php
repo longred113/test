@@ -151,6 +151,7 @@ Route::prefix('admin-match-activity-management')
     ->name('admin-match-activity-management.')
     ->group(function () {
         Route::get('/', [MatchedActivityController::class, 'index'])->name('index');
+        Route::get('/get-with-group', [MatchedActivityController::class, 'getMatchedActivityWithGroup'])->name('getMatchedActivityWithGroup');
         Route::post('/create', [MatchedActivityController::class, 'store'])->name('store');
         Route::get('/{matchedActivityId}', [MatchedActivityController::class, 'show'])->name('show');
         Route::get('/get-match-activity/{productId}', [MatchedActivityController::class, 'getMatchActivityFromProduct'])->name('getMatchActivityFromProduct');

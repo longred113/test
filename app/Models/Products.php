@@ -19,6 +19,7 @@ class Products extends Model
         'details',
         'image',
         'duration',
+        'startDate',
         'type',
         'activate',
     ];

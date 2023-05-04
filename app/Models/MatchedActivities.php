@@ -18,5 +18,6 @@ class MatchedActivities extends Model
         'time',
         'unitId',
         'type',
+        'holiday',
     ];
 }

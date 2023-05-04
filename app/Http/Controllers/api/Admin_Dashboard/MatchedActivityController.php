@@ -32,6 +32,23 @@ class MatchedActivityController extends Controller
         return $this->successMatchedActivityRequest($matchedActivityData);
     }
 
+    public function getMatchedActivityWithGroup()
+    {
+        try {
+            $matchedActivityData = MatchedActivities::leftJoin('group_activities', 'matched_activities.matchedActivityId', '=', 'group_activities.matchedActivityId')
+                ->select(
+                    'matched_activities.matchedActivityId',
+                    'matched_activities.name as matchedActivityName',
+                    'group_activities.groupId',
+                    'group_activities.groupName',
+                )
+                ->get();
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+        return $matchedActivityData;
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -126,11 +143,11 @@ class MatchedActivityController extends Controller
             $matchedActivity['type'] = $this->request['type'],
         ];
 
-        try{
+        try {
             $newInfoMatchedActivity = $matchedActivity->update($params);
             ProductMatchedActivities::where('matchedActivityId', $matchedActivityId)->update(['matchedActivityName' => $this->request['name']]);
             StudentMatchedActivities::where('matchedActivityId', $matchedActivityId)->update(['name' => $this->request['name']]);
-        } catch(Exception $e){
+        } catch (Exception $e) {
             $e->getMessage();
         }
         return $this->successMatchedActivityRequest($newInfoMatchedActivity);
