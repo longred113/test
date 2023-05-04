@@ -113,6 +113,12 @@ class ProductController extends Controller
             // 'image' => $image_path,
             'activate' => $this->request['activate'],
         ];
+        if(!empty($this->request['duration'])){
+            $params['duration'] = $this->request['duration'];
+        }
+        if(!empty($this->request['type'])){
+            $params['type'] = $this->request['type'];
+        }
         $newProducts = new ProductsResource(Products::create($params));
         return $this->successProductsRequest($newProducts);
     }
@@ -155,6 +161,12 @@ class ProductController extends Controller
         if (empty($this->request['activate'])) {
             $this->request['activate'] = $products['activate'];
         }
+        if (empty($this->request['duration'])) {
+            $this->request['duration'] = $products['duration'];
+        }
+        if (empty($this->request['type'])) {
+            $this->request['type'] = $products['type'];
+        }
         $validator = Validator::make($this->request->all(), [
             'name' => 'required|string',
             'level' => 'required',
@@ -172,6 +184,8 @@ class ProductController extends Controller
             $products['level'] = $this->request['level'],
             $products['details'] = $this->request['details'],
             $products['image'] = $this->request['image'],
+            $products['duration'] = $this->request['duration'],
+            $products['type'] = $this->request['type'],
             $products['activate'] = $this->request['activate'],
         ];
         $newInfoProducts = $products->update($params);

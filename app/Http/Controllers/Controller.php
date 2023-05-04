@@ -272,4 +272,28 @@ class Controller extends BaseController
             'classTimeSlotData' => $classTimeSlotData,
         ],200);
     }
+    protected function successGroupRequest($groupData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'groupData' => $groupData,
+        ],200);
+    }
+    protected function successGroupActivityRequest($groupActivityRequestData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'groupActivityRequestData' => $groupActivityRequestData,
+        ],200);
+    }
+    protected function successProductGroupRequest($productGroupData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'productGroupData' => $productGroupData,
+        ],200);
+    }
 }

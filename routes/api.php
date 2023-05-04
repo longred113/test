@@ -21,8 +21,11 @@ use App\Http\Controllers\api\Admin_Dashboard\ClassMaterialController;
 use App\Http\Controllers\api\Admin_Dashboard\ClassProductController;
 use App\Http\Controllers\api\Admin_Dashboard\ClassTimeSlotController;
 use App\Http\Controllers\api\Admin_Dashboard\EnrollmentControllerA;
+use App\Http\Controllers\api\Admin_Dashboard\GroupActivityController;
+use App\Http\Controllers\api\Admin_Dashboard\GroupController;
 use App\Http\Controllers\api\Admin_Dashboard\ImageController;
 use App\Http\Controllers\api\Admin_Dashboard\ProductEnrollmentController;
+use App\Http\Controllers\api\Admin_Dashboard\ProductGroupController;
 use App\Http\Controllers\api\Admin_Dashboard\ProductMatchedActivityController;
 use App\Http\Controllers\api\Admin_Dashboard\ProductPackageController;
 use App\Http\Controllers\api\Admin_Dashboard\StudentClassController;
@@ -410,6 +413,36 @@ Route::prefix('admin-class-time-slot-management')
         Route::get('/{classTimeSlotId}', [ClassTimeSlotController::class, 'show'])->name('show');
         Route::put('/update/{classTimeSlotId}', [ClassTimeSlotController::class, 'update'])->name('update');
         Route::delete('/{classTimeSlotId}', [ClassTimeSlotController::class, 'destroy'])->name('destroy');
+    });
+
+Route::prefix('admin-group-management')
+    ->name('admin-group-management.')
+    ->group(function () {
+        Route::get('/', [GroupController::class, 'index'])->name('index');
+        Route::post('/create', [GroupController::class, 'store'])->name('store');
+        Route::get('/{groupId}', [GroupController::class, 'show'])->name('show');
+        Route::put('/update/{groupId}', [GroupController::class, 'update'])->name('update');
+        Route::delete('/{groupId}', [GroupController::class, 'destroy'])->name('destroy');
+    });
+
+Route::prefix('admin-group-activity-management')
+    ->name('admin-group-activity-management.')
+    ->group(function () {
+        Route::get('/', [GroupActivityController::class, 'index'])->name('index');
+        Route::post('/create', [GroupActivityController::class, 'store'])->name('store');
+        Route::get('/{groupId}', [GroupActivityController::class, 'show'])->name('show');
+        Route::put('/update/{groupActivityId}', [GroupActivityController::class, 'update'])->name('update');
+        Route::delete('/{groupActivityId}', [GroupActivityController::class, 'destroy'])->name('destroy');
+    });
+
+Route::prefix('admin-product-group-management')
+    ->name('admin-product-group-management.')
+    ->group(function () {
+        Route::get('/', [ProductGroupController::class, 'index'])->name('index');
+        Route::post('/create', [ProductGroupController::class, 'store'])->name('store');
+        Route::get('/{productGroupId}', [ProductGroupController::class, 'show'])->name('show');
+        Route::post('/update', [ProductGroupController::class, 'update'])->name('update');
+        Route::delete('/{productGroupId}', [ProductGroupController::class, 'destroy'])->name('destroy');
     });
 //END ADMIN DASHBOARD
 

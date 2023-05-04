@@ -96,8 +96,6 @@ class StudentProductController extends Controller
                 'student_products.studentId',
                 'products.name',
                 'products.level',
-                'products.startLevel',
-                'products.endLevel',
                 'products.details',
                 'products.activate',
             )
