@@ -41,6 +41,8 @@ class MatchedActivityController extends Controller
                     'matched_activities.name as matchedActivityName',
                     'group_activities.groupId',
                     'group_activities.groupName',
+                    'matched_activities.time',
+                    'matched_activities.type',
                 )
                 ->get();
         } catch (Exception $e) {
