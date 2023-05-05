@@ -195,7 +195,7 @@ class OffTeachController extends Controller
             // 'certificate' => 'required',
             // 'contract' => 'required',
             // 'basicPoint' => 'required',
-            'campusId' => 'required',
+            // 'campusId' => 'required',
             // 'type' => 'required',
             'talkSamId' => 'required',
             'role' => 'required',
