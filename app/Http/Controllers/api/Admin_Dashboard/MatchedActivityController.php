@@ -57,30 +57,32 @@ class MatchedActivityController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store()
+    public static function store($matchActivities)
     {
-        $validator = Validator::make($this->request->all(), [
-            // 'productId' => 'required',
-            'name' => 'string|required',
-            'time' => 'integer|required',
-            // 'unitId' => 'string|required',
-            'type' => 'string|required',
-        ]);
-        if ($validator->fails()) {
-            return $this->errorBadRequest($validator->getMessageBag()->toArray());
-        }
+        // $validator = Validator::make($this->request->all(), [
+        //     // 'productId' => 'required',
+        //     'name' => 'string|required',
+        //     'time' => 'integer|required',
+        //     // 'unitId' => 'string|required',
+        //     'type' => 'string|required',
+        // ]);
+        // if ($validator->fails()) {
+        //     return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        // }
 
         $matchedActivityId = IdGenerator::generate(['table' => 'matched_activities', 'trow' => 'matchedActivityId', 'length' => 7, 'prefix' => 'MA']);
         $params = [
             'matchedActivityId' => $matchedActivityId,
-            'productId' => $this->request['productId'],
-            'name' => $this->request['name'],
-            'time' => $this->request['time'],
-            'unitId' => $this->request['unitId'],
-            'type' => $this->request['type'],
+            // 'productId' => $this->request['productId'],
+            'name' => $matchActivities['name'],
+            'time' => $matchActivities['time'],
+            // 'unitId' => $this->request['unitId'],
+            'type' => $matchActivities['type'],
         ];
-        $newMatchedActivityData = new MatchedActivityResource(MatchedActivities::create($params));
-        return $this->successMatchedActivityRequest($newMatchedActivityData);
+        $newMatchedActivityData = MatchedActivities::create($params);
+        return $newMatchedActivityData;
+        // $newMatchedActivityData = new MatchedActivityResource(MatchedActivities::create($params));
+        // return $this->successMatchedActivityRequest($newMatchedActivityData);
     }
 
     /**

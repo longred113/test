@@ -41,13 +41,19 @@ class GroupController extends Controller
     {
         $validator = Validator::make($this->request->all(),[
             'name' => 'string|required',
-            'matchActivityIds' => 'required|array',
+            'matchActivities' => 'required|array',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         try{
+            foreach($this->request->matchActivities as $matchActivity){
+                $newMatchActivity[] = MatchedActivityController::store($matchActivity);
+            }
+            foreach($newMatchActivity as $matchActivity){
+                $matchActivityIds[] = $matchActivity->matchedActivityId;
+            }
             $groupId = IdGenerator::generate(['table' => 'tbl_groups', 'trow' => 'groupId', 'length' => 7, 'prefix' => 'GR']);
             $params = [
                 'groupId' => $groupId,
@@ -58,7 +64,7 @@ class GroupController extends Controller
             $groupActivityParams = [
                 'groupId' => $groupId,
                 'groupName' => $this->request->name,
-                'matchActivityIds' => $this->request->matchActivityIds,
+                'matchActivityIds' => $matchActivityIds,
             ];
             $new = GroupActivityController::store($groupActivityParams);
         }catch(Exception $e){
