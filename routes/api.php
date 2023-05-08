@@ -105,8 +105,6 @@ Route::prefix('admin-teacher-management')
         Route::get('/', [TeacherController::class, 'index'])->name('index');
         Route::get('/get-data-before-update', [TeacherController::class, 'getTeacherDataBeforeUpdate'])->name('getTeacherDataBeforeUpdate');
         Route::get('/all-online-teacher', [TeacherController::class, 'getAllOnlineTeacher'])->name('getAllOnlineTeacher');
-        Route::get('/get-classes-of-teacher/{teacherId}', [TeacherController::class, 'getClassesOfTeacher'])->name('getClassesOfTeacher');
-        Route::get('/get-free-time-teacher/{classTime}', [TeacherController::class, 'getFreeTimeTeacher'])->name('getFreeTimeTeacher');
         Route::post('/create', [TeacherController::class, 'store'])->name('store');
         Route::get('/online-teacher', [TeacherController::class, 'showOnlineTeacher'])->name('showOnlineTeacher');
         Route::get('/{teacherId}', [TeacherController::class, 'show'])->name('show');
@@ -119,7 +117,6 @@ Route::prefix('admin-package-management')
     ->name('admin-package-management.')
     ->group(function () {
         Route::get('/', [PackagesController::class, 'index'])->name('index');
-        Route::get('/get-level', [PackagesController::class, 'getLevel'])->name('getLevel');
         Route::post('/create', [PackagesController::class, 'store'])->name('store');
         Route::get('/{packageId}', [PackagesController::class, 'show'])->name('show');
         Route::post('/update/{packageId}', [PackagesController::class, 'update'])->name('update');
@@ -193,8 +190,7 @@ Route::prefix('admin-student-management')
         Route::get('/joined', [StudentController::class, 'studentJoinedList'])->name('studentJoinedList');
         Route::get('/withdrawal', [StudentController::class, 'studentWithdrawalList'])->name('studentWithdrawalList');
         Route::get('/get-product-and-match-activity', [StudentController::class, 'viewStudentProductAndStudyPlanner'])->name('viewStudentProductAndStudyPlanner');
-        Route::get('/test/{studentId}', [StudentController::class, 'detail'])->name('detail');
-        Route::get('/get-details-of-student/{studentId}', [StudentController::class, 'detailsOfStudent'])->name('detailsOfStudent');
+        Route::get('/test/{studentId}', [StudentController::class, 'studentDetail'])->name('studentDetail');
         Route::get('/student-with-id/{studentId}', [StudentController::class, 'getStudentWithId'])->name('getStudentWithId');
         Route::get('/get-student-online', [StudentController::class, 'getStudentOnline'])->name('getStudentOnline');
         Route::post('/create', [StudentController::class, 'store'])->name('store');
@@ -427,7 +423,7 @@ Route::prefix('admin-group-management')
         Route::get('/', [GroupController::class, 'index'])->name('index');
         Route::post('/create', [GroupController::class, 'store'])->name('store');
         Route::get('/{groupId}', [GroupController::class, 'show'])->name('show');
-        Route::put('/update', [GroupController::class, 'update'])->name('update');
+        Route::put('/update/{groupId}', [GroupController::class, 'update'])->name('update');
         Route::delete('/{groupId}', [GroupController::class, 'destroy'])->name('destroy');
     });
 
@@ -459,16 +455,6 @@ Route::prefix('admin-course-management')
         Route::get('/{courseId}', [CourseController::class, 'show'])->name('show');
         Route::put('/update/{courseId}', [CourseController::class, 'update'])->name('update');
         Route::delete('/{courseId}', [CourseController::class, 'destroy'])->name('destroy');
-    });
-
-Route::prefix('admin-class-time-management')
-    ->name('admin-class-time-management.')
-    ->group(function () {
-        Route::get('/', [ClassTimeController::class, 'index'])->name('index');
-        // Route::post('/create', [ClassTimeController::class, 'store'])->name('store');
-        Route::get('/{classId}', [ClassTimeController::class, 'show'])->name('show');
-        Route::put('/update/{classTimeId}', [ClassTimeController::class, 'update'])->name('update');
-        Route::delete('/{classTimeId}', [ClassTimeController::class, 'destroy'])->name('destroy');
     });
 //END ADMIN DASHBOARD
 

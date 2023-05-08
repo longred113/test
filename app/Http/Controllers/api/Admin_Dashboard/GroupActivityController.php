@@ -80,15 +80,8 @@ class GroupActivityController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public static function update($groupActivityParams)
+    public function update()
     {
-        try {
-            $newGroupActivity = GroupActivities::where('groupId', $groupActivityParams['groupId'])
-            ->where('matchedActivityId', $groupActivityParams['matchedActivityId'])->update($groupActivityParams);
-        } catch (Exception $e) {
-            return $e->getMessage();
-        }
-        return $newGroupActivity;
     }
 
     /**
