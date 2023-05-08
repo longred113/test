@@ -52,7 +52,7 @@ class GroupController extends Controller
                 $newMatchActivity[] = MatchedActivityController::store($matchActivity);
             }
             foreach($newMatchActivity as $matchActivity){
-                $matchActivityIds[] = $matchActivity->matchedActivityId;
+                $matchActivityIds[] = $matchActivity['matchedActivityId'];
             }
             $groupId = IdGenerator::generate(['table' => 'tbl_groups', 'trow' => 'groupId', 'length' => 7, 'prefix' => 'GR']);
             $params = [
