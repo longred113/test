@@ -98,6 +98,7 @@ class ProductController extends Controller
             // 'image' => 'image|mimes:jpg,png,jpeg,gif,svg|max:5048',
             'activate' => 'required',
             'groupIds' => 'required|array',
+            'type' => 'required|string',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
