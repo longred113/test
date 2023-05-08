@@ -137,36 +137,16 @@ class TeacherController extends Controller
         return $this->successTeacherRequest($teachersData);
     }
 
-    public function getClassesOfTeacher($teacherId)
-    {
-        $teacherData = Teachers::join('classes', 'teachers.teacherId', '=', 'classes.onlineTeacher')
+    public function getClassesOfTeacher($teacherId){
+        $teachersData = Teachers::join('classes', 'teachers.teacherId', '=', 'classes.onlineTeacher')
             ->select(
                 'teachers.teacherId',
                 'teachers.name as teacherName',
                 'classes.classId',
                 'classes.name as className',
             )
-            ->where('teachers.teacherId', $teacherId)
-            ->get();
-        return $this->successTeacherRequest($teacherData);
-    }
-
-    public function getFreeTimeTeacher($classTime)
-    {
-        $teachers = Teachers::leftJoin('classes', 'teachers.teacherId', '=', 'classes.onlineTeacher')
-            ->select(
-                'teachers.teacherId', 
-                'teachers.name as teacherName'
-                )
-                ->distinct()
-                ->where('teachers.type', 'online')
-                ->where(function ($query) use ($classTime) {
-                    $query->where('classes.classTime', '!=', $classTime)
-                        ->orWhereNull('classes.classTime');
-                })
-                ->get();
-
-        return $this->successTeacherRequest($teachers);
+            ->where('teachers.teacherId', $teacherId)->get();
+        return $this->successClassRequest($teachersData);
     }
 
     /**
@@ -179,7 +159,6 @@ class TeacherController extends Controller
     {
         $validator = validator::make($this->request->all(), [
             'name' => 'required|string',
-            'userName' => 'string',
             'email' => 'required|string|unique:teachers',
             'password' => 'required|string',
             'activate' => 'required',

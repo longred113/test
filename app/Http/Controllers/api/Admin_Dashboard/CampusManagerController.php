@@ -82,10 +82,12 @@ class CampusManagerController extends Controller
             'campusId' => $teacherParams['campusId'],
             'campusManagerId' => $campusManagerId,
             'name' => $params['name'],
-            'userName' => $teacherParams['userName'],
             'email' => $params['email'],
             'password' => $teacherParams['password'],
         ];
+        if(!empty($teacherParams['userName'])) {
+            $userParams['userName'] = $teacherParams['userName'];
+        }
         $newCampusManager = new CampusManagerResource(CampusManager::create($params));
         UserController::store($userParams);
         return $newCampusManager;

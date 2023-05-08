@@ -56,7 +56,7 @@ class UserController extends Controller
             'email' => $userParams['email'],
             'password' => $userParams['password'],
         ];
-        if (!empty($userParams['userName'])) {
+        if(!empty($userParams['userName'])){
             $params['userName'] = $userParams['userName'];
         }
         if (!empty($userParams['teacherId'])) {
