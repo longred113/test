@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentResource;
 use App\Models\Campus;
 use App\Models\ClassFeedbacks;
+use App\Models\ClassReports;
 use App\Models\Parents;
 use App\Models\ProductMatchedActivities;
 use App\Models\Products;
@@ -156,7 +157,7 @@ class StudentController extends Controller
         return $this->successStudentRequest($students);
     }
 
-    public function studentDetail($studentId)
+    public function detailsOfStudent($studentId)
     {
         try {
             $student = Students::where('studentId', $studentId)->first();
@@ -186,10 +187,14 @@ class StudentController extends Controller
                 ->join('class_products', 'classes.classId', '=', 'class_products.classId')
                 ->join('product_matched_activities', 'class_products.productId', '=', 'product_matched_activities.productId')
                 ->join('student_matched_activities', 'student_classes.studentId', '=', 'student_matched_activities.studentId')
+                ->leftJoin('class_times', 'classes.classId', '=', 'class_times.classId')
                 ->select(
                     'classes.classId',
                     'classes.name as className',
+                    'classes.level',
                     'classes.classStartDate',
+                    // 'class_times.classEndDate',
+                    'classes.classday',
                     'classes.classTimeSlot',
                     'classes.typeOfClass',
                     'classes.numberOfStudent',
@@ -205,7 +210,7 @@ class StudentController extends Controller
                     $productPart = explode(':', $productOfClass);
                     $productIdOfClass = $productPart[0];
                     $matchedActivities = ProductMatchedActivities::where('productId', $productIdOfClass)->select('matchedActivityId', 'matchedActivityName')->get();
-                    $matchedActivityId = $matchedActivities->pluck('matchedActivityId');
+                    $matchedActivityId = $matchedActivities->pluck('matchedActivityId')->toArray();
                     $status = StudentMatchedActivities::join('matched_activities', 'student_matched_activities.matchedActivityId', '=', 'matched_activities.matchedActivityId')
                         ->where('studentId', $studentId)
                         ->whereIn('student_matched_activities.matchedActivityId', $matchedActivityId)
@@ -215,16 +220,43 @@ class StudentController extends Controller
                             'student_matched_activities.status'
                         )
                         ->get();
-                    $productOfClasses[$productOfClass]= $status;
+                    $productActivityOfClasses[$productOfClass]= $status;
                 }
-                $class->productOfClasses = $productOfClasses;
-                $classFeedback = ClassFeedbacks::where('classId', $classId)->get();
+                $class->productOfClasses = $productActivityOfClasses;
+                $classFeedback = ClassFeedbacks::where('classId', $classId)->where('studentId', $studentId)->get();
                 $class->classFeedback = $classFeedback;
+                $classReport = ClassReports::where('classId', $classId)->where('studentId', $studentId)->get();
+                $class->classReport = $classReport;
             }
 
             // return $student->class;
             // $student->studyPlaners = StudentMatchedActivities::where('studentId', $studentId)->get();
         } catch (Exception $e) {
+            return $e->getMessage();
+        }
+        return $this->successStudentRequest($student);
+    }
+
+    public function detail1($studentId)
+    {
+        try{
+            $student = Students::where('studentId', $studentId)->first();
+            $student->campusName = Campus::where('campusId', $student->campusId)->first()->name;
+            $student->levels = StudentProducts::join('products', 'student_products.productId', '=', 'products.productId')
+                ->select(
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",products.level)) as levels'),
+                )
+                ->where('studentId', $studentId)
+                ->pluck('levels')
+                ->first();
+            $levels = explode(',', $student->levels);
+            foreach($levels as $level){
+                $parts = explode(':', $level);
+            }
+            $student->levels = $levels;
+
+        }
+        catch(Exception $e){
             return $e->getMessage();
         }
         return $this->successStudentRequest($student);
@@ -264,6 +296,22 @@ class StudentController extends Controller
         $students = Students::where('type', 'online')->get();
         return $this->successStudentRequest($students);
     }
+
+    // public function getStudentsWithForClassRegister()
+    // {
+    //     $validator = Validator::make($this->request->all(), [
+    //         'level' => 'string|required',
+    //         'product' => 'string|required',
+    //         'timeZone' => 'string|required',
+    //         'timeSlot' => 'string|required',
+    //     ]);
+
+    //     if ($validator->fails()) {
+    //         return $this->errorBadRequest($validator->getMessageBag()->toArray());
+    //     }
+
+    //     $studentsData = Students::join()
+    // }
 
     /**
      * Store a newly created resource in storage.

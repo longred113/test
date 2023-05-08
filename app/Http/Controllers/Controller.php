@@ -304,4 +304,12 @@ class Controller extends BaseController
             'courseData' => $courseData,
         ],200);
     }
+    protected function successClassTimeRequest($classTimeData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'classTimeData' => $classTimeData,
+        ],200);
+    }
 }

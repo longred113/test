@@ -14,14 +14,19 @@ class Classes extends Model
     protected $fillable = [
         'classId',
         'name',
+        'level',
         'numberOfStudent',
         'subject',
         'onlineTeacher',
         'classday',
         'classTimeSlot',
+        'classTime',
         'classStartDate',
+        'classEndDate',
+        'duration',
         'status',
         'typeOfClass',
         'initialTextbook',
+        'unit',
     ];
 }

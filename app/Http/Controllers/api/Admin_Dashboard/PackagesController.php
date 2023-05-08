@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Packages;
 use App\Http\Resources\Packages as PackagesResource;
+use App\Models\Courses;
 
 class PackagesController extends Controller
 {
@@ -33,9 +34,10 @@ class PackagesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function getLevel()
     {
-        //
+        $course = Courses::select('level', 'course')->get();
+        return $this->successPackagesRequest($course);
     }
 
     /**

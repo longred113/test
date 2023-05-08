@@ -137,6 +137,38 @@ class TeacherController extends Controller
         return $this->successTeacherRequest($teachersData);
     }
 
+    public function getClassesOfTeacher($teacherId)
+    {
+        $teacherData = Teachers::join('classes', 'teachers.teacherId', '=', 'classes.onlineTeacher')
+            ->select(
+                'teachers.teacherId',
+                'teachers.name as teacherName',
+                'classes.classId',
+                'classes.name as className',
+            )
+            ->where('teachers.teacherId', $teacherId)
+            ->get();
+        return $this->successTeacherRequest($teacherData);
+    }
+
+    public function getFreeTimeTeacher($classTime)
+    {
+        $teachers = Teachers::leftJoin('classes', 'teachers.teacherId', '=', 'classes.onlineTeacher')
+            ->select(
+                'teachers.teacherId', 
+                'teachers.name as teacherName'
+                )
+                ->distinct()
+                ->where('teachers.type', 'online')
+                ->where(function ($query) use ($classTime) {
+                    $query->where('classes.classTime', '!=', $classTime)
+                        ->orWhereNull('classes.classTime');
+                })
+                ->get();
+
+        return $this->successTeacherRequest($teachers);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -147,11 +179,12 @@ class TeacherController extends Controller
     {
         $validator = validator::make($this->request->all(), [
             'name' => 'required|string',
+            'userName' => 'string',
             'email' => 'required|string|unique:teachers',
             'password' => 'required|string',
             'activate' => 'required',
             'resignation' => 'required',
-            'talkSamId' => 'required|string',
+            'talkSamId' => 'string',
             'campusId' => 'required|string',
             'role' => 'string|required',
         ]);
@@ -182,6 +215,9 @@ class TeacherController extends Controller
             'role' => $this->request['role'],
             'memo' => $this->request['memo'],
         ];
+        if(!empty($this->request['userName'])){
+            $params['userName'] = $this->request['userName'];
+        }
         if ($this->request['role'] == 'Campus Manager') {
             $existCampusId = CampusManager::where('campusId', $this->request['campusId'])->get();
             if ($existCampusId->isNotEmpty()) {
@@ -199,6 +235,9 @@ class TeacherController extends Controller
                 'email' => $this->request['email'],
                 'password' => $this->request['password'],
             ];
+            if(!empty($this->request['userName'])){
+                $userParams['userName'] = $this->request['userName'];
+            }
             UserController::store($userParams);
             return $this->successTeacherRequest($newTeacherData);
         }

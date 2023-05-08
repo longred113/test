@@ -90,7 +90,6 @@ class ClassFeedbackController extends Controller
             'satisfaction' => $this->request['satisfaction'],
             'comment' => $this->request['comment'],
         ];
-        return $params;
         $newClassFeedback = new ClassFeedbackResource(ClassFeedbacks::create($params));
         return $this->successClassFeedback($newClassFeedback);
     }

@@ -17,15 +17,20 @@ class ClassResource extends JsonResource
         return [
             'classId' => $this->classId,
             'name' => $this->name,
+            'level' => $this->level,
             'numberOfStudent' => $this->numberOfStudent,
             'subject' => $this->subject,
             'onlineTeacher' => $this->onlineTeacher,
             'classday' => $this->classday,
             'classTimeSlot' => $this->classTimeSlot,
+            'classTime' => $this->classTime,
             'classStartDate' => $this->classStartDate,
+            'classEndDate' => $this->classEndDate,
+            'duration' => $this->duration,
             'status' => $this->status,
             'initialTextbook' => $this->initialTextbook,
             'typeOfClass' => $this->typeOfClass,
+            'unit' => $this->unit,
         ];
     }
 }

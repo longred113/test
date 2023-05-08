@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\Admin_Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ClassResource;
 use App\Models\Classes;
+use App\Models\ClassTimes;
 use App\Models\Teachers;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
@@ -50,27 +51,40 @@ class ClassController extends Controller
             'status' => 'string',
             'typeOfClass' => 'string|required',
             'initialTextbook' => 'string',
+            'level' => 'string|required',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         $classId = IdGenerator::generate(['table' => 'classes', 'trow' => 'classId', 'length' => 7, 'prefix' => 'CL']);
+        $classTimes []= $this->request['classday'] .'-'. $this->request['classTimeSlot'];
         $params = [
             'classId' => $classId,
             'name' => $this->request['name'],
+            'level' => $this->request['level'],
             'numberOfStudent' => $this->request['numberOfStudent'],
             // 'subject' => $this->request['subject'],
             'onlineTeacher' => $this->request['onlineTeacher'],
             'classday' => $this->request['classday'],
             'classTimeSlot' => $this->request['classTimeSlot'],
+            // 'classTime' => $classTime,
             'classStartDate' => $this->request['classStartDate'],
             'status' => $this->request['status'],
             'typeOfClass' => $this->request['typeOfClass'],
             'initialTextbook' => $this->request['initialTextbook'],
         ];
-        $newClass = new ClassResource(Classes::create($params));
-        return $this->successClassRequest($newClass);
+        if(!empty($this->request['duration'])){
+            $params['duration'] = $this->request['duration'];
+        }
+        // $newClass = new ClassResource(Classes::create($params));
+        $classTimeParams = [
+            'classId' => $classId,
+            'classTimes' => $classTimes,
+            'classStartDate' => $this->request['classStartDate'],
+        ];
+        ClassTimeController::store($classTimeParams);
+        // return $this->successClassRequest($newClass);
     }
 
     /**
@@ -104,6 +118,9 @@ class ClassController extends Controller
         $class = Classes::find($classId);
         if (empty($this->request['name'])) {
             $this->request['name'] = $class['name'];
+        }
+        if (empty($this->request['level'])) {
+            $this->request['level'] = $class['level'];
         }
         if (empty($this->request['numberOfStudent'])) {
             $this->request['numberOfStudent'] = $class['numberOfStudent'];
@@ -150,6 +167,7 @@ class ClassController extends Controller
 
         $params = [
             $class['name'] = $this->request['name'],
+            $class['level'] = $this->request['level'],
             $class['numberOfStudent'] = $this->request['numberOfStudent'],
             // $class['subject'] = $this->request['subject'],
             $class['onlineTeacher'] = $this->request['onlineTeacher'],
