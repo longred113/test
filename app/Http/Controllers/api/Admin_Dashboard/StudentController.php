@@ -297,21 +297,29 @@ class StudentController extends Controller
         return $this->successStudentRequest($students);
     }
 
-    // public function getStudentsWithForClassRegister()
-    // {
-    //     $validator = Validator::make($this->request->all(), [
-    //         'level' => 'string|required',
-    //         'product' => 'string|required',
-    //         'timeZone' => 'string|required',
-    //         'timeSlot' => 'string|required',
-    //     ]);
+    public function getStudentsWithForClassRegister()
+    {
+        $validator = Validator::make($this->request->all(), [
+            'level' => 'string|required',
+            'product' => 'string|required',
+            'timeZone' => 'string|required',
+            'day' => 'string|required',
+            'timeSlot' => 'string|required',
+        ]);
 
-    //     if ($validator->fails()) {
-    //         return $this->errorBadRequest($validator->getMessageBag()->toArray());
-    //     }
+        if ($validator->fails()) {
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        }
 
-    //     $studentsData = Students::join()
-    // }
+        $studentsData = Students::leftJoin('student_classes', 'students.studentId', '=', 'student_classes.studentId')
+        ->leftJoin('classes', 'student_classes.classId', '=', 'classes.classId')
+        ->leftJoin('class_times', 'classes.classId', '=', 'class_times.classId')
+        ->where('students.type', 'online')
+        ->where('classes.level', $this->request['level'])
+        ->where('classes.classday', $this->request['day'])
+        ->where('classes.classTimeSlot', $this->request['timeSlot'])
+        ->where('classes.timeZone', $this->request['timeZone']);
+    }
 
     /**
      * Store a newly created resource in storage.

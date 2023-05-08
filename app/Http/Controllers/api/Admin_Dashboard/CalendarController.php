@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\Admin_Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\StudentClasses;
 use Illuminate\Http\Request;
 
 class CalendarController extends Controller
@@ -15,6 +16,19 @@ class CalendarController extends Controller
     public function index()
     {
         //
+    }
+
+    public function getClassByStudent($studentId)
+    {
+        $studentClassesData = StudentClasses::join('classes', 'student_classes.classId', '=', 'classes.classId')
+            ->select(
+                'classes.classId',
+                'classes.name',
+            )
+            ->where('studentId', $studentId)
+            ->distinct()
+            ->get();
+        return $this->successStudentClassRequest($studentClassesData);
     }
 
     /**
