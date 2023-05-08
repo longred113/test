@@ -125,6 +125,7 @@ class GroupController extends Controller
                 if(!empty($this->request->groupName)){
                     $params['name'] = $this->request->groupName;
                     $group = TblGroups::where('groupId', $this->request->groupId)->update($params);
+                    GroupActivities::where('groupId', $this->request->groupId)->update(['groupName' => $this->request->groupName]);
                 }
     
                 if(!empty($this->request->matchedActivityId)){
@@ -139,7 +140,6 @@ class GroupController extends Controller
                     }
                     MatchedActivities::where('matchedActivityId', $this->request->matchedActivityId)->update($activityParams);
                     $groupActivityParams = [
-                        'groupName' => $this->request->groupName,
                         'matchedActivityName' => $this->request->matchedActivityName,
                     ];
                     GroupActivities::where('groupId', $this->request->groupId)
