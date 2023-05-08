@@ -97,6 +97,7 @@ class ProductController extends Controller
             // 'details' => 'required',
             // 'image' => 'image|mimes:jpg,png,jpeg,gif,svg|max:5048',
             'activate' => 'required',
+            'groupIds' => 'required|array',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
@@ -123,6 +124,11 @@ class ProductController extends Controller
             $params['startDate'] = $this->request['startDate'];
         }
         $newProducts = new ProductsResource(Products::create($params));
+        $productGroupParams = [
+            'productId' => $productId,
+            'groupIds' => $this->request['groupIds'],
+        ];
+        ProductGroupController::store($productGroupParams);
         return $this->successProductsRequest($newProducts);
     }
 

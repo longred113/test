@@ -43,24 +43,24 @@ class ProductGroupController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store()
+    public static function store($productGroupParams)
     {
-        $validator = Validator::make($this->request->all(), [
-            'productId' => 'string|required',
-            'groupIds' => 'required|array',
-        ]);
-        if ($validator->fails()) {
-            return $this->errorBadRequest($validator->getMessageBag()->toArray());
-        }
+        // $validator = Validator::make($this->request->all(), [
+        //     'productId' => 'string|required',
+        //     'groupIds' => 'required|array',
+        // ]);
+        // if ($validator->fails()) {
+        //     return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        // }
 
         try {
-            $productName = Products::where('productId', $this->request->productId)->first()->name;
-            foreach ($this->request->groupIds as $groupId) {
+            $productName = Products::where('productId', $productGroupParams['productId'])->first()->name;
+            foreach ($productGroupParams['groupIds'] as $groupId) {
                 $productGroupId = IdGenerator::generate(['table' => 'product_groups', 'trow' => 'productGroupId', 'length' => 7, 'prefix' => 'PG']);
                 $groupName = TblGroups::where('groupId', $groupId)->first()->name;
                 $params = [
                     'productGroupId' => $productGroupId,
-                    'productId' => $this->request->productId,
+                    'productId' => $productGroupParams['productId'],
                     'productName' => $productName,
                     'groupId' => $groupId,
                     'groupName' => $groupName,
@@ -70,7 +70,7 @@ class ProductGroupController extends Controller
         } catch (Exception $e) {
             return $e->getMessage();
         }
-        return $this->successProductGroupRequest($productGroup);
+        // return $this->successProductGroupRequest($productGroup);
     }
 
     /**
