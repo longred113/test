@@ -423,7 +423,7 @@ Route::prefix('admin-group-management')
         Route::get('/', [GroupController::class, 'index'])->name('index');
         Route::post('/create', [GroupController::class, 'store'])->name('store');
         Route::get('/{groupId}', [GroupController::class, 'show'])->name('show');
-        Route::put('/update/{groupId}', [GroupController::class, 'update'])->name('update');
+        Route::put('/update', [GroupController::class, 'update'])->name('update');
         Route::delete('/{groupId}', [GroupController::class, 'destroy'])->name('destroy');
     });
 

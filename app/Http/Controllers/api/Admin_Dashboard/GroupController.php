@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\Admin_Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\GroupActivities;
 use App\Models\Groups;
+use App\Models\MatchedActivities;
 use App\Models\TblGroups;
 use Exception;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
@@ -105,25 +106,52 @@ class GroupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update($groupId)
+    public function update()
     {
-        $group = TblGroups::where('groupId', $groupId)->first();
-        if (empty($group)) {
-            return $this->errorBadRequest('Group not found');
-        }
         $validator = Validator::make($this->request->all(),[
-            'name' => 'string',
+            'groupId' => 'string|required',
+            'groupName' => 'string',
+            'matchedActivityId' => 'string',
+            'matchedActivityName' => 'string',
+            'type' => 'string',
+            'time' => 'integer',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
-        $params = [
-            'name' => $this->request->name,
-        ];
-        $group->update($params);
+        try{
+            if(!empty($this->request->groupId)){
+                if(!empty($this->request->groupName)){
+                    $params['name'] = $this->request->groupName;
+                    $group = TblGroups::where('groupId', $this->request->groupId)->update($params);
+                }
+    
+                if(!empty($this->request->matchedActivityId)){
+                    if(!empty($this->request->matchedActivityName)){
+                        $activityParams['name'] = $this->request->matchedActivityName;
+                    }
+                    if(!empty($this->request->type)){
+                        $activityParams['type'] = $this->request->type;
+                    }
+                    if(!empty($this->request->time)){
+                        $activityParams['time'] = $this->request->time;
+                    }
+                    MatchedActivities::where('matchedActivityId', $this->request->matchedActivityId)->update($activityParams);
+                    $groupActivityParams = [
+                        'groupName' => $this->request->groupName,
+                        'matchedActivityName' => $this->request->matchedActivityName,
+                    ];
+                    GroupActivities::where('groupId', $this->request->groupId)
+                        ->where('matchedActivityId', $this->request->matchedActivityId)
+                        ->update($groupActivityParams);
+                }
+            }
+        }catch(Exception $e){
+            return $e->getMessage();
+        }
 
-        return $this->successGroupRequest($group);
+        return $this->successGroupRequest('updated successfully');
     }
 
     /**
