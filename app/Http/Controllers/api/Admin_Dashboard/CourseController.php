@@ -113,6 +113,12 @@ class CourseController extends Controller
      */
     public function destroy($courseId)
     {
-        //
+        try {
+            $course = Courses::where('courseId', $courseId)->first();
+            $course->delete();
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+        return $this->successCourseRequest($course);
     }
 }
