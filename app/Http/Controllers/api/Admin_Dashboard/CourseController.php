@@ -7,6 +7,7 @@ use App\Models\Courses;
 use Exception;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class CourseController extends Controller
@@ -26,7 +27,7 @@ class CourseController extends Controller
     public function index()
     {
         try {
-            $courses = Courses::all();
+            $courses = Courses::orderBy('level')->get();
         } catch (Exception $e) {
             return $e->getMessage();
         }
