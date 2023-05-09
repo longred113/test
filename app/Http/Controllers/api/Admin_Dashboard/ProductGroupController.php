@@ -30,7 +30,19 @@ class ProductGroupController extends Controller
     public function index()
     {
         try {
-            $productGroups = ProductGroups::all();
+            $productGroups = Products::leftJoin('product_groups', 'products.productId', '=', 'product_groups.productId')
+                ->leftJoin('group_activities', 'product_groups.groupId', '=', 'group_activities.groupId')
+                ->select(
+                    'products.productId',
+                    'products.name',
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",group_activities.groupId, group_activities.groupName, group_activities.matchedActivityId, group_activities.matchedActivityName)SEPARATOR ";") as `group_activities`'),
+                )
+                ->groupBy('products.productId')
+                ->get();
+            foreach ($productGroups as $product) {
+                $groupActivities = explode(';', $product->group_activities);
+            }
+            // $product
         } catch (Exception $e) {
             return $e->getMessage();
         }
@@ -65,7 +77,7 @@ class ProductGroupController extends Controller
                     'groupId' => $groupId,
                     'groupName' => $groupName,
                 ];
-                $productGroup [] = ProductGroups::create($params);
+                $productGroup[] = ProductGroups::create($params);
             }
         } catch (Exception $e) {
             return $e->getMessage();
@@ -84,15 +96,14 @@ class ProductGroupController extends Controller
         try {
             $product = Products::where('productId', $productId)->first();
             $product->group = ProductGroups::join('group_activities', 'product_groups.groupId', '=', 'group_activities.groupId')
-            ->where('productId', $productId)
-            ->select(
-                'group_activities.groupId',
-                'group_activities.groupName',
-                DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",group_activities.matchedActivityId, group_activities.matchedActivityName)) as activities')
-            )
-            ->groupBy('group_activities.groupId', 'group_activities.groupName')
-            ->get();
-
+                ->where('productId', $productId)
+                ->select(
+                    'group_activities.groupId',
+                    'group_activities.groupName',
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",group_activities.matchedActivityId, group_activities.matchedActivityName)) as activities')
+                )
+                ->groupBy('group_activities.groupId', 'group_activities.groupName')
+                ->get();
         } catch (Exception $e) {
             return $e->getMessage();
         }
@@ -108,33 +119,33 @@ class ProductGroupController extends Controller
      */
     public function update()
     {
-            $validator = Validator::make($this->request->all(), [
-                'productId' => 'string|required',
-                'groupIds' => 'required|array',
-            ]);
-            if ($validator->fails()) {
-                return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        $validator = Validator::make($this->request->all(), [
+            'productId' => 'string|required',
+            'groupIds' => 'required|array',
+        ]);
+        if ($validator->fails()) {
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        }
+
+        try {
+            $productName = Products::where('productId', $this->request->productId)->first()->name;
+            ProductGroups::where('productId', $this->request->productId)->delete();
+            foreach ($this->request->groupIds as $groupId) {
+                $productGroupId = IdGenerator::generate(['table' => 'product_groups', 'trow' => 'productGroupId', 'length' => 7, 'prefix' => 'PG']);
+                $groupName = TblGroups::where('groupId', $groupId)->first()->name;
+                $params = [
+                    'productGroupId' => $productGroupId,
+                    'productId' => $this->request->productId,
+                    'productName' => $productName,
+                    'groupId' => $groupId,
+                    'groupName' => $groupName,
+                ];
+                $productGroup[] = ProductGroups::create($params);
             }
-    
-            try {
-                $productName = Products::where('productId', $this->request->productId)->first()->name;
-                ProductGroups::where('productId', $this->request->productId)->delete();
-                foreach ($this->request->groupIds as $groupId) {
-                    $productGroupId = IdGenerator::generate(['table' => 'product_groups', 'trow' => 'productGroupId', 'length' => 7, 'prefix' => 'PG']);
-                    $groupName = TblGroups::where('groupId', $groupId)->first()->name;
-                    $params = [
-                        'productGroupId' => $productGroupId,
-                        'productId' => $this->request->productId,
-                        'productName' => $productName,
-                        'groupId' => $groupId,
-                        'groupName' => $groupName,
-                    ];
-                    $productGroup [] = ProductGroups::create($params);
-                }
-            } catch (Exception $e) {
-                return $e->getMessage();
-            }
-            return $this->successProductGroupRequest($productGroup);
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+        return $this->successProductGroupRequest($productGroup);
     }
 
     /**

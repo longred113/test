@@ -109,7 +109,7 @@ class GroupController extends Controller
     public function update()
     {
         $validator = Validator::make($this->request->all(),[
-            'groupId' => 'string|required',
+            'groupId' => 'string',
             'groupName' => 'string',
             'matchedActivityId' => 'string',
             'matchedActivityName' => 'string',
@@ -127,25 +127,23 @@ class GroupController extends Controller
                     $group = TblGroups::where('groupId', $this->request->groupId)->update($params);
                     GroupActivities::where('groupId', $this->request->groupId)->update(['groupName' => $this->request->groupName]);
                 }
-    
-                if(!empty($this->request->matchedActivityId)){
-                    if(!empty($this->request->matchedActivityName)){
-                        $activityParams['name'] = $this->request->matchedActivityName;
-                    }
-                    if(!empty($this->request->type)){
-                        $activityParams['type'] = $this->request->type;
-                    }
-                    if(!empty($this->request->time)){
-                        $activityParams['time'] = $this->request->time;
-                    }
-                    MatchedActivities::where('matchedActivityId', $this->request->matchedActivityId)->update($activityParams);
-                    $groupActivityParams = [
-                        'matchedActivityName' => $this->request->matchedActivityName,
-                    ];
-                    GroupActivities::where('groupId', $this->request->groupId)
-                        ->where('matchedActivityId', $this->request->matchedActivityId)
-                        ->update($groupActivityParams);
+            }
+            if(!empty($this->request->matchedActivityId)){
+                if(!empty($this->request->matchedActivityName)){
+                    $activityParams['name'] = $this->request->matchedActivityName;
                 }
+                if(!empty($this->request->type)){
+                    $activityParams['type'] = $this->request->type;
+                }
+                if(!empty($this->request->time)){
+                    $activityParams['time'] = $this->request->time;
+                }
+                MatchedActivities::where('matchedActivityId', $this->request->matchedActivityId)->update($activityParams);
+                $groupActivityParams = [
+                    'matchedActivityName' => $this->request->matchedActivityName,
+                ];
+                GroupActivities::where('matchedActivityId', $this->request->matchedActivityId)
+                    ->update($groupActivityParams);
             }
         }catch(Exception $e){
             return $e->getMessage();
