@@ -23,4 +23,13 @@ class Products extends Model
         'type',
         'activate',
     ];
+    public function productGroups()
+    {
+        return $this->hasMany(ProductGroups::class, 'product_id', 'id');
+    }
+
+    public function group_activities()
+    {
+        return $this->hasMany(GroupActivity::class);
+    }
 }

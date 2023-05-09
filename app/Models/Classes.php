@@ -28,5 +28,6 @@ class Classes extends Model
         'typeOfClass',
         'initialTextbook',
         'unit',
+        'expired',
     ];
 }

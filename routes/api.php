@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\api\Admin_Dashboard\AdminController;
+use App\Http\Controllers\api\Admin_Dashboard\CalendarController;
 use App\Http\Controllers\api\Admin_Dashboard\CampusController;
 use App\Http\Controllers\api\Admin_Dashboard\CampusManagerController;
 use App\Http\Controllers\api\Admin_Dashboard\ClassBoardController;
@@ -105,12 +106,13 @@ Route::prefix('admin-teacher-management')
         Route::get('/', [TeacherController::class, 'index'])->name('index');
         Route::get('/get-data-before-update', [TeacherController::class, 'getTeacherDataBeforeUpdate'])->name('getTeacherDataBeforeUpdate');
         Route::get('/all-online-teacher', [TeacherController::class, 'getAllOnlineTeacher'])->name('getAllOnlineTeacher');
+        // Route::get('/get-')
         Route::post('/create', [TeacherController::class, 'store'])->name('store');
         Route::get('/online-teacher', [TeacherController::class, 'showOnlineTeacher'])->name('showOnlineTeacher');
         Route::get('/{teacherId}', [TeacherController::class, 'show'])->name('show');
         Route::put('/update/{teacherId}', [TeacherController::class, 'update'])->name('update');
         Route::delete('/{teacherId}', [TeacherController::class, 'destroy'])->name('destroy');
-        Route::post('/', [TeacherController::class, 'multiDeleteTeacher'])->name('multiDeleteTeacher');
+        Route::post('/delete', [TeacherController::class, 'multiDeleteTeacher'])->name('multiDeleteTeacher');
     });
 
 Route::prefix('admin-package-management')
@@ -455,6 +457,13 @@ Route::prefix('admin-course-management')
         Route::get('/{courseId}', [CourseController::class, 'show'])->name('show');
         Route::put('/update/{courseId}', [CourseController::class, 'update'])->name('update');
         Route::delete('/{courseId}', [CourseController::class, 'destroy'])->name('destroy');
+    });
+
+Route::prefix('admin-calendar-management')
+    ->name('admin-calendar-management.')
+    ->group(function () {
+        Route::get('/class-time-line', [CalendarController::class, 'classCalendarTimeLine'])->name('classCalendarTimeLine');
+        Route::get('/class-time-line-by-date', [CalendarController::class, 'ClassTimeLineByDate'])->name('ClassTimeLineByDate');
     });
 //END ADMIN DASHBOARD
 
