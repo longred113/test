@@ -106,7 +106,7 @@ Route::prefix('admin-teacher-management')
         Route::get('/', [TeacherController::class, 'index'])->name('index');
         Route::get('/get-data-before-update', [TeacherController::class, 'getTeacherDataBeforeUpdate'])->name('getTeacherDataBeforeUpdate');
         Route::get('/all-online-teacher', [TeacherController::class, 'getAllOnlineTeacher'])->name('getAllOnlineTeacher');
-        // Route::get('/get-')
+        Route::post('/get-free-time-teacher', [TeacherController::class, 'getTeacherHaveFreeTime'])->name('getTeacherHaveFreeTime');
         Route::post('/create', [TeacherController::class, 'store'])->name('store');
         Route::get('/online-teacher', [TeacherController::class, 'showOnlineTeacher'])->name('showOnlineTeacher');
         Route::get('/{teacherId}', [TeacherController::class, 'show'])->name('show');
