@@ -109,8 +109,8 @@ class GroupController extends Controller
     public function update()
     {
         $validator = Validator::make($this->request->all(),[
-            'groupId' => 'string',
-            'groupName' => 'string',
+            // 'groupId' => 'string',
+            // 'groupName' => 'string',
             'matchedActivityId' => 'string',
             'matchedActivityName' => 'string',
             'type' => 'string',

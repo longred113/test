@@ -39,10 +39,11 @@ class ProductGroupController extends Controller
                 )
                 ->groupBy('products.productId')
                 ->get();
+            
             foreach ($productGroups as $product) {
+                $productId = $product->productId;
                 $groupActivities = explode(';', $product->group_activities);
             }
-            // $product
         } catch (Exception $e) {
             return $e->getMessage();
         }
