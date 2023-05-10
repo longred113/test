@@ -297,11 +297,11 @@ class StudentController extends Controller
         return $this->successStudentRequest($students);
     }
 
-    public function getStudentsWithForClassRegister()
+    public function getStudentForClassRegister()
     {
         $validator = Validator::make($this->request->all(), [
             'level' => 'string|required',
-            'product' => 'string|required',
+            'productId' => 'string|required',
             'timeZone' => 'string|required',
             'day' => 'string|required',
             'timeSlot' => 'string|required',
@@ -311,14 +311,34 @@ class StudentController extends Controller
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
-        $studentsData = Students::leftJoin('student_classes', 'students.studentId', '=', 'student_classes.studentId')
-        ->leftJoin('classes', 'student_classes.classId', '=', 'classes.classId')
-        ->leftJoin('class_times', 'classes.classId', '=', 'class_times.classId')
-        ->where('students.type', 'online')
-        ->where('classes.level', $this->request['level'])
-        ->where('classes.classday', $this->request['day'])
-        ->where('classes.classTimeSlot', $this->request['timeSlot'])
-        ->where('classes.timeZone', $this->request['timeZone']);
+        try {
+            $studentsData = Students::leftJoin('student_classes', 'students.studentId', '=', 'student_classes.studentId')
+            ->leftJoin('classes', 'student_classes.classId', '=', 'classes.classId')
+            ->leftJoin('class_times', 'classes.classId', '=', 'class_times.classId')
+            ->leftJoin('student_products', 'students.studentId', '=', 'student_products.studentId')
+            ->leftJoin('products', 'student_products.productId', '=', 'products.productId')
+            ->where('students.type', 'online')
+            ->select(
+                'students.studentId',
+                'students.name',
+                DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classId, classes.name)) as classes'),
+                DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",products.productId, products.name)) as products'),
+                'students.timeZone',
+                DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classday)) as classTime'),
+                DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classTimeSlot)) as classTimeSlot'),
+            )
+            ->where('products.level', $this->request['level'])
+            ->where('products.productId', $this->request['productId'])
+            ->where('students.timeZone', $this->request['timeZone'])
+            // ->where('classes.classday', $this->request['day'])
+            // ->where('classes.classTimeSlot', $this->request['timeSlot'])
+            ->groupBy('students.studentId')
+            ->get();
+        }catch(Exception $e){
+            return $e->getMessage();
+        }
+
+        return $this->successStudentRequest($studentsData);
     }
 
     /**

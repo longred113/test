@@ -320,4 +320,12 @@ class Controller extends BaseController
             'classTimeLineData' => $classTimeLineData,
         ],200);
     }
+    protected function successTeacherOffDateRequest($teacherOffDateData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'teacherOffDateData' => $teacherOffDateData,
+        ],200);
+    }
 }

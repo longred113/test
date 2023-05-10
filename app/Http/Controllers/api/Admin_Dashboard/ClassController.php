@@ -73,18 +73,19 @@ class ClassController extends Controller
             'status' => $this->request['status'],
             'typeOfClass' => $this->request['typeOfClass'],
             'initialTextbook' => $this->request['initialTextbook'],
+            'expired' => 0,
         ];
         if(!empty($this->request['duration'])){
             $params['duration'] = $this->request['duration'];
         }
-        // $newClass = new ClassResource(Classes::create($params));
+        $newClass = new ClassResource(Classes::create($params));
         $classTimeParams = [
             'classId' => $classId,
             'classTimes' => $classTimes,
             'classStartDate' => $this->request['classStartDate'],
         ];
         ClassTimeController::store($classTimeParams);
-        // return $this->successClassRequest($newClass);
+        return $this->successClassRequest($newClass);
     }
 
     /**
