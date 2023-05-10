@@ -10,9 +10,6 @@ use DateTime;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use stdClass;
-
-use function PHPSTORM_META\map;
 
 class CalendarController extends Controller
 {
@@ -160,34 +157,56 @@ class CalendarController extends Controller
                 ->where('classes.expired', 0)
                 ->get();
             $classTime = [
-                'MON' => null,
-                'TUE' => null,
-                'WED' => null,
-                'THU' => null,
-                'FRI' => null,
-                'SAT' => null,
-                'SUN' => null,
+                // 'MON' => [],
+                // 'TUE' => [],
+                // 'WED' => [],
+                // 'THU' => [],
+                // 'FRI' => [],
+                // 'SAT' => [],
+                // 'SUN' => [],
             ];
             foreach ($classData as $time) {
                 $timeSlot = $time['classTimeSlot'];
                 $className = $time['name'];
-                $mappedData = new stdClass();
-                $mappedData->className = $className;
-                $mappedData->timeSlot = $timeSlot;
-                $mappedData->teacherId = $time['onlineTeacher'];
-                $mappedData->teacherName = $time['teacherName'];
-                $mappedData->startTime = $time['startTime'];
-                $mappedData->endTime = $time['endTime'];
+                $mappedData = [
+                    'classId' => $time['classId'],
+                    'className' => $className,
+                    'timeSlot' => $timeSlot,
+                    'teacherId ' => $time['onlineTeacher'],
+                    'teacherName' => $time['teacherName'],
+                    'startTime' => $time['startTime'],
+                    'endTime' => $time['endTime'],
+                ];
+                
                 $day = $time['day'];
-
-                $classTime[$day][] = $mappedData; // Gán thời gian lớp học cho ngày tương ứng
+                if ($day == 'MON') {
+                    $classTime[$day][] = $mappedData;
+                }
+                if ($day == 'TUE') {
+                    $classTime[$day][] = $mappedData;
+                }
+                if ($day == 'WED') {
+                    $classTime[$day][] = $mappedData;
+                }
+                if ($day == 'THU') {
+                    $classTime[$day][] = $mappedData;
+                }
+                if ($day == 'FRI') {
+                    $classTime[$day][] = $mappedData;
+                }
+                if ($day == 'SAT') {
+                    $classTime[$day][] = $mappedData;
+                }
+                if ($day == 'SUN') {
+                    $classTime[$day][] = $mappedData;
+                }
+                // $classTime[][] = $mappedData; // Gán thời gian lớp học cho ngày tương ứng
             }
-            return $classTime;
         } catch (Exception $e) {
             return $e->getMessage();
         }
 
-        return $this->successClassTimeLineRequest($classData);
+        return $this->successClassTimeLineRequest($classTime);
     }
     /**
      * Store a newly created resource in storage.
