@@ -157,13 +157,13 @@ class CalendarController extends Controller
                 ->where('classes.expired', 0)
                 ->get();
             $classTime = [
-                // 'MON' => [],
-                // 'TUE' => [],
-                // 'WED' => [],
-                // 'THU' => [],
-                // 'FRI' => [],
-                // 'SAT' => [],
-                // 'SUN' => [],
+                'MON' => [],
+                'TUE' => [],
+                'WED' => [],
+                'THU' => [],
+                'FRI' => [],
+                'SAT' => [],
+                'SUN' => [],
             ];
             foreach ($classData as $time) {
                 $timeSlot = $time['classTimeSlot'];
@@ -179,28 +179,28 @@ class CalendarController extends Controller
                 ];
                 
                 $day = $time['day'];
-                if ($day == 'MON') {
-                    $classTime[$day][] = $mappedData;
-                }
-                if ($day == 'TUE') {
-                    $classTime[$day][] = $mappedData;
-                }
-                if ($day == 'WED') {
-                    $classTime[$day][] = $mappedData;
-                }
-                if ($day == 'THU') {
-                    $classTime[$day][] = $mappedData;
-                }
-                if ($day == 'FRI') {
-                    $classTime[$day][] = $mappedData;
-                }
-                if ($day == 'SAT') {
-                    $classTime[$day][] = $mappedData;
-                }
-                if ($day == 'SUN') {
-                    $classTime[$day][] = $mappedData;
-                }
-                // $classTime[][] = $mappedData; // Gán thời gian lớp học cho ngày tương ứng
+                // if ($day == 'MON') {
+                //     $classTime[$day][] = $mappedData;
+                // }
+                // if ($day == 'TUE') {
+                //     $classTime[$day][] = $mappedData;
+                // }
+                // if ($day == 'WED') {
+                //     $classTime[$day][] = $mappedData;
+                // }
+                // if ($day == 'THU') {
+                //     $classTime[$day][] = $mappedData;
+                // }
+                // if ($day == 'FRI') {
+                //     $classTime[$day][] = $mappedData;
+                // }
+                // if ($day == 'SAT') {
+                //     $classTime[$day][] = $mappedData;
+                // }
+                // if ($day == 'SUN') {
+                //     $classTime[$day][] = $mappedData;
+                // }
+                $classTime[$day][] = $mappedData; // Gán thời gian lớp học cho ngày tương ứng
             }
         } catch (Exception $e) {
             return $e->getMessage();
