@@ -12,6 +12,7 @@ use Error;
 use Exception;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Validator;
 use TypeError;
@@ -137,15 +138,55 @@ class TeacherController extends Controller
         return $this->successTeacherRequest($teachersData);
     }
 
-    public function getClassesOfTeacher($teacherId){
-        $teachersData = Teachers::join('classes', 'teachers.teacherId', '=', 'classes.onlineTeacher')
-            ->select(
-                'teachers.teacherId',
-                'teachers.name as teacherName',
-                'classes.classId',
-                'classes.name as className',
-            )
-            ->where('teachers.teacherId', $teacherId)->get();
+    public function getTeacherHaveFreeTime()
+    {
+        $validator = Validator::make($this->request->all(), [
+            'date' => 'required|date',
+            'classTime' => 'required|array',
+        ]);
+        if ($validator->fails()) {
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        }
+
+        try {
+            $teachersData = Teachers::leftJoin('classes', 'teachers.teacherId', '=', 'classes.onlineTeacher')
+                ->leftJoin('class_times', 'classes.classId', '=', 'class_times.classId')
+                ->leftJoin('teacher_off_dates', 'teachers.teacherId', '=', 'teacher_off_dates.teacherId')
+                ->leftJoin('class_time_slots', 'teacher_off_dates.classTimeSlotId', '=', 'class_time_slots.classTimeSlotId')
+                ->select(
+                    'teachers.teacherId',
+                    'teachers.name as teacherName',
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS("-",teacher_off_dates.day,class_time_slots.name)) as offTime'),
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS("-",class_times.day,class_times.classTimeSlot)) as classTime'),
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS("-",teacher_off_dates.date)) as offDate'),
+                )
+                ->groupBy('teachers.teacherId')
+                ->where('teachers.type', 'online')
+                // ->where(function($query){
+                //     $query->where('teacher_off_dates.day', '!=', $classTime[0])
+                //         ->orWhereNull('offTime');
+                // })
+                ->get();
+                // return $teachersData;
+            foreach ($teachersData as $key => $teacher) {
+                $offTimes = explode(',', $teacher['offTime']);
+                $classTime = explode(',', $teacher['classTime']);
+                $classTimes = $this->request['classTime'];
+                $offDates = explode(',', $teacher['offDate']);
+                foreach($classTimes as $time){
+                    // if(in_array($time, $offTime)){
+                    //     $teacher['offTime'] = str_replace($time, 'block', $teacher['offTime']);
+                    // }
+                    if ((in_array($time, $offTimes) && in_array($time, $offDates)) || in_array($time, $classTime)) {
+                        unset($teachersData[$key]);
+                        break;
+                    }
+                }
+            }
+            return $teachersData;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
         return $this->successClassRequest($teachersData);
     }
 
@@ -194,7 +235,7 @@ class TeacherController extends Controller
             'role' => $this->request['role'],
             'memo' => $this->request['memo'],
         ];
-        if(!empty($this->request['userName'])){
+        if (!empty($this->request['userName'])) {
             $params['userName'] = $this->request['userName'];
         }
         if ($this->request['role'] == 'Campus Manager') {
@@ -214,7 +255,7 @@ class TeacherController extends Controller
                 'email' => $this->request['email'],
                 'password' => $this->request['password'],
             ];
-            if(!empty($this->request['userName'])){
+            if (!empty($this->request['userName'])) {
                 $userParams['userName'] = $this->request['userName'];
             }
             UserController::store($userParams);
@@ -335,9 +376,9 @@ class TeacherController extends Controller
                 return $this->errorBadRequest($validator->getMessageBag()->toArray());
             }
 
-            if($this->request['email'] != $teacher['email']){
+            if ($this->request['email'] != $teacher['email']) {
                 $email = Teachers::where('email', $this->request['email'])->first();
-                if(!empty($email)){
+                if (!empty($email)) {
                     return $this->errorBadRequest('Email already exists');
                 }
             }

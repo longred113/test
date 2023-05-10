@@ -34,6 +34,7 @@ use App\Http\Controllers\api\Admin_Dashboard\StudentClassController;
 use App\Http\Controllers\api\Admin_Dashboard\StudentEnrollmentController;
 use App\Http\Controllers\api\Admin_Dashboard\StudentMatchedActivityController;
 use App\Http\Controllers\api\Admin_Dashboard\StudentProductController;
+use App\Http\Controllers\api\Admin_Dashboard\TeacherOffDateController;
 use App\Http\Controllers\api\Campus_Dashboard\OffStudentController;
 use App\Http\Controllers\api\Campus_Dashboard\OffTeachController;
 use App\Http\Controllers\api\Campus_Dashboard\EnrollmentController;
@@ -195,6 +196,7 @@ Route::prefix('admin-student-management')
         Route::get('/test/{studentId}', [StudentController::class, 'studentDetail'])->name('studentDetail');
         Route::get('/student-with-id/{studentId}', [StudentController::class, 'getStudentWithId'])->name('getStudentWithId');
         Route::get('/get-student-online', [StudentController::class, 'getStudentOnline'])->name('getStudentOnline');
+        Route::post('/get-student-for-class-register', [StudentController::class, 'getStudentForClassRegister'])->name('getStudentForClassRegister');
         Route::post('/create', [StudentController::class, 'store'])->name('store');
         Route::get('/{studentId}', [StudentController::class, 'show'])->name('show');
         Route::put('/update-enrollment-count/{studentId}', [StudentController::class, 'updateEnrollmentCount'])->name('updateEnrollmentCount');
@@ -464,6 +466,16 @@ Route::prefix('admin-calendar-management')
     ->group(function () {
         Route::get('/class-time-line', [CalendarController::class, 'classCalendarTimeLine'])->name('classCalendarTimeLine');
         Route::get('/class-time-line-by-date', [CalendarController::class, 'ClassTimeLineByDate'])->name('ClassTimeLineByDate');
+    });
+
+Route::prefix('admin-teacher-off-date-management')
+    ->name('admin-teacher-off-date-management.')
+    ->group(function () {
+        Route::get('/', [TeacherOffDateController::class, 'index'])->name('index');
+        Route::post('/create', [TeacherOffDateController::class, 'store'])->name('store');
+        Route::get('/{teacherOffDateId}', [TeacherOffDateController::class, 'show'])->name('show');
+        Route::put('/update/{teacherOffDateId}', [TeacherOffDateController::class, 'update'])->name('update');
+        Route::delete('/{teacherOffDateId}', [TeacherOffDateController::class, 'destroy'])->name('destroy');
     });
 //END ADMIN DASHBOARD
 

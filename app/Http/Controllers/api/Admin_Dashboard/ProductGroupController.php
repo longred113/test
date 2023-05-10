@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\Admin_Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\GroupActivities;
 use App\Models\MatchedActivities;
 use App\Models\ProductGroups;
 use App\Models\Products;
@@ -30,20 +31,31 @@ class ProductGroupController extends Controller
     public function index()
     {
         try {
-            $productGroups = Products::leftJoin('product_groups', 'products.productId', '=', 'product_groups.productId')
-                ->leftJoin('group_activities', 'product_groups.groupId', '=', 'group_activities.groupId')
+            $productGroups = Products::join('product_groups', 'products.productId', '=', 'product_groups.productId')
+                ->join('group_activities', 'product_groups.groupId', '=', 'group_activities.groupId')
                 ->select(
                     'products.productId',
                     'products.name',
-                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",group_activities.groupId, group_activities.groupName, group_activities.matchedActivityId, group_activities.matchedActivityName)SEPARATOR ";") as `group_activities`'),
-                )
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":", group_activities.groupId, group_activities.groupName) SEPARATOR "|") as `groups`'),
+                 )
                 ->groupBy('products.productId')
+                ->with('group_activities') // Eager load the group_activities relationship
                 ->get();
             
             foreach ($productGroups as $product) {
                 $productId = $product->productId;
-                $groupActivities = explode(';', $product->group_activities);
+                $groups = explode(',', $product->groups);
+                foreach($groups as $group){
+                    $group = explode(':', $group);
+                    $groupActivities[] = [
+                        'productId' => $productId,
+                        'groupId' => $group[0],
+                        'groupName' => $group[1],
+                        'activities' => GroupActivities::where('groupId', $group[0])->get(),
+                    ];
+                }
             }
+            return($groupActivities);
         } catch (Exception $e) {
             return $e->getMessage();
         }
