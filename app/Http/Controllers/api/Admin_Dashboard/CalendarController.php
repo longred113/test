@@ -9,6 +9,7 @@ use DateInterval;
 use DateTime;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class CalendarController extends Controller
@@ -143,70 +144,78 @@ class CalendarController extends Controller
                 ->join('teachers', 'classes.onlineTeacher', '=', 'teachers.teacherId')
                 ->leftJoin('class_time_slots', 'class_times.classTimeSlot', '=', 'class_time_slots.name')
                 ->select(
-                    'classes.classId',
-                    'classes.name',
-                    'classes.classStartDate',
-                    'class_times.classEndDate',
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classId,classes.name)) as Class'),
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_times.day)) as day'),
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.onlineTeacher,teachers.name)) as teacher'),
+                    // DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS("->",classes.classStartDate, class_times.classEndDate)) as Date'),
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_time_slots.classStart)) as startTime'),
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_time_slots.classEnd)) as endTime'),
+                    // DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS("-",class_times.classTimeSlot)) as classTimeSlot'),
+
+                    // 'classes.classStartDate',
+                    // 'class_times.classEndDate',
                     'class_times.classTimeSlot',
-                    'class_times.day',
-                    'classes.onlineTeacher',
-                    'teachers.name as teacherName',
-                    'class_time_slots.classStart as startTime',
-                    'class_time_slots.classEnd as endTime'
+                    // 'class_times.day',
+                    // 'classes.onlineTeacher',
+                    // 'teachers.name as teacherName',
+                    // 'class_time_slots.classStart as startTime',
+                    // 'class_time_slots.classEnd as endTime'
                 )
                 ->where('classes.expired', 0)
+                ->groupBy('class_times.classTimeSlot')
                 ->get();
-            $classTime = [
-                'MON' => [],
-                'TUE' => [],
-                'WED' => [],
-                'THU' => [],
-                'FRI' => [],
-                'SAT' => [],
-                'SUN' => [],
-            ];
-            foreach ($classData as $time) {
-                $timeSlot = $time['classTimeSlot'];
-                $className = $time['name'];
-                $mappedData = [
-                    'classId' => $time['classId'],
-                    'className' => $className,
-                    'timeSlot' => $timeSlot,
-                    'teacherId ' => $time['onlineTeacher'],
-                    'teacherName' => $time['teacherName'],
-                    'startTime' => $time['startTime'],
-                    'endTime' => $time['endTime'],
-                ];
+            // return $classData;
+            // $classTime = [
+            //     'MON' => [],
+            //     'TUE' => [],
+            //     'WED' => [],
+            //     'THU' => [],
+            //     'FRI' => [],
+            //     'SAT' => [],
+            //     'SUN' => [],
+            // ];
+            // foreach ($classData as $time) {
+            //     $timeSlot = $time['classTimeSlot'];
+            //     $className = $time['name'];
+            //     $mappedData = [
+            //         'classId' => $time['classId'],
+            //         'className' => $className,
+            //         'timeSlot' => $timeSlot,
+            //         'teacherId ' => $time['onlineTeacher'],
+            //         'teacherName' => $time['teacherName'],
+            //         'startTime' => $time['startTime'],
+            //         'endTime' => $time['endTime'],
+            //     ];
                 
-                $day = $time['day'];
-                // if ($day == 'MON') {
-                //     $classTime[$day][] = $mappedData;
-                // }
-                // if ($day == 'TUE') {
-                //     $classTime[$day][] = $mappedData;
-                // }
-                // if ($day == 'WED') {
-                //     $classTime[$day][] = $mappedData;
-                // }
-                // if ($day == 'THU') {
-                //     $classTime[$day][] = $mappedData;
-                // }
-                // if ($day == 'FRI') {
-                //     $classTime[$day][] = $mappedData;
-                // }
-                // if ($day == 'SAT') {
-                //     $classTime[$day][] = $mappedData;
-                // }
-                // if ($day == 'SUN') {
-                //     $classTime[$day][] = $mappedData;
-                // }
-                $classTime[$day][] = $mappedData; // Gán thời gian lớp học cho ngày tương ứng
-            }
+            //     $day = $time['day'];
+            //     if ($day == 'MON') {
+            //         $classTime[$day][] = $mappedData;
+            //     }
+            //     if ($day == 'TUE') {
+            //         $classTime[$day][] = $mappedData;
+            //     }
+            //     if ($day == 'WED') {
+            //         $classTime[$day][] = $mappedData;
+            //     }
+            //     if ($day == 'THU') {
+            //         $classTime[$day][] = $mappedData;
+            //     }
+            //     if ($day == 'FRI') {
+            //         $classTime[$day][] = $mappedData;
+            //     }
+            //     if ($day == 'SAT') {
+            //         $classTime[$day][] = $mappedData;
+            //     }
+            //     if ($day == 'SUN') {
+            //         $classTime[$day][] = $mappedData;
+            //     }
+            //     $classTime[$day][] = $mappedData; // Gán thời gian lớp học cho ngày tương ứng
+            // }
         } catch (Exception $e) {
             return $e->getMessage();
         }
 
-        return $this->successClassTimeLineRequest($classTime);
+        return $this->successClassTimeLineRequest($classData);
     }
     /**
      * Store a newly created resource in storage.
