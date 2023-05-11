@@ -12,6 +12,7 @@ use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Exception;
 use Facade\Ignition\Support\Packagist\Package;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -29,7 +30,15 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $data = ProductsResource::collection(Products::all());
+        $data = Products::leftJoin('product_groups', 'products.productId', '=', 'product_groups.productId')
+            ->leftJoin('group_activities', 'product_groups.groupId', '=', 'group_activities.groupId')
+            ->select(
+                'products.productId',
+                'products.name',
+                DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":", group_activities.groupId, group_activities.groupName) SEPARATOR ",") as `groups`'),
+            )
+            ->groupBy('products.productId')
+            ->get();
         return $this->successProductsRequest($data);
     }
 
@@ -115,13 +124,13 @@ class ProductController extends Controller
             // 'image' => $image_path,
             'activate' => $this->request['activate'],
         ];
-        if(!empty($this->request['duration'])){
+        if (!empty($this->request['duration'])) {
             $params['duration'] = $this->request['duration'];
         }
-        if(!empty($this->request['type'])){
+        if (!empty($this->request['type'])) {
             $params['type'] = $this->request['type'];
         }
-        if(!empty($this->request['startDate'])){
+        if (!empty($this->request['startDate'])) {
             $params['startDate'] = $this->request['startDate'];
         }
         $newProducts = new ProductsResource(Products::create($params));
