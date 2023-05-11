@@ -82,13 +82,21 @@ class ProductController extends Controller
             //     ->get();
             $products = Products::leftJoin('product_groups', 'products.productId', '=', 'product_groups.productId')
                 ->leftJoin('group_activities', 'product_groups.groupId', '=', 'group_activities.groupId')
+                ->leftJoin('product_matched_activities', 'products.productId', '=', 'product_matched_activities.productId')
                 ->select(
                     'products.productId',
                     'products.name',
                     DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":", group_activities.groupId, group_activities.groupName) SEPARATOR ",") as `groups`'),
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":", group_activities.matchedActivityId, group_activities.matchedActivityName)) as `groupMatchedActivities`'),
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":", product_matched_activities.matchedActivityId, product_matched_activities.matchedActivityName)) as `oldMatchedActivities`'),
                 )
                 ->groupBy('products.productId')
                 ->get();
+            foreach ($products as $product) {
+                $product->groups = explode(',', $product->groups);
+                $product->groupMatchedActivities = explode(',', $product->groupMatchedActivities);
+                $product->oldMatchedActivities = explode(',', $product->oldMatchedActivities);
+            }
         } catch (Exception $e) {
             return $e->getMessage();
         }
