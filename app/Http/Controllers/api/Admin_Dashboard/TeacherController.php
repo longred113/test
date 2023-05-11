@@ -167,7 +167,6 @@ class TeacherController extends Controller
                 //         ->orWhereNull('offTime');
                 // })
                 ->get();
-                return $teachersData;
             foreach ($teachersData as $key => $teacher) {
                 $offTimes = explode(',', $teacher['offTime']);
                 $classTime = explode(',', $teacher['classTime']);
@@ -183,7 +182,6 @@ class TeacherController extends Controller
                     }
                 }
             }
-            return $teachersData;
         } catch (Exception $e) {
             return $e->getMessage();
         }
