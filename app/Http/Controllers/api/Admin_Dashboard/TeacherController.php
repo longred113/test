@@ -167,7 +167,7 @@ class TeacherController extends Controller
                 //         ->orWhereNull('offTime');
                 // })
                 ->get();
-                // return $teachersData;
+                return $teachersData;
             foreach ($teachersData as $key => $teacher) {
                 $offTimes = explode(',', $teacher['offTime']);
                 $classTime = explode(',', $teacher['classTime']);
