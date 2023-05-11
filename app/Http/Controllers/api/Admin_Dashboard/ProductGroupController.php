@@ -118,31 +118,62 @@ class ProductGroupController extends Controller
     {
         $validator = Validator::make($this->request->all(), [
             'productId' => 'string|required',
-            'groupIds' => 'required|array',
+            'name' => 'string',
+            'activate' => 'integer',
+            'type' => 'string',
+            'groupIds' => 'array',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
         try {
-            $productName = Products::where('productId', $this->request->productId)->first()->name;
-            ProductGroups::where('productId', $this->request->productId)->delete();
-            foreach ($this->request->groupIds as $groupId) {
-                $productGroupId = IdGenerator::generate(['table' => 'product_groups', 'trow' => 'productGroupId', 'length' => 7, 'prefix' => 'PG']);
-                $groupName = TblGroups::where('groupId', $groupId)->first()->name;
-                $params = [
-                    'productGroupId' => $productGroupId,
-                    'productId' => $this->request->productId,
-                    'productName' => $productName,
-                    'groupId' => $groupId,
-                    'groupName' => $groupName,
-                ];
-                $productGroup[] = ProductGroups::create($params);
+            if(!empty($this->request->name)) {
+                $productParams['name'] = $this->request->name;
+            }
+            if(!is_null($this->request->activate)) {
+                $productParams['activate'] = $this->request->activate;
+            }
+            if(!empty($this->request->type)) {
+                $productParams['type'] = $this->request->type;
+            }
+            if(!empty($productParams)) {
+                $product = Products::where('productId', $this->request->productId)->update($productParams);
+                if(!empty($productParams['name'])){
+                    ProductGroups::where('productId', $this->request->productId)->update(['productName' => $this->request->name]);
+                }
+            }
+            if(!empty($this->request->groupIds)) {
+                $productName = Products::where('productId', $this->request->productId)->first()->name;
+                ProductGroups::where('productId', $this->request->productId)->delete();
+                foreach ($this->request->groupIds as $groupId) {
+                    $productGroupId = IdGenerator::generate(['table' => 'product_groups', 'trow' => 'productGroupId', 'length' => 7, 'prefix' => 'PG']);
+                    $groupName = TblGroups::where('groupId', $groupId)->first()->name;
+                    $params = [
+                        'productGroupId' => $productGroupId,
+                        'productId' => $this->request->productId,
+                        'productName' => $productName,
+                        'groupId' => $groupId,
+                        'groupName' => $groupName,
+                    ];
+                    $productGroup[] = ProductGroups::create($params);
+                }
             }
         } catch (Exception $e) {
             return $e->getMessage();
         }
-        return $this->successProductGroupRequest($productGroup);
+        if(!empty($product) && !empty($productGroup)) {
+            return $this->successProductGroupRequest('Update product and product group success');
+        }
+        elseif(!empty($product) && empty($productGroup)) {
+            return $this->successProductGroupRequest('Update product success');
+        }
+        elseif(empty($product) && !empty($productGroup)) {
+            return $this->successProductGroupRequest('Update product group success');
+        }
+        else {
+            return $this->successProductGroupRequest('Nothing to update');
+        }
     }
 
     /**
