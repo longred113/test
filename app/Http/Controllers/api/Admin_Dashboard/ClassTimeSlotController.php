@@ -34,6 +34,16 @@ class ClassTimeSlotController extends Controller
         return $this->successClassTimeSlotRequest($classTimeSlotData);
     }
 
+    public function getByName($name)
+    {
+        try{
+            $classTimeSlotData = ClassTimeSlots::where('name', $name)->first();
+        }catch(Exception $e){
+            return $e->getMessage();
+        }
+        return $this->successClassTimeSlotRequest($classTimeSlotData);
+    }
+
     /**
      * Store a newly created resource in storage.
      *

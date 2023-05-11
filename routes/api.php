@@ -415,6 +415,7 @@ Route::prefix('admin-class-time-slot-management')
     ->name('admin-class-time-slot-management.')
     ->group(function () {
         Route::get('/', [ClassTimeSlotController::class, 'index'])->name('index');
+        Route::get('/get-by-name/{name}', [ClassTimeSlotController::class, 'getByName'])->name('getByName');
         Route::post('/create', [ClassTimeSlotController::class, 'store'])->name('store');
         Route::get('/{classTimeSlotId}', [ClassTimeSlotController::class, 'show'])->name('show');
         Route::put('/update/{classTimeSlotId}', [ClassTimeSlotController::class, 'update'])->name('update');
