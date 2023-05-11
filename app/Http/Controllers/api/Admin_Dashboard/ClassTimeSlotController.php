@@ -43,7 +43,7 @@ class ClassTimeSlotController extends Controller
     public function store()
     {
         $validator = Validator::make($this->request->all(), [
-            'name' => 'string|required',
+            'name' => 'string|required|unique:name',
             'classStart' => 'string|required',
             'classEnd' => 'string|required',
         ]);
