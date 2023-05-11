@@ -177,8 +177,9 @@ class TeacherController extends Controller
                     //     $teacher['offTime'] = str_replace($time, 'block', $teacher['offTime']);
                     // }
                     if ((in_array($time, $offTimes) && in_array($time, $offDates)) || in_array($time, $classTime)) {
-                        unset($teachersData[$key]);
-                        break;
+                        // unset($teachersData[$key]);
+                        // break;
+                        continue 2;
                     }
                 }
             }
