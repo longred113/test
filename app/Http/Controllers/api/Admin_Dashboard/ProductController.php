@@ -67,16 +67,25 @@ class ProductController extends Controller
     public function getProductAndMatchActivity()
     {
         try {
-            $products = Products::leftJoin('product_packages', 'products.productId', '=', 'product_packages.productId')
-                ->leftJoin('packages', 'product_packages.packageId', '=', 'packages.packageId')
-                ->leftJoin('product_matched_activities', 'products.productId', '=', 'product_matched_activities.productId')
-                ->selectRaw(
-                    'products.productId,
-                    products.name,
-                    GROUP_CONCAT(DISTINCT CONCAT_WS(":",packages.packageId,packages.name )) as packages,
-                    MAX(products.level) as level,
-                    products.activate,
-                    GROUP_CONCAT(DISTINCT CONCAT_WS(":", product_matched_activities.matchedActivityId, product_matched_activities.matchedActivityName)) as matchedActivities'
+            // $products = Products::leftJoin('product_packages', 'products.productId', '=', 'product_packages.productId')
+            //     ->leftJoin('packages', 'product_packages.packageId', '=', 'packages.packageId')
+            //     ->leftJoin('product_matched_activities', 'products.productId', '=', 'product_matched_activities.productId')
+            //     ->selectRaw(
+            //         'products.productId,
+            //         products.name,
+            //         GROUP_CONCAT(DISTINCT CONCAT_WS(":",packages.packageId,packages.name )) as packages,
+            //         MAX(products.level) as level,
+            //         products.activate,
+            //         GROUP_CONCAT(DISTINCT CONCAT_WS(":", product_matched_activities.matchedActivityId, product_matched_activities.matchedActivityName)) as matchedActivities'
+            //     )
+            //     ->groupBy('products.productId')
+            //     ->get();
+            $products = Products::leftJoin('product_groups', 'products.productId', '=', 'product_groups.productId')
+                ->leftJoin('group_activities', 'product_groups.groupId', '=', 'group_activities.groupId')
+                ->select(
+                    'products.productId',
+                    'products.name',
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":", group_activities.groupId, group_activities.groupName) SEPARATOR ",") as `groups`'),
                 )
                 ->groupBy('products.productId')
                 ->get();
