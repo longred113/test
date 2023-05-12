@@ -162,31 +162,49 @@ class TeacherController extends Controller
                 )
                 ->groupBy('teachers.teacherId')
                 ->where('teachers.type', 'online')
-                // ->where(function($query){
-                //     $query->where('teacher_off_dates.day', '!=', $classTime[0])
-                //         ->orWhereNull('offTime');
-                // })
                 ->get();
-            foreach ($teachersData as $key => $teacher) {
-                $offTimes = explode(',', $teacher['offTime']);
-                $classTime = explode(',', $teacher['classTime']);
-                $classTimes = $this->request['classTime'];
-                $offDates = explode(',', $teacher['offDate']);
-                foreach($classTimes as $time){
-                    // if(in_array($time, $offTime)){
-                    //     $teacher['offTime'] = str_replace($time, 'block', $teacher['offTime']);
-                    // }
-                    if ((in_array($time, $offTimes) && in_array($time, $offDates)) || in_array($time, $classTime)) {
-                        // unset($teachersData[$key]);
-                        // break;
-                        continue 2;
-                    }
+            $classTimes = $this->request['classTime'];
+            $date[] = $this->request['date'];
+            foreach ($classTimes as $time) {
+                $classTimeSlot = $time['classTimeSlot'];
+                $days = $time['day'];
+
+                foreach($days as $day){
+                    $formatted = $day . "-" . $classTimeSlot;
+                    $classTimeResult[] = $formatted;
                 }
             }
+
+            $filteredTeachersData = collect([]);
+
+            foreach ($teachersData as $key => $teacher) {
+                $classTime = explode(',', $teacher['classTime']);
+                $offTimes = explode(',', $teacher['offTime']);
+                $offDates = explode(',', $teacher['offDate']);
+
+                $shouldExclude = false;
+
+                foreach($classTimeResult as $result){
+                    if ((in_array($result, $offTimes) && in_array($date, $offDates)) || in_array($result, $classTime)) {
+                        // unset($teachersData[$key]);
+                        // break;
+                        $shouldExclude = true;
+                        break;
+                    }
+                    // if(in_array($result, $offDates)){
+                    //     $shouldExclude = true;
+                    //     break;
+                    // }
+                }
+                if (!$shouldExclude && !in_array($date, $offDates)) {
+                    $filteredTeachersData->push($teacher);
+                }
+            }
+            $teachersDataOutput = $filteredTeachersData;
         } catch (Exception $e) {
             return $e->getMessage();
         }
-        return $this->successClassRequest($teachersData);
+        return $this->successClassRequest($teachersDataOutput);
     }
 
     /**
