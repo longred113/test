@@ -299,7 +299,7 @@ class StudentController extends Controller
     {
         $validator = Validator::make($this->request->all(), [
             'level' => 'string|required',
-            'productId' => 'string|required',
+            'productIds' => 'array|required',
             'timeZone' => 'string|required',
             'classTime' => 'array|required',
             // 'day' => 'string|required',
@@ -353,13 +353,13 @@ class StudentController extends Controller
             $filteredTeachersData = collect([]);
 
             foreach ($studentsData as $student) {
-                $productId[] = $this->request['productId'];
+                $productIds = $this->request['productIds'];
                 $classProducts = explode(',', $student->classProducts);
                 $classTime = explode(',', $student->classTime);
 
                 $shouldExclude = false;
                 foreach ($classProducts as $product) {
-                    if (in_array($product, $productId)) {
+                    if (in_array($product, $productIds)) {
                         $shouldExclude = true;
                     }
                 }
