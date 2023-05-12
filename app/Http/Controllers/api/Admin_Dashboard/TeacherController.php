@@ -190,14 +190,12 @@ class TeacherController extends Controller
                 $shouldExclude = false;
                 foreach ($classTimeResults as $result) {
                     if (in_array($result, $classTime)) {
-                        var_dump(11);
                         $shouldExclude = true;
                         break;
                     }
                 }
                 foreach ($offDateResults as $result) {
                     if (in_array($result, $offTimes)) {
-                        var_dump(22);
                         $shouldExclude = true;
                         break;
                     }
@@ -210,7 +208,7 @@ class TeacherController extends Controller
         } catch (Exception $e) {
             return $e->getMessage();
         }
-        return $this->successClassRequest($teachersDataOutput);
+        return $this->successTeacherRequest($teachersDataOutput);
     }
 
     /**
