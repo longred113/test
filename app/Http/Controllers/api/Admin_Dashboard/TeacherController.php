@@ -156,7 +156,7 @@ class TeacherController extends Controller
                 ->select(
                     'teachers.teacherId',
                     'teachers.name as teacherName',
-                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS("-",teacher_off_dates.day,class_time_slots.name)) as offTime'),
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS("-",teacher_off_dates.date,teacher_off_dates.day,class_time_slots.name)) as offTime'),
                     DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS("-",class_times.day,class_times.classTimeSlot)) as classTime'),
                     DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS("-",teacher_off_dates.date)) as offDate'),
                 )
@@ -169,34 +169,40 @@ class TeacherController extends Controller
                 $classTimeSlot = $time['classTimeSlot'];
                 $days = $time['day'];
 
-                foreach($days as $day){
+                foreach ($days as $day) {
                     $formatted = $day . "-" . $classTimeSlot;
-                    $classTimeResult[] = $formatted;
+                    $classTimeResults[] = $formatted;
                 }
+            }
+            foreach ($classTimeResults as $classTimeResult) {
+                $offDateFormat = $this->request['date'] . "-" . $classTimeResult;
+                $offDateResults[] = $offDateFormat;
             }
 
             $filteredTeachersData = collect([]);
 
-            foreach ($teachersData as $key => $teacher) {
+            // return $teachersData;
+            foreach ($teachersData as $teacher) {
                 $classTime = explode(',', $teacher['classTime']);
                 $offTimes = explode(',', $teacher['offTime']);
                 $offDates = explode(',', $teacher['offDate']);
 
                 $shouldExclude = false;
-
-                foreach($classTimeResult as $result){
-                    if ((in_array($result, $offTimes) && in_array($date, $offDates)) || in_array($result, $classTime)) {
-                        // unset($teachersData[$key]);
-                        // break;
+                foreach ($classTimeResults as $result) {
+                    if (in_array($result, $classTime)) {
+                        var_dump(11);
                         $shouldExclude = true;
                         break;
                     }
-                    // if(in_array($result, $offDates)){
-                    //     $shouldExclude = true;
-                    //     break;
-                    // }
                 }
-                if (!$shouldExclude && !in_array($date, $offDates)) {
+                foreach ($offDateResults as $result) {
+                    if (in_array($result, $offTimes)) {
+                        var_dump(22);
+                        $shouldExclude = true;
+                        break;
+                    }
+                }
+                if (!$shouldExclude) {
                     $filteredTeachersData->push($teacher);
                 }
             }
