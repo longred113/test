@@ -86,6 +86,7 @@ class ProductController extends Controller
                 ->select(
                     'products.productId',
                     'products.name',
+                    'products.level',
                     DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":", product_groups.groupId, product_groups.groupName) SEPARATOR ",") as `groups`'),
                     DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":", group_activities.matchedActivityId, group_activities.matchedActivityName)) as `groupMatchedActivities`'),
                     DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":", product_matched_activities.matchedActivityId, product_matched_activities.matchedActivityName)) as `matchedActivities`'),
