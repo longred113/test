@@ -88,14 +88,13 @@ class ProductController extends Controller
                     'products.name',
                     DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":", product_groups.groupId, product_groups.groupName) SEPARATOR ",") as `groups`'),
                     DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":", group_activities.matchedActivityId, group_activities.matchedActivityName)) as `groupMatchedActivities`'),
-                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":", product_matched_activities.matchedActivityId, product_matched_activities.matchedActivityName)) as `oldMatchedActivities`'),
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":", product_matched_activities.matchedActivityId, product_matched_activities.matchedActivityName)) as `matchedActivities`'),
                 )
                 ->groupBy('products.productId')
                 ->get();
             foreach ($products as $product) {
                 $product->groups = explode(',', $product->groups);
                 $product->groupMatchedActivities = explode(',', $product->groupMatchedActivities);
-                $product->oldMatchedActivities = explode(',', $product->oldMatchedActivities);
             }
         } catch (Exception $e) {
             return $e->getMessage();
