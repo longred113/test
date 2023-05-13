@@ -118,6 +118,7 @@ class ProductGroupController extends Controller
     {
         $validator = Validator::make($this->request->all(), [
             'productId' => 'string|required',
+            'level' => 'string',
             'name' => 'string',
             'activate' => 'integer',
             'type' => 'string',
@@ -128,6 +129,9 @@ class ProductGroupController extends Controller
         }
 
         try {
+            if(!empty($this->request->level)) {
+                $productParams['level'] = $this->request->level;
+            }
             if(!empty($this->request->name)) {
                 $productParams['name'] = $this->request->name;
             }
