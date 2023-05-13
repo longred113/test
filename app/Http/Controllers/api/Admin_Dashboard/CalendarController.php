@@ -7,6 +7,7 @@ use App\Models\Classes;
 use App\Models\StudentClasses;
 use DateInterval;
 use DateTime;
+use DateTimeZone;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -27,9 +28,34 @@ class CalendarController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function getTimeZone()
     {
-        //
+        $timezones = timezone_identifiers_list();
+        $selectedTimezones = array(
+            'Asia/Ho_Chi_Minh',
+            'Asia/Seoul',
+            'Asia/Tokyo',
+            'Asia/Manila',
+            'America/Toronto'
+        );
+        foreach ($selectedTimezones as $timezone) {
+            $timezoneObj = new DateTimeZone($timezone);
+            $currentTime = new DateTime('now', $timezoneObj);
+
+            $offset = $timezoneObj->getOffset($currentTime) / 3600; // Chuyển đổi sang đơn vị giờ
+
+            $timezoneFormatted = 'GMT';
+            if ($offset >= 0) {
+                $timezoneFormatted .= '+';
+            } else {
+                $timezoneFormatted .= '-';
+                $offset *= -1;
+            }
+            $timezoneFormatted .= $offset;
+
+            $result[] =  $timezoneFormatted . ' ' . $timezone;
+        }
+        return($result);
     }
 
     public function getClassByStudent($studentId)
