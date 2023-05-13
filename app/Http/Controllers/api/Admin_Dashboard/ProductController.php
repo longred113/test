@@ -96,6 +96,30 @@ class ProductController extends Controller
             foreach ($products as $product) {
                 $product->groups = explode(',', $product->groups);
                 $product->groupMatchedActivities = explode(',', $product->groupMatchedActivities);
+                $groupList = [];
+                $groupMatchedActivityList = [];
+                foreach ($product->groups as $group) {
+                    $prGroup = explode(':', $group);
+                    if (isset($group[1])) {
+                        $productGroup = [
+                            'groupId' => $prGroup[0],
+                            'groupName' => $prGroup[1],
+                        ];
+                        $groupList[] = $productGroup;
+                    }
+                }
+                $product->groups = $groupList;
+                foreach ($product->groupMatchedActivities as $groupMatchedActivity) {
+                    $prGroupMatchedActivity = explode(':', $groupMatchedActivity);
+                    if (isset($groupMatchedActivity[1])) {
+                        $productGroupMatchedActivity = [
+                            'matchedActivityId' => $prGroupMatchedActivity[0],
+                            'matchedActivityName' => $prGroupMatchedActivity[1],
+                        ];
+                        $groupMatchedActivityList[] = $productGroupMatchedActivity;
+                    }
+                }
+                $product->groupMatchedActivities = $groupMatchedActivityList;
             }
         } catch (Exception $e) {
             return $e->getMessage();
