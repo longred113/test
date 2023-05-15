@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\Admin_Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\ClassTimes;
 use App\Models\ClassTimeSlots;
 use Carbon\Carbon;
 use Exception;
@@ -98,25 +99,18 @@ class ClassTimeSlotController extends Controller
     public function update($classTimeSlotId)
     {
         $classTimeSlotData = ClassTimeSlots::where('classTimeSlotId', $classTimeSlotId)->first();
-        if(empty($this->request->name)){
-            $this->request['name'] = $classTimeSlotData->name;
-        }
-        if(empty($this->request->classStart)){
-            $this->request['classStart'] = $classTimeSlotData->classStart;
-        }
-        if(empty($this->request->classEnd)){
-            $this->request['classEnd'] = $classTimeSlotData->classEnd;
-        }
+        $oldName = $classTimeSlotData->name;
         $validator = Validator::make($this->request->all(), [
-            'name' => 'string|required',
-            'classStart' => 'string|required',
-            'classEnd' => 'string|required',
+            'name' => 'string',
+            // 'classStart' => 'string',
+            // 'classEnd' => 'string',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
         if(!empty($this->request->name)){
             $params['name'] = $this->request->name;
+            $classTimeParams['classTimeSlot'] = $this->request->name;
         }
         if(!empty($this->request->classStart)){
             $params['classStart'] = Carbon::parse($this->request->classStart)->format('H:i:s');
@@ -125,6 +119,7 @@ class ClassTimeSlotController extends Controller
             $params['classEnd'] = Carbon::parse($this->request->classEnd)->format('H:i:s');
         }
         $classTimeSlotData->update($params);
+        ClassTimes::where('classTimeSlot', $oldName)->update($classTimeParams);
         return $this->successClassTimeSlotRequest($classTimeSlotData);
     }
 
