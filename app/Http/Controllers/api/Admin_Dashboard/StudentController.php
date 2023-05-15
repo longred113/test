@@ -383,6 +383,10 @@ class StudentController extends Controller
                 ->select(
                     'students.studentId',
                     'students.name',
+                    'students.campusId',
+                    'students.email',
+                    'students.gender',
+                    'students.dateOfBirth',
                     'students.timeZone',
                     DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classId, classes.name)) as classes'),
                     DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_products.productId)) as classProducts'),
@@ -394,6 +398,8 @@ class StudentController extends Controller
                 ->where('students.type', 'online')
                 ->groupBy('students.studentId')
                 ->get();
+
+                // return $studentsData;
 
             $classTimes = $this->request['classTime'];
             foreach ($classTimes as $classTime) {
