@@ -394,7 +394,6 @@ class StudentController extends Controller
                 ->where('students.type', 'online')
                 ->groupBy('students.studentId')
                 ->get();
-            // return $studentsData;
 
             $classTimes = $this->request['classTime'];
             foreach ($classTimes as $classTime) {
