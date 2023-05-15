@@ -400,42 +400,46 @@ class StudentController extends Controller
                 ->get();
 
                 // return $studentsData;
-
-            $classTimes = $this->request['classTime'];
-            foreach ($classTimes as $classTime) {
-                $classTimeSlot = $classTime['classTimeSlot'];
-                $days = $classTime['day'];
-
-                foreach ($days as $day) {
-                    $formatted = $day . "-" . $classTimeSlot;
-                    $classTimeResults[] = $formatted;
-                }
+            if($studentsData->isEmpty()){
+                return $this->successStudentRequest('No student found');
             }
-
-            $filteredTeachersData = collect([]);
-
-            $productIds = $this->request['productIds'];
-            foreach ($studentsData as $student) {
-                $classProducts = explode(',', $student->classProducts);
-                $classTime = explode(',', $student->classTime);
-
-                $shouldExclude = false;
-                foreach ($classProducts as $product) {
-                    if (in_array($product, $productIds)) {
-                        $shouldExclude = true;
+            else{
+                $classTimes = $this->request['classTime'];
+                foreach ($classTimes as $classTime) {
+                    $classTimeSlot = $classTime['classTimeSlot'];
+                    $days = $classTime['day'];
+    
+                    foreach ($days as $day) {
+                        $formatted = $day . "-" . $classTimeSlot;
+                        $classTimeResults[] = $formatted;
                     }
                 }
-
-                foreach ($classTime as $time) {
-                    if (in_array($time, $classTimeResults)) {
-                        $shouldExclude = true;
+    
+                $filteredTeachersData = collect([]);
+    
+                $productIds = $this->request['productIds'];
+                foreach ($studentsData as $student) {
+                    $classProducts = explode(',', $student->classProducts);
+                    $classTime = explode(',', $student->classTime);
+    
+                    $shouldExclude = false;
+                    foreach ($classProducts as $product) {
+                        if (in_array($product, $productIds)) {
+                            $shouldExclude = true;
+                        }
                     }
+    
+                    foreach ($classTime as $time) {
+                        if (in_array($time, $classTimeResults)) {
+                            $shouldExclude = true;
+                        }
+                    }
+    
+                    if (!$shouldExclude) {
+                        $filteredTeachersData->push($student);
+                    }
+                    $studentDataOutput = $filteredTeachersData;
                 }
-
-                if (!$shouldExclude) {
-                    $filteredTeachersData->push($student);
-                }
-                $studentDataOutput = $filteredTeachersData;
             }
         } catch (Exception $e) {
             return $e->getMessage();
