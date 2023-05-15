@@ -298,10 +298,10 @@ class StudentController extends Controller
     public function getStudentForClassRegister()
     {
         $validator = Validator::make($this->request->all(), [
-            'level' => 'string|required',
-            'productIds' => 'array|required',
+            'studentIds' => 'array|required',
             'timeZone' => 'string|required',
             'classTime' => 'array|required',
+            'productIds' => 'array|required',
             // 'day' => 'string|required',
             // 'timeSlot' => 'string|required',
         ]);
@@ -311,49 +311,106 @@ class StudentController extends Controller
         }
 
         try {
+            // $studentsData = Students::leftJoin('student_classes', 'students.studentId', '=', 'student_classes.studentId')
+            //     ->leftJoin('classes', 'student_classes.classId', '=', 'classes.classId')
+            //     ->leftJoin('class_times', 'classes.classId', '=', 'class_times.classId')
+            //     ->leftJoin('student_products', 'students.studentId', '=', 'student_products.studentId')
+            //     ->leftJoin('products', 'student_products.productId', '=', 'products.productId')
+            //     ->leftJoin('class_products', 'classes.classId', '=', 'class_products.classId')
+            //     ->select(
+            //         'students.studentId',
+            //         'students.name',
+            //         DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classId, classes.name)) as classes'),
+            //         DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",products.productId, products.name)) as products'),
+            //         DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_products.productId)) as classProducts'),
+            //         'students.timeZone',
+            //         DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",products.level)) as levels'),
+            //         DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classday)) as classDay'),
+            //         // DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classTimeSlot)) as classTimeSlot'),
+            //         DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS("-",class_times.day,class_times.classTimeSlot)) as classTime'),
+            //     )
+            //     ->where('students.type', 'online')
+            //     // ->where('products.level', $this->request['level'])
+            //     ->where('products.productId', $this->request['productId'])
+            //     // ->where('students.timeZone', $this->request['timeZone'])
+            //     // ->where('classes.classday', $this->request['day'])
+            //     // ->where('classes.classTimeSlot', $this->request['timeSlot'])
+            //     ->groupBy('students.studentId')
+            //     ->get();
+            // return $studentsData;
+
+            // $classTimes = $this->request['classTime'];
+            // foreach($classTimes as $classTime){
+            //     $classTimeSlot = $classTime['classTimeSlot'];
+            //     $days = $classTime['day'];
+
+            //     foreach($days as $day){
+            //         $formatted = $day . "-" . $classTimeSlot;
+            //         $classTimeResults[] = $formatted;
+            //     }
+            // }
+
+            // $filteredTeachersData = collect([]);
+
+            // foreach ($studentsData as $student) {
+            //     $productIds[] = $this->request['productIds'];
+            //     $classProducts = explode(',', $student->classProducts);
+            //     $classTime = explode(',', $student->classTime);
+
+            //     $shouldExclude = false;
+            //     foreach ($classProducts as $product) {
+            //         if (in_array($product, $productIds)) {
+            //             $shouldExclude = true;
+            //         }
+            //     }
+
+            //     foreach($classTime as $time){
+            //         if(in_array($time, $classTimeResults)){
+            //             $shouldExclude = true;
+            //         }
+            //     }
+
+            //     if (!$shouldExclude) {
+            //         $filteredTeachersData->push($student);
+            //     }
+            //     $studentDataOutput = $filteredTeachersData;
+            // }
+
             $studentsData = Students::leftJoin('student_classes', 'students.studentId', '=', 'student_classes.studentId')
                 ->leftJoin('classes', 'student_classes.classId', '=', 'classes.classId')
                 ->leftJoin('class_times', 'classes.classId', '=', 'class_times.classId')
-                ->leftJoin('student_products', 'students.studentId', '=', 'student_products.studentId')
-                ->leftJoin('products', 'student_products.productId', '=', 'products.productId')
                 ->leftJoin('class_products', 'classes.classId', '=', 'class_products.classId')
                 ->select(
                     'students.studentId',
                     'students.name',
-                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classId, classes.name)) as classes'),
-                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",products.productId, products.name)) as products'),
-                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_products.productId)) as classProducts'),
                     'students.timeZone',
-                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",products.level)) as levels'),
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classId, classes.name)) as classes'),
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_products.productId)) as classProducts'),
                     DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classday)) as classDay'),
-                    // DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classTimeSlot)) as classTimeSlot'),
                     DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS("-",class_times.day,class_times.classTimeSlot)) as classTime'),
                 )
-                ->where('students.type', 'online')
-                ->where('products.level', $this->request['level'])
-                ->where('products.productId', $this->request['productId'])
+                ->whereIn('students.studentId', $this->request['studentIds'])
                 ->where('students.timeZone', $this->request['timeZone'])
-                // ->where('classes.classday', $this->request['day'])
-                // ->where('classes.classTimeSlot', $this->request['timeSlot'])
+                ->where('students.type', 'online')
                 ->groupBy('students.studentId')
                 ->get();
             // return $studentsData;
 
             $classTimes = $this->request['classTime'];
-            foreach($classTimes as $classTime){
+            foreach ($classTimes as $classTime) {
                 $classTimeSlot = $classTime['classTimeSlot'];
                 $days = $classTime['day'];
 
-                foreach($days as $day){
+                foreach ($days as $day) {
                     $formatted = $day . "-" . $classTimeSlot;
                     $classTimeResults[] = $formatted;
                 }
             }
-            
+
             $filteredTeachersData = collect([]);
 
+            $productIds = $this->request['productIds'];
             foreach ($studentsData as $student) {
-                $productIds = $this->request['productIds'];
                 $classProducts = explode(',', $student->classProducts);
                 $classTime = explode(',', $student->classTime);
 
@@ -364,8 +421,8 @@ class StudentController extends Controller
                     }
                 }
 
-                foreach($classTime as $time){
-                    if(in_array($time, $classTimeResults)){
+                foreach ($classTime as $time) {
+                    if (in_array($time, $classTimeResults)) {
                         $shouldExclude = true;
                     }
                 }
