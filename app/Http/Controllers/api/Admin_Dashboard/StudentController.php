@@ -401,7 +401,7 @@ class StudentController extends Controller
 
                 // return $studentsData;
             if($studentsData->isEmpty()){
-                return $this->successStudentRequest('No student found');
+                return $this->successStudentRequest($studentsData);
             }
             else{
                 $classTimes = $this->request['classTime'];
