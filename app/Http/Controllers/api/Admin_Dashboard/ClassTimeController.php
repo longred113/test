@@ -37,18 +37,18 @@ class ClassTimeController extends Controller
     {
         $classId = $classTimeParams['classId'];
         $classTimes = $classTimeParams['classTimes'];
+        $classEndDate = $classTimeParams['classEndDate'];
         try{
             foreach($classTimes as $classTime) {
                 $classTimeId = IdGenerator::generate(['table' => 'class_times', 'trow' => 'classTimeId', 'length' => 7, 'prefix' => 'CT']);
-                $classTime = (explode('-', $classTime));
+                $classTimeResult = (explode('-', $classTime));
                 $params = [
                     'classTimeId' => $classTimeId,
                     'classId' => $classId,
-                    'day' => $classTime[0],
-                    'classTimeSlot' => $classTime[1],
+                    'day' => $classTimeResult[0],
+                    'classTimeSlot' => $classTimeResult[1],
                     'classStartDate' => $classTimeParams['classStartDate'],
                 ];
-                $classEndDate = date('Y-m-d', strtotime($classTimeParams['classStartDate'] . ' + 2 months'));
                 $params['classEndDate'] = $classEndDate;
 
                 ClassTimes::create($params);

@@ -7,6 +7,8 @@ use App\Http\Resources\ClassResource;
 use App\Models\Classes;
 use App\Models\ClassTimes;
 use App\Models\Teachers;
+use DateTime;
+use DateTimeZone;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -43,10 +45,11 @@ class ClassController extends Controller
         $validator = Validator::make($this->request->all(), [
             'name' => 'string|required',
             'numberOfStudent' => 'integer|required',
-            // 'subject' => 'string|required',
             'onlineTeacher' => 'string|required',
-            'classday' => 'string',
-            'classTimeSlot' => 'string|required',
+            'productIds' => 'array|required',
+            // 'classday' => 'string',
+            // 'classTimeSlot' => 'string|required',
+            'classTime' => 'array|required',
             'classStartDate' => 'date|required',
             'status' => 'string',
             'typeOfClass' => 'string|required',
@@ -58,7 +61,7 @@ class ClassController extends Controller
         }
 
         $classId = IdGenerator::generate(['table' => 'classes', 'trow' => 'classId', 'length' => 7, 'prefix' => 'CL']);
-        $classTimes []= $this->request['classday'] .'-'. $this->request['classTimeSlot'];
+        $classTimes = $this->request['classTime'];
         $params = [
             'classId' => $classId,
             'name' => $this->request['name'],
@@ -66,8 +69,8 @@ class ClassController extends Controller
             'numberOfStudent' => $this->request['numberOfStudent'],
             // 'subject' => $this->request['subject'],
             'onlineTeacher' => $this->request['onlineTeacher'],
-            'classday' => $this->request['classday'],
-            'classTimeSlot' => $this->request['classTimeSlot'],
+            // 'classday' => $this->request['classday'],
+            // 'classTimeSlot' => $this->request['classTimeSlot'],
             // 'classTime' => $classTime,
             'classStartDate' => $this->request['classStartDate'],
             'status' => $this->request['status'],
@@ -75,14 +78,32 @@ class ClassController extends Controller
             'initialTextbook' => $this->request['initialTextbook'],
             'expired' => 0,
         ];
-        if(!empty($this->request['duration'])){
+
+        $productNumber = count($this->request['productIds']);
+        if (!empty($this->request['duration'])) {
             $params['duration'] = $this->request['duration'];
         }
+        if (!empty($this->request['classStartDate'])) {
+            $classEndDate = date('Y-m-d', strtotime($this->request['classStartDate'] . ' + ' . $productNumber * 2 . ' months'));
+            $params['classEndDate'] = $classEndDate;
+        }
         $newClass = new ClassResource(Classes::create($params));
+
+        foreach ($classTimes as $classTime) {
+            $classTimeSlot = $classTime['classTimeSlot'];
+            $days = $classTime['day'];
+
+            foreach ($days as $day) {
+                $formatted = $day . "-" . $classTimeSlot;
+                $classTimeResults[] = $formatted;
+            }
+        }
+        $newClass['classTime'] = $classTimeResults;
         $classTimeParams = [
             'classId' => $classId,
-            'classTimes' => $classTimes,
+            'classTimes' => $classTimeResults,
             'classStartDate' => $this->request['classStartDate'],
+            'classEndDate' => $classEndDate,
         ];
         ClassTimeController::store($classTimeParams);
         return $this->successClassRequest($newClass);

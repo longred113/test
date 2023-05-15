@@ -467,6 +467,7 @@ Route::prefix('admin-calendar-management')
     ->group(function () {
         Route::get('/class-time-line', [CalendarController::class, 'classCalendarTimeLine'])->name('classCalendarTimeLine');
         Route::get('/class-time-line-by-date', [CalendarController::class, 'ClassTimeLineByDate'])->name('ClassTimeLineByDate');
+        Route::get('/get-timezone', [CalendarController::class, 'getTimeZone'])->name('getTimeZone');
     });
 
 Route::prefix('admin-teacher-off-date-management')

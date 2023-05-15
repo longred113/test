@@ -19,7 +19,6 @@ class ClassResource extends JsonResource
             'name' => $this->name,
             'level' => $this->level,
             'numberOfStudent' => $this->numberOfStudent,
-            'subject' => $this->subject,
             'onlineTeacher' => $this->onlineTeacher,
             'classday' => $this->classday,
             'classTimeSlot' => $this->classTimeSlot,
