@@ -8,6 +8,8 @@ use Exception;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 
+use function PHPUnit\Framework\isNull;
+
 class ClassTimeController extends Controller
 {
     protected Request $request;
@@ -77,23 +79,52 @@ class ClassTimeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update($classTimeId)
+    public static function update($classTimeParams)
     {
-        $classTime = ClassTimes::where('classTimeId', $classTimeId)->first();
-        if(!empty($this->request['day'])) {
-            $params['day'] = $this->request['day'];
+        $classId = $classTimeParams['classId'];
+        $classTimes = $classTimeParams['classTime'];
+        $classStartDate = $classTimeParams['classStartDate'];
+        $classEndDate = $classTimeParams['classEndDate'];
+        $classHaveTime = ClassTimes::where('classId', $classId)->get();
+        try{
+            if(!$classHaveTime->isEmpty()){
+                var_dump(1);
+                ClassTimes::where('classId', $classId)->delete();
+                foreach($classTimes as $classTime) {
+                    $classTimeId = IdGenerator::generate(['table' => 'class_times', 'trow' => 'classTimeId', 'length' => 7, 'prefix' => 'CT']);
+                    $classTimeResult = (explode('-', $classTime));
+                    $params = [
+                        'classTimeId' => $classTimeId,
+                        'classId' => $classId,
+                        'day' => $classTimeResult[0],
+                        'classTimeSlot' => $classTimeResult[1],
+                        'classStartDate' => $classStartDate,
+                    ];
+                    $params['classEndDate'] = $classEndDate;
+    
+                    ClassTimes::create($params);
+                }
+            }
+            if($classHaveTime->isEmpty()){
+                var_dump(2);
+                foreach($classTimes as $classTime) {
+                    $classTimeId = IdGenerator::generate(['table' => 'class_times', 'trow' => 'classTimeId', 'length' => 7, 'prefix' => 'CT']);
+                    $classTimeResult = (explode('-', $classTime));
+                    $params = [
+                        'classTimeId' => $classTimeId,
+                        'classId' => $classId,
+                        'day' => $classTimeResult[0],
+                        'classTimeSlot' => $classTimeResult[1],
+                        'classStartDate' => $classStartDate,
+                    ];
+                    $params['classEndDate'] = $classEndDate;
+    
+                    ClassTimes::create($params);
+                }
+            }
+        } catch(Exception $e){
+            return $e->getMessage();
         }
-        if(!empty($this->request['classTimeSlot'])) {
-            $params['classTimeSlot'] = $this->request['classTimeSlot'];
-        }
-        if(!empty($this->request['classStartDate'])) {
-            $params['classStartDate'] = $this->request['classStartDate'];
-        }
-        if(!empty($this->request['classEndDate'])) {
-            $params['classEndDate'] = $this->request['classEndDate'];
-        }
-        $classTime->update($params);
-        return $this->successClassTimeRequest($classTime);
     }
 
     /**

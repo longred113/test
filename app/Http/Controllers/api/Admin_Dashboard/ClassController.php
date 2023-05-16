@@ -165,70 +165,75 @@ class ClassController extends Controller
      */
     public function update($classId)
     {
-        $class = Classes::find($classId);
-        if (empty($this->request['name'])) {
-            $this->request['name'] = $class['name'];
-        }
-        if (empty($this->request['level'])) {
-            $this->request['level'] = $class['level'];
-        }
-        if (empty($this->request['numberOfStudent'])) {
-            $this->request['numberOfStudent'] = $class['numberOfStudent'];
-        }
-        // if (empty($this->request['subject'])) {
-        //     $this->request['subject'] = $class['subject'];
-        // }
-        if (empty($this->request['onlineTeacher'])) {
-            $this->request['onlineTeacher'] = $class['onlineTeacher'];
-        }
-        if (empty($this->request['classday'])) {
-            $this->request['classday'] = $class['classday'];
-        }
-        if (empty($this->request['classTimeSlot'])) {
-            $this->request['classTimeSlot'] = $class['classTimeSlot'];
-        }
-        if (empty($this->request['classStartDate'])) {
-            $this->request['classStartDate'] = $class['classStartDate'];
-        }
-        if (empty($this->request['status'])) {
-            $this->request['status'] = $class['status'];
-        }
-        if (empty($this->request['typeOfClass'])) {
-            $this->request['typeOfClass'] = $class['typeOfClass'];
-        }
-        if (empty($this->request['initialTextbook'])) {
-            $this->request['initialTextbook'] = $class['initialTextbook'];
-        }
         $validator = Validator::make($this->request->all(), [
-            'name' => 'string|required',
-            'numberOfStudent' => 'integer|required',
+            'name' => 'string',
+            'numberOfStudent' => 'integer',
             // 'subject' => 'string|required',
-            'onlineTeacher' => 'string|required',
+            'onlineTeacher' => 'string',
             // 'classday' => 'string|required',
             // 'classTimeSlot' => 'string|required',
-            // 'classStartDate' => 'date|required',
-            'status' => 'string|required',
-            'typeOfClass' => 'string|required',
-            'initialTextbook' => 'string|required',
+            'classStartDate' => 'date',
+            'status' => 'string',
+            'typeOfClass' => 'string',
+            'initialTextbook' => 'string',
+            'expired' => 'integer',
+            'classTime' => 'array',
+            'productIds' => 'array',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
-        $params = [
-            $class['name'] = $this->request['name'],
-            $class['level'] = $this->request['level'],
-            $class['numberOfStudent'] = $this->request['numberOfStudent'],
-            // $class['subject'] = $this->request['subject'],
-            $class['onlineTeacher'] = $this->request['onlineTeacher'],
-            $class['classday'] = $this->request['classday'],
-            $class['classTimeSlot'] = $this->request['classTimeSlot'],
-            $class['classStartDate'] = $this->request['classStartDate'],
-            $class['status'] = $this->request['status'],
-            $class['typeOfClass'] = $this->request['typeOfClass'],
-            $class['initialTextbook'] = $this->request['initialTextbook'],
-        ];
+        $class = Classes::where('classId', $classId)->first();
+        if(!empty($this->request['name'])){
+            $params['name'] = $this->request['name'];
+        }
+        if(!empty($this->request['level'])){
+            $params['level'] = $this->request['level'];
+        }
+        if(!empty($this->request['numberOfStudent'])){
+            $params['numberOfStudent'] = $this->request['numberOfStudent'];
+        }
+        if(!empty($this->request['onlineTeacher'])){
+            $params['onlineTeacher'] = $this->request['onlineTeacher'];
+        }
+        if(!empty($this->request['classStartDate'])){
+            $params['classStartDate'] = $this->request['classStartDate'];
+            $classTimeParams['classStartDate'] = $this->request['classStartDate'];
+            if(!empty($this->request['productIds'])){
+                $productNumber = count($this->request['productIds']);
+                $classEndDate = date('Y-m-d', strtotime($this->request['classStartDate'] . ' + ' . $productNumber * 2 . ' months'));
+                $params['classEndDate'] = $classEndDate;
+                $classTimeParams['classEndDate'] = $classEndDate;
+            }
+        }
+        if(!empty($this->request['status'])){
+            $params['status'] = $this->request['status'];
+        }
+        if(!empty($this->request['typeOfClass'])){
+            $params['typeOfClass'] = $this->request['typeOfClass'];
+        }
+        if(!empty($this->request['initialTextbook'])){
+            $params['initialTextbook'] = $this->request['initialTextbook'];
+        }
+        if(!empty($this->request['expired'])){
+            $params['expired'] = $this->request['expired'];
+        }
         $newInfoClass = $class->update($params);
+        if(!empty($this->request['classTime'])){
+            foreach ($this->request['classTime'] as $classTime) {
+                $classTimeSlot = $classTime['classTimeSlot'];
+                $days = $classTime['day'];
+    
+                foreach ($days as $day) {
+                    $formatted = $day . "-" . $classTimeSlot;
+                    $classTimeResults[] = $formatted;
+                }
+            }
+            $classTimeParams['classTime'] = $classTimeResults;
+        }
+        $classTimeParams['classId'] = $classId;
+        ClassTimeController::update($classTimeParams);
         return $this->successClassRequest($newInfoClass);
     }
 
