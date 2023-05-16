@@ -25,7 +25,9 @@ use App\Http\Controllers\api\Admin_Dashboard\CourseController;
 use App\Http\Controllers\api\Admin_Dashboard\EnrollmentControllerA;
 use App\Http\Controllers\api\Admin_Dashboard\GroupActivityController;
 use App\Http\Controllers\api\Admin_Dashboard\GroupController;
+use App\Http\Controllers\api\Admin_Dashboard\HolidayController;
 use App\Http\Controllers\api\Admin_Dashboard\ImageController;
+use App\Http\Controllers\api\Admin_Dashboard\LearningManagementController;
 use App\Http\Controllers\api\Admin_Dashboard\ProductEnrollmentController;
 use App\Http\Controllers\api\Admin_Dashboard\ProductGroupController;
 use App\Http\Controllers\api\Admin_Dashboard\ProductMatchedActivityController;
@@ -468,6 +470,8 @@ Route::prefix('admin-calendar-management')
         Route::get('/class-time-line', [CalendarController::class, 'classCalendarTimeLine'])->name('classCalendarTimeLine');
         Route::get('/class-time-line-by-date', [CalendarController::class, 'ClassTimeLineByDate'])->name('ClassTimeLineByDate');
         Route::get('/get-timezone', [CalendarController::class, 'getTimeZone'])->name('getTimeZone');
+        Route::get('/get-calendar-of-student/{studentId}', [CalendarController::class, 'getCalendarOfStudent'])->name('getCalendarOfStudent');
+        Route::get('/get-calendar-of-class/{classId}', [CalendarController::class, 'getCalendarOfClass'])->name('getCalendarOfClass');
     });
 
 Route::prefix('admin-teacher-off-date-management')
@@ -478,6 +482,26 @@ Route::prefix('admin-teacher-off-date-management')
         Route::get('/{teacherOffDateId}', [TeacherOffDateController::class, 'show'])->name('show');
         Route::put('/update/{teacherOffDateId}', [TeacherOffDateController::class, 'update'])->name('update');
         Route::delete('/{teacherOffDateId}', [TeacherOffDateController::class, 'destroy'])->name('destroy');
+    });
+
+Route::prefix('admin-learning-management')
+    ->name('admin-learning-management.')
+    ->group(function () {
+        Route::get('/', [LearningManagementController::class, 'index'])->name('index');
+        Route::post('/create', [LearningManagementController::class, 'store'])->name('store');
+        Route::get('/{learningId}', [LearningManagementController::class, 'show'])->name('show');
+        Route::put('/update/{learningId}', [LearningManagementController::class, 'update'])->name('update');
+        Route::delete('/{learningId}', [LearningManagementController::class, 'destroy'])->name('destroy');
+    });
+
+Route::prefix('admin-holiday-management')
+    ->name('admin-holiday-management.')
+    ->group(function () {
+        Route::get('/', [HolidayController::class, 'index'])->name('index');
+        Route::post('/create', [HolidayController::class, 'store'])->name('store');
+        Route::get('/{holidayId}', [HolidayController::class, 'show'])->name('show');
+        Route::put('/update/{holidayId}', [HolidayController::class, 'update'])->name('update');
+        Route::delete('/{holidayId}', [HolidayController::class, 'destroy'])->name('destroy');
     });
 //END ADMIN DASHBOARD
 

@@ -55,7 +55,7 @@ class CalendarController extends Controller
 
             $result[] =  $timezoneFormatted . ' ' . $timezone;
         }
-        return($result);
+        return ($result);
     }
 
     public function getClassByStudent($studentId)
@@ -212,7 +212,7 @@ class CalendarController extends Controller
             //         'startTime' => $time['startTime'],
             //         'endTime' => $time['endTime'],
             //     ];
-                
+
             //     $day = $time['day'];
             //     if ($day == 'MON') {
             //         $classTime[$day][] = $mappedData;
@@ -249,8 +249,31 @@ class CalendarController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function getCalendarOfStudent($studentId)
     {
+        try {
+            $studentClassesData = StudentClasses::join('classes', 'student_classes.classId', '=', 'classes.classId')
+                ->join('class_times', 'classes.classId', '=', 'class_times.classId')
+                ->join('teachers', 'classes.onlineTeacher', '=', 'teachers.teacherId')
+                ->leftJoin('class_time_slots', 'class_times.classTimeSlot', '=', 'class_time_slots.name')
+                ->select(
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classId,classes.name,class_times.day,teachers.name)) as Class'),
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_times.day)) as day'),
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.onlineTeacher,teachers.name)) as teacher'),
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_time_slots.classStart)) as startTime'),
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_time_slots.classEnd)) as endTime'),
+                    'class_times.classTimeSlot',
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",student_classes.studentId)) as student'),
+                )
+                ->where('studentId', $studentId)
+                ->where('classes.expired', 0)
+                ->groupBy('class_times.classTimeSlot')
+                ->get();
+        } catch (Exception $e) {
+            return ($e->getMessage());
+        }
+
+        return $this->successClassTimeLineRequest($studentClassesData);
     }
 
     /**
@@ -259,9 +282,26 @@ class CalendarController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function getCalendarOfClass($classId)
     {
-        //
+        $classData = Classes::join('class_times', 'classes.classId', '=', 'class_times.classId')
+            ->join('teachers', 'classes.onlineTeacher', '=', 'teachers.teacherId')
+            ->leftJoin('class_time_slots', 'class_times.classTimeSlot', '=', 'class_time_slots.name')
+            ->select(
+                DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classId,classes.name,class_times.day,teachers.name)) as Class'),
+                DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_times.day)) as day'),
+                DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.onlineTeacher,teachers.name)) as teacher'),
+                DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_time_slots.classStart)) as startTime'),
+                DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_time_slots.classEnd)) as endTime'),
+                'class_times.classTimeSlot',
+                DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classStartDate, class_times.classEndDate)) as Date'),
+            )
+            ->where('classes.classId', $classId)
+            // ->where('classes.typeOfClass', 'online')
+            ->where('classes.expired', 0)
+            ->groupBy('class_times.classTimeSlot')
+            ->get();
+        return $this->successClassTimeLineRequest($classData);
     }
 
     /**
