@@ -11,6 +11,7 @@ use DateTime;
 use DateTimeZone;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class ClassController extends Controller
@@ -30,6 +31,33 @@ class ClassController extends Controller
     public function index()
     {
         $classesData = ClassResource::collection(Classes::all());
+        return $this->successClassRequest($classesData);
+    }
+
+    public function getClass()
+    {
+        $classesData = Classes::all();
+        foreach($classesData as $class){
+            $classId = $class['classId'];
+            $class['classTime'] = Classes::join('class_times', 'classes.classId', '=', 'class_times.classId')
+            ->join('teachers', 'classes.onlineTeacher', '=', 'teachers.teacherId')
+            ->leftJoin('class_time_slots', 'class_times.classTimeSlot', '=', 'class_time_slots.name')
+            ->select(
+                DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classId,classes.name,class_times.day,teachers.name)) as Class'),
+                DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_times.day)) as day'),
+                DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.onlineTeacher,teachers.name)) as teacher'),
+                DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_time_slots.classStart)) as startTime'),
+                DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_time_slots.classEnd)) as endTime'),
+                'class_times.classTimeSlot',
+                DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classStartDate, class_times.classEndDate)) as Date'),
+            )
+            ->where('classes.classId', $classId)
+            // ->where('classes.typeOfClass', 'online')
+            ->where('classes.expired', 0)
+            ->groupBy('class_times.classTimeSlot')
+            ->get();
+        }
+
         return $this->successClassRequest($classesData);
     }
 
@@ -216,4 +244,6 @@ class ClassController extends Controller
         $deleteClass = $class->delete();
         return $this->successClassRequest($deleteClass);
     }
+
+    // function calculateEndDate($class)
 }
