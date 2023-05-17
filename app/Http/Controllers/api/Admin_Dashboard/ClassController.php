@@ -65,6 +65,27 @@ class ClassController extends Controller
                 ->where('classes.expired', 0)
                 ->groupBy('class_times.classTimeSlot')
                 ->get();
+            $classProducts = Classes::leftJoin('class_products', 'classes.classId', '=', 'class_products.classId')
+                ->leftJoin('products', 'class_products.productId', '=', 'products.productId')
+                ->select(
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",products.productId)) as productId'),
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",products.name)) as productName'),
+                )
+                ->where('classes.classId', $classId)
+                ->groupBy('classes.classId')
+                ->get();
+            $class['product'] = $classProducts;
+
+            $classHolidays = Classes::leftJoin('class_holidays', 'classes.classId', '=', 'class_holidays.classId')
+                ->leftJoin('holidays', 'class_holidays.holidayId', '=', 'holidays.holidayId')
+                ->select(
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",holidays.holidayId)) as holidayId'),
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",holidays.name)) as holidayName'),
+                )
+                ->where('classes.classId', $classId)
+                ->groupBy('classes.classId')
+                ->get();
+            $class['holiday'] = $classHolidays;
             // Lấy ngày bắt đầu và ngày kết thúc của lớp học
             $startDate = $class['classStartDate'];
             $endDate = $class['classEndDate'];
@@ -83,9 +104,9 @@ class ClassController extends Controller
                 // Ví dụ: in ra tuần hiện tại của lớp học
                 $class['currentWeek'] = $currentWeek;
             }
-            if($currentDateTime > $endDateTime){
-                $class->update(['expired' => 1]);
-            }
+            // if($currentDateTime > $endDateTime){
+            //     $class->update(['expired' => 1]);
+            // }
         }
 
         return $this->successClassRequest($classesData);
