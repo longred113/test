@@ -79,7 +79,7 @@ class ClassController extends Controller
                 foreach ($classProducts as $product) {
                     $groupProduct = explode(',', $product);
                 }
-                $class['product'] = $groupProduct;
+                // $class['product'] = $groupProduct;
                 $classGroupProduct = [];
                 foreach ($groupProduct as $clProduct) {
                     $classProduct = explode(':', $clProduct);
