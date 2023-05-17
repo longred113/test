@@ -102,17 +102,17 @@ class ClassController extends Controller
         $onlineTeacher = Teachers::where('type', 'online')->get();
         $validator = Validator::make($this->request->all(), [
             'name' => 'string|required',
-            // 'numberOfStudent' => 'integer|required',
-            // 'onlineTeacher' => 'string|required',
+            'numberOfStudent' => 'integer|required',
+            'onlineTeacher' => 'string|required',
             'productIds' => 'array|required',
             // 'classday' => 'string',
-            // 'classTimeSlot' => 'string|required',
+            'classTimeSlot' => 'string|required',
             'classTime' => 'array|required',
             'classStartDate' => 'date|required',
             'status' => 'string',
-            // 'typeOfClass' => 'string|required',
+            'typeOfClass' => 'string|required',
             'initialTextbook' => 'string',
-            // 'level' => 'string|required',
+            'level' => 'string|required',
             'holidayIds' => 'array',
         ]);
         if ($validator->fails()) {
@@ -155,7 +155,7 @@ class ClassController extends Controller
             $classEndDate = date('Y-m-d', strtotime($classEndDate . ' + ' . $offDates . ' days'));
             $params['classEndDate'] = $classEndDate;
         }
-        
+
         if (!empty($this->request['classStartDate']) && empty($this->request['holidayIds'])) {
             $classEndDate = date('Y-m-d', strtotime($this->request['classStartDate'] . ' + ' . $productNumber * 2 . ' months'));
             $params['classEndDate'] = $classEndDate;
