@@ -104,26 +104,23 @@ class ClassController extends Controller
                 //     ->get();
                 // $class['holiday'] = $classHolidays;
                 // Lấy ngày bắt đầu và ngày kết thúc của lớp học
-                // $startDate = $class['classStartDate'];
-                // $endDate = $class['classEndDate'];
+                $startDate = $class['classStartDate'];
+                $endDate = $class['classEndDate'];
 
-                // // Chuyển đổi ngày thành đối tượng DateTime
-                // $startDateTime = new DateTime($startDate);
-                // $endDateTime = new DateTime($endDate);
-                // $currentDateTime = new DateTime($currentDate);
-                // // Kiểm tra nếu ngày hiện tại nằm trong khoảng ngày bắt đầu và kết thúc
-                // if ($currentDateTime >= $startDateTime && $currentDateTime <= $endDateTime) {
-                //     // Tính toán số tuần từ ngày bắt đầu đến ngày hiện tại
-                //     $diff = $startDateTime->diff($currentDateTime);
-                //     $currentWeek = ceil($diff->days / 7);
+                // Chuyển đổi ngày thành đối tượng DateTime
+                $startDateTime = new DateTime($startDate);
+                $endDateTime = new DateTime($endDate);
+                $currentDateTime = new DateTime($currentDate);
+                // Kiểm tra nếu ngày hiện tại nằm trong khoảng ngày bắt đầu và kết thúc
+                if ($currentDateTime >= $startDateTime && $currentDateTime <= $endDateTime) {
+                    // Tính toán số tuần từ ngày bắt đầu đến ngày hiện tại
+                    $diff = $startDateTime->diff($currentDateTime);
+                    $currentWeek = ceil($diff->days / 7);
 
-                //     // Sử dụng biến $currentWeek ở đây để làm gì đó
-                //     // Ví dụ: in ra tuần hiện tại của lớp học
-                //     $class['currentWeek'] = $currentWeek;
-                // }
-                // if($currentDateTime > $endDateTime){
-                //     $class->update(['expired' => 1]);
-                // }
+                    // Sử dụng biến $currentWeek ở đây để làm gì đó
+                    // Ví dụ: in ra tuần hiện tại của lớp học
+                    $class['currentWeek'] = $currentWeek;
+                }
             }
         } catch (Exception $e) {
             return $e->getMessage();
