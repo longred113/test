@@ -85,8 +85,8 @@ class ClassController extends Controller
                     $classProduct = explode(':', $clProduct);
                     if (count($classProduct) >= 2) {
                         $classGroupProduct[] = [
-                            'productId' => $classProduct[0],
-                            'productName' => $classProduct[1],
+                            'value' => $classProduct[0],
+                            'label' => $classProduct[1],
                         ];
                     }
                 }
