@@ -503,6 +503,7 @@ Route::prefix('admin-holiday-management')
         Route::get('/{holidayId}', [HolidayController::class, 'show'])->name('show');
         Route::put('/update/{holidayId}', [HolidayController::class, 'update'])->name('update');
         Route::delete('/{holidayId}', [HolidayController::class, 'destroy'])->name('destroy');
+        Route::post('/get-available-holiday', [HolidayController::class, 'getAvailableHolidays'])->name('getAvailableHolidays');
     });
 //END ADMIN DASHBOARD
 

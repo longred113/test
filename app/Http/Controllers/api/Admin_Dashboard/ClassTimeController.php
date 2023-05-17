@@ -88,7 +88,6 @@ class ClassTimeController extends Controller
         $classHaveTime = ClassTimes::where('classId', $classId)->get();
         try{
             if(!$classHaveTime->isEmpty()){
-                var_dump(1);
                 ClassTimes::where('classId', $classId)->delete();
                 foreach($classTimes as $classTime) {
                     $classTimeId = IdGenerator::generate(['table' => 'class_times', 'trow' => 'classTimeId', 'length' => 7, 'prefix' => 'CT']);
@@ -106,7 +105,6 @@ class ClassTimeController extends Controller
                 }
             }
             if($classHaveTime->isEmpty()){
-                var_dump(2);
                 foreach($classTimes as $classTime) {
                     $classTimeId = IdGenerator::generate(['table' => 'class_times', 'trow' => 'classTimeId', 'length' => 7, 'prefix' => 'CT']);
                     $classTimeResult = (explode('-', $classTime));

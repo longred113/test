@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers\api\Admin_Dashboard;
 
+use App\Events\ClassExpired;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ClassResource;
 use App\Models\Classes;
 use App\Models\ClassTimes;
+use App\Models\Holidays;
 use App\Models\Teachers;
+use DateInterval;
 use DateTime;
 use DateTimeZone;
+use Exception;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -37,25 +41,51 @@ class ClassController extends Controller
     public function getClass()
     {
         $classesData = Classes::all();
-        foreach($classesData as $class){
+        $currentDate = date('Y-m-d');
+        foreach ($classesData as $class) {
+            if (now() > $class->classEndDate) {
+                event(new ClassExpired($class));
+            }
             $classId = $class['classId'];
             $class['classTime'] = Classes::join('class_times', 'classes.classId', '=', 'class_times.classId')
-            ->join('teachers', 'classes.onlineTeacher', '=', 'teachers.teacherId')
-            ->leftJoin('class_time_slots', 'class_times.classTimeSlot', '=', 'class_time_slots.name')
-            ->select(
-                DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classId,classes.name,class_times.day,teachers.name)) as Class'),
-                DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_times.day)) as day'),
-                DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.onlineTeacher,teachers.name)) as teacher'),
-                DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_time_slots.classStart)) as startTime'),
-                DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_time_slots.classEnd)) as endTime'),
-                'class_times.classTimeSlot',
-                DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classStartDate, class_times.classEndDate)) as Date'),
-            )
-            ->where('classes.classId', $classId)
-            // ->where('classes.typeOfClass', 'online')
-            ->where('classes.expired', 0)
-            ->groupBy('class_times.classTimeSlot')
-            ->get();
+                ->join('teachers', 'classes.onlineTeacher', '=', 'teachers.teacherId')
+                ->leftJoin('class_time_slots', 'class_times.classTimeSlot', '=', 'class_time_slots.name')
+                ->select(
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classId,classes.name,class_times.day,teachers.name)) as Class'),
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_times.day)) as day'),
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.onlineTeacher,teachers.name)) as teacher'),
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_time_slots.classStart)) as startTime'),
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_time_slots.classEnd)) as endTime'),
+                    'class_times.classTimeSlot',
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classStartDate)) as startDate'),
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_times.classEndDate)) as endDate'),
+                )
+                ->where('classes.classId', $classId)
+                // ->where('classes.typeOfClass', 'online')
+                ->where('classes.expired', 0)
+                ->groupBy('class_times.classTimeSlot')
+                ->get();
+            // Lấy ngày bắt đầu và ngày kết thúc của lớp học
+            $startDate = $class['classStartDate'];
+            $endDate = $class['classEndDate'];
+
+            // Chuyển đổi ngày thành đối tượng DateTime
+            $startDateTime = new DateTime($startDate);
+            $endDateTime = new DateTime($endDate);
+            $currentDateTime = new DateTime($currentDate);
+            // Kiểm tra nếu ngày hiện tại nằm trong khoảng ngày bắt đầu và kết thúc
+            if ($currentDateTime >= $startDateTime && $currentDateTime <= $endDateTime) {
+                // Tính toán số tuần từ ngày bắt đầu đến ngày hiện tại
+                $diff = $startDateTime->diff($currentDateTime);
+                $currentWeek = ceil($diff->days / 7);
+
+                // Sử dụng biến $currentWeek ở đây để làm gì đó
+                // Ví dụ: in ra tuần hiện tại của lớp học
+                $class['currentWeek'] = $currentWeek;
+            }
+            if($currentDateTime > $endDateTime){
+                $class->update(['expired' => 1]);
+            }
         }
 
         return $this->successClassRequest($classesData);
@@ -72,17 +102,18 @@ class ClassController extends Controller
         $onlineTeacher = Teachers::where('type', 'online')->get();
         $validator = Validator::make($this->request->all(), [
             'name' => 'string|required',
-            'numberOfStudent' => 'integer|required',
-            'onlineTeacher' => 'string|required',
+            // 'numberOfStudent' => 'integer|required',
+            // 'onlineTeacher' => 'string|required',
             'productIds' => 'array|required',
             // 'classday' => 'string',
             // 'classTimeSlot' => 'string|required',
             'classTime' => 'array|required',
             'classStartDate' => 'date|required',
             'status' => 'string',
-            'typeOfClass' => 'string|required',
+            // 'typeOfClass' => 'string|required',
             'initialTextbook' => 'string',
-            'level' => 'string|required',
+            // 'level' => 'string|required',
+            'holidayIds' => 'array',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
@@ -105,17 +136,37 @@ class ClassController extends Controller
             'typeOfClass' => $this->request['typeOfClass'],
             'initialTextbook' => $this->request['initialTextbook'],
             'expired' => 0,
+            'holidayIds' => 'array',
         ];
 
         $productNumber = count($this->request['productIds']);
         if (!empty($this->request['duration'])) {
             $params['duration'] = $this->request['duration'];
         }
-        if (!empty($this->request['classStartDate'])) {
+
+        $holidayIds = $this->request['holidayIds'];
+        if(!empty($this->request['holidayIds']) && !empty($this->request['classStartDate'])){
+            $holidays = Holidays::whereIn('holidayId', $holidayIds)->get('duration');
+            $offDates = 0;
+            foreach($holidays as $holiday){
+                $offDates = $offDates + $holiday->duration;
+            }
+            $classEndDate = date('Y-m-d', strtotime($this->request['classStartDate'] . ' + ' . $productNumber * 2 . ' months'));
+            $classEndDate = date('Y-m-d', strtotime($classEndDate . ' + ' . $offDates . ' days'));
+            $params['classEndDate'] = $classEndDate;
+        }
+        
+        if (!empty($this->request['classStartDate']) && empty($this->request['holidayIds'])) {
             $classEndDate = date('Y-m-d', strtotime($this->request['classStartDate'] . ' + ' . $productNumber * 2 . ' months'));
             $params['classEndDate'] = $classEndDate;
         }
         $newClass = new ClassResource(Classes::create($params));
+        
+        $holidayParams = [
+            'classId' => $classId,
+            'holidayIds' => $holidayIds,
+        ];
+        ClassHolidayController::store($holidayParams);
 
         foreach ($classTimes as $classTime) {
             $classTimeSlot = $classTime['classTimeSlot'];
@@ -179,61 +230,104 @@ class ClassController extends Controller
             'expired' => 'integer',
             'classTime' => 'array',
             'productIds' => 'array',
+            'holidayIds' => 'array',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
-        $class = Classes::where('classId', $classId)->first();
-        if(!empty($this->request['name'])){
-            $params['name'] = $this->request['name'];
-        }
-        if(!empty($this->request['level'])){
-            $params['level'] = $this->request['level'];
-        }
-        if(!empty($this->request['numberOfStudent'])){
-            $params['numberOfStudent'] = $this->request['numberOfStudent'];
-        }
-        if(!empty($this->request['onlineTeacher'])){
-            $params['onlineTeacher'] = $this->request['onlineTeacher'];
-        }
-        if(!empty($this->request['classStartDate'])){
-            $params['classStartDate'] = $this->request['classStartDate'];
-            $classTimeParams['classStartDate'] = $this->request['classStartDate'];
-            if(!empty($this->request['productIds'])){
-                $productNumber = count($this->request['productIds']);
-                $classEndDate = date('Y-m-d', strtotime($this->request['classStartDate'] . ' + ' . $productNumber * 2 . ' months'));
-                $params['classEndDate'] = $classEndDate;
-                $classTimeParams['classEndDate'] = $classEndDate;
+        try{
+            $class = Classes::where('classId', $classId)->first();
+            if (!empty($this->request['name'])) {
+                $params['name'] = $this->request['name'];
             }
-        }
-        if(!empty($this->request['status'])){
-            $params['status'] = $this->request['status'];
-        }
-        if(!empty($this->request['typeOfClass'])){
-            $params['typeOfClass'] = $this->request['typeOfClass'];
-        }
-        if(!empty($this->request['initialTextbook'])){
-            $params['initialTextbook'] = $this->request['initialTextbook'];
-        }
-        if(!empty($this->request['expired'])){
-            $params['expired'] = $this->request['expired'];
-        }
-        $newInfoClass = $class->update($params);
-        if(!empty($this->request['classTime'])){
-            foreach ($this->request['classTime'] as $classTime) {
-                $classTimeSlot = $classTime['classTimeSlot'];
-                $days = $classTime['day'];
-    
-                foreach ($days as $day) {
-                    $formatted = $day . "-" . $classTimeSlot;
-                    $classTimeResults[] = $formatted;
+            if (!empty($this->request['level'])) {
+                $params['level'] = $this->request['level'];
+            }
+            if (!empty($this->request['numberOfStudent'])) {
+                $params['numberOfStudent'] = $this->request['numberOfStudent'];
+            }
+            if (!empty($this->request['onlineTeacher'])) {
+                $params['onlineTeacher'] = $this->request['onlineTeacher'];
+            }
+            if (!empty($this->request['classStartDate'])) {
+                $params['classStartDate'] = $this->request['classStartDate'];
+                $classTimeParams['classStartDate'] = $this->request['classStartDate'];
+                if (!empty($this->request['productIds'])) {
+                    $productNumber = count($this->request['productIds']);
+                    $classEndDate = date('Y-m-d', strtotime($this->request['classStartDate'] . ' + ' . $productNumber * 2 . ' months'));
+                    $params['classEndDate'] = $classEndDate;
+                    $classTimeParams['classEndDate'] = $classEndDate;
                 }
             }
-            $classTimeParams['classTime'] = $classTimeResults;
+            if (!empty($this->request['status'])) {
+                $params['status'] = $this->request['status'];
+            }
+            if (!empty($this->request['typeOfClass'])) {
+                $params['typeOfClass'] = $this->request['typeOfClass'];
+            }
+            if (!empty($this->request['initialTextbook'])) {
+                $params['initialTextbook'] = $this->request['initialTextbook'];
+            }
+            if (!empty($this->request['expired'])) {
+                $params['expired'] = $this->request['expired'];
+            }
+            if (!empty($this->request['holidayIds'])) {
+                $holidayIds = $this->request['holidayIds'];
+                $holidayParams = [
+                    'classId' => $classId,
+                    'holidayIds' => $holidayIds,
+                ];
+                ClassHolidayController::update($holidayParams);
+                $holidays = Holidays::whereIn('holidayId', $holidayIds)->get();
+                $classTimed = ClassTimes::where('classId', $classId)->get();
+                // foreach($classTimed as $time){
+                //     $classTimeDays[] = $time->day;
+                // }
+                // // dd(end($days));
+                // $holidayDays = [];
+                // foreach($holidays as $holiday){
+                //     $startDate = new DateTime($holiday->startDate);
+                //     $endDate = new DateTime($holiday->endDate);
+                //     while($startDate<=$endDate){
+                //         $day = strtoupper($startDate->format('D'));
+                //         $holidayDays[] = $day;
+                //         $startDate->add(new DateInterval('P1D')); // add this to increment by 1 day
+                //     }
+                //     foreach($holidayDays as $holidayDay){
+                //         if(in_array($holidayDay, $classTimeDays)){
+                //             // dd(1);
+                //             $lastClassDay = end($days);
+    
+                //             if($holiday->endDate > $lastClassDay){
+                //                 $lastClassDay = $holiday->endDate;
+                //             }
+                //         }
+                //     }
+                //     // return $days;
+                //     $holidayDates[] = $holiday->startDate. " - " .$holiday->endDate;
+                    
+                // }
+            }
+            $newInfoClass = $class->update($params);
+            if (!empty($this->request['classTime'])) {
+                foreach ($this->request['classTime'] as $classTime) {
+                    $classTimeSlot = $classTime['classTimeSlot'];
+                    $days = $classTime['day'];
+    
+                    foreach ($days as $day) {
+                        $formatted = $day . "-" . $classTimeSlot;
+                        $classTimeResults[] = $formatted;
+                    }
+                }
+                $classTimeParams['classTime'] = $classTimeResults;
+                $classTimeParams['classId'] = $classId;
+                ClassTimeController::update($classTimeParams);
+            }
+        } catch(Exception $e){
+            return $e->getMessage();
         }
-        $classTimeParams['classId'] = $classId;
-        ClassTimeController::update($classTimeParams);
+
         return $this->successClassRequest($newInfoClass);
     }
 

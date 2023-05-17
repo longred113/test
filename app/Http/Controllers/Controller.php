@@ -328,4 +328,21 @@ class Controller extends BaseController
             'teacherOffDateData' => $teacherOffDateData,
         ],200);
     }
+    protected function successLearningManagementRequest($learningManagementData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'learningManagementData' => $learningManagementData,
+        ],200);
+    }
+
+    protected function successHolidayRequest($holidayData = array())
+    {
+        return response()->json([
+            'error_code' => 0,
+            'message' => ['Successfully'],
+            'holidayData' => $holidayData,
+        ],200);
+    }
 }
