@@ -42,71 +42,91 @@ class ClassController extends Controller
     {
         $classesData = Classes::all();
         $currentDate = date('Y-m-d');
-        foreach ($classesData as $class) {
-            if (now() > $class->classEndDate) {
-                event(new ClassExpired($class));
+        try {
+            foreach ($classesData as $class) {
+                if (now() > $class->classEndDate) {
+                    event(new ClassExpired($class));
+                }
+                $classId = $class['classId'];
+                $class['classTime'] = Classes::join('class_times', 'classes.classId', '=', 'class_times.classId')
+                    ->join('teachers', 'classes.onlineTeacher', '=', 'teachers.teacherId')
+                    ->leftJoin('class_time_slots', 'class_times.classTimeSlot', '=', 'class_time_slots.name')
+                    ->select(
+                        DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classId,classes.name,class_times.day,teachers.name)) as Class'),
+                        DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_times.day)) as day'),
+                        DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.onlineTeacher,teachers.name)) as teacher'),
+                        DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_time_slots.classStart)) as startTime'),
+                        DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_time_slots.classEnd)) as endTime'),
+                        'class_times.classTimeSlot',
+                        DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classStartDate)) as startDate'),
+                        DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_times.classEndDate)) as endDate'),
+                    )
+                    ->where('classes.classId', $classId)
+                    // ->where('classes.typeOfClass', 'online')
+                    ->where('classes.expired', 0)
+                    ->groupBy('class_times.classTimeSlot')
+                    ->get();
+                $classProducts = Classes::leftJoin('class_products', 'classes.classId', '=', 'class_products.classId')
+                    ->leftJoin('products', 'class_products.productId', '=', 'products.productId')
+                    ->select(
+                        DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",products.productId,products.name)) as products'),
+                    )
+                    ->where('classes.classId', $classId)
+                    ->groupBy('classes.classId')
+                    ->get();
+                $classProducts = $classProducts->pluck('products')->toArray();
+                $groupProduct = [];
+                foreach ($classProducts as $product) {
+                    $groupProduct = explode(',', $product);
+                }
+                $class['product'] = $groupProduct;
+                $classGroupProduct = [];
+                foreach ($groupProduct as $clProduct) {
+                    $classProduct = explode(':', $clProduct);
+                    if (count($classProduct) >= 2) {
+                        $classGroupProduct[] = [
+                            'productId' => $classProduct[0],
+                            'productName' => $classProduct[1],
+                        ];
+                    }
+                }
+                // return $classGroupProduct;
+                $class['products'] = $classGroupProduct;
+
+                // $classHolidays = Classes::leftJoin('class_holidays', 'classes.classId', '=', 'class_holidays.classId')
+                //     ->leftJoin('holidays', 'class_holidays.holidayId', '=', 'holidays.holidayId')
+                //     ->select(
+                //         DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",holidays.holidayId)) as holidayId'),
+                //         DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",holidays.name)) as holidayName'),
+                //     )
+                //     ->where('classes.classId', $classId)
+                //     ->groupBy('classes.classId')
+                //     ->get();
+                // $class['holiday'] = $classHolidays;
+                // Lấy ngày bắt đầu và ngày kết thúc của lớp học
+                // $startDate = $class['classStartDate'];
+                // $endDate = $class['classEndDate'];
+
+                // // Chuyển đổi ngày thành đối tượng DateTime
+                // $startDateTime = new DateTime($startDate);
+                // $endDateTime = new DateTime($endDate);
+                // $currentDateTime = new DateTime($currentDate);
+                // // Kiểm tra nếu ngày hiện tại nằm trong khoảng ngày bắt đầu và kết thúc
+                // if ($currentDateTime >= $startDateTime && $currentDateTime <= $endDateTime) {
+                //     // Tính toán số tuần từ ngày bắt đầu đến ngày hiện tại
+                //     $diff = $startDateTime->diff($currentDateTime);
+                //     $currentWeek = ceil($diff->days / 7);
+
+                //     // Sử dụng biến $currentWeek ở đây để làm gì đó
+                //     // Ví dụ: in ra tuần hiện tại của lớp học
+                //     $class['currentWeek'] = $currentWeek;
+                // }
+                // if($currentDateTime > $endDateTime){
+                //     $class->update(['expired' => 1]);
+                // }
             }
-            $classId = $class['classId'];
-            $class['classTime'] = Classes::join('class_times', 'classes.classId', '=', 'class_times.classId')
-                ->join('teachers', 'classes.onlineTeacher', '=', 'teachers.teacherId')
-                ->leftJoin('class_time_slots', 'class_times.classTimeSlot', '=', 'class_time_slots.name')
-                ->select(
-                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classId,classes.name,class_times.day,teachers.name)) as Class'),
-                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_times.day)) as day'),
-                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.onlineTeacher,teachers.name)) as teacher'),
-                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_time_slots.classStart)) as startTime'),
-                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_time_slots.classEnd)) as endTime'),
-                    'class_times.classTimeSlot',
-                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classStartDate)) as startDate'),
-                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_times.classEndDate)) as endDate'),
-                )
-                ->where('classes.classId', $classId)
-                // ->where('classes.typeOfClass', 'online')
-                ->where('classes.expired', 0)
-                ->groupBy('class_times.classTimeSlot')
-                ->get();
-            $classProducts = Classes::leftJoin('class_products', 'classes.classId', '=', 'class_products.classId')
-                ->leftJoin('products', 'class_products.productId', '=', 'products.productId')
-                ->select(
-                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",products.productId)) as productId'),
-                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",products.name)) as productName'),
-                )
-                ->where('classes.classId', $classId)
-                ->groupBy('classes.classId')
-                ->get();
-            $class['product'] = $classProducts;
-
-            $classHolidays = Classes::leftJoin('class_holidays', 'classes.classId', '=', 'class_holidays.classId')
-                ->leftJoin('holidays', 'class_holidays.holidayId', '=', 'holidays.holidayId')
-                ->select(
-                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",holidays.holidayId)) as holidayId'),
-                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",holidays.name)) as holidayName'),
-                )
-                ->where('classes.classId', $classId)
-                ->groupBy('classes.classId')
-                ->get();
-            $class['holiday'] = $classHolidays;
-            // Lấy ngày bắt đầu và ngày kết thúc của lớp học
-            $startDate = $class['classStartDate'];
-            $endDate = $class['classEndDate'];
-
-            // Chuyển đổi ngày thành đối tượng DateTime
-            $startDateTime = new DateTime($startDate);
-            $endDateTime = new DateTime($endDate);
-            $currentDateTime = new DateTime($currentDate);
-            // Kiểm tra nếu ngày hiện tại nằm trong khoảng ngày bắt đầu và kết thúc
-            if ($currentDateTime >= $startDateTime && $currentDateTime <= $endDateTime) {
-                // Tính toán số tuần từ ngày bắt đầu đến ngày hiện tại
-                $diff = $startDateTime->diff($currentDateTime);
-                $currentWeek = ceil($diff->days / 7);
-
-                // Sử dụng biến $currentWeek ở đây để làm gì đó
-                // Ví dụ: in ra tuần hiện tại của lớp học
-                $class['currentWeek'] = $currentWeek;
-            }
-            // if($currentDateTime > $endDateTime){
-            //     $class->update(['expired' => 1]);
-            // }
+        } catch (Exception $e) {
+            return $e->getMessage();
         }
 
         return $this->successClassRequest($classesData);
@@ -166,10 +186,10 @@ class ClassController extends Controller
         }
 
         $holidayIds = $this->request['holidayIds'];
-        if(!empty($this->request['holidayIds']) && !empty($this->request['classStartDate'])){
+        if (!empty($this->request['holidayIds']) && !empty($this->request['classStartDate'])) {
             $holidays = Holidays::whereIn('holidayId', $holidayIds)->get('duration');
             $offDates = 0;
-            foreach($holidays as $holiday){
+            foreach ($holidays as $holiday) {
                 $offDates = $offDates + $holiday->duration;
             }
             $classEndDate = date('Y-m-d', strtotime($this->request['classStartDate'] . ' + ' . $productNumber * 2 . ' months'));
@@ -182,7 +202,7 @@ class ClassController extends Controller
             $params['classEndDate'] = $classEndDate;
         }
         $newClass = new ClassResource(Classes::create($params));
-        
+
         $holidayParams = [
             'classId' => $classId,
             'holidayIds' => $holidayIds,
@@ -257,7 +277,7 @@ class ClassController extends Controller
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
-        try{
+        try {
             $class = Classes::where('classId', $classId)->first();
             if (!empty($this->request['name'])) {
                 $params['name'] = $this->request['name'];
@@ -319,7 +339,7 @@ class ClassController extends Controller
                 //         if(in_array($holidayDay, $classTimeDays)){
                 //             // dd(1);
                 //             $lastClassDay = end($days);
-    
+
                 //             if($holiday->endDate > $lastClassDay){
                 //                 $lastClassDay = $holiday->endDate;
                 //             }
@@ -327,7 +347,7 @@ class ClassController extends Controller
                 //     }
                 //     // return $days;
                 //     $holidayDates[] = $holiday->startDate. " - " .$holiday->endDate;
-                    
+
                 // }
             }
             $newInfoClass = $class->update($params);
@@ -335,7 +355,7 @@ class ClassController extends Controller
                 foreach ($this->request['classTime'] as $classTime) {
                     $classTimeSlot = $classTime['classTimeSlot'];
                     $days = $classTime['day'];
-    
+
                     foreach ($days as $day) {
                         $formatted = $day . "-" . $classTimeSlot;
                         $classTimeResults[] = $formatted;
@@ -345,7 +365,7 @@ class ClassController extends Controller
                 $classTimeParams['classId'] = $classId;
                 ClassTimeController::update($classTimeParams);
             }
-        } catch(Exception $e){
+        } catch (Exception $e) {
             return $e->getMessage();
         }
 
