@@ -130,7 +130,6 @@ class ClassController extends Controller
 
                     // Sử dụng biến $currentWeek ở đây để làm gì đó
                     // Ví dụ: in ra tuần hiện tại của lớp học
-                    $class['currentWeek'] = $currentWeek;
                 }
                 // Tính toán ngày bắt đầu và ngày kết thúc của tuần hiện tại
                 $currentWeekStartDate = clone $currentDateTime;
@@ -141,8 +140,11 @@ class ClassController extends Controller
                 // Chuyển đổi thành định dạng mong muốn (Y-m-d)
                 $currentWeekStartDateFormatted = $currentWeekStartDate->format('Y-m-d');
                 $currentWeekEndDateFormatted = $currentWeekEndDate->format('Y-m-d');
-                $class['currentWeekStartDate'] = $currentWeekStartDateFormatted;
-                $class['currentWeekEndDate'] = $currentWeekEndDateFormatted;
+                foreach($class['classTime'] as $classTime){
+                    $classTime['currentWeek'] = $currentWeek;
+                    $classTime['currentWeekStartDate'] = $currentWeekStartDateFormatted;
+                    $classTime['currentWeekEndDate'] = $currentWeekEndDateFormatted;
+                }
             }
         } catch (Exception $e) {
             return $e->getMessage();
