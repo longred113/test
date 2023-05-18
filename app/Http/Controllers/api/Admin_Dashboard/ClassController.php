@@ -6,6 +6,7 @@ use App\Events\ClassExpired;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ClassResource;
 use App\Models\Classes;
+use App\Models\ClassProducts;
 use App\Models\ClassTimes;
 use App\Models\Holidays;
 use App\Models\Teachers;
@@ -316,15 +317,22 @@ class ClassController extends Controller
                     $classEndDate = date('Y-m-d', strtotime($this->request['classStartDate'] . ' + ' . $productNumber * 2 . ' months'));
                     $params['classEndDate'] = $classEndDate;
                     $classTimeParams['classEndDate'] = $classEndDate;
+                    $classProductParams = [
+                        'classId' => $classId,
+                        'productIds' => $this->request['productIds'],
+                    ];
+                    ClassProductController::updateMultipleProduct($classProductParams);
                 }
                 if(!empty($this->request['holidayIds']) && !empty($this->request['productIds'])){
+                    $productNumber = count($this->request['productIds']);
                     $holidayIds = $this->request['holidayIds'];
                     $holidays = Holidays::whereIn('holidayId', $holidayIds)->get('duration');
                     $offDates = 0;
                     foreach ($holidays as $holiday) {
                         $offDates = $offDates + $holiday->duration;
                     }
-                    $classEndDate = date('Y-m-d', strtotime($class->classEndDate . ' + ' . $offDates . ' days'));
+                    $classEndDate = date('Y-m-d', strtotime($this->request['classStartDate'] . ' + ' . $productNumber * 2 . ' months'));
+                    $classEndDate = date('Y-m-d', strtotime($classEndDate . ' + ' . $offDates . ' days'));
                     $params['classEndDate'] = $classEndDate;
                     $classTimeParams['classEndDate'] = $classEndDate;
                     $holidayParams = [
@@ -332,6 +340,11 @@ class ClassController extends Controller
                         'holidayIds' => $holidayIds,
                     ];
                     ClassHolidayController::update($holidayParams);
+                    $classProductParams = [
+                        'classId' => $classId,
+                        'productIds' => $this->request['productIds'],
+                    ];
+                    ClassProductController::updateMultipleProduct($classProductParams);
                 }
             }
             if(!empty($this->request['holidayIds']) && empty($this->request['classStartDate'])){
@@ -341,8 +354,10 @@ class ClassController extends Controller
                 foreach ($holidays as $holiday) {
                     $offDates = $offDates + $holiday->duration;
                 }
-                // $classEndDate = date('Y-m-d', strtotime($class->classStartDate . ' + ' . $class->duration . ' months'));
-                $classEndDate = date('Y-m-d', strtotime($class->classEndDate . ' + ' . $offDates . ' days'));
+                $classProducts = ClassProducts::where('classId', $classId)->get();
+                $productNumber = count($classProducts);
+                $classEndDate = date('Y-m-d', strtotime($class->classStartDate . ' + ' . $productNumber * 2 . ' months'));
+                $classEndDate = date('Y-m-d', strtotime($classEndDate . ' + ' . $offDates . ' days'));
                 $params['classEndDate'] = $classEndDate;
                 $classTimeParams['classStartDate'] = $class->classStartDate;
                 $classTimeParams['classEndDate'] = $classEndDate;

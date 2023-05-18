@@ -133,18 +133,12 @@ class ClassProductController extends Controller
         return $this->successClassProductRequest($deleteClassProduct);
     }
 
-    public function updateMultipleProduct()
+    public static function updateMultipleProduct($classProductParams)
     {
-        $validator = Validator::make($this->request->all(), [
-            'classId' => 'string|required',
-            'productIds' => 'array|required',
-            'status' => 'string|required',
-        ]);
-        if($validator->fails()){
-            return $this->errorBadRequest($validator->getMessageBag()->toArray());
-        }
-        $classId = $this->request['classId'];
-        $productIds = $this->request['productIds'];
+        $classId = $classProductParams['classId'];
+        $productIds = $classProductParams['productIds'];
+
+        ClassProducts::where('classId', $classId)->delete();
 
         foreach ($productIds as $productId) {
             $classProductId = IdGenerator::generate(['table' => 'class_products', 'trow' => 'classProductId', 'length' => 8, 'prefix' => 'CLP']);
@@ -152,10 +146,8 @@ class ClassProductController extends Controller
                 'classProductId' => $classProductId,
                 'productId' => $productId,
                 'classId' => $classId,
-                'status' => $this->request['status'],
             ];
             ClassProducts::create($params);
         }
-        return $this->successClassProductRequest('Update multiple product success');
     }
 }

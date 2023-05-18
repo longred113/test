@@ -196,7 +196,7 @@ Route::prefix('admin-student-management')
         Route::get('/joined', [StudentController::class, 'studentJoinedList'])->name('studentJoinedList');
         Route::get('/withdrawal', [StudentController::class, 'studentWithdrawalList'])->name('studentWithdrawalList');
         Route::get('/get-product-and-match-activity', [StudentController::class, 'viewStudentProductAndStudyPlanner'])->name('viewStudentProductAndStudyPlanner');
-        Route::get('/test/{studentId}', [StudentController::class, 'studentDetail'])->name('studentDetail');
+        Route::get('/get-details-of-student/{studentId}', [StudentController::class, 'detailsOfStudent'])->name('detailsOfStudent');
         Route::get('/student-with-id/{studentId}', [StudentController::class, 'getStudentWithId'])->name('getStudentWithId');
         Route::get('/get-student-online', [StudentController::class, 'getStudentOnline'])->name('getStudentOnline');
         Route::post('/get-student-for-class-register', [StudentController::class, 'getStudentForClassRegister'])->name('getStudentForClassRegister');
@@ -490,7 +490,7 @@ Route::prefix('admin-learning-management')
     ->group(function () {
         Route::get('/', [LearningManagementController::class, 'index'])->name('index');
         Route::post('/create', [LearningManagementController::class, 'store'])->name('store');
-        Route::get('/{learningId}', [LearningManagementController::class, 'show'])->name('show');
+        Route::get('/get-student-details/{studentId}', [LearningManagementController::class, 'show'])->name('show');
         Route::put('/update/{learningId}', [LearningManagementController::class, 'update'])->name('update');
         Route::delete('/{learningId}', [LearningManagementController::class, 'destroy'])->name('destroy');
     });
