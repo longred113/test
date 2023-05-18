@@ -29,6 +29,29 @@ class ClassProductController extends Controller
         return $this->successClassProductRequest($classProductsData);
     }
 
+    public function getClassFromProduct()
+    {
+        $validator = Validator::make($this->request->all(), [
+            'productIds' => 'array|required',
+        ]);
+        if ($validator->fails()) {
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        }
+
+        $productIds = $this->request['productIds'];
+        $classProductsData = ClassProducts::join('classes', 'classes.classId', '=', 'class_products.classId')
+            ->select(
+                'classes.classId',
+                'classes.name',
+                'class_products.productId',
+            )
+            ->whereIn('class_products.productId', $productIds)
+            ->distinct()
+            ->get();
+
+        return $this->successClassProductRequest($classProductsData);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
