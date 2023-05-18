@@ -172,4 +172,19 @@ class StudentClassController extends Controller
         $deleteStudentClass = $studentClass->delete();
         return $this->successStudentClassRequest($deleteStudentClass);
     }
+
+    public static function createStudentClassByAdmin($studentClassParams)
+    {
+        $studentId = $studentClassParams['studentId'];
+        $classId = $studentClassParams['classId'];
+        // $point = $studentClassParams['point'];
+        $studentClassId = IdGenerator::generate(['table' => 'student_classes', 'trow' => 'studentClassId', 'length' => 7, 'prefix' => 'SC']);
+        $params = [
+            'studentClassId' => $studentClassId,
+            'studentId' => $studentId,
+            'classId' => $classId,
+            // 'point' => $point,
+        ];
+        $newStudentClassData = StudentClasses::create($params);
+    }
 }

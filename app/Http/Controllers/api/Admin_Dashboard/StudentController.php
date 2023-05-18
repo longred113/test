@@ -778,4 +778,86 @@ class StudentController extends Controller
         $deleteStudent = $student->delete();
         return $this->successStudentRequest($deleteStudent);
     }
+
+    public function createStudentByAdmin()
+    {
+        try{
+
+            $validator = Validator::make($this->request->all(), [
+                'name' => 'string|required',
+                'email' => 'string|required|unique:students',
+                'userName' => 'string|required|unique:users',
+                'password' => 'string|required|min:8',
+                // 'gender' => 'string|required',
+                // 'dateOfBirth' => 'date|required',
+                // 'country' => 'string|required',
+                // 'timeZone' => 'string|required',
+                // 'status' => 'string|required',
+                // 'joinedDate' => 'date|required',
+                // 'withDrawal' => 'date|required',
+                // 'introduction' => 'string|required',
+                // 'talkSamId' => 'string|required',
+                // 'basicPoint' => 'integer|required',
+                'campusId' => 'string|required',
+                'type' => [Rule::in(['online', 'offline', 'online-break', 'offline-break', 'reserve', 'wait-for-approval'])],
+                'enrollmentCount' => 'integer',
+                'productIds' => 'array|required',
+                'classId' => 'string|required',
+                // 'level' => 'string|required',
+            ]);
+            if ($validator->fails()) {
+                return $this->errorBadRequest($validator->getMessageBag()->toArray());
+            }
+    
+            $studentId = IdGenerator::generate(['table' => 'students', 'trow' => 'studentId', 'length' => 7, 'prefix' => 'ST']);
+    
+            $studentParams = [
+                'studentId' => $studentId,
+                'name' => $this->request['name'],
+                'enrollmentCount' => $this->request['enrollmentCount'],
+                'email' => $this->request['email'],
+                'gender' => $this->request['gender'],
+                'dateOfBirth' => $this->request['dateOfBirth'],
+                'country' => $this->request['country'],
+                'timeZone' => $this->request['timeZone'],
+                'status' => $this->request['status'],
+                'joinedDate' => $this->request['joinedDate'],
+                'withDrawal' => $this->request['withDrawal'],
+                'introduction' => $this->request['introduction'],
+                'talkSamId' => $this->request['talkSamId'],
+                'basicPoint' => $this->request['basicPoint'],
+                'campusId' => $this->request['campusId'],
+                'type' => $this->request['type'],
+            ];
+            $newStudent = Students::create($studentParams);
+    
+            $productIds = $this->request['productIds'];
+            $classId = $this->request['classId'];
+    
+            $userParams = [
+                'name' => $this->request['name'],
+                'userName' => $this->request['userName'],
+                'email' => $this->request['email'],
+                'password' => $this->request['password'],
+                'studentId' => $studentId,
+            ];
+            UserController::store($userParams);
+    
+            $studentProductParams = [
+                'studentId' => $studentId,
+                'productIds' => $productIds,
+            ];
+            StudentProductController::createStudentProductByAdmin($studentProductParams);
+    
+            $studentClassParams = [
+                'studentId' => $studentId,
+                'classId' => $classId,
+            ];
+            StudentClassController::createStudentClassByAdmin($studentClassParams);
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+
+        return $this->successStudentRequest($newStudent);
+    }
 }

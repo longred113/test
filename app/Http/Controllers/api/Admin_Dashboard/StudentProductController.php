@@ -206,4 +206,20 @@ class StudentProductController extends Controller
         }
         return $this->successStudentProductRequest();
     }
+
+    public static function createStudentProductByAdmin($studentProductParams)
+    {
+        $studentId = $studentProductParams['studentId'];
+        $productIds = $studentProductParams['productIds'];
+
+        foreach($productIds as $productId){
+            $studentProductId = IdGenerator::generate(['table' => 'student_products', 'trow' => 'studentProductId', 'length' => 7, 'prefix' => 'SP']);
+            $params = [
+                'studentProductId' => $studentProductId,
+                'studentId' => $studentId,
+                'productId' => $productId,
+            ];
+            StudentProducts::create($params);
+        }
+    }
 }

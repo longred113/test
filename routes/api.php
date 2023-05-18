@@ -209,6 +209,7 @@ Route::prefix('admin-student-management')
         Route::get('/get-student/{parentId}', [StudentController::class, 'getStudentByParent'])->name('getStudentByParent');
         Route::get('/get-enrollment-count/{studentId}', [StudentController::class, 'getEnrollmentCount'])->name('getEnrollmentCount');
         Route::get('/get-by-campus/{campusId}', [StudentController::class, 'getStudentByCampus'])->name('getStudentByCampus');
+        Route::post('/create-student-by-admin', [StudentController::class, 'createStudentByAdmin'])->name('createStudentByAdmin');
     });
 
 Route::prefix('admin-parent-management')
