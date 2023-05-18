@@ -48,7 +48,6 @@ class ClassProductController extends Controller
             ->whereIn('class_products.productId', $productIds)
             ->distinct()
             ->get();
-
         return $this->successClassProductRequest($classProductsData);
     }
 
