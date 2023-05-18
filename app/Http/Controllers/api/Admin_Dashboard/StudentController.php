@@ -7,7 +7,9 @@ use App\Http\Resources\StudentResource;
 use App\Models\Campus;
 use App\Models\ClassFeedbacks;
 use App\Models\ClassReports;
+use App\Models\GroupActivities;
 use App\Models\Parents;
+use App\Models\ProductGroups;
 use App\Models\ProductMatchedActivities;
 use App\Models\Products;
 use App\Models\StudentClasses;
@@ -854,6 +856,24 @@ class StudentController extends Controller
                 'classId' => $classId,
             ];
             StudentClassController::createStudentClassByAdmin($studentClassParams);
+
+            $productGroups = ProductGroups::whereIn('productId', $productIds)->get();
+            $groupActivity = [];
+            if(!empty($productGroups)){
+                foreach($productGroups as $productGroup){
+                    $groupId = $productGroup->groupId;
+                    $groupActivity = GroupActivities::where('groupId', $groupId)->select('matchedActivityId','matchedActivityName')->get();
+                    foreach($groupActivity as $activity){
+                        $studentMatchedActivityParams = [
+                            'studentId' => $studentId,
+                            'matchedActivityId' => $activity->matchedActivityId,
+                            'matchedActivityName' => $activity->matchedActivityName,
+                            'status' => 'to-do',
+                        ];
+                        StudentMatchedActivityController::createStudentMatchedActivityByAdmin($studentMatchedActivityParams);
+                    }
+                }
+            }
         } catch (Exception $e) {
             return $e->getMessage();
         }

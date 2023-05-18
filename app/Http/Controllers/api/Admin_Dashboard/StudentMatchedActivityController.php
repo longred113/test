@@ -204,26 +204,23 @@ class StudentMatchedActivityController extends Controller
         }
     }
 
-    // public static function updateMultipleStudentWithMultipleMatchedActivity($studentMatchActivityParams)
-    // {
-    //     $studentIds = $studentMatchActivityParams['studentIds'];
-    //     $matchedActivityIds = $studentMatchActivityParams['matchedActivityIds'];
+    public static function createStudentMatchedActivityByAdmin($studentMatchedActivityParams)
+    {
+        $studentId = $studentMatchedActivityParams['studentId'];
+        $matchedActivityId = $studentMatchedActivityParams['matchedActivityId'];
+        $matchedActivityName = $studentMatchedActivityParams['matchedActivityName'];
+        $status = $studentMatchedActivityParams['status'];
 
-    //     foreach($studentIds as $studentId){
-    //         $students = StudentMatchedActivities::where('studentId', $studentId)->delete();
-    //         foreach($matchedActivityIds as $matchedActivityId){
-    //             $studentMatchedActivityId = IdGenerator::generate(['table' => 'student_matched_activities', 'trow' => 'studentMatchedActivityId', 'length' => 8, 'prefix' => 'SMA']);
-    //             $params = [
-    //                 'studentMatchedActivityId' => $studentMatchedActivityId,
-    //                 'studentId' => $studentId,
-    //                 'matchedActivityId' => $matchedActivityId,
-    //                 'status' => 'to-do',
-    //                 'activate' => 1,
-    //             ];
-    //             $matchedActivityName = MatchedActivities::where('matchedActivityId', $matchedActivityId)->pluck('name')->toArray();
-    //             $params['name'] = implode(', ', $matchedActivityName);
-    //             StudentMatchedActivities::create($params);
-    //         }
-    //     }
-    // }
+        $studentMatchedActivityId = IdGenerator::generate(['table' => 'student_matched_activities', 'trow' => 'studentMatchedActivityId', 'length' => 8, 'prefix' => 'SMA']);
+        $params = [
+            'studentMatchedActivityId' => $studentMatchedActivityId,
+            'studentId' => $studentId,
+            'matchedActivityId' => $matchedActivityId,
+            'name' => $matchedActivityName,
+            'status' => $status,
+            'activate' => 1,
+        ];
+
+        StudentMatchedActivities::create($params);
+    }
 }
