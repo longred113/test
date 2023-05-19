@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\Admin_Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentResource;
 use App\Models\Campus;
+use App\Models\Classes;
 use App\Models\ClassFeedbacks;
 use App\Models\ClassReports;
 use App\Models\GroupActivities;
@@ -18,6 +19,7 @@ use App\Models\StudentProducts;
 use App\Models\Students;
 use App\Models\Users;
 use Carbon\Carbon;
+use DateTime;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -103,128 +105,197 @@ class StudentController extends Controller
         return $this->successStudentRequest($students);
     }
 
-    public function test()
-    {
-        try {
-            $students = Students::leftJoin('users', 'students.studentId', '=', 'users.studentId')
-                ->leftJoin('campuses', 'students.campusId', '=', 'campuses.campusId')
-                ->leftJoin('student_products', 'students.studentId', '=', 'student_products.studentId')
-                ->leftJoin('student_matched_activities', 'students.studentId', '=', 'student_matched_activities.studentId')
-                ->leftJoin('products', 'student_products.productId', '=', 'products.productId')
-                ->leftJoin('matched_activities', 'student_matched_activities.matchedActivityId', '=', 'matched_activities.matchedActivityId')
-                ->leftJoin('student_classes', 'students.studentId', '=', 'student_classes.studentId')
-                ->leftJoin('classes', 'student_classes.classId', '=', 'classes.classId')
-                ->selectRaw(
-                    'students.studentId,
-                    students.campusId,
-                    campuses.name as campusName,
-                    classes.classId,
-                    classes.name as className,
-                    students.name,
-                    students.email,
-                    MAX(users.userName) as userName,
-                    MAX(users.password) as password,
-                    students.gender,
-                    students.dateOfBirth,
-                    GROUP_CONCAT(DISTINCT CONCAT_WS(":",student_products.productId, products.name)) as products,
-                    GROUP_CONCAT(DISTINCT CONCAT_WS(":", student_matched_activities.matchedActivityId, matched_activities.name)) as studyPlaners',
-                )
-                ->where('students.type', 'online')
-                ->whereNotNull('users.studentId')
-                ->groupBy('students.studentId', 'students.campusId', 'classes.classId')
-                ->get();
-            foreach ($students as $student) {
-                $products = explode(',', $student->products);
-                foreach ($products as $product) {
-                    $parts = explode(':', $product);
-                    $productId = $parts[0];
-                    $productName = isset($parts[1]) ? $parts[1] : '';
-                    $matchActivities = ProductMatchedActivities::where('productId', $productId)
-                        ->select('matchedActivityId', 'matchedActivityName')->get();
-                    foreach ($matchActivities as $activity) {
-                        $productActivities[$productId][] = [
-                            'id' => $activity->matchedActivityId,
-                            'name' => $activity->matchedActivityName,
-                        ];
-                    }
-                }
-                // $product = [$productIds, $matchActivity];
-                $studyPlaner = explode(',', $student->studyPlaners);
-                $student->products = $productActivities;
-                $student->studyPlaners = $studyPlaner;
-            }
-        } catch (Exception $e) {
-            return $e->getMessage();
-        }
-        return $this->successStudentRequest($students);
-    }
-
     public function detailsOfStudent($studentId)
     {
         try {
-            $student = Students::where('studentId', $studentId)->first();
+            $student = Students::leftJoin('users', 'students.studentId', '=', 'users.studentId')
+                ->leftJoin('campuses', 'students.campusId', '=', 'campuses.campusId')
+                ->select(
+                    'students.studentId',
+                    'students.name as studentName',
+                    'students.campusId',
+                    'campuses.name as campusName',
+                    'students.email',
+                    'students.gender',
+                    'students.dateOfBirth',
+                    'students.type',
+                    'students.country',
+                    'students.timeZone',
+                    'users.userName',
+                    'users.password',
+                )
+                ->where('students.type', 'online')
+                ->where('students.studentId', $studentId)
+                ->first();
             $student->campusName = Campus::where('campusId', $student->campusId)->first()->name;
-            $student->products = StudentProducts::join('product_matched_activities', 'student_products.productId', '=', 'product_matched_activities.productId')
+            $products = StudentProducts::join('products', 'student_products.productId', '=', 'products.productId')
                 ->selectRaw(
-                    'GROUP_CONCAT(DISTINCT CONCAT_WS(":",product_matched_activities.productId, product_matched_activities.productName))as products',
+                    'GROUP_CONCAT(DISTINCT CONCAT_WS(":",products.productId, products.name))as products',
                 )
                 ->where('studentId', $studentId)
                 ->pluck('products')
-                ->first();
-            $products = explode(',', $student->products);
+                ->toArray();
             foreach ($products as $product) {
-                $parts = explode(':', $product);
-                $productId = $parts[0];
-                $matchActivities = ProductMatchedActivities::where('productId', $productId)
-                    ->select('matchedActivityId', 'matchedActivityName')->get();
-                foreach ($matchActivities as $activity) {
-                    $productActivities[$product][] = [
-                        'matchActivityId' => $activity->matchedActivityId,
-                        'matchActivityName' => $activity->matchedActivityName,
+                $eachProducts = explode(',', $product);
+            }
+            $studentProducts = [];
+            foreach ($eachProducts as $eachProduct) {
+                $productParts = explode(':', $eachProduct);
+                if (count($productParts) >= 2) {
+                    $studentProducts[] = [
+                        'productId' => $productParts[0],
+                        'productName' => $productParts[1],
                     ];
                 }
             }
-            $student->products = $productActivities;
-            $student->class = StudentClasses::join('classes', 'student_classes.classId', '=', 'classes.classId')
-                ->join('class_products', 'classes.classId', '=', 'class_products.classId')
-                ->join('product_matched_activities', 'class_products.productId', '=', 'product_matched_activities.productId')
-                ->join('student_matched_activities', 'student_classes.studentId', '=', 'student_matched_activities.studentId')
-                ->leftJoin('class_times', 'classes.classId', '=', 'class_times.classId')
+
+            $productGroups = ProductGroups::where('productId', $productParts[0])->select('groupId', 'groupName')->get();
+            $groupId = $productGroups->pluck('groupId')->toArray();
+            $groupActivities = GroupActivities::whereIn('groupId', $groupId)->select('matchedActivityId', 'matchedActivityName')->get();
+            $student->products = $studentProducts;
+            $student->productGroups = $productGroups;
+            $student->groupActivities = $groupActivities;
+            $classes = Classes::join('student_classes', 'classes.classId', '=', 'student_classes.classId')
                 ->select(
                     'classes.classId',
                     'classes.name as className',
                     'classes.level',
-                    'classes.classStartDate',
-                    // 'class_times.classEndDate',
-                    'classes.classday',
-                    'classes.classTimeSlot',
-                    'classes.typeOfClass',
                     'classes.numberOfStudent',
-                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",product_matched_activities.productId, product_matched_activities.productName)) as productOfClasses'),
+                    'classes.onlineTeacher',
+                    'classes.classStartDate',
+                    'classes.classEndDate',
+                    'classes.status',
+                    'classes.typeOfClass',
+                    'classes.initialTextbook'
                 )
-                ->where('student_classes.studentId', $studentId)
-                ->groupBy('classes.classId')
+                ->where('studentId', $studentId)
                 ->get();
-            foreach ($student->class as $class) {
-                $productOfClasses = explode(',', $class->productOfClasses);
-                $classId = $class->classId;
-                foreach ($productOfClasses as $productOfClass) {
-                    $productPart = explode(':', $productOfClass);
-                    $productIdOfClass = $productPart[0];
-                    $matchedActivities = ProductMatchedActivities::where('productId', $productIdOfClass)->select('matchedActivityId', 'matchedActivityName')->get();
-                    $matchedActivityId = $matchedActivities->pluck('matchedActivityId')->toArray();
-                    $status = StudentMatchedActivities::join('matched_activities', 'student_matched_activities.matchedActivityId', '=', 'matched_activities.matchedActivityId')
-                        ->where('studentId', $studentId)
-                        ->whereIn('student_matched_activities.matchedActivityId', $matchedActivityId)
+            $currentDate = date('Y-m-d');
+            foreach ($classes as $class) {
+                $classId = $class['classId'];
+                $class['classTime'] = Classes::join('class_times', 'classes.classId', '=', 'class_times.classId')
+                    ->join('teachers', 'classes.onlineTeacher', '=', 'teachers.teacherId')
+                    ->leftJoin('class_time_slots', 'class_times.classTimeSlot', '=', 'class_time_slots.name')
+                    ->select(
+                        DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classId,classes.name,class_times.day,teachers.name)) as Class'),
+                        DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_times.day)) as day'),
+                        DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.onlineTeacher,teachers.name)) as teacher'),
+                        DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_time_slots.classStart)) as startTime'),
+                        DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_time_slots.classEnd)) as endTime'),
+                        'class_times.classTimeSlot',
+                        DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classStartDate)) as startDate'),
+                        DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_times.classEndDate)) as endDate'),
+                    )
+                    ->where('classes.classId', $classId)
+                    // ->where('classes.typeOfClass', 'online')
+                    ->where('classes.expired', 0)
+                    ->groupBy('class_times.classTimeSlot')
+                    ->get();
+                foreach ($classes as $class) {
+                    $classId = $class['classId'];
+                    $class['classTime'] = Classes::join('class_times', 'classes.classId', '=', 'class_times.classId')
+                        ->join('teachers', 'classes.onlineTeacher', '=', 'teachers.teacherId')
+                        ->leftJoin('class_time_slots', 'class_times.classTimeSlot', '=', 'class_time_slots.name')
                         ->select(
-                            'matched_activities.matchedActivityId',
-                            'student_matched_activities.name as matchedActivityName',
-                            'student_matched_activities.status'
+                            DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classId,classes.name,class_times.day,teachers.name)) as Class'),
+                            DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_times.day)) as day'),
+                            DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.onlineTeacher,teachers.name)) as teacher'),
+                            DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_time_slots.classStart)) as startTime'),
+                            DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_time_slots.classEnd)) as endTime'),
+                            'class_times.classTimeSlot',
+                            DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classStartDate)) as startDate'),
+                            DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_times.classEndDate)) as endDate'),
                         )
+                        ->where('classes.classId', $classId)
+                        // ->where('classes.typeOfClass', 'online')
+                        ->where('classes.expired', 0)
+                        ->groupBy('class_times.classTimeSlot')
                         ->get();
-                    $productActivityOfClasses[$productOfClass] = $status;
+                    $classProducts = Classes::leftJoin('class_products', 'classes.classId', '=', 'class_products.classId')
+                        ->leftJoin('products', 'class_products.productId', '=', 'products.productId')
+                        ->select(
+                            DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",products.productId,products.name)) as products'),
+                        )
+                        ->where('classes.classId', $classId)
+                        ->groupBy('classes.classId')
+                        ->get();
+                    $classProducts = $classProducts->pluck('products')->toArray();
+                    $groupProduct = [];
+                    foreach ($classProducts as $product) {
+                        $groupProduct = explode(',', $product);
+                    }
+                    // $class['product'] = $groupProduct;
+                    $classGroupProduct = [];
+                    foreach ($groupProduct as $clProduct) {
+                        $classProduct = explode(':', $clProduct);
+                        if (count($classProduct) >= 2) {
+                            $classGroupProduct[] = [
+                                'productId' => $classProduct[0],
+                                'productName' => $classProduct[1],
+                            ];
+                        }
+                    }
+                    $classProductGroup = ProductGroups::where('productId', $classProduct[0])->select('groupId', 'groupName')->get();
+                    $classGroupId = $classProductGroup->pluck('groupId')->toArray();
+                    $classGroupActivities = GroupActivities::whereIn('groupId', $classGroupId)->select('matchedActivityId', 'matchedActivityName')->get();
+                    // return $classGroupProduct;
+                    $class['products'] = $classGroupProduct;
+                    $class['productGroups'] = $classProductGroup;
+                    $class['groupActivities'] = $classGroupActivities;
+
+                    $classHolidays = Classes::leftJoin('class_holidays', 'classes.classId', '=', 'class_holidays.classId')
+                        ->leftJoin('holidays', 'class_holidays.holidayId', '=', 'holidays.holidayId')
+                        ->select(
+                            DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",holidays.holidayId, holidays.name)) as holidays'),
+                        )
+                        ->where('classes.classId', $classId)
+                        ->groupBy('classes.classId')
+                        ->get();
+                    $classHolidays = $classHolidays->pluck('holidays')->toArray();
+                    $holiday = [];
+                    foreach ($classHolidays as $classHoliday) {
+                        $clHoliday = explode(':', $classHoliday);
+                        if (count($clHoliday) >= 2) {
+                            $holiday[] = [
+                                'value' => $clHoliday[0],
+                                'label' => $clHoliday[1],
+                            ];
+                        }
+                    }
+                    $class['holiday'] = $holiday;
+                    // Lấy ngày bắt đầu và ngày kết thúc của lớp học
+                    $startDate = $class['classStartDate'];
+                    $endDate = $class['classEndDate'];
+
+                    // Chuyển đổi ngày thành đối tượng DateTime
+                    $startDateTime = new DateTime($startDate);
+                    $endDateTime = new DateTime($endDate);
+                    $currentDateTime = new DateTime($currentDate);
+                    // Kiểm tra nếu ngày hiện tại nằm trong khoảng ngày bắt đầu và kết thúc
+                    if ($currentDateTime >= $startDateTime && $currentDateTime <= $endDateTime) {
+                        // Tính toán số tuần từ ngày bắt đầu đến ngày hiện tại
+                        $diff = $startDateTime->diff($currentDateTime);
+                        $currentWeek = ceil($diff->days / 7);
+
+                        // Sử dụng biến $currentWeek ở đây để làm gì đó
+                        // Ví dụ: in ra tuần hiện tại của lớp học
+                    }
+                    // Tính toán ngày bắt đầu và ngày kết thúc của tuần hiện tại
+                    $currentWeekStartDate = clone $currentDateTime;
+                    $currentWeekStartDate->modify('monday this week');
+                    $currentWeekEndDate = clone $currentDateTime;
+                    $currentWeekEndDate->modify('sunday this week');
+
+                    // Chuyển đổi thành định dạng mong muốn (Y-m-d)
+                    $currentWeekStartDateFormatted = $currentWeekStartDate->format('Y-m-d');
+                    $currentWeekEndDateFormatted = $currentWeekEndDate->format('Y-m-d');
+                    foreach ($class['classTime'] as $classTime) {
+                        $classTime['currentWeek'] = $currentWeek;
+                        $classTime['currentWeekStartDate'] = $currentWeekStartDateFormatted;
+                        $classTime['currentWeekEndDate'] = $currentWeekEndDateFormatted;
+                    }
                 }
-                $class->productOfClasses = $productActivityOfClasses;
+                $student->classes = $classes;
                 $classFeedback = ClassFeedbacks::where('classId', $classId)->where('studentId', $studentId)->get();
                 $class->classFeedback = $classFeedback;
                 $classReport = ClassReports::where('classId', $classId)->where('studentId', $studentId)->get();
@@ -233,29 +304,6 @@ class StudentController extends Controller
 
             // return $student->class;
             // $student->studyPlaners = StudentMatchedActivities::where('studentId', $studentId)->get();
-        } catch (Exception $e) {
-            return $e->getMessage();
-        }
-        return $this->successStudentRequest($student);
-    }
-
-    public function detail1($studentId)
-    {
-        try {
-            $student = Students::where('studentId', $studentId)->first();
-            $student->campusName = Campus::where('campusId', $student->campusId)->first()->name;
-            $student->levels = StudentProducts::join('products', 'student_products.productId', '=', 'products.productId')
-                ->select(
-                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",products.level)) as levels'),
-                )
-                ->where('studentId', $studentId)
-                ->pluck('levels')
-                ->first();
-            $levels = explode(',', $student->levels);
-            foreach ($levels as $level) {
-                $parts = explode(':', $level);
-            }
-            $student->levels = $levels;
         } catch (Exception $e) {
             return $e->getMessage();
         }
@@ -313,71 +361,6 @@ class StudentController extends Controller
         }
 
         try {
-            // $studentsData = Students::leftJoin('student_classes', 'students.studentId', '=', 'student_classes.studentId')
-            //     ->leftJoin('classes', 'student_classes.classId', '=', 'classes.classId')
-            //     ->leftJoin('class_times', 'classes.classId', '=', 'class_times.classId')
-            //     ->leftJoin('student_products', 'students.studentId', '=', 'student_products.studentId')
-            //     ->leftJoin('products', 'student_products.productId', '=', 'products.productId')
-            //     ->leftJoin('class_products', 'classes.classId', '=', 'class_products.classId')
-            //     ->select(
-            //         'students.studentId',
-            //         'students.name',
-            //         DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classId, classes.name)) as classes'),
-            //         DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",products.productId, products.name)) as products'),
-            //         DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_products.productId)) as classProducts'),
-            //         'students.timeZone',
-            //         DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",products.level)) as levels'),
-            //         DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classday)) as classDay'),
-            //         // DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classTimeSlot)) as classTimeSlot'),
-            //         DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS("-",class_times.day,class_times.classTimeSlot)) as classTime'),
-            //     )
-            //     ->where('students.type', 'online')
-            //     // ->where('products.level', $this->request['level'])
-            //     ->where('products.productId', $this->request['productId'])
-            //     // ->where('students.timeZone', $this->request['timeZone'])
-            //     // ->where('classes.classday', $this->request['day'])
-            //     // ->where('classes.classTimeSlot', $this->request['timeSlot'])
-            //     ->groupBy('students.studentId')
-            //     ->get();
-            // return $studentsData;
-
-            // $classTimes = $this->request['classTime'];
-            // foreach($classTimes as $classTime){
-            //     $classTimeSlot = $classTime['classTimeSlot'];
-            //     $days = $classTime['day'];
-
-            //     foreach($days as $day){
-            //         $formatted = $day . "-" . $classTimeSlot;
-            //         $classTimeResults[] = $formatted;
-            //     }
-            // }
-
-            // $filteredTeachersData = collect([]);
-
-            // foreach ($studentsData as $student) {
-            //     $productIds[] = $this->request['productIds'];
-            //     $classProducts = explode(',', $student->classProducts);
-            //     $classTime = explode(',', $student->classTime);
-
-            //     $shouldExclude = false;
-            //     foreach ($classProducts as $product) {
-            //         if (in_array($product, $productIds)) {
-            //             $shouldExclude = true;
-            //         }
-            //     }
-
-            //     foreach($classTime as $time){
-            //         if(in_array($time, $classTimeResults)){
-            //             $shouldExclude = true;
-            //         }
-            //     }
-
-            //     if (!$shouldExclude) {
-            //         $filteredTeachersData->push($student);
-            //     }
-            //     $studentDataOutput = $filteredTeachersData;
-            // }
-
             $studentsData = Students::leftJoin('student_classes', 'students.studentId', '=', 'student_classes.studentId')
                 ->leftJoin('classes', 'student_classes.classId', '=', 'classes.classId')
                 ->leftJoin('class_times', 'classes.classId', '=', 'class_times.classId')
@@ -401,42 +384,41 @@ class StudentController extends Controller
                 ->groupBy('students.studentId')
                 ->get();
 
-                // return $studentsData;
-            if($studentsData->isEmpty()){
+            // return $studentsData;
+            if ($studentsData->isEmpty()) {
                 return $this->successStudentRequest($studentsData);
-            }
-            else{
+            } else {
                 $classTimes = $this->request['classTime'];
                 foreach ($classTimes as $classTime) {
                     $classTimeSlot = $classTime['classTimeSlot'];
                     $days = $classTime['day'];
-    
+
                     foreach ($days as $day) {
                         $formatted = $day . "-" . $classTimeSlot;
                         $classTimeResults[] = $formatted;
                     }
                 }
-    
+
                 $filteredTeachersData = collect([]);
-    
+
                 $productIds = $this->request['productIds'];
                 foreach ($studentsData as $student) {
                     $classProducts = explode(',', $student->classProducts);
                     $classTime = explode(',', $student->classTime);
-    
+
                     $shouldExclude = false;
                     foreach ($classProducts as $product) {
                         if (in_array($product, $productIds)) {
                             $shouldExclude = true;
                         }
                     }
-    
+
                     foreach ($classTime as $time) {
                         if (in_array($time, $classTimeResults)) {
                             $shouldExclude = true;
                         }
                     }
-    
+
                     if (!$shouldExclude) {
                         $filteredTeachersData->push($student);
                     }
@@ -783,7 +765,7 @@ class StudentController extends Controller
 
     public function createStudentByAdmin()
     {
-        try{
+        try {
 
             $validator = Validator::make($this->request->all(), [
                 'name' => 'string|required',
@@ -810,9 +792,9 @@ class StudentController extends Controller
             if ($validator->fails()) {
                 return $this->errorBadRequest($validator->getMessageBag()->toArray());
             }
-    
+
             $studentId = IdGenerator::generate(['table' => 'students', 'trow' => 'studentId', 'length' => 7, 'prefix' => 'ST']);
-    
+
             $studentParams = [
                 'studentId' => $studentId,
                 'name' => $this->request['name'],
@@ -832,10 +814,10 @@ class StudentController extends Controller
                 'type' => $this->request['type'],
             ];
             $newStudent = Students::create($studentParams);
-    
+
             $productIds = $this->request['productIds'];
             $classId = $this->request['classId'];
-    
+
             $userParams = [
                 'name' => $this->request['name'],
                 'userName' => $this->request['userName'],
@@ -844,13 +826,13 @@ class StudentController extends Controller
                 'studentId' => $studentId,
             ];
             UserController::store($userParams);
-    
+
             $studentProductParams = [
                 'studentId' => $studentId,
                 'productIds' => $productIds,
             ];
             StudentProductController::createStudentProductByAdmin($studentProductParams);
-    
+
             $studentClassParams = [
                 'studentId' => $studentId,
                 'classId' => $classId,
@@ -859,11 +841,11 @@ class StudentController extends Controller
 
             $productGroups = ProductGroups::whereIn('productId', $productIds)->get();
             $groupActivity = [];
-            if(!empty($productGroups)){
-                foreach($productGroups as $productGroup){
+            if (!empty($productGroups)) {
+                foreach ($productGroups as $productGroup) {
                     $groupId = $productGroup->groupId;
-                    $groupActivity = GroupActivities::where('groupId', $groupId)->select('matchedActivityId','matchedActivityName')->get();
-                    foreach($groupActivity as $activity){
+                    $groupActivity = GroupActivities::where('groupId', $groupId)->select('matchedActivityId', 'matchedActivityName')->get();
+                    foreach ($groupActivity as $activity) {
                         $studentMatchedActivityParams = [
                             'studentId' => $studentId,
                             'matchedActivityId' => $activity->matchedActivityId,
