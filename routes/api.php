@@ -170,7 +170,7 @@ Route::prefix('admin-class-management')
     ->group(function () {
         Route::get('/', [ClassController::class, 'index'])->name('index');
         Route::get('/get-class',[ClassController::class,'getClass'])->name('getClass');
-        Route::get('get-details-of-class/{classId}',[ClassController::class,'getDetailsOfClass'])->name('getDetailsOfClass');
+        Route::get('/get-details-of-class/{classId}',[ClassController::class,'getDetailsOfClass'])->name('getDetailsOfClass');
         Route::post('/create', [ClassController::class, 'store'])->name('store');
         Route::get('/{classId}', [ClassController::class, 'show'])->name('show');
         Route::get('/get-class/{onlineTeacher}', [ClassController::class, 'getClassFromTeacher'])->name('getClassFromTeacher');
