@@ -445,6 +445,7 @@ Route::prefix('admin-group-activity-management')
         Route::get('/{groupId}', [GroupActivityController::class, 'show'])->name('show');
         Route::put('/update/{groupActivityId}', [GroupActivityController::class, 'update'])->name('update');
         Route::delete('/{groupActivityId}', [GroupActivityController::class, 'destroy'])->name('destroy');
+        Route::post('/get-activity-by-product', [GroupActivityController::class, 'getActivityByProduct'])->name('getActivityByProduct');
     });
 
 Route::prefix('admin-product-group-management')

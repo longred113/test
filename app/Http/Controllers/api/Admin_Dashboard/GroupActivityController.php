@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\Admin_Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\GroupActivities;
 use App\Models\MatchedActivities;
+use App\Models\ProductGroups;
 use App\Models\TblGroups;
 use Exception;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
@@ -95,5 +96,31 @@ class GroupActivityController extends Controller
         $groupActivity = GroupActivities::where('groupId', $groupId)->get();
         $groupActivity->delete();
         return $this->successGroupActivityRequest($groupActivity);
+    }
+
+    public function getActivityByProduct()
+    {
+        $validator = Validator::make($this->request->all(), [
+            'productIds' => 'array|required',
+        ]);
+        if ($validator->fails()) {
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        }
+
+        try{
+            $productIds = $this->request['productIds'];
+            $productGroup = ProductGroups::join('group_activities', 'product_groups.groupId', '=', 'group_activities.groupId')
+            ->select(
+                'product_groups.productId',
+                'group_activities.groupId',
+                'matchedActivityId',
+                'matchedActivityName',
+            )
+            ->whereIn('productId', $productIds)
+            ->get();
+            return $productGroup;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
     }
 }
