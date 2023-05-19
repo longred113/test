@@ -301,9 +301,6 @@ class StudentController extends Controller
                 $classReport = ClassReports::where('classId', $classId)->where('studentId', $studentId)->get();
                 $class->classReport = $classReport;
             }
-
-            // return $student->class;
-            // $student->studyPlaners = StudentMatchedActivities::where('studentId', $studentId)->get();
         } catch (Exception $e) {
             return $e->getMessage();
         }
@@ -528,63 +525,11 @@ class StudentController extends Controller
     public function update($studentId)
     {
         try {
-            $student = Students::find($studentId);
-            if (empty($this->request['name'])) {
-                $this->request['name'] = $student['name'];
-            }
-            if (empty($this->request['email'])) {
-                $this->request['email'] = $student['email'];
-            }
-            if (empty($this->request['gender'])) {
-                $this->request['gender'] = $student['gender'];
-            }
-            if (empty($this->request['dateOfBirth'])) {
-                $this->request['dateOfBirth'] = $student['dateOfBirth'];
-            }
-            if (empty($this->request['country'])) {
-                $this->request['country'] = $student['country'];
-            }
-            if (empty($this->request['timeZone'])) {
-                $this->request['timeZone'] = $student['timeZone'];
-            }
-            if (empty($this->request['status'])) {
-                $this->request['status'] = $student['status'];
-            }
-            if (empty($this->request['joinedDate'])) {
-                $this->request['joinedDate'] = $student['joinedDate'];
-            }
-            if (empty($this->request['withDrawal'])) {
-                $this->request['withDrawal'] = $student['withDrawal'];
-            }
-            if (empty($this->request['introduction'])) {
-                $this->request['introduction'] = $student['introduction'];
-            }
-            if (empty($this->request['talkSamId'])) {
-                $this->request['talkSamId'] = $student['talkSamId'];
-            }
-            if (empty($this->request['basicPoint'])) {
-                $this->request['basicPoint'] = $student['basicPoint'];
-            }
-            if (empty($this->request['campusId'])) {
-                $this->request['campusId'] = $student['campusId'];
-            }
-            if (empty($this->request['type'])) {
-                $this->request['type'] = $student['type'];
-            }
-            if (empty($this->request['enrollmentId'])) {
-                $this->request['enrollmentId'] = $student['enrollmentId'];
-            }
-            if (empty($this->request['parentId'])) {
-                $this->request['parentId'] = $student['parentId'];
-            }
-            if (is_null($this->request['enrollmentCount'])) {
-                $this->request['enrollmentCount'] = $student['enrollmentCount'];
-            }
-
             $validator = Validator::make($this->request->all(), [
-                'name' => 'string|required',
-                'email' => 'string|required',
+                'name' => 'string',
+                'email' => 'string',
                 'userName' => 'string',
+                'password' => 'string|min:8',
                 // 'gender' => 'string|required',
                 // 'dateOfBirth' => 'date|required',
                 // 'country' => 'string|required',
@@ -600,56 +545,119 @@ class StudentController extends Controller
                 // 'enrollmentId' => 'string',
                 // 'parentId' => 'string',
                 'enrollmentCount' => 'int',
+                'productIds' => 'array',
             ]);
             if ($validator->fails()) {
                 return $this->errorBadRequest($validator->getMessageBag()->toArray());
             }
 
-            if ($this->request['email'] != $student['email']) {
-                $email = Students::where('email', $this->request['email'])->first();
-                if (!empty($email)) {
-                    return $this->errorBadRequest('Email already exists');
+            $student = Students::where('studentId', $studentId)->first();
+            $user = Users::where('studentId', $studentId)->first();
+            if (!empty($this->request['email'])) {
+                if ($this->request['email'] != $student['email']) {
+                    $email = Students::where('email', $this->request['email'])->first();
+                    $params['email'] = $this->request['email'];
+                    $userParams['email'] = $this->request['email'];
+                    if (!empty($email)) {
+                        return $this->errorBadRequest('Email already exists');
+                    }
+                } else {
+                    $params['email'] = $this->request['email'];
+                    $userParams['email'] = $this->request['email'];
                 }
             }
-            $params = [
-                $student['name'] = $this->request['name'],
-                $student['email'] = $this->request['email'],
-                $student['gender'] = $this->request['gender'],
-                $student['dateOfBirth'] = $this->request['dateOfBirth'],
-                $student['country'] = $this->request['country'],
-                $student['timeZone'] = $this->request['timeZone'],
-                $student['status'] = $this->request['status'],
-                $student['joinedDate'] = $this->request['joinedDate'],
-                $student['withDrawal'] = $this->request['withDrawal'],
-                $student['introduction'] = $this->request['introduction'],
-                $student['talkSamId'] = $this->request['talkSamId'],
-                $student['basicPoint'] = $this->request['basicPoint'],
-                $student['campusId'] = $this->request['campusId'],
-                $student['type'] = $this->request['type'],
-                $student['enrollmentId'] = $this->request['enrollmentId'],
-                $student['parentId'] = $this->request['parentId'],
-                $student['enrollmentCount'] = $this->request['enrollmentCount'],
-            ];
-
+            if (!empty($this->request['userName'])) {
+                if ($this->request['userName'] != $user['userName']) {
+                    $userName = Users::where('userName', $this->request['userName'])->first();
+                    $userParams['userName'] = $this->request['userName'];
+                    if (!empty($userName)) {
+                        return $this->errorBadRequest('Username already exists');
+                    }
+                } else {
+                    $userParams['userName'] = $this->request['userName'];
+                }
+            }
+            if (!empty($this->request['name'])) {
+                $params['name'] = $this->request['name'];
+                $userParams['name'] = $this->request['name'];
+            }
+            if (!empty($this->request['password'])) {
+                $userParams['password'] = $this->request['password'];
+            }
+            if (!empty($this->request['gender'])) {
+                $params['gender'] = $this->request['gender'];
+            }
+            if (!empty($this->request['dateOfBirth'])) {
+                $params['dateOfBirth'] = $this->request['dateOfBirth'];
+            }
+            if (!empty($this->request['country'])) {
+                $params['country'] = $this->request['country'];
+            }
+            if (!empty($this->request['timeZone'])) {
+                $params['timeZone'] = $this->request['timeZone'];
+            }
+            if (!empty($this->request['status'])) {
+                $params['status'] = $this->request['status'];
+            }
+            if (!empty($this->request['joinedDate'])) {
+                $params['joinedDate'] = $this->request['joinedDate'];
+            }
+            if (!empty($this->request['withDrawal'])) {
+                $params['withDrawal'] = $this->request['withDrawal'];
+            }
+            if (!empty($this->request['introduction'])) {
+                $params['introduction'] = $this->request['introduction'];
+            }
+            if (!empty($this->request['talkSamId'])) {
+                $params['talkSamId'] = $this->request['talkSamId'];
+            }
+            if (!empty($this->request['basicPoint'])) {
+                $params['basicPoint'] = $this->request['basicPoint'];
+            }
+            if (!empty($this->request['campusId'])) {
+                $params['campusId'] = $this->request['campusId'];
+            }
+            if (!empty($this->request['type'])) {
+                $params['type'] = $this->request['type'];
+            }
+            if (!empty($this->request['parentId'])) {
+                $params['parentId'] = $this->request['parentId'];
+            }
+            if (!is_null($this->request['enrollmentCount'])) {
+                $params['enrollmentCount'] = $this->request['enrollmentCount'];
+            }
 
             $newStudentInfoData = $student->update($params);
-            $user = Users::where('studentId', $studentId)->first();
+
             if (!empty($user)) {
-                if (empty($this->request['userName'])) {
-                    $this->request['userName'] = $user['userName'];
-                }
-                if (empty($this->request['password'])) {
-                    $this->request['password'] = $user['password'];
-                }
-                $userParams = [
-                    'name' => $this->request['name'],
-                    'userName' => $this->request['userName'],
-                    'email' => $this->request['email'],
-                    'password' => $this->request['password'],
+                $userParams['studentId'] = $studentId;
+                UserController::update($userParams);
+            }
+
+            if (!empty($this->request['productIds'])) {
+                $productIds = $this->request['productIds'];
+                $studentProductParams = [
                     'studentId' => $studentId,
+                    'productIds' => $productIds,
                 ];
-                if (!empty($user)) {
-                    UserController::update($userParams);
+                StudentProductController::updateStudentProductByAdmin($studentProductParams);
+
+                $productGroups = ProductGroups::whereIn('productId', $productIds)->get();
+                if (!empty($productGroups)) {
+                    $studentMatchedActivity = StudentMatchedActivities::where('studentId', $studentId)->delete();
+                    foreach ($productGroups as $productGroup) {
+                        $groupId = $productGroup['groupId'];
+                        $groupActivity = GroupActivities::where('groupId', $groupId)->select('matchedActivityId', 'matchedActivityName')->get();
+                        foreach ($groupActivity as $activity) {
+                            $studentMatchedActivityParams = [
+                                'studentId' => $studentId,
+                                'matchedActivityId' => $activity->matchedActivityId,
+                                'matchedActivityName' => $activity->matchedActivityName,
+                                'status' => 'to-do',
+                            ];
+                            StudentMatchedActivityController::createStudentMatchedActivityByAdmin($studentMatchedActivityParams);
+                        }
+                    }
                 }
             }
         } catch (Exception $e) {

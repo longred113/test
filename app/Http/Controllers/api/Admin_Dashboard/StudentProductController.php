@@ -222,4 +222,21 @@ class StudentProductController extends Controller
             StudentProducts::create($params);
         }
     }
+    
+    public static function updateStudentProductByAdmin($studentProductParams)
+    {
+        $studentId = $studentProductParams['studentId'];
+        $productIds = $studentProductParams['productIds'];
+
+        StudentProducts::where('studentId', $studentId)->delete();
+        foreach($productIds as $productId){
+            $studentProductId = IdGenerator::generate(['table' => 'student_products', 'trow' => 'studentProductId', 'length' => 7, 'prefix' => 'SP']);
+            $params = [
+                'studentProductId' => $studentProductId,
+                'studentId' => $studentId,
+                'productId' => $productId,
+            ];
+            StudentProducts::create($params);
+        }
+    }
 }

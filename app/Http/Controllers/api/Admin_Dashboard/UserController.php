@@ -202,11 +202,15 @@ class UserController extends Controller
      */
     public static function update($userParams)
     {
-        $params = [
-            'name' => $userParams['name'],
-            'email' => $userParams['email'],
-            'password' => $userParams['password'],
-        ];
+        if(!empty($userParams['name'])){
+            $params['name'] = $userParams['name'];
+        }
+        if(!empty($userParams['email'])){
+            $params['email'] = $userParams['email'];
+        }
+        if(!empty($userParams['password'])){
+            $params['password'] = $userParams['password'];
+        }
         if(!empty($userParams['userName'])){
             $params['userName'] = $userParams['userName'];
         }
