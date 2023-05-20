@@ -266,7 +266,7 @@ class StudentController extends Controller
                     // Lấy ngày bắt đầu và ngày kết thúc của lớp học
                     $startDate = $class['classStartDate'];
                     $endDate = $class['classEndDate'];
-
+                    
                     // Chuyển đổi ngày thành đối tượng DateTime
                     $startDateTime = new DateTime($startDate);
                     $endDateTime = new DateTime($endDate);
@@ -279,20 +279,20 @@ class StudentController extends Controller
 
                         // Sử dụng biến $currentWeek ở đây để làm gì đó
                         // Ví dụ: in ra tuần hiện tại của lớp học
-                    }
-                    // Tính toán ngày bắt đầu và ngày kết thúc của tuần hiện tại
-                    $currentWeekStartDate = clone $currentDateTime;
-                    $currentWeekStartDate->modify('monday this week');
-                    $currentWeekEndDate = clone $currentDateTime;
-                    $currentWeekEndDate->modify('sunday this week');
-
-                    // Chuyển đổi thành định dạng mong muốn (Y-m-d)
-                    $currentWeekStartDateFormatted = $currentWeekStartDate->format('Y-m-d');
-                    $currentWeekEndDateFormatted = $currentWeekEndDate->format('Y-m-d');
-                    foreach ($class['classTime'] as $classTime) {
-                        $classTime['currentWeek'] = $currentWeek;
-                        $classTime['currentWeekStartDate'] = $currentWeekStartDateFormatted;
-                        $classTime['currentWeekEndDate'] = $currentWeekEndDateFormatted;
+                        // Tính toán ngày bắt đầu và ngày kết thúc của tuần hiện tại
+                        $currentWeekStartDate = clone $currentDateTime;
+                        $currentWeekStartDate->modify('monday this week');
+                        $currentWeekEndDate = clone $currentDateTime;
+                        $currentWeekEndDate->modify('sunday this week');
+    
+                        // Chuyển đổi thành định dạng mong muốn (Y-m-d)
+                        $currentWeekStartDateFormatted = $currentWeekStartDate->format('Y-m-d');
+                        $currentWeekEndDateFormatted = $currentWeekEndDate->format('Y-m-d');
+                        foreach ($class['classTime'] as $classTime) {
+                            $classTime['currentWeek'] = $currentWeek;
+                            $classTime['currentWeekStartDate'] = $currentWeekStartDateFormatted;
+                            $classTime['currentWeekEndDate'] = $currentWeekEndDateFormatted;
+                        }
                     }
                 }
                 $student->classes = $classes;
