@@ -336,7 +336,7 @@ class ClassController extends Controller
             $params['duration'] = $this->request['duration'];
         }
 
-        if (!empty($this->request['holidayIds']) && !empty($this->request['classStartDate'])) {
+        if (!is_null($this->request['holidayIds']) && !empty($this->request['classStartDate'])) {
             $holidayIds = $this->request['holidayIds'];
             $holidays = Holidays::whereIn('holidayId', $holidayIds)->get('duration');
             $offDates = 0;
@@ -348,7 +348,7 @@ class ClassController extends Controller
             $params['classEndDate'] = $classEndDate;
         }
 
-        if (!empty($this->request['classStartDate']) && empty($this->request['holidayIds'])) {
+        if (!empty($this->request['classStartDate']) && is_null($this->request['holidayIds'])) {
             $classEndDate = date('Y-m-d', strtotime($this->request['classStartDate'] . ' + ' . $productNumber * 2 . ' months'));
             $params['classEndDate'] = $classEndDate;
         }
