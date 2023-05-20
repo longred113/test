@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\api\Campus_Dashboard;
 
+use App\Http\Controllers\api\Admin_Dashboard\StudentMatchedActivityController;
+use App\Http\Controllers\api\Admin_Dashboard\StudentProductController;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -9,6 +11,8 @@ use App\Models\Students;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use App\Http\Resources\Student as StudentsResource;
 use App\Http\Resources\StudentResource;
+use App\Models\GroupActivities;
+use App\Models\ProductGroups;
 
 class OffStudentController extends Controller
 {
@@ -49,8 +53,9 @@ class OffStudentController extends Controller
     {
         $validator = validator::make($request->all(), [
             'name' => 'required',
-            'talkSamId' => 'required',
+            // 'talkSamId' => 'required',
             'email' => 'required|unique:students',
+            'productIds' => 'array|required',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
@@ -59,7 +64,6 @@ class OffStudentController extends Controller
         $params = [
             'studentId' => $studentId,
             'name' => request('name'),
-            'enrollmentId' => request('enrollmentId'),
             'enrollmentCount' => 0,
             'email' => request('email'),
             'gender' => request('gender'),
@@ -75,7 +79,32 @@ class OffStudentController extends Controller
             'type' => request('type'),
         ];
         $newStudents = new StudentsResource(Students::create($params));
-        return $newStudents;
+        
+        $productIds = $request->productIds;
+        $studentProductParams = [
+            'studentId' => $studentId,
+            'productIds' => $productIds,
+        ];
+        StudentProductController::createStudentProductByAdmin($studentProductParams);
+
+        $productGroups = ProductGroups::whereIn('productId', $productIds)->get();
+            $groupActivity = [];
+            if (!empty($productGroups)) {
+                foreach ($productGroups as $productGroup) {
+                    $groupId = $productGroup->groupId;
+                    $groupActivity = GroupActivities::where('groupId', $groupId)->select('matchedActivityId', 'matchedActivityName')->get();
+                    foreach ($groupActivity as $activity) {
+                        $studentMatchedActivityParams = [
+                            'studentId' => $studentId,
+                            'matchedActivityId' => $activity->matchedActivityId,
+                            'matchedActivityName' => $activity->matchedActivityName,
+                            'status' => 'to-do',
+                        ];
+                        StudentMatchedActivityController::createStudentMatchedActivityByAdmin($studentMatchedActivityParams);
+                    }
+                }
+            }
+            return $this->successStudentRequest($newStudents);
     }
 
     /**
