@@ -847,6 +847,10 @@ class StudentController extends Controller
             ];
             StudentClassController::createStudentClassByAdmin($studentClassParams);
 
+            $class = Classes::where('classId', $classId)->first();
+            $availableNumStudent = $class['availableNumStudent'] + 1;
+            $class->update(['availableNumStudent' => $availableNumStudent]);
+
             $productGroups = ProductGroups::whereIn('productId', $productIds)->get();
             $groupActivity = [];
             if (!empty($productGroups)) {
