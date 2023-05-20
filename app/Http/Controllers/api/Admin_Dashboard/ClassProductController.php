@@ -4,9 +4,13 @@ namespace App\Http\Controllers\api\Admin_Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ClassProductResource;
+use App\Models\Classes;
 use App\Models\ClassProducts;
+use App\Models\StudentClasses;
+use Exception;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class ClassProductController extends Controller
@@ -38,16 +42,37 @@ class ClassProductController extends Controller
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
-        $productIds = $this->request['productIds'];
-        $classProductsData = ClassProducts::join('classes', 'classes.classId', '=', 'class_products.classId')
-            ->select(
-                'classes.classId',
-                'classes.name',
-                'class_products.productId',
-            )
-            ->whereIn('class_products.productId', $productIds)
-            ->distinct()
-            ->get();
+        try {
+            $productIds = $this->request['productIds'];
+            $classProductsData = ClassProducts::join('classes', 'classes.classId', '=', 'class_products.classId')
+                ->select(
+                    'classes.classId',
+                    'classes.name',
+                    'class_products.productId',
+                    'classes.availableNumStudent',
+                    'classes.numberOfStudent',
+                )
+                ->whereIn('class_products.productId', $productIds)
+                ->whereRaw('classes.availableNumStudent < classes.numberOfStudent')
+                ->distinct()
+                ->get();
+            // foreach ($classProductsData as $classProduct) {
+            //     $studentClass[] = StudentClasses::where('classId', $classProduct['classId'])
+            //         ->select(
+            //             'classId',
+            //             DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",studentId)) as students'),
+            //         )
+            //         ->groupBy('classId')
+            //         ->pluck('students', 'classId')
+            //         ->toArray();
+            // }
+            // foreach ($studentClass as $value) {
+            //     $numberOfStudent = count($value);
+            // }
+            // return $studentClass;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
         return $this->successClassProductRequest($classProductsData);
     }
 
