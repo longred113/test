@@ -53,7 +53,7 @@ class ClassProductController extends Controller
                     'classes.numberOfStudent',
                 )
                 ->whereIn('class_products.productId', $productIds)
-                ->whereRaw('classes.availableNumStudent < classes.numberOfStudent')
+                ->where('classes.availableNumStudent', '!=' , 0)
                 ->distinct()
                 ->get();
             // foreach ($classProductsData as $classProduct) {
