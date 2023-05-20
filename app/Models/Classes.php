@@ -28,6 +28,8 @@ class Classes extends Model
         'typeOfClass',
         'initialTextbook',
         'unit',
+        'campusId',
+        'availableNumStudent',
         'expired',
     ];
 }

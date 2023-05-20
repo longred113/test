@@ -292,7 +292,7 @@ class ClassController extends Controller
             'onlineTeacher' => 'string|required',
             'productIds' => 'array|required',
             // 'classday' => 'string',
-            'classTimeSlot' => 'string|required',
+            // 'classTimeSlot' => 'string|required',
             'classTime' => 'array|required',
             'classStartDate' => 'date|required',
             'status' => 'string',
@@ -300,6 +300,7 @@ class ClassController extends Controller
             'initialTextbook' => 'string',
             'level' => 'string|required',
             'holidayIds' => 'array',
+            'availableNumStudent' => 'integer|required',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
@@ -323,6 +324,12 @@ class ClassController extends Controller
             'initialTextbook' => $this->request['initialTextbook'],
             'expired' => 0,
         ];
+        if(!empty($this->request['availableNumStudent'])){
+            if($this->request['availableNumStudent'] > $this->request['numberOfStudent']){
+                return $this->errorBadRequest('Available number of student must be less than or equal to number of student');
+            }
+            $params['availableNumStudent'] = $this->request['availableNumStudent'];
+        }
 
         $productNumber = count($this->request['productIds']);
         if (!empty($this->request['duration'])) {

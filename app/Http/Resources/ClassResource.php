@@ -30,6 +30,8 @@ class ClassResource extends JsonResource
             'initialTextbook' => $this->initialTextbook,
             'typeOfClass' => $this->typeOfClass,
             'unit' => $this->unit,
+            'campusId' => $this->campusId,
+            'availableNumStudent' => $this->availableNumStudent,
             'expired' => $this->expired,
         ];
     }
