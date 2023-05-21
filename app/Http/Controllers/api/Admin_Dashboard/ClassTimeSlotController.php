@@ -15,7 +15,7 @@ class ClassTimeSlotController extends Controller
 {
     protected Request $request;
 
-    Public function __construct(
+    public function __construct(
         Request $request
     ) {
         $this->request = $request;
@@ -27,9 +27,9 @@ class ClassTimeSlotController extends Controller
      */
     public function index()
     {
-        try{
+        try {
             $classTimeSlotData = ClassTimeSlots::all();
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return $e->getMessage();
         }
         return $this->successClassTimeSlotRequest($classTimeSlotData);
@@ -37,9 +37,9 @@ class ClassTimeSlotController extends Controller
 
     public function getByName($name)
     {
-        try{
+        try {
             $classTimeSlotData = ClassTimeSlots::where('name', $name)->first();
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return $e->getMessage();
         }
         return $this->successClassTimeSlotRequest($classTimeSlotData);
@@ -53,16 +53,16 @@ class ClassTimeSlotController extends Controller
      */
     public function store()
     {
-        $validator = Validator::make($this->request->all(), [
-            'name' => 'string|required|unique:name',
-            'classStart' => 'string|required',
-            'classEnd' => 'string|required',
-        ]);
-        if ($validator->fails()) {
-            return $this->errorBadRequest($validator->getMessageBag()->toArray());
-        }
+        try {
+            $validator = Validator::make($this->request->all(), [
+                'name' => 'string|required|unique:class_time_slots',
+                'classStart' => 'string|required',
+                'classEnd' => 'string|required',
+            ]);
+            if ($validator->fails()) {
+                return $this->errorBadRequest($validator->getMessageBag()->toArray());
+            }
 
-        try{
             $classTimeSlotId = IdGenerator::generate(['table' => 'class_time_slots', 'trow' => 'classTimeSlotId', 'length' => 8, 'prefix' => 'CTS']);
             $params = [
                 'classTimeSlotId' => $classTimeSlotId, // 'CTS00001
@@ -72,7 +72,7 @@ class ClassTimeSlotController extends Controller
             ];
             $newClassTimeSlot = ClassTimeSlots::create($params);
             return $this->successClassTimeSlotRequest($newClassTimeSlot);
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return $e->getMessage();
         }
     }
@@ -108,14 +108,14 @@ class ClassTimeSlotController extends Controller
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
-        if(!empty($this->request->name)){
+        if (!empty($this->request->name)) {
             $params['name'] = $this->request->name;
             $classTimeParams['classTimeSlot'] = $this->request->name;
         }
-        if(!empty($this->request->classStart)){
+        if (!empty($this->request->classStart)) {
             $params['classStart'] = Carbon::parse($this->request->classStart)->format('H:i:s');
         }
-        if(!empty($this->request->classEnd)){
+        if (!empty($this->request->classEnd)) {
             $params['classEnd'] = Carbon::parse($this->request->classEnd)->format('H:i:s');
         }
         $classTimeSlotData->update($params);
