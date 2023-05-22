@@ -20,6 +20,7 @@ use App\Http\Controllers\api\Admin_Dashboard\ClassReportController;
 use App\Http\Controllers\api\Admin_Dashboard\ClassFeedbackController;
 use App\Http\Controllers\api\Admin_Dashboard\ClassMaterialController;
 use App\Http\Controllers\api\Admin_Dashboard\ClassProductController;
+use App\Http\Controllers\api\Admin_Dashboard\ClassTimeController;
 use App\Http\Controllers\api\Admin_Dashboard\ClassTimeSlotController;
 use App\Http\Controllers\api\Admin_Dashboard\CourseController;
 use App\Http\Controllers\api\Admin_Dashboard\EnrollmentControllerA;
@@ -508,6 +509,15 @@ Route::prefix('admin-holiday-management')
         Route::put('/update/{holidayId}', [HolidayController::class, 'update'])->name('update');
         Route::delete('/{holidayId}', [HolidayController::class, 'destroy'])->name('destroy');
         Route::post('/get-available-holiday', [HolidayController::class, 'getAvailableHolidays'])->name('getAvailableHolidays');
+    });
+
+Route::prefix('admin-class-time-management')
+    ->name('admin-class-time-management.')
+    ->group(function () {
+        Route::get('/', [ClassTimeController::class, 'index'])->name('index');
+        Route::get('/{classId}', [ClassTimeController::class, 'show'])->name('show');
+        Route::post('/get-by-product', [ClassTimeController::class, 'getByProduct'])->name('getByProduct');
+        Route::delete('/{classTimeId}', [ClassTimeController::class, 'destroy'])->name('destroy');
     });
 //END ADMIN DASHBOARD
 
