@@ -87,7 +87,12 @@ class ClassProductController extends Controller
 
         $productIds = $this->request['productIds'];
         $classProductsData = ClassProducts::join('classes', 'classes.classId', '=', 'class_products.classId')
+            ->select(
+                'classes.*',
+                DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_products.productId)) as productId'),
+            )
             ->whereIn('class_products.productId', $productIds)
+            ->groupBy('class_products.classId')
             ->get();
 
         return $this->successClassProductRequest($classProductsData);
