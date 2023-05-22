@@ -282,8 +282,16 @@ class CalendarController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function getCalendarOfClass($classId)
+    public function getCalendarOfClass()
     {
+        $validator = Validator::make($this->request->all(), [
+            'classIds' => 'array|required',
+        ]);
+        if ($validator->fails()) {
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        }
+
+        $classIds = $this->request['classIds'];
         $classData = Classes::join('class_times', 'classes.classId', '=', 'class_times.classId')
             ->join('teachers', 'classes.onlineTeacher', '=', 'teachers.teacherId')
             ->leftJoin('class_time_slots', 'class_times.classTimeSlot', '=', 'class_time_slots.name')
@@ -296,11 +304,81 @@ class CalendarController extends Controller
                 'class_times.classTimeSlot',
                 DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classStartDate, class_times.classEndDate)) as Date'),
             )
-            ->where('classes.classId', $classId)
+            ->whereIn('classes.classId', $classIds)
             // ->where('classes.typeOfClass', 'online')
             ->where('classes.expired', 0)
             ->groupBy('class_times.classTimeSlot')
             ->get();
+        return $this->successClassTimeLineRequest($classData);
+    }
+
+    public function getCalendarOfTeacher($teacherId)
+    {
+        $classData = Classes::join('class_times', 'classes.classId', '=', 'class_times.classId')
+            ->join('teachers', 'classes.onlineTeacher', '=', 'teachers.teacherId')
+            ->leftJoin('class_time_slots', 'class_times.classTimeSlot', '=', 'class_time_slots.name')
+            ->select(
+                DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classId,classes.name,class_times.day,teachers.name)) as Class'),
+                DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classId)) as classId'),
+                DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_times.day)) as day'),
+                DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.onlineTeacher,teachers.name)) as teacher'),
+                DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_time_slots.classStart)) as startTime'),
+                DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_time_slots.classEnd)) as endTime'),
+                'class_times.classTimeSlot',
+                DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classStartDate, class_times.classEndDate)) as Date'),
+            )
+            ->where('classes.onlineTeacher', $teacherId)
+            // ->where('classes.typeOfClass', 'online')
+            ->where('classes.expired', 0)
+            ->groupBy('class_times.classTimeSlot')
+            ->get();
+        foreach ($classData as $class) {
+            $classId = $class['classId'];
+            $classId = explode(',', $classId);
+            $classes = Classes::whereIn('classId', $classId)->get();
+            $week = [];
+            foreach ($classes as $oneClass) {
+                $classStartDate = $oneClass['classStartDate'];
+                $classEndDate = $oneClass['classEndDate'];
+                $currentDate = date('Y-m-d');
+                $startDateTime = new DateTime($classStartDate);
+                $endDateTime = new DateTime($classEndDate);
+                $currentDateTime = new DateTime($currentDate);
+                // Kiểm tra nếu ngày hiện tại nằm trong khoảng ngày bắt đầu và kết thúc
+                if ($currentDateTime >= $startDateTime && $currentDateTime <= $endDateTime) {
+                    // Tính toán số tuần từ ngày bắt đầu đến ngày hiện tại
+                    $diff = $startDateTime->diff($currentDateTime);
+                    $currentWeek = ceil($diff->days / 7);
+
+                    // Sử dụng biến $currentWeek ở đây để làm gì đó
+                    // Ví dụ: in ra tuần hiện tại của lớp học
+                    // Tính toán ngày bắt đầu và ngày kết thúc của tuần hiện tại
+                    $currentWeekStartDate = clone $currentDateTime;
+                    $currentWeekStartDate->modify('monday this week');
+                    $currentWeekEndDate = clone $currentDateTime;
+                    $currentWeekEndDate->modify('sunday this week');
+
+                    // Chuyển đổi thành định dạng mong muốn (Y-m-d)
+                    $currentWeekStartDateFormatted = $currentWeekStartDate->format('Y-m-d');
+                    $currentWeekEndDateFormatted = $currentWeekEndDate->format('Y-m-d');
+                    // Tính toán số tuần còn lại từ ngày hiện tại đến ngày kết thúc của lớp học
+                    $diffRemaining = $currentDateTime->diff($endDateTime);
+                    $remainingWeeks = ceil($diffRemaining->days / 7);
+                    $oneClass['currentWeek'] = $currentWeek;
+                    $oneClass['currentWeekStartDate'] = $currentWeekStartDateFormatted;
+                    $oneClass['currentWeekEndDate'] = $currentWeekEndDateFormatted;
+                    $oneClass['remainingWeeks'] = $remainingWeeks;
+                }
+                $week[] = [
+                    'oneClass' => $oneClass['classId'],
+                    'currentWeek' => $oneClass['currentWeek'],
+                    'currentWeekStartDate' => $oneClass['currentWeekStartDate'],
+                    'currentWeekEndDate' => $oneClass['currentWeekEndDate'],
+                    'remainingWeeks' => $oneClass['remainingWeeks'],
+                ];
+            }
+            $class['week'] = $week;
+        }
         return $this->successClassTimeLineRequest($classData);
     }
 

@@ -478,7 +478,8 @@ Route::prefix('admin-calendar-management')
         Route::get('/class-time-line-by-date', [CalendarController::class, 'ClassTimeLineByDate'])->name('ClassTimeLineByDate');
         Route::get('/get-timezone', [CalendarController::class, 'getTimeZone'])->name('getTimeZone');
         Route::get('/get-calendar-of-student/{studentId}', [CalendarController::class, 'getCalendarOfStudent'])->name('getCalendarOfStudent');
-        Route::get('/get-calendar-of-class/{classId}', [CalendarController::class, 'getCalendarOfClass'])->name('getCalendarOfClass');
+        Route::post('/get-calendar-of-class', [CalendarController::class, 'getCalendarOfClass'])->name('getCalendarOfClass');
+        Route::get('/get-calendar-of-teacher/{teacherId}', [CalendarController::class, 'getCalendarOfTeacher'])->name('getCalendarOfTeacher');
     });
 
 Route::prefix('admin-teacher-off-date-management')
