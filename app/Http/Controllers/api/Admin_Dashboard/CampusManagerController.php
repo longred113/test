@@ -170,7 +170,8 @@ class CampusManagerController extends Controller
             // 'campusId' => 'required',
             // 'memo' => 'required',
             // 'offlineStudentId' => 'required',
-            // 'offlineTeacherId' => 'required'
+            // 'offlineTeacherId' => 'required',
+            'activate' => 'integer',
         ]);
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->getMessageBag()->toArray());

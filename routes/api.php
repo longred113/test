@@ -325,6 +325,7 @@ Route::prefix('admin-class-product-management')
     ->group(function () {
         Route::get('/', [ClassProductController::class, 'index'])->name('index');
         Route::post('/get-class-from-product', [ClassProductController::class, 'getClassFromProduct'])->name('getClassFromProduct');
+        Route::post('/get-all-class-by-product', [ClassProductController::class, 'getAllClassByProduct'])->name('getAllClassByProduct');
         Route::post('/create', [ClassProductController::class, 'store'])->name('store');
         Route::get('/{classProductId}', [ClassProductController::class, 'show'])->name('show');
         Route::get('/display-by-class/{classId}', [ClassProductController::class, 'displayByClass'])->name('displayByClass');
