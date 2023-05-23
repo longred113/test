@@ -177,6 +177,7 @@ Route::prefix('admin-class-management')
         Route::get('/get-class/{onlineTeacher}', [ClassController::class, 'getClassFromTeacher'])->name('getClassFromTeacher');
         Route::put('/update/{classId}', [ClassController::class, 'update'])->name('update');
         Route::delete('/{classId}', [ClassController::class, 'destroy'])->name('destroy');
+        Route::post('/update-teacher-teaching-class', [ClassController::class, 'updateTeacherTeachingClass'])->name('updateTeacherTeachingClass');
     });
 
 Route::prefix('admin-class-match-activity-management')
@@ -184,7 +185,7 @@ Route::prefix('admin-class-match-activity-management')
     ->group(function () {
         Route::get('/', [ClassMatchActivityController::class, 'index'])->name('index');
         Route::post('/create', [ClassMatchActivityController::class, 'store'])->name('store');
-        Route::post('/{classMatchActivityId}', [ClassMatchActivityController::class, 'show'])->name('show');
+        Route::get('/{classMatchActivityId}', [ClassMatchActivityController::class, 'show'])->name('show');
         Route::get('/display-by-class/{classId}', [ClassMatchActivityController::class, 'displayByClass'])->name('displayByClass');
         Route::get('/display-by-matched-activity/{matchedActivityId}', [ClassMatchActivityController::class, 'displayByMatchActivity'])->name('displayByMatchActivity');
         Route::put('/update/{classMatchActivityId}', [ClassMatchActivityController::class, 'update'])->name('update');
@@ -239,7 +240,7 @@ Route::prefix('admin-enrollment')
         Route::get('/{studentId}', [EnrollmentControllerA::class, 'show'])->name('show');
         Route::put('/update/{enrollmentId}', [EnrollmentControllerA::class, 'update'])->name('update');
         Route::put('/update-history/{enrollmentId}', [EnrollmentControllerA::class, 'updateEnrollmentHistory'])->name('updateEnrollmentHistory');
-        Route::delete('/{studentId}', [EnrollmentControllerA::class, 'destroy'])->name('destroy');
+        Route::delete('/{enrollmentId}', [EnrollmentControllerA::class, 'destroy'])->name('destroy');
     });
 
 Route::prefix('admin-class-feedback')

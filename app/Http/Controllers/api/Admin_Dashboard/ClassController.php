@@ -584,5 +584,28 @@ class ClassController extends Controller
         return $this->successClassRequest($deleteClass);
     }
 
-    // function calculateEndDate($class)
+    public function updateTeacherTeachingClass()
+    {
+        $validator = Validator::make($this->request->all(), [
+            'classIds' => 'array|required',
+            'teacherId' => 'string|required',
+        ]);
+        if ($validator->fails()) {
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        }
+
+        try {
+            $classIds = $this->request['classIds'];
+            $teacherId = $this->request['teacherId'];
+            $classOfTeacher = Classes::where('onlineTeacher', $teacherId)->update(['onlineTeacher' => null]);
+            foreach ($classIds as $classId) {
+                $class = Classes::where('classId', $classId)->update(['onlineTeacher' => $teacherId]);
+            }
+            
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+
+        return $this->successClassRequest();
+    }
 }
