@@ -555,7 +555,7 @@ Route::prefix('campus-enrollment')
         Route::get('/showEnrolls/{level}/{productId}', [EnrollmentController::class, 'showEnrollmentByPro'])->name('showEnrollmentByPro');
         Route::get('/{campusId}', [EnrollmentController::class, 'show'])->name('show');
         Route::put('/update/{enrollmentId}', [EnrollmentController::class, 'update'])->name('update');
-        Route::delete('/{studentId}', [EnrollmentController::class, 'destroy'])->name('destroy');
+        Route::delete('/{enrollmentId}', [EnrollmentController::class, 'destroy'])->name('destroy');
         Route::get('/', [EnrollmentController::class, 'getAllEnrollment'])->name('getAllEnrollment');
     });
 // CAMPUS DASHBOARD END

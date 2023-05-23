@@ -39,6 +39,7 @@ class LearningManagementController extends Controller
                     'campuses.name as campusName',
                     DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.level)) as levels'),
                     DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classId,classes.name)) as classes'),
+                    'students.joinedDate',
                 )
                 ->groupBy('students.studentId')
                 ->get();
