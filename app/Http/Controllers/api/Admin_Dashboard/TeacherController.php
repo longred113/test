@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\TeacherResource;
 use App\Models\Campus;
 use App\Models\CampusManager;
+use App\Models\Classes;
 use App\Models\Teachers;
 use App\Models\Users;
 use Error;
@@ -300,7 +301,9 @@ class TeacherController extends Controller
                 'users.userName',
                 'users.password',
             )
-            ->where('teachers.teacherId', $teacherId)->get();
+            ->where('teachers.teacherId', $teacherId)->first();
+            $teacherClass = Classes::where('onlineTeacher', $teacherId)->get();
+            $joinData['teacherClass'] = $teacherClass;
         }catch(Exception $e){
             return $e->getMessage();
         }
