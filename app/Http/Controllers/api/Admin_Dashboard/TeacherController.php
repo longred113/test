@@ -292,15 +292,19 @@ class TeacherController extends Controller
      */
     public function show($teacherId)
     {
-        $teacher = Teachers::find($teacherId);
-        $joinData = Teachers::join('campuses', 'teachers.campusId', '=', 'campuses.campusId')->where('teacherId', $teacherId)->get();
-        foreach ($joinData as $join) {
-            $data = $join['name'];
+        try{
+            $joinData = Teachers::leftJoin('users', 'users.teacherId', '=', 'teachers.teacherId')
+            ->join('campuses', 'teachers.campusId', '=', 'campuses.campusId')
+            ->select(
+                'teachers.*',
+                'users.userName',
+                'users.password',
+            )
+            ->where('teachers.teacherId', $teacherId)->get();
+        }catch(Exception $e){
+            return $e->getMessage();
         }
-        $showTeacherData = [];
-        $showTeacherData = $teacher;
-        $showTeacherData['campusName'] = $data;
-        return $this->successTeacherRequest($showTeacherData);
+        return $this->successTeacherRequest($joinData);
     }
 
     /**

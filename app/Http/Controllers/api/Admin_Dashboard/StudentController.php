@@ -540,7 +540,7 @@ class StudentController extends Controller
                 // 'introduction' => 'string|required',
                 // 'talkSamId' => 'string|required',
                 // 'basicPoint' => 'integer|required',
-                'campusId' => 'string|',
+                'campusId' => 'string',
                 'type' => 'string',
                 // 'enrollmentId' => 'string',
                 // 'parentId' => 'string',
