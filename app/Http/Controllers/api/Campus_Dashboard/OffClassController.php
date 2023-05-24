@@ -13,9 +13,9 @@ class OffClassController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($campusId)
     {
-        $offlineClass = Classes::where('category', 'offline')->get();
+        $offlineClass = Classes::where('category', 'offline')->where('campusId', $campusId)->get();
         return $this->successClassRequest($offlineClass);
     }
 
