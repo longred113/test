@@ -28,6 +28,7 @@ class Classes extends Model
         'typeOfClass',
         'initialTextbook',
         'unit',
+        'category',
         'campusId',
         'availableNumStudent',
         'expired',
