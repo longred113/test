@@ -874,4 +874,34 @@ class StudentController extends Controller
 
         return $this->successStudentRequest($newStudent);
     }
+
+    public function getInfoStudentFromMobile()
+    {
+        $validator = Validator::make($this->request->all(), [
+            'userName/email' => 'string|required',
+            'password' => 'string|required',
+        ]);
+        if ($validator->fails()) {
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        }
+
+        $userName = $this->request['userName/email'];
+        $password = $this->request['password'];
+
+        $user = Users::where('userName', $userName)->orWhere('email', $userName)->first();
+        if (empty($user)) {
+            return $this->errorBadRequest('Username or email does not exist');
+        }
+        if ($user['password'] != $password) {
+            return $this->errorBadRequest('Password is incorrect');
+        }
+        $student = Students::join('campuses', 'campuses.campusId', '=', 'students.campusId')
+        ->select(
+            'students.*',
+            'campuses.name as campusName',
+        )
+        ->where('studentId', $user['studentId'])->first();
+
+        return $this->successStudentRequest($student);
+    }
 }

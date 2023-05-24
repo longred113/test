@@ -213,6 +213,7 @@ Route::prefix('admin-student-management')
         Route::get('/get-enrollment-count/{studentId}', [StudentController::class, 'getEnrollmentCount'])->name('getEnrollmentCount');
         Route::get('/get-by-campus/{campusId}', [StudentController::class, 'getStudentByCampus'])->name('getStudentByCampus');
         Route::post('/create-student-by-admin', [StudentController::class, 'createStudentByAdmin'])->name('createStudentByAdmin');
+        Route::post('/get-info-student-from-mobile', [StudentController::class, 'getInfoStudentFromMobile'])->name('getInfoStudentFromMobile');
     });
 
 Route::prefix('admin-parent-management')
@@ -497,7 +498,7 @@ Route::prefix('admin-learning-management')
     ->name('admin-learning-management.')
     ->group(function () {
         Route::get('/', [LearningManagementController::class, 'index'])->name('index');
-        Route::post('/create', [LearningManagementController::class, 'store'])->name('store');
+        Route::get('/test/{studentId}', [LearningManagementController::class, 'store'])->name('store');
         Route::get('/get-student-details/{studentId}', [LearningManagementController::class, 'show'])->name('show');
         Route::put('/update/{learningId}', [LearningManagementController::class, 'update'])->name('update');
         Route::delete('/{learningId}', [LearningManagementController::class, 'destroy'])->name('destroy');
