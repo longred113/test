@@ -530,7 +530,7 @@ Route::prefix('admin-class-time-management')
 Route::prefix('campus-teacherOff')
     ->name('campus-teacherOff.')
     ->group(function () {
-        Route::get('/', [OffTeachController::class, 'index'])->name('index');
+        Route::get('/{campusId}', [OffTeachController::class, 'index'])->name('index');
         Route::post('/create', [OffTeachController::class, 'store'])->name('store');
         Route::get('/{teacherId}', [OffTeachController::class, 'show'])->name('show');
         Route::put('/update/{teacherId}', [OffTeachController::class, 'update'])->name('update');

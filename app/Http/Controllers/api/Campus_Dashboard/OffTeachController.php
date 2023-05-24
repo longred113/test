@@ -17,27 +17,33 @@ class OffTeachController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($campusId)
     {
-        $data = Teachers::join('campuses', 'teachers.campusId', '=', 'campuses.campusId')
-            ->select(
-                'teachers.teacherId',
-                'teachers.campusId',
-                'campuses.name as campusName',
-                'teachers.name as teacherName',
-                'teachers.email as email',
-                'teachers.role',
-                'teachers.activate',
-                'teachers.type',
-                'teachers.gender',
-                'teachers.dateOfBirth',
-                'teachers.status',
-                'teachers.country',
-                'teachers.timeZone',
-                'teachers.talkSamId',
-                'teachers.memo',
-            )
-            ->where('type', 'off')->get();
+        try{
+            $data = Teachers::leftJoin('campuses', 'teachers.campusId', '=', 'campuses.campusId')
+                ->select(
+                    'teachers.teacherId',
+                    'teachers.campusId',
+                    'campuses.name as campusName',
+                    'teachers.name as teacherName',
+                    'teachers.email as email',
+                    'teachers.role',
+                    'teachers.activate',
+                    'teachers.type',
+                    'teachers.gender',
+                    'teachers.dateOfBirth',
+                    'teachers.status',
+                    'teachers.country',
+                    'teachers.timeZone',
+                    'teachers.talkSamId',
+                    'teachers.memo',
+                )
+                ->where('teachers.type', 'off')
+                ->where('teachers.campusId', $campusId)
+                ->get();
+        }catch(Exception $e){
+            return $e->getMessage();
+        }
         return $this->successTeacherRequest($data);
     }
 
