@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\Admin_Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\Classes;
 use App\Models\ClassTimes;
+use DateTime;
 use Exception;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
@@ -92,6 +93,7 @@ class ClassTimeController extends Controller
                 ->join('class_products', 'classes.classId', '=', 'class_products.classId')
                 ->select(
                     DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classId,classes.name,class_times.day,teachers.name)) as Class'),
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classId)) as classId'),
                     DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_times.day)) as day'),
                     DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.onlineTeacher,teachers.name)) as teacher'),
                     DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_time_slots.classStart)) as startTime'),
@@ -106,6 +108,54 @@ class ClassTimeController extends Controller
                 ->where('classes.expired', 0)
                 ->groupBy('class_times.classTimeSlot')
                 ->get();
+
+                foreach ($classTime as $class) {
+                    $classId = $class['classId'];
+                    $classId = explode(',', $classId);
+                    $classes = Classes::whereIn('classId', $classId)->get();
+                    $week = [];
+                    foreach ($classes as $oneClass) {
+                        $classStartDate = $oneClass['classStartDate'];
+                        $classEndDate = $oneClass['classEndDate'];
+                        $currentDate = date('Y-m-d');
+                        $startDateTime = new DateTime($classStartDate);
+                        $endDateTime = new DateTime($classEndDate);
+                        $currentDateTime = new DateTime($currentDate);
+                        // Kiểm tra nếu ngày hiện tại nằm trong khoảng ngày bắt đầu và kết thúc
+                        if ($currentDateTime >= $startDateTime && $currentDateTime <= $endDateTime) {
+                            // Tính toán số tuần từ ngày bắt đầu đến ngày hiện tại
+                            $diff = $startDateTime->diff($currentDateTime);
+                            $currentWeek = ceil($diff->days / 7);
+        
+                            // Sử dụng biến $currentWeek ở đây để làm gì đó
+                            // Ví dụ: in ra tuần hiện tại của lớp học
+                            // Tính toán ngày bắt đầu và ngày kết thúc của tuần hiện tại
+                            $currentWeekStartDate = clone $currentDateTime;
+                            $currentWeekStartDate->modify('monday this week');
+                            $currentWeekEndDate = clone $currentDateTime;
+                            $currentWeekEndDate->modify('sunday this week');
+        
+                            // Chuyển đổi thành định dạng mong muốn (Y-m-d)
+                            $currentWeekStartDateFormatted = $currentWeekStartDate->format('Y-m-d');
+                            $currentWeekEndDateFormatted = $currentWeekEndDate->format('Y-m-d');
+                            // Tính toán số tuần còn lại từ ngày hiện tại đến ngày kết thúc của lớp học
+                            $diffRemaining = $currentDateTime->diff($endDateTime);
+                            $remainingWeeks = ceil($diffRemaining->days / 7);
+                            $oneClass['currentWeek'] = $currentWeek;
+                            $oneClass['currentWeekStartDate'] = $currentWeekStartDateFormatted;
+                            $oneClass['currentWeekEndDate'] = $currentWeekEndDateFormatted;
+                            $oneClass['remainingWeeks'] = $remainingWeeks;
+                        }
+                        $week[] = [
+                            'oneClass' => $oneClass['classId'],
+                            'currentWeek' => $oneClass['currentWeek'],
+                            'currentWeekStartDate' => $oneClass['currentWeekStartDate'],
+                            'currentWeekEndDate' => $oneClass['currentWeekEndDate'],
+                            'remainingWeeks' => $oneClass['remainingWeeks'],
+                        ];
+                    }
+                    $class['week'] = $week;
+                }
         } catch (Exception $e) {
             return $e->getMessage();
         }

@@ -36,6 +36,11 @@ class ClassController extends Controller
     public function index()
     {
         $classesData = Classes::where('category', 'online')->get();
+        foreach ($classesData as $class) {
+            if (now() > $class->classEndDate) {
+                event(new ClassExpired($class));
+            }
+        }
         return $this->successClassRequest($classesData);
     }
 
