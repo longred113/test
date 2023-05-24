@@ -564,7 +564,7 @@ Route::prefix('campus-enrollment')
 Route::prefix('campus-offline-class-management')
     ->name('campus-offline-class-management.')
     ->group(function () {
-        Route::get('/', [OffClassController::class, 'index'])->name('index');
+        Route::get('/{campusId}', [OffClassController::class, 'index'])->name('index');
         Route::post('/create', [OffClassController::class, 'store'])->name('store');
         Route::get('/{offlineClassId}', [OffClassController::class, 'show'])->name('show');
         Route::put('/update/{offlineClassId}', [OffClassController::class, 'update'])->name('update');
