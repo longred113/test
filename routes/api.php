@@ -41,6 +41,7 @@ use App\Http\Controllers\api\Admin_Dashboard\TeacherOffDateController;
 use App\Http\Controllers\api\Campus_Dashboard\OffStudentController;
 use App\Http\Controllers\api\Campus_Dashboard\OffTeachController;
 use App\Http\Controllers\api\Campus_Dashboard\EnrollmentController;
+use App\Http\Controllers\api\Campus_Dashboard\OffClassController;
 use App\Http\Controllers\api\Message_Dashboard\PrivateMessageController;
 use App\Http\Controllers\api\Teacher_Dashboard\StudyPlannerController;
 use App\Http\Controllers\api\Student_Dashboard\StudyPlannerSController;
@@ -558,6 +559,16 @@ Route::prefix('campus-enrollment')
         Route::put('/update/{enrollmentId}', [EnrollmentController::class, 'update'])->name('update');
         Route::delete('/{enrollmentId}', [EnrollmentController::class, 'destroy'])->name('destroy');
         Route::get('/', [EnrollmentController::class, 'getAllEnrollment'])->name('getAllEnrollment');
+    });
+
+Route::prefix('campus-offline-class-management')
+    ->name('campus-offline-class-management.')
+    ->group(function () {
+        Route::get('/', [OffClassController::class, 'index'])->name('index');
+        Route::post('/create', [OffClassController::class, 'store'])->name('store');
+        Route::get('/{offlineClassId}', [OffClassController::class, 'show'])->name('show');
+        Route::put('/update/{offlineClassId}', [OffClassController::class, 'update'])->name('update');
+        Route::delete('/{offlineClassId}', [OffClassController::class, 'destroy'])->name('destroy');
     });
 // CAMPUS DASHBOARD END
 
