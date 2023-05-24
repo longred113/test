@@ -54,6 +54,7 @@ class ClassProductController extends Controller
                 )
                 ->whereIn('class_products.productId', $productIds)
                 ->where('classes.availableNumStudent', '!=' , 0)
+                ->where('classes.category', 'online')
                 ->distinct()
                 ->get();
             // foreach ($classProductsData as $classProduct) {

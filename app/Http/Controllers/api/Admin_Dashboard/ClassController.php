@@ -35,7 +35,7 @@ class ClassController extends Controller
      */
     public function index()
     {
-        $classesData = ClassResource::collection(Classes::all());
+        $classesData = Classes::where('category', 'online')->get();
         return $this->successClassRequest($classesData);
     }
 
