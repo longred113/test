@@ -184,7 +184,6 @@ class LearningManagementController extends Controller
                     ];
                 }
             }
-
             $productGroups = ProductGroups::where('productId', $productParts[0])->select('groupId', 'groupName')->get();
             $groupId = $productGroups->pluck('groupId')->toArray();
             $groupActivities = GroupActivities::whereIn('groupId', $groupId)->select('matchedActivityId', 'matchedActivityName')->get();
