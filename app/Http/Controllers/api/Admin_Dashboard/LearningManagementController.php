@@ -256,14 +256,18 @@ class LearningManagementController extends Controller
                 $classProductGroup = ProductGroups::where('productId', $classProduct[0])->select('groupId', 'groupName')->get();
                 $classGroupId = $classProductGroup->pluck('groupId')->toArray();
                 $classGroupActivities = GroupActivities::join('student_matched_activities', 'group_activities.matchedActivityId', '=', 'student_matched_activities.matchedActivityId')
-                ->whereIn('groupId', $classGroupId)
-                ->select(
-                    'student_matched_activities.matchedActivityId', 
-                    'student_matched_activities.name',
-                    'student_matched_activities.status',
+                    ->join('matched_activities', 'group_activities.matchedActivityId', '=', 'matched_activities.matchedActivityId')
+                    ->whereIn('groupId', $classGroupId)
+                    ->where('student_matched_activities.status', 'incomplete')
+                    ->select(
+                        'student_matched_activities.matchedActivityId',
+                        'student_matched_activities.name',
+                        'student_matched_activities.status',
+                        'matched_activities.type',
+                        'matched_activities.time',
                     )
                     ->distinct()
-                ->get();
+                    ->get();
                 // return $classGroupProduct;
                 $class['products'] = $classGroupProduct;
                 $class['productGroups'] = $classProductGroup;
