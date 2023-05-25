@@ -243,6 +243,7 @@ Route::prefix('admin-enrollment')
         Route::put('/update/{enrollmentId}', [EnrollmentControllerA::class, 'update'])->name('update');
         Route::put('/update-history/{enrollmentId}', [EnrollmentControllerA::class, 'updateEnrollmentHistory'])->name('updateEnrollmentHistory');
         Route::delete('/{enrollmentId}', [EnrollmentControllerA::class, 'destroy'])->name('destroy');
+        Route::post('/get-student-not-have-class', [EnrollmentControllerA::class, 'getStudentNotHaveClass'])->name('getStudentNotHaveClass');
     });
 
 Route::prefix('admin-class-feedback')
@@ -483,6 +484,7 @@ Route::prefix('admin-calendar-management')
         Route::get('/get-calendar-of-student/{studentId}', [CalendarController::class, 'getCalendarOfStudent'])->name('getCalendarOfStudent');
         Route::post('/get-calendar-of-class', [CalendarController::class, 'getCalendarOfClass'])->name('getCalendarOfClass');
         Route::get('/get-calendar-of-teacher/{teacherId}', [CalendarController::class, 'getCalendarOfTeacher'])->name('getCalendarOfTeacher');
+        Route::get('/get-calendar-of-class-by-product/{productId}', [CalendarController::class, 'getCalendarOfClassByProduct'])->name('getCalendarOfClassByProduct');
     });
 
 Route::prefix('admin-teacher-off-date-management')
@@ -566,9 +568,10 @@ Route::prefix('campus-offline-class-management')
     ->group(function () {
         Route::get('/{campusId}', [OffClassController::class, 'index'])->name('index');
         Route::post('/create', [OffClassController::class, 'store'])->name('store');
-        Route::get('/{offlineClassId}', [OffClassController::class, 'show'])->name('show');
-        Route::put('/update/{offlineClassId}', [OffClassController::class, 'update'])->name('update');
-        Route::delete('/{offlineClassId}', [OffClassController::class, 'destroy'])->name('destroy');
+        Route::get('/{classId}', [OffClassController::class, 'show'])->name('show');
+        Route::put('/update/{classId}', [OffClassController::class, 'update'])->name('update');
+        Route::delete('/{classId}', [OffClassController::class, 'destroy'])->name('destroy');
+        Route::post('/get-class-off-from-product', [OffClassController::class, 'getClassOffFromProduct'])->name('getClassOffFromProduct');
     });
 // CAMPUS DASHBOARD END
 
