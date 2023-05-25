@@ -192,12 +192,14 @@ class LearningManagementController extends Controller
             $student->productGroups = $productGroups;
             $student->groupActivities = $groupActivities;
             $classes = Classes::join('student_classes', 'classes.classId', '=', 'student_classes.classId')
+                ->join('teachers', 'classes.onlineTeacher', '=', 'teachers.teacherId')
                 ->select(
                     'classes.classId',
                     'classes.name as className',
                     'classes.level',
                     'classes.numberOfStudent',
                     'classes.onlineTeacher',
+                    'teachers.name as teacherName',
                     'classes.classStartDate',
                     'classes.classEndDate',
                     'classes.status',
