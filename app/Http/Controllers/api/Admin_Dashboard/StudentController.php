@@ -170,27 +170,10 @@ class StudentController extends Controller
                 )
                 ->where('studentId', $studentId)
                 ->get();
-            $currentDate = date('Y-m-d');
-            foreach ($classes as $class) {
-                $classId = $class['classId'];
-                $class['classTime'] = Classes::join('class_times', 'classes.classId', '=', 'class_times.classId')
-                    ->join('teachers', 'classes.onlineTeacher', '=', 'teachers.teacherId')
-                    ->leftJoin('class_time_slots', 'class_times.classTimeSlot', '=', 'class_time_slots.name')
-                    ->select(
-                        DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classId,classes.name,class_times.day,teachers.name)) as Class'),
-                        DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_times.day)) as day'),
-                        DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.onlineTeacher,teachers.name)) as teacher'),
-                        DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_time_slots.classStart)) as startTime'),
-                        DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_time_slots.classEnd)) as endTime'),
-                        'class_times.classTimeSlot',
-                        DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",classes.classStartDate)) as startDate'),
-                        DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS(":",class_times.classEndDate)) as endDate'),
-                    )
-                    ->where('classes.classId', $classId)
-                    // ->where('classes.typeOfClass', 'online')
-                    ->where('classes.expired', 0)
-                    ->groupBy('class_times.classTimeSlot')
-                    ->get();
+            if ($classes->isEmpty()) {
+                $student->classes = $classes;
+            } else {
+                $currentDate = date('Y-m-d');
                 foreach ($classes as $class) {
                     $classId = $class['classId'];
                     $class['classTime'] = Classes::join('class_times', 'classes.classId', '=', 'class_times.classId')
@@ -266,7 +249,7 @@ class StudentController extends Controller
                     // Lấy ngày bắt đầu và ngày kết thúc của lớp học
                     $startDate = $class['classStartDate'];
                     $endDate = $class['classEndDate'];
-                    
+
                     // Chuyển đổi ngày thành đối tượng DateTime
                     $startDateTime = new DateTime($startDate);
                     $endDateTime = new DateTime($endDate);
@@ -284,7 +267,7 @@ class StudentController extends Controller
                         $currentWeekStartDate->modify('monday this week');
                         $currentWeekEndDate = clone $currentDateTime;
                         $currentWeekEndDate->modify('sunday this week');
-    
+
                         // Chuyển đổi thành định dạng mong muốn (Y-m-d)
                         $currentWeekStartDateFormatted = $currentWeekStartDate->format('Y-m-d');
                         $currentWeekEndDateFormatted = $currentWeekEndDate->format('Y-m-d');
@@ -896,11 +879,11 @@ class StudentController extends Controller
             return $this->errorBadRequest('Password is incorrect');
         }
         $student = Students::join('campuses', 'campuses.campusId', '=', 'students.campusId')
-        ->select(
-            'students.*',
-            'campuses.name as campusName',
-        )
-        ->where('studentId', $user['studentId'])->first();
+            ->select(
+                'students.*',
+                'campuses.name as campusName',
+            )
+            ->where('studentId', $user['studentId'])->first();
 
         return $this->successStudentRequest($student);
     }

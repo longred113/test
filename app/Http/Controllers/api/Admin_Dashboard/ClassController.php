@@ -329,6 +329,7 @@ class ClassController extends Controller
             'typeOfClass' => $this->request['typeOfClass'],
             'initialTextbook' => $this->request['initialTextbook'],
             'expired' => 0,
+            'category' => $this->request['category'],
         ];
         if(!empty($this->request['availableNumStudent'])){
             if($this->request['availableNumStudent'] > $this->request['numberOfStudent']){
@@ -338,9 +339,9 @@ class ClassController extends Controller
         }
 
         $productNumber = count($this->request['productIds']);
-        if (!empty($this->request['duration'])) {
-            $params['duration'] = $this->request['duration'];
-        }
+        // if (!empty($this->request['duration'])) {
+        //     $params['duration'] = $this->request['duration'];
+        // }
 
         if (!is_null($this->request['holidayIds']) && !empty($this->request['classStartDate'])) {
             $holidayIds = $this->request['holidayIds'];
@@ -417,6 +418,7 @@ class ClassController extends Controller
         $validator = Validator::make($this->request->all(), [
             'name' => 'string',
             'numberOfStudent' => 'integer',
+            'level' => 'string',
             // 'subject' => 'string|required',
             'onlineTeacher' => 'string',
             // 'classday' => 'string|required',

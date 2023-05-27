@@ -9,9 +9,17 @@ use App\Models\Teachers;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use App\Http\Resources\TeacherResource;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class OffTeachController extends Controller
 {
+    protected Request $request;
+
+    public function __construct(
+        Request $request
+    ) {
+        $this->request = $request;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -19,7 +27,7 @@ class OffTeachController extends Controller
      */
     public function index($campusId)
     {
-        try{
+        try {
             $data = Teachers::leftJoin('campuses', 'teachers.campusId', '=', 'campuses.campusId')
                 ->select(
                     'teachers.teacherId',
@@ -41,7 +49,7 @@ class OffTeachController extends Controller
                 ->where('teachers.type', 'off')
                 ->where('teachers.campusId', $campusId)
                 ->get();
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return $e->getMessage();
         }
         return $this->successTeacherRequest($data);
@@ -211,9 +219,9 @@ class OffTeachController extends Controller
             return $this->errorBadRequest($validator->getMessageBag()->toArray());
         }
 
-        if($request['email'] != $teachers['email']){
+        if ($request['email'] != $teachers['email']) {
             $email = Teachers::where('email', $request['email'])->first();
-            if(!empty($email)){
+            if (!empty($email)) {
                 return $this->errorBadRequest('Email already exists');
             }
         }
@@ -254,5 +262,82 @@ class OffTeachController extends Controller
         $teacher = Teachers::find($teacherId);
         $deleteTeachers = $teacher->delete();
         return $this->successTeacherRequest($deleteTeachers);
+    }
+
+    public function getOffTeacherHaveFreeTime()
+    {
+        $validator = Validator::make($this->request->all(), [
+            'date' => 'required|date',
+            'classTime' => 'required|array',
+            'campusId' => 'required|string',
+        ]);
+        if ($validator->fails()) {
+            return $this->errorBadRequest($validator->getMessageBag()->toArray());
+        }
+
+        try {
+            $campusId = $this->request['campusId'];
+            $teachersData = Teachers::leftJoin('classes', 'teachers.teacherId', '=', 'classes.onlineTeacher')
+                ->leftJoin('class_times', 'classes.classId', '=', 'class_times.classId')
+                ->leftJoin('teacher_off_dates', 'teachers.teacherId', '=', 'teacher_off_dates.teacherId')
+                ->leftJoin('class_time_slots', 'teacher_off_dates.classTimeSlotId', '=', 'class_time_slots.classTimeSlotId')
+                ->select(
+                    'teachers.teacherId',
+                    'teachers.name as teacherName',
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS("-",teacher_off_dates.date,teacher_off_dates.day,class_time_slots.name)) as offTime'),
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS("-",class_times.day,class_times.classTimeSlot)) as classTime'),
+                    DB::raw('GROUP_CONCAT(DISTINCT CONCAT_WS("-",teacher_off_dates.date)) as offDate'),
+                )
+                ->groupBy('teachers.teacherId')
+                ->where('teachers.type', 'off')
+                ->where('teachers.campusId', $campusId)
+                ->get();
+            $classTimes = $this->request['classTime'];
+            $date[] = $this->request['date'];
+            foreach ($classTimes as $time) {
+                $classTimeSlot = $time['classTimeSlot'];
+                $days = $time['day'];
+
+                foreach ($days as $day) {
+                    $formatted = $day . "-" . $classTimeSlot;
+                    $classTimeResults[] = $formatted;
+                }
+            }
+            foreach ($classTimeResults as $classTimeResult) {
+                $offDateFormat = $this->request['date'] . "-" . $classTimeResult;
+                $offDateResults[] = $offDateFormat;
+            }
+
+            $filteredTeachersData = collect([]);
+
+            // return $teachersData;
+            foreach ($teachersData as $teacher) {
+                $classTime = explode(',', $teacher['classTime']);
+                $offTimes = explode(',', $teacher['offTime']);
+                $offDates = explode(',', $teacher['offDate']);
+
+                $shouldExclude = false;
+                foreach ($classTimeResults as $result) {
+                    if (in_array($result, $classTime)) {
+                        $shouldExclude = true;
+                        break;
+                    }
+                }
+                foreach ($offDateResults as $result) {
+                    if (in_array($result, $offTimes)) {
+                        $shouldExclude = true;
+                        break;
+                    }
+                }
+                if (!$shouldExclude) {
+                    $filteredTeachersData->push($teacher);
+                }
+            }
+            $teachersDataOutput = $filteredTeachersData;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+
+        return $this->successTeacherRequest($teachersData);
     }
 }
